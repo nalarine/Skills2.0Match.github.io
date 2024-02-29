@@ -1,0 +1,12 @@
+@keyframes moveText {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animated-text {
+  animation: moveText 5s forwards; /* Animation will play forward and stop at the end */
+}
