@@ -4,6 +4,8 @@ import { BiBriefcaseAlt2 } from "react-icons/bi";
 import { BsStars } from "react-icons/bs";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { updateURL } from "../utils";
+import { apiRequest } from "../utils";
+import Loading from "../components/Loading";
 
 import Header from "../components/Header";
 import { experience, jobTypes, jobs } from "../utils/data";
@@ -105,9 +107,10 @@ const FindJobs = () => {
   }, [sort, filterJobTypes, filterExp, page]);
   
   return (
-    <div className="relative z-0 inset-2">
+    <div>
       <Header
         title='Find Your Dream Job with Ease'
+        className='text-lime-300'
         type='home'
         handleClick={handleSearchSubmit}
         searchQuery={searchQuery}
@@ -118,7 +121,7 @@ const FindJobs = () => {
 
       <div className='container mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 bg-[#f7fdfd]'>
         <div className='hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm'>
-          <p className='text-lg font-semibold text-slate-600'>Filter Search</p>
+          <p className='text-lg font-semibold text-green-500'>Filter Search</p>
 
           <div className='py-2'>
             <div className='flex justify-between mb-3'>
@@ -193,7 +196,7 @@ const FindJobs = () => {
             {data?.map((job, index) => {
               const newJob = {
                 name: job?.company?.name,
-                logo: job?.company?. profileUrl,
+                logo: job?.company?.profileUrl,
                 ...job,
               };
               return <JobCard job={newJob} key={index} />;
@@ -209,7 +212,7 @@ const FindJobs = () => {
               <CustomButton
               onClick={handleShowMore}
                 title='Load More'
-                containerStyles={`text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600`}
+                containerStyles={`text-lime-600 py-1.5 px-5 focus:outline-none hover:bg-lime-700 hover:text-white rounded-full text-base border border-lime-600`}
               />
             </div>
           )}

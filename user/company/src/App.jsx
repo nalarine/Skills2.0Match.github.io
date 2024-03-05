@@ -82,8 +82,11 @@ function App() {
     location.pathname.startsWith("/schedule") ||
     location.pathname.startsWith("/company-profile") ||
     location.pathname.startsWith("/cjoblisting") ||
+    location.pathname.startsWith("/upload-job") ||
+    location.pathname.startsWith("/job-detail/") ||
     location.pathname.startsWith("/AdminDashboard");
-  
+
+
   const hideExtraComponents = user && (
     location.pathname === "/" || 
     location.pathname.startsWith("/AboutPage") ||
@@ -91,7 +94,10 @@ function App() {
     location.pathname.startsWith("/ContactPage") ||
     location.pathname.startsWith("/find-jobs") ||
     location.pathname.startsWith("/company-profile") ||
+    location.pathname.startsWith("/job-detail/") ||
+    location.pathname.startsWith("/upload-job") ||
     location.pathname.startsWith("/AdminDashboard")
+
   );
 
   return (
@@ -106,6 +112,8 @@ function App() {
       )}
       <Routes>
         <Route path="/user-auth" element={<AuthPage />} />
+        <Route path='/find-jobs' element={<FindJobs />} />
+          <Route path='/companies' element={<Companies />} />
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
@@ -139,8 +147,6 @@ function App() {
           <Route path='/admin/job/create' element={<DashCreateJobHOC />} />
           <Route path='/admin/category/create' element={<DashCreateCategoryHOC />} />
           
-          <Route path='/find-jobs' element={<FindJobs />} />
-          <Route path='/companies' element={<Companies />} />
           <Route
             path={
               user?.accountType === "seeker"
@@ -149,16 +155,12 @@ function App() {
             }
             element={<UserProfile />}
           />
-            <Route
-            path={
-              user?.accountType === "company"
-                ? "/company-profile"
-                : "/company-profile/:id"
-            }
-            element={<CompanyProfile />}
-          />
+    
+          <Route path={"/company-profile"} element={<CompanyProfile />} />
+          <Route path={"/company-profile/:id"} element={<CompanyProfile />} />
           <Route path={"/upload-job"} element={<UploadJob />} />
           <Route path={"/job-detail/:id"} element={<JobDetail />} />
+
           </Route>
           <Route path='/AboutPage' element={<AboutPage />} />
           <Route path='/ContactPage' element={<ContactPage />} />

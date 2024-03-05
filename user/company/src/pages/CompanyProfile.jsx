@@ -9,8 +9,9 @@ import { Link, useParams } from "react-router-dom";
 import { companies, jobs } from "../utils/data";
 import { CustomButton, JobCard, Loading, TextInput } from "../components";
 import { handleFileUpload } from "../utils";
+import { apiRequest } from "../utils";
 
-const CompanyForm = ({ open, setOpen }) => {
+const CompnayForm = ({ open, setOpen }) => {
   const { user } = useSelector((state) => state.user);
   const {
     register,
@@ -41,7 +42,6 @@ const CompanyForm = ({ open, setOpen }) => {
       try {
         const res = await apiRequest({
           url: "companies/update-company",
-          token: user?.token,
           data: newData,
           method: "PUT",
         });
@@ -52,7 +52,7 @@ const CompanyForm = ({ open, setOpen }) => {
         } else {
           setErrMsg({ status: "success", message: res.message });
           const newData = { token: res?.token, ...res?.user };
-          dispatch(Login(newData));
+          dispatch(Login(data));
           localStorage.setItem("userInfo", JSON.stringify(data));
 
           setTimeout(() => {
@@ -157,7 +157,7 @@ const CompanyForm = ({ open, setOpen }) => {
                         About Company
                       </label>
                       <textarea
-                        className='ounded border border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-base px-4 py-2 resize-none'
+                        className='ounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none'
                         rows={4}
                         cols={6}
                         {...register("about", {
@@ -181,7 +181,7 @@ const CompanyForm = ({ open, setOpen }) => {
                     ) : (
                       <CustomButton
                         type='submit'
-                        containerStyles='inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none '
+                        containerStyles='inline-flex justify-center rounded-md border border-transparent bg-green-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#86CA16] hover:text-[#86CA16] focus:outline-none '
                         title={"Submit"}
                       />
                     )}
@@ -252,14 +252,14 @@ const CompanyProfile = () => {
                 <CustomButton
                   onClick={() => setOpenForm(true)}
                   iconRight={<FiEdit3 />}
-                  containerStyles={`py-1.5 px-3 md:px-5 focus:outline-none bg-blue-600  hover:bg-blue-700 text-white rounded text-sm md:text-base border border-blue-600`}
+                  containerStyles={`py-1.5 px-3 md:px-5 focus:outline-none bg-green-600  hover:bg-green-700 text-white rounded text-sm md:text-base border border-green-600`}
                 />
 
                 <Link to='/upload-job'>
                   <CustomButton
                     title='Upload Job'
                     iconRight={<FiUpload />}
-                    containerStyles={`text-blue-600 py-1.5 px-3 md:px-5 focus:outline-none  rounded text-sm md:text-base border border-blue-600`}
+                    containerStyles={`text-green-600 py-1.5 px-3 md:px-5 focus:outline-none  rounded text-sm md:text-base border border-green-600`}
                   />
                 </Link>
               </div>
@@ -279,7 +279,7 @@ const CompanyProfile = () => {
 
           <div className='flex flex-col items-center mt-10 md:mt-0'>
             <span className='text-xl'>{info?.jobPosts?.length}</span>
-            <p className='text-blue-600 '>Job Post</p>
+            <p className='text-green-600 '>Job Post</p>
           </div>
         </div>
       </div>
@@ -300,7 +300,7 @@ const CompanyProfile = () => {
         </div>
       </div>
 
-      <CompanyForm open={openForm} setOpen={setOpenForm} />
+      <CompnayForm open={openForm} setOpen={setOpenForm} />
     </div>
   );
 };

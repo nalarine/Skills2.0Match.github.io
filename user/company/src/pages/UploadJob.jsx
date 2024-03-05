@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CustomButton, JobCard, JobTypes, TextInput } from "../components";
 import { jobs } from "../utils/data";
 import { apiRequest } from "../utils";
+import { useSelector } from "react-redux";
 
 const UploadJob = () => {
   const { user } = useSelector((state) => state.user)
@@ -154,7 +155,7 @@ const getRecentPost = async() => {
                 Job Description
               </label>
               <textarea
-                className='rounded border border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-base px-4 py-2 resize-none'
+                className='rounded border border-gray-400 focus:outline-none focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-base px-4 py-2 resize-none'
                 rows={4}
                 cols={6}
                 {...register("desc", {
@@ -174,7 +175,7 @@ const getRecentPost = async() => {
                 Requirements
               </label>
               <textarea
-                className='rounded border border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-base px-4 py-2 resize-none'
+                className='rounded border border-gray-400 focus:outline-none focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-base px-4 py-2 resize-none'
                 rows={4}
                 cols={6}
                 {...register("requirements")}
@@ -192,7 +193,7 @@ const getRecentPost = async() => {
             ) : (
               <CustomButton
                 type='submit'
-                containerStyles='inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none '
+                containerStyles='inline-flex justify-center rounded-md border border-transparent bg-lime-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none '
                 title='Submit'
               />
             )}

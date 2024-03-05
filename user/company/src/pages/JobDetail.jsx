@@ -5,6 +5,9 @@ import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 import { jobs } from "../utils/data";
 import { CustomButton, JobCard } from "../components";
+import { useSelector } from "react-redux";
+import { apiRequest } from "../utils";
+import Loading from "../components/Loading";
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -88,7 +91,7 @@ const JobDetail = () => {
 
                 <span className='text-base'>{job?.location}</span>
 
-                <span className='text-base text-blue-600'>
+                <span className='text-base text-lime-600'>
                   {job?.company?.name}
                 </span>
 
@@ -99,7 +102,7 @@ const JobDetail = () => {
             </div>
 
             <div className=''>
-              <AiOutlineSafetyCertificate className='text-3xl text-blue-500' />
+              <AiOutlineSafetyCertificate className='text-3xl text-lime-500' />
             </div>
           </div>
 
@@ -139,7 +142,7 @@ const JobDetail = () => {
               title='Job Description'
               containerStyles={`w-full flex items-center justify-center py-3 px-5 outline-none rounded-full text-sm ${
                 selected === "0"
-                  ? "bg-black text-white"
+                  ? "bg-[#86CA16] text-white"
                   : "bg-white text-black border border-gray-300"
               }`}
             />
@@ -149,7 +152,7 @@ const JobDetail = () => {
               title='Company'
               containerStyles={`w-full flex items-center justify-center  py-3 px-5 outline-none rounded-full text-sm ${
                 selected === "1"
-                  ? "bg-black text-white"
+                  ? "bg-[#86CA16] text-white"
                   : "bg-white text-black border border-gray-300"
               }`}
             />
@@ -174,7 +177,7 @@ const JobDetail = () => {
             ) : (
               <>
                 <div className='mb-6 flex flex-col'>
-                  <p className='text-xl text-blue-600 font-semibold'>
+                  <p className='text-xl text-lime-600 font-semibold'>
                     {job?.company?.name}
                   </p>
                   <span className='text-base'>{job?.company?.location}</span>
@@ -192,7 +195,7 @@ const JobDetail = () => {
               <CustomButton
               title='Delete Post'
               onClick={handleDeletePost}
-              containerStyles={`w-full flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+              containerStyles={`w-full flex items-center justify-center text-white bg-[#B91C1C] py-3 px-5 outline-none rounded-full text-base`}
             />
             ) : (
               <CustomButton
