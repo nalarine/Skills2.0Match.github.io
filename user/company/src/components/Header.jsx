@@ -59,13 +59,13 @@ const Header = ({
           <div className='w-full flex items-center justify-around bg-white px-2 md:px-5 py-2.5 md:py-6 shadow-2xl rounded-full'>
             <SearchInput
               placeholder='Job Title or Keywords'
-              icon={<AiOutlineSearch className='text-gray-600 text-xl' />}
+              icon={<AiOutlineSearch className='text-black-600 text-xl' />}
               value={searchQuery}
               setValue={setSearchQuery}
             />
             <SearchInput
               placeholder='Add Country or City'
-              icon={<CiLocationOn className='text-gray-600 text-xl' />}
+              icon={<CiLocationOn className='text-black-600 text-xl' />}
               value={location}
               setValue={setLocation}
               styles={"hidden md:flex"}

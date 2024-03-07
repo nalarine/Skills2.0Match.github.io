@@ -10,6 +10,7 @@ import { companies, jobs } from "../utils/data";
 import { CustomButton, JobCard, Loading, TextInput } from "../components";
 import { handleFileUpload } from "../utils";
 import { apiRequest } from "../utils";
+import { Login } from "../redux/userSlice";
 
 const CompnayForm = ({ open, setOpen }) => {
   const { user } = useSelector((state) => state.user);
@@ -27,29 +28,27 @@ const CompnayForm = ({ open, setOpen }) => {
   const dispatch = useDispatch();
   const [profileImage, setProfileImage] = useState("");
   const [uploadCv, setUploadCv] = useState("");
-  const [isLoading, SetisLoading] =useState(false);
+  const [isLoading, setIsLoading] =useState(false);
   const [errMsg, setErrMsg] = useState({ status: false, message: "" });
   
   const onSubmit = async (data) => {
     setIsLoading(true);
     setErrMsg(null);  
 
-    const url = profileImage && (await handleFileUpload(profileImage));
+    const uri = profileImage && (await handleFileUpload(profileImage));
 
-      const newData = url ? {...data, profileUrl: 
-      url } : data;
+      const newData = uri ? {...data, profileUrl: uri } : data;
 
       try {
         const res = await apiRequest({
-          url: "companies/update-company",
+          url: "/companies/update-company",
+          token: user?.token,
           data: newData,
-          method: "PUT",
+          method: "PUT", 
         });
         setIsLoading(false);
 
         if (res.status === "failed") {
-          setErrMsg({ ...res });
-        } else {
           setErrMsg({ status: "success", message: res.message });
           const newData = { token: res?.token, ...res?.user };
           dispatch(Login(data));
@@ -59,6 +58,7 @@ const CompnayForm = ({ open, setOpen }) => {
             window.location.reload();
           }, 1500);
         }
+
       } catch (error) {
         console.log(error);
         setIsLoading(false);
@@ -181,7 +181,7 @@ const CompnayForm = ({ open, setOpen }) => {
                     ) : (
                       <CustomButton
                         type='submit'
-                        containerStyles='inline-flex justify-center rounded-md border border-transparent bg-green-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#86CA16] hover:text-[#86CA16] focus:outline-none '
+                        containerStyles='inline-flex justify-center rounded-md border border-transparent bg-green-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#86CA16] hover:text-white focus:outline-none '
                         title={"Submit"}
                       />
                     )}
