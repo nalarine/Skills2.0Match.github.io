@@ -110,7 +110,7 @@ const FindJobs = () => {
     <div>
       <Header
         title='Find Your Dream Job with Ease'
-        className='text-lime-300'
+        className='text-blue-500'
         type='home'
         handleClick={handleSearchSubmit}
         searchQuery={searchQuery}
