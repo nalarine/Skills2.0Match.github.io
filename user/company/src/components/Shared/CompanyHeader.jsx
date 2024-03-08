@@ -1,28 +1,25 @@
-import React from "react";
+import React from 'react';
 import { useSelector } from "react-redux";
-import { DUMMY_DATA_ABOUT } from "../lib/consts/dummy/dummy";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-const Header = () => {
-  const { user } = useSelector((state) => state.user);
-
+export default function Header() {
+  const { user } = useSelector((state) => state.user); // Ensure correct property access from state
+  // Ensure that profileUrl is fetched from user object
+  const profileUrl = user?.profileUrl || ''; // Initialize profileUrl to empty string if not available
 
   return (
     <div className="p-3">
       <div className="items-center h-28 px-5 py-5 flex flex-row pt-2 border-b border-blue gap">
         <div className="flex-1 flex flex-row gap-3">
-        {DUMMY_DATA_ABOUT.map((item, index) => (
-            <React.Fragment key={index}>
-              <div>
-                <img src={item.image} height={"72px"} width={"72px"} />
-              </div>
-              <div className="flex-1 flex flex-col py-2">
-                <span className="font-normal text-gray">Company</span>
-                <span className="font-bold text-lg">{user?.name}</span>
-              </div>
-            </React.Fragment>
-          ))}
+          <div>
+            {/* Use profileUrl fetched from user object */}
+            <img src={profileUrl} height={"72px"} width={"72px"} alt="Profile" />
+          </div>
+          <div className="flex-1 flex flex-col py-2">
+            <span className="font-normal text-gray">Company</span>
+            <span className="font-bold text-lg">{user?.name}</span>
+          </div>
         </div>
         <div className="flex items-center gap-3 p-3">
           <IoIosNotificationsOutline fontSize={36} />
@@ -36,5 +33,3 @@ const Header = () => {
     </div>
   );
 };
-
-export default Header;

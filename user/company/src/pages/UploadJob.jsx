@@ -213,7 +213,8 @@ const getRecentPost = async() => {
               logo: user?.profileUrl,
               ...job,
             };
-        return <JobCard job={data} key={index} />;
+        return <JobCard job={data} key={index} /
+        >;
         })}
         </div>
       </div>

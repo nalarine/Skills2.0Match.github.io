@@ -30,7 +30,7 @@ function MenuList({ user, onClick }) {
             </span>
           </div>
           <img
-            src={user?.profileUrl}
+            src={user.profileUrl}
             alt='user profile'
             className='w-10 h-10 rounded-full object-cover'
           />
