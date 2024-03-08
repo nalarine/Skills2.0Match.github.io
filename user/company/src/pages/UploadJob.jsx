@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import { CustomButton, JobCard, JobTypes, TextInput } from "../components";
 import { jobs } from "../utils/data";
 import { apiRequest } from "../utils";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { BsArrowLeft } from "react-icons/bs";
 
 const UploadJob = () => {
   const { user } = useSelector((state) => state.user)
@@ -71,9 +73,16 @@ const getRecentPost = async() => {
    }, []);
 
   return (
+    
     <div className='container mx-auto flex flex-col md:flex-row gap-8 2xl:gap-14 bg-[#f7fdfd] px-5'>
       <div className='w-full h-fit md:w-2/3 2xl:2/4 bg-white px-5 py-10 md:px-10 shadow-md'>
         <div>
+        <Link to="/CompanyDash" className="absolute top-0 left-0 mt-4 ml-4 flex items-center">
+          <button className="text-black text-sm bg-transparent border border-black px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
+            <BsArrowLeft className="mr-2" />
+            Back
+          </button>
+        </Link>
           <p className='text-gray-500 font-semibold text-2xl'>Job Post</p>
 
           <form

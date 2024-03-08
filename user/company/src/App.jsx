@@ -84,6 +84,7 @@ function App() {
     location.pathname.startsWith("/cjoblisting") ||
     location.pathname.startsWith("/upload-job") ||
     location.pathname.startsWith("/job-detail/") ||
+    location.pathname.startsWith("/companies") ||
     location.pathname.startsWith("/AdminDashboard");
 
 
@@ -96,6 +97,7 @@ function App() {
     location.pathname.startsWith("/company-profile") ||
     location.pathname.startsWith("/job-detail/") ||
     location.pathname.startsWith("/upload-job") ||
+    location.pathname.startsWith("/companies") ||
     location.pathname.startsWith("/AdminDashboard")
 
   );
