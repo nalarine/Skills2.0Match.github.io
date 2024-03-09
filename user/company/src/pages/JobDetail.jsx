@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Linkedin } from "../assets";
 import moment from "moment";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { jobs } from "../utils/data";
 import { CustomButton, JobCard } from "../components";
 import { useSelector } from "react-redux";
 import { apiRequest } from "../utils";
 import Loading from "../components/Loading";
+import { BsArrowLeft } from "react-icons/bs";
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -71,6 +72,13 @@ const JobDetail = () => {
     <div className='container mx-auto'>
       <div className='w-full flex flex-col md:flex-row gap-10'>
 
+        <Link to="/CompanyDash" className="absolute top-0 left-0 mt-4 ml-4 flex items-center">
+          <button className="text-black text-sm bg-transparent border border-black px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
+            <BsArrowLeft className="mr-2" />
+            Back
+          </button>
+        </Link>
+        
         {/* LEFT SIDE */}
         {isFetching ? (
           <Loading />
@@ -81,7 +89,7 @@ const JobDetail = () => {
               <img
                 src={job?.company?.profileUrl}
                 alt={job?.company?.name}
-                className='w-20 h-20 md:w-24 md:h-20 rounded'
+                className='w-20 h-20 md:w-20 md:h-20 rounded'
               />
 
               <div className='flex flex-col'>

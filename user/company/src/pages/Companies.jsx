@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CompanyCard, CustomButton, Header, ListBox } from "../components";
+import { updateURL } from "../utils";
+import Loading from "../components/Loading";
+import { apiRequest } from "../utils";
 
 
 const Companies = () => {

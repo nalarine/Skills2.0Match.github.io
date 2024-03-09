@@ -131,6 +131,9 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
+          <Link to='/companies' className='hover:hover:text-green-500'>
+            Companies
+          </Link>
           <Link to='/AboutPage' className='hover:hover:text-green-500'>
             About
           </Link>
