@@ -3,6 +3,11 @@ import objectSupport from "dayjs/plugin/objectSupport";
 import { useState } from "react";
 dayjs.extend(objectSupport);
 
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+
 export default function Schedule() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [eventDetails, setEventDetails] = useState({
@@ -229,38 +234,50 @@ export default function Schedule() {
 
   const renderEventDetailsModal = () => {
     if (!selectedEvent) return null;
-
+  
     return (
       <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-4 rounded-md w-2/3">
-          <h2 className="text-lg font-bold mb-4">Event Details</h2>
-          <div className="mb-4">
-            <div className="font-semibold">Title:</div>
-            <div>{selectedEvent.title}</div>
-          </div>
-          <div className="mb-4">
-            <div className="font-semibold">Location:</div>
-            <div>{selectedEvent.location}</div>
-          </div>
-          <div className="mb-4">
-            <div className="font-semibold">Start Time:</div>
-            <div>{selectedEvent.startTime}</div>
-          </div>
-          <div className="mb-4">
-            <div className="font-semibold">End Time:</div>
-            <div>{selectedEvent.endTime}</div>
-          </div>
-          <div className="mb-4">
-            <div className="font-semibold">Description:</div>
-            <div>{selectedEvent.description}</div>
-          </div>
-          <div className="flex justify-end">
+        <div className="bg-white p-4 rounded-md w-1/3">
+        <div className="flex justify-end">
             <button
               onClick={handleCloseModal}
-              className="bg-gray-200 text-gray-700 ml-2 px-4 py-2 rounded-md"
+              className="text-gray-700 ml-2 mb-4 rounded-md hover:text-green-700"
             >
-              Close
+              <CloseOutlinedIcon fontSize="medium"/>
             </button>
+          </div>
+          <div className="mb-4">
+            {/* Apply styles to the title */}
+            <div className="font-medium text-2xl bg-green-200 px-2 py-1 rounded-lg text-left border-4 border-l-8 border-green-200 border-l-green-500">
+              {selectedEvent.title}
+            </div>
+          </div>
+          <div className="mb-4 flex items-center">
+            <PlaceOutlinedIcon fontSize="medium" style={{ color: '#14532d' }} />
+            <div className="pl-2 text-lg">{selectedEvent.location}</div>
+            <div className="pl-2 text-lg">
+              {/* Display start time and end time inside parentheses */}
+              ({selectedEvent.startTime} - {selectedEvent.endTime})
+            </div>
+          </div>
+          <div>
+            <div className="mb-4">
+              <div className="font-semibold text-left">Description:</div>
+              <div className="text-left pt-2">{selectedEvent.description}</div>
+            </div>
+            {/* Edit and Delete button in one row */}
+            <div className="flex justify-end">
+              <button
+                className="bg-green-300 text-gray-700 ml-2 px-4 py-2 rounded-md mr-2"
+              >
+                <ModeEditOutlinedIcon />Edit
+              </button>
+              <button
+                className="bg-red-300 text-gray-700 ml-2 px-4 py-2 rounded-md"
+              >
+                <DeleteOutlineOutlinedIcon />Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
