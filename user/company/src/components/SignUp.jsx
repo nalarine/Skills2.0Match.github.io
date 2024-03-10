@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
@@ -7,8 +7,9 @@ import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
 import { apiRequest } from "../utils";
 import { Login } from "../redux/userSlice";
-import  Logo  from "../assets/header.png";
-import '../App.css'
+import Logo from "../assets/header.png";
+import GoogleIcon from "../assets/google-icon.svg"; // Import the Google icon
+import "../App.css";
 
 const SignUp = ({ open, setOpen }) => {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const SignUp = ({ open, setOpen }) => {
   const [isRegister, setIsRegister] = useState(true);
   const [accountType, setAccountType] = useState("seeker");
 
-  const [errMsg, setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState(""); // State for error message
   const {
     register,
     handleSubmit,
@@ -31,15 +32,14 @@ const SignUp = ({ open, setOpen }) => {
 
   const closeModal = () => setOpen(false);
 
-  const onSubmit = async(data) => {
-    let URL = null
-    if(isRegister) {
-      if(accountType === "seeker") {
-        URL = "auth/register"
-      }else 
-      URL = "companies/register"
+  const onSubmit = async (data) => {
+    let URL = null;
+    if (isRegister) {
+      if (accountType === "seeker") {
+        URL = "auth/register";
+      } else URL = "companies/register";
     } else {
-      if(accountType === "seeker") {
+      if (accountType === "seeker") {
         URL = "auth/login";
       } else {
         URL = "companies/login";
@@ -54,61 +54,66 @@ const SignUp = ({ open, setOpen }) => {
       });
 
       console.log(res);
-      if (res?.status === "failed") {
-        setErrMsg(res?.message);
+      if (res?.status === "falied") {
+        setErrMsg("Incorrect email or password."); // Set error message for incorrect credentials
+        alert("Incorrect email or password."); // Display alert box
       } else {
         setErrMsg("");
-        const data = { token: res?.token, ...res?.
-          user };
-          dispatch(Login(data));
-          localStorage.setItem("userInfo", JSON. 
-          stringify(data));
-          window.location.replace(from);
+        const userData = { token: res?.token, ...res?.user };
+        dispatch(Login(userData));
+        localStorage.setItem("userInfo", JSON.stringify(userData));
+        setOpen(false); // Close the dialog after successful login
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
   return (
     <>
       <Transition appear show={open || false}>
-        <Dialog as='div' className='fixed inset-0 z-50 overflow-y-aut0' onClose={closeModal}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-50 overflow-y-aut0"
+          onClose={closeModal}
+        >
           <Transition.Child
             as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
           >
-            <div className='fixed inset-0 bg-black bg-opacity-25' />
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
 
-          
-          <div className='fixed inset-0 overflow-y-auto '>
-            <div className='flex min-h-full items-center justify-center p-4 content-center '>
+          <div className="fixed inset-0 overflow-y-auto ">
+            <div className="flex min-h-full items-center justify-center p-4 content-center ">
               <Transition.Child
                 as={Fragment}
-                enter='ease-out duration-300'
-                enterFrom='opacity-0 scale-95'
-                enterTo='opacity-100 scale-100'
-                leave='ease-in duration-200'
-                leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all '>
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all ">
                   <Dialog.Title
-                    as='h3'
-                    className='flex items-center justify-center text-xl font-semibold leading-6 text-gray-900'
+                    as="h3"
+                    className="flex items-center justify-center text-xl font-semibold leading-6 text-gray-900"
                   >
-                   <img src={Logo} alt="Logo" className="h-30 w-40 mr-2 justify-items-center" />
+                    <img
+                      src={Logo}
+                      alt="Logo"
+                      className="h-30 w-40 mr-2 justify-items-center"
+                    />
                     {isRegister ? "" : ""}
                   </Dialog.Title>
 
-                  <div className='w-full flex items-center justify-center py-4 '>
+                  <div className="w-full flex items-center justify-center py-4 ">
                     <button
                       className={`flex-1 px-4 py-2 rounded text-sm outline-none ${
                         accountType === "seeker"
@@ -132,14 +137,14 @@ const SignUp = ({ open, setOpen }) => {
                   </div>
 
                   <form
-                    className='w-full flex flex-col gap-5'
+                    className="w-full flex flex-col gap-5"
                     onSubmit={handleSubmit(onSubmit)}
                   >
-                    <TextInput 
-                      name='email'
-                      label='Email Address'
-                      placeholder='email@example.com'
-                      type='email'
+                    <TextInput
+                      name="email"
+                      label="Email Address"
+                      placeholder="email@example.com"
+                      type="email"
                       register={register("email", {
                         required: "Email Address is required!",
                       })}
@@ -147,7 +152,7 @@ const SignUp = ({ open, setOpen }) => {
                     />
 
                     {isRegister && (
-                      <div className='w-full flex gap-1 md:gap-2'>
+                      <div className="w-full flex gap-1 md:gap-2">
                         <div
                           className={`${
                             accountType === "seeker" ? "w-1/2" : "w-full"
@@ -167,7 +172,7 @@ const SignUp = ({ open, setOpen }) => {
                                 ? "eg. James"
                                 : "Company name"
                             }
-                            type='text'
+                            type="text"
                             register={register(
                               accountType === "seeker" ? "firstName" : "name",
                               {
@@ -190,12 +195,12 @@ const SignUp = ({ open, setOpen }) => {
                         </div>
 
                         {accountType === "seeker" && isRegister && (
-                          <div className='w-1/2'>
+                          <div className="w-1/2">
                             <TextInput
-                              name='lastName'
-                              label='Last Name'
-                              placeholder='Wagonner' 
-                              type='text'
+                              name="lastName"
+                              label="Last Name"
+                              placeholder="Wagonner"
+                              type="text"
                               register={register("lastName", {
                                 required: "Last Name is required",
                               })}
@@ -208,13 +213,13 @@ const SignUp = ({ open, setOpen }) => {
                       </div>
                     )}
 
-                    <div className='w-full flex gap-1 md:gap-2'>
+                    <div className="w-full flex gap-1 md:gap-2">
                       <div className={`${isRegister ? "w-1/2" : "w-full"}`}>
                         <TextInput
-                          name='password'
-                          label='Password'
-                          placeholder='Password'
-                          type='password'
+                          name="password"
+                          label="Password"
+                          placeholder="Password"
+                          type="password"
                           register={register("password", {
                             required: "Password is required!",
                           })}
@@ -225,17 +230,17 @@ const SignUp = ({ open, setOpen }) => {
                       </div>
 
                       {isRegister && (
-                        <div className='w-1/2'>
+                        <div className="w-1/2">
                           <TextInput
-                            label='Confirm Password'
-                            placeholder='Password'
-                            type='password'
+                            label="Confirm Password"
+                            placeholder="Password"
+                            type="password"
                             register={register("cPassword", {
                               validate: (value) => {
                                 const { password } = getValues();
 
-                                if (password != value) {
-                                  return "Passwords do no match";
+                                if (password !== value) {
+                                  return "Passwords do not match";
                                 }
                               },
                             })}
@@ -250,32 +255,44 @@ const SignUp = ({ open, setOpen }) => {
                       )}
                     </div>
 
-                    {errMsg && (
-                      <span
-                        role='alert'
-                        className='text-sm text-red-500 mt-0.5'
-                      >
-                        {errMsg}
-                      </span>
-                    )}
-
-                    <div className='mt-2 flex items-center justify-center'>
+                    <div className="mt-2 flex items-center justify-center">
                       <CustomButton
-                       type='submit'
-                       containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
-                      title={isRegister ? "Create Account" : "Login Account"}
-                    />
-                  </div>
+                        type="submit"
+                        containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
+                        title={isRegister ? "Create Account" : "Login Account"}
+                      />
+                    </div>
+
+                    {/* Add sign up with social text and Google icon */}
+                    <div className="flex items-center justify-center mt-2">
+                      <hr className="w-24 border-gray-500" />
+                      <p className="text-base text-gray-700 mx-3">
+                        Sign up with Social
+                      </p>
+                      <hr className="w-24 border-gray-500" />
+                    </div>
+                    <div className="flex items-center justify-center mt-2">
+                      <button
+                        className="relative flex items-center bg-white text-[#14532D] font-bold rounded-full h-8 w-auto text-sm px-3 py-5 border border-[#14532D] border-opacity-100 hover:bg-[#14532D] hover:text-[#FFFFFF] focus:outline-none"
+                      >
+                        <img
+                          src={GoogleIcon}
+                          alt="Google Icon"
+                          className="w-6 h-6 mr-2"
+                        />
+                        Continue with Google
+                      </button>
+                    </div>
                   </form>
 
-                  <div className='mt-4'>
-                    <p className='text-sm text-gray-700'>
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-700">
                       {isRegister
                         ? "Already have an account?"
                         : "Do not have an account?"}
 
                       <span
-                        className='text-sm text-border-[#14532d] ml-2 hover:text-[#C1E1C1] hover:font-semibold cursor-pointer'
+                        className="text-sm text-border-[#14532d] ml-2 hover:text-[#C1E1C1] hover:font-semibold cursor-pointer"
                         onClick={() => setIsRegister((prev) => !prev)}
                       >
                         {isRegister ? "Login" : "Create Account"}
