@@ -3,28 +3,82 @@ import objectSupport from "dayjs/plugin/objectSupport";
 import { useState } from "react";
 dayjs.extend(objectSupport);
 
-// For actual event query logic, put it inside the component itself. This is just an example.
-const exampleEvents = {
-  "2023-09-01": ["The previous month"],
-  "2023-09-30": ["Example event"],
-  "2023-10-11": ["Happy birthday, Z."],
-  "2023-10-14": ["Created this calendar component", "Congrats to 400 members!"],
-  "2023-10-15": ["Example event"],
-  "2023-10-16": [
-    "Example with a lot of events",
-    "Event 2",
-    "Event 3",
-    "Event 4",
-    "Event 5",
-    "Event 6",
-  ],
-  "2023-10-27": ["Example meeting", "Two meetings in 1 day"],
-  "2023-11-01": ["All Saints Day"],
-  "2023-12-30": ["An event in the far future"],
-  "2024-01-01": ["Happy New Year!"],
-};
-
 export default function Schedule() {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [eventDetails, setEventDetails] = useState({
+    title: "",
+    location: "",
+    description: "",
+    startTime: "",
+    endTime: "",
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [exampleEvents, setExampleEvents] = useState({}); // Define initial state as an empty object
+  const [selectedEvent, setSelectedEvent] = useState(null); // New state to track selected event for detail modal
+
+  // Function to handle clicking on a day
+  const handleDayClick = (date) => {
+    setSelectedDate(date.toString());
+    setIsModalOpen(true);
+  };
+
+  // Function to handle modal close
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null); // Clear selected event when modal is closed
+  };
+
+  // Function to handle input change in modal
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEventDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+  };
+
+  // Function to handle form submission ----------------------------------------------
+  const handleSubmit = () => {
+    // Here, you can handle submitting event details
+    console.log("Event details:", eventDetails);
+
+    // Check if there's a title for the event, assuming it's required for submission
+    if (!eventDetails.title) {
+      // Alert the user to fill in the title field
+      alert("Please enter a title for the event.");
+      return; // Exit the function without closing the modal
+    }
+
+    // Update the exampleEvents object with the new event details
+    const updatedEvents = {
+      ...exampleEvents,
+      [selectedDate]: [
+        ...(exampleEvents[selectedDate] || []),
+        { ...eventDetails }, // Store a copy of eventDetails
+      ],
+    };
+
+    // Set the updated events to the state
+    setExampleEvents(updatedEvents);
+
+    // Reset eventDetails to clear the form fields
+    setEventDetails({
+      title: "",
+      location: "",
+      description: "",
+      startTime: "",
+      endTime: "",
+    });
+
+    handleCloseModal(); // Close the modal after submitting
+  };
+
+  // Function to handle click on event for displaying details
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
+
   const [month, setMonth] = useState(dayjs());
 
   const calendarDays = Array.from({ length: 42 }, (_, i) => {
@@ -75,7 +129,7 @@ export default function Schedule() {
         <div className="flex">
           <button
             onClick={() => setMonth(month.subtract(1, "month"))}
-            className="rounded-l-lg border px-2 py-1 hover:bg-blue-100"
+            className="rounded-l-lg border px-2 py-1 hover:bg-green-100"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +148,7 @@ export default function Schedule() {
           </button>
           <button
             onClick={() => setMonth(month.add(1, "month"))}
-            className="ml-[-1px] rounded-r-lg border px-2 py-1 hover:bg-blue-100"
+            className="ml-[-1px] rounded-r-lg border px-2 py-1 hover:bg-green-100"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +168,7 @@ export default function Schedule() {
 
           <button
             onClick={() => setMonth(dayjs())}
-            className="ml-4 rounded-lg border px-3 py-1 font-semibold  hover:bg-blue-100"
+            className="ml-4 rounded-lg border px-3 py-1 font-semibold  hover:bg-green-100"
           >
             Today
           </button>
@@ -141,7 +195,7 @@ export default function Schedule() {
 
   const renderEventsByDay = (events) => {
     if (!events.length) return null;
-
+  
     // Limit the number of events to be displayed (suggested 2 for UI uniformity). You can change this to whatever you want.
     const displayLimit = 2;
     if (events.length > displayLimit)
@@ -149,22 +203,68 @@ export default function Schedule() {
         ...events.slice(0, displayLimit),
         `${events.length - displayLimit} more...`,
       ];
-
+  
     return (
       <div className="mt-1 space-y-1 px-0.5 text-sm">
         {events.map((event, key) => (
-          <div className="line-clamp-1 rounded-sm bg-blue-100 px-0.5" key={key}>
-            {event}
+          <div
+            className="line-clamp-1 rounded-sm bg-emerald-500 px-0.5 cursor-pointer"
+            key={key}
+            onClick={() => handleEventClick(event)} // Add click handler to show event details
+          >
+            {/* Render event details */}
+            <div className="flex justify-between">
+              <div>
+              <div>{event.startTime}</div>
+              </div>
+              <div>
+                <div className="font-semibold text-base">{event.title}</div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
     );
-  };
+  };  
 
-  // Selects the day. You can use this to navigate to a different page.
-  // The parameter is a string in YYYY-MM-DD format.
-  const goToDay = () => {
-    alert(day);
+  const renderEventDetailsModal = () => {
+    if (!selectedEvent) return null;
+
+    return (
+      <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-4 rounded-md w-2/3">
+          <h2 className="text-lg font-bold mb-4">Event Details</h2>
+          <div className="mb-4">
+            <div className="font-semibold">Title:</div>
+            <div>{selectedEvent.title}</div>
+          </div>
+          <div className="mb-4">
+            <div className="font-semibold">Location:</div>
+            <div>{selectedEvent.location}</div>
+          </div>
+          <div className="mb-4">
+            <div className="font-semibold">Start Time:</div>
+            <div>{selectedEvent.startTime}</div>
+          </div>
+          <div className="mb-4">
+            <div className="font-semibold">End Time:</div>
+            <div>{selectedEvent.endTime}</div>
+          </div>
+          <div className="mb-4">
+            <div className="font-semibold">Description:</div>
+            <div>{selectedEvent.description}</div>
+          </div>
+          <div className="flex justify-end">
+            <button
+              onClick={handleCloseModal}
+              className="bg-gray-200 text-gray-700 ml-2 px-4 py-2 rounded-md"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -173,11 +273,11 @@ export default function Schedule() {
       <table className="mt-3 table w-full table-fixed border-collapse flex-col border">
         {renderHeaders()}
         <tbody className="table-row-group">
-          {calendarWeeks.map((day, key) => (
+          {calendarWeeks.map((week, key) => (
             <tr key={key} className="table-row">
-              {day.map((day) => (
+              {week.map((day) => (
                 <td
-                  onClick={() => goToDay(day.string)}
+                  onClick={() => handleDayClick(day.string)}
                   key={day.number}
                   className="table-cell cursor-pointer border"
                 >
@@ -190,7 +290,7 @@ export default function Schedule() {
                     <div
                       className={
                         "self-end h-7 w-7 flex items-center justify-center" +
-                        (day.isToday ? " bg-blue-300 rounded-lg" : "")
+                        (day.isToday ? " text-white font-semibold bg-green-700 rounded-lg" : "")
                       }
                     >
                       {day.number}
@@ -203,6 +303,84 @@ export default function Schedule() {
           ))}
         </tbody>
       </table>
+
+      {/* Modal for adding event */}
+      {isModalOpen && !selectedEvent && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-md w-3/5">
+            <h2 className="text-lg font-bold mb-4">Add Event</h2>
+            <div className="mb-4">
+              <input
+                type="text"
+                name="title"
+                value={eventDetails.title}
+                onChange={handleChange}
+                placeholder="Title"
+                className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                name="location"
+                value={eventDetails.location}
+                onChange={handleChange}
+                placeholder="Location"
+                className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div className="mb-4 flex justify-between">
+              <div className="w-[48%]">
+                <label htmlFor="startTime" className="block text-sm font-medium text-gray-700">Start Time</label>
+                <input
+                  type="time"
+                  name="startTime"
+                  id="startTime"
+                  value={eventDetails.startTime}
+                  onChange={handleChange}
+                  className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+              <div className="w-[48%]">
+                <label htmlFor="endTime" className="block text-sm font-medium text-gray-700">End Time</label>
+                <input
+                  type="time"
+                  name="endTime"
+                  id="endTime"
+                  value={eventDetails.endTime}
+                  onChange={handleChange}
+                  className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <textarea
+                name="description"
+                value={eventDetails.description}
+                onChange={handleChange}
+                placeholder="Description"
+                className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={handleSubmit}
+                className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-900"
+              >
+                Save
+              </button>
+              <button
+                onClick={handleCloseModal}
+                className="bg-gray-200 text-gray-700 ml-2 px-4 py-2 rounded-md"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Modal for displaying event details */}
+      {renderEventDetailsModal()}
     </div>
   );
 }
