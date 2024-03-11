@@ -18,19 +18,23 @@ export default function Schedule() {
     endTime: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [exampleEvents, setExampleEvents] = useState({}); // Define initial state as an empty object
-  const [selectedEvent, setSelectedEvent] = useState(null); // New state to track selected event for detail modal
+  const [exampleEvents, setExampleEvents] = useState({});
+  const [selectedEvent, setSelectedEvent] = useState(null); // State to store the selected event for viewing details
+  const [editingEvent, setEditingEvent] = useState(null); // State to store the event being edited
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   // Function to handle clicking on a day
   const handleDayClick = (date) => {
     setSelectedDate(date.toString());
     setIsModalOpen(true);
+    setEditingEvent(null); // Reset editingEvent state when adding a new event
   };
 
   // Function to handle modal close
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedEvent(null); // Clear selected event when modal is closed
+    setSelectedEvent(null);
+    setEditingEvent(null);
   };
 
   // Function to handle input change in modal
@@ -42,30 +46,45 @@ export default function Schedule() {
     }));
   };
 
-  // Function to handle form submission ----------------------------------------------
+  // Function to handle form submission
   const handleSubmit = () => {
     // Here, you can handle submitting event details
     console.log("Event details:", eventDetails);
-
+  
     // Check if there's a title for the event, assuming it's required for submission
     if (!eventDetails.title) {
       // Alert the user to fill in the title field
       alert("Please enter a title for the event.");
       return; // Exit the function without closing the modal
     }
-
-    // Update the exampleEvents object with the new event details
-    const updatedEvents = {
-      ...exampleEvents,
-      [selectedDate]: [
-        ...(exampleEvents[selectedDate] || []),
-        { ...eventDetails }, // Store a copy of eventDetails
-      ],
-    };
-
-    // Set the updated events to the state
-    setExampleEvents(updatedEvents);
-
+  
+    // If editing an existing event
+    if (editingEvent) {
+      // Update the exampleEvents object with the edited event details
+      const updatedEvents = {
+        ...exampleEvents,
+        [selectedDate]: exampleEvents[selectedDate].map((event) =>
+          event === editingEvent ? { ...eventDetails } : event
+        ),
+      };
+  
+      // Set the updated events to the state
+      setExampleEvents(updatedEvents);
+    } else {
+      // Adding a new event
+      // Update the exampleEvents object with the new event details
+      const updatedEvents = {
+        ...exampleEvents,
+        [selectedDate]: [
+          ...(exampleEvents[selectedDate] || []),
+          { ...eventDetails }, // Store a copy of eventDetails
+        ],
+      };
+  
+      // Set the updated events to the state
+      setExampleEvents(updatedEvents);
+    }
+  
     // Reset eventDetails to clear the form fields
     setEventDetails({
       title: "",
@@ -74,7 +93,7 @@ export default function Schedule() {
       startTime: "",
       endTime: "",
     });
-
+  
     handleCloseModal(); // Close the modal after submitting
   };
 
@@ -82,6 +101,54 @@ export default function Schedule() {
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setIsModalOpen(true);
+    setEditingEvent(null); // Reset editingEvent state when viewing event details
+  };
+
+  // Function to handle editing event
+  const handleEditEvent = (event) => {
+    setSelectedEvent(null); // Close the event details modal
+    setEditingEvent(event); // Set the event to be edited
+    setEventDetails(event); // Populate the form fields with event details for editing
+    setIsModalOpen(false); // Open the modal for editing
+  };
+
+   // Function to open the delete confirmation modal
+  const openDeleteConfirmation = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  // Function to close the delete confirmation modal
+  const closeDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  // Function to handle delete event
+  const handleDeleteEvent = () => {
+    // Open the delete confirmation modal
+    openDeleteConfirmation();
+  };
+
+  // Function to handle confirmed delete event
+  const handleConfirmDeleteEvent = () => {
+    // Close the delete confirmation modal
+    closeDeleteConfirmation();
+
+    // Create a copy of the exampleEvents object
+    const updatedEvents = { ...exampleEvents };
+
+    // Find the index of the selected event in the events array
+    const eventIndex = updatedEvents[selectedDate].findIndex(
+      (event) => event === selectedEvent
+    );
+
+    // Remove the selected event from the events array
+    updatedEvents[selectedDate].splice(eventIndex, 1);
+
+    // Set the updated events to the state
+    setExampleEvents(updatedEvents);
+
+    // Close the modal after deleting the event
+    handleCloseModal();
   };
 
   const [month, setMonth] = useState(dayjs());
@@ -233,51 +300,164 @@ export default function Schedule() {
   };  
 
   const renderEventDetailsModal = () => {
-    if (!selectedEvent) return null;
-  
-    return (
-      <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-4 rounded-md w-1/3">
-        <div className="flex justify-end">
-            <button
-              onClick={handleCloseModal}
-              className="text-gray-700 ml-2 mb-4 rounded-md hover:text-green-700"
-            >
-              <CloseOutlinedIcon fontSize="medium"/>
-            </button>
-          </div>
-          <div className="mb-4">
-            {/* Apply styles to the title */}
-            <div className="font-medium text-2xl bg-green-200 px-2 py-1 rounded-lg text-left border-4 border-l-8 border-green-200 border-l-green-500">
-              {selectedEvent.title}
+    if (editingEvent) {
+      // Editing an existing event
+      return (
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-md w-1/3">
+          <div className="flex justify-end">
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-700 ml-2 mb-4 rounded-md hover:text-green-700"
+              >
+                <CloseOutlinedIcon fontSize="medium"/>
+              </button>
             </div>
-          </div>
-          <div className="mb-4 flex items-center">
-            <PlaceOutlinedIcon fontSize="medium" style={{ color: '#14532d' }} />
-            <div className="pl-2 text-lg">{selectedEvent.location}</div>
-            <div className="pl-2 text-lg">
-              {/* Display start time and end time inside parentheses */}
-              ({selectedEvent.startTime} - {selectedEvent.endTime})
-            </div>
-          </div>
-          <div>
             <div className="mb-4">
-              <div className="font-semibold text-left">Description:</div>
-              <div className="text-left pt-2">{selectedEvent.description}</div>
+              <div className="font-medium text-2xl bg-green-200 px-2 py-1 rounded-lg text-left border-4 border-l-8 border-green-200 border-l-green-500">
+                Edit Event
+              </div>
             </div>
-            {/* Edit and Delete button in one row */}
+            <div className="mb-4">
+              <input
+                type="text"
+                name="title"
+                value={eventDetails.title}
+                onChange={handleChange}
+                placeholder="Title"
+                className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                name="location"
+                value={eventDetails.location}
+                onChange={handleChange}
+                placeholder="Location"
+                className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div className="mb-4 flex justify-between">
+              <div className="w-[48%]">
+                <label htmlFor="startTime" className="block text-sm font-medium text-gray-700">Start Time</label>
+                <input
+                  type="time"
+                  name="startTime"
+                  id="startTime"
+                  value={eventDetails.startTime}
+                  onChange={handleChange}
+                  className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+              <div className="w-[48%]">
+                <label htmlFor="endTime" className="block text-sm font-medium text-gray-700">End Time</label>
+                <input
+                  type="time"
+                  name="endTime"
+                  id="endTime"
+                  value={eventDetails.endTime}
+                  onChange={handleChange}
+                  className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <textarea
+                name="description"
+                value={eventDetails.description}
+                onChange={handleChange}
+                placeholder="Description"
+                className="border border-green-300 rounded-md p-2 w-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              />
+            </div>
             <div className="flex justify-end">
               <button
-                className="bg-green-300 text-gray-700 ml-2 px-4 py-2 rounded-md mr-2"
+                onClick={handleSubmit}
+                className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-900"
               >
-                <ModeEditOutlinedIcon />Edit
+                Update
               </button>
               <button
-                className="bg-red-300 text-gray-700 ml-2 px-4 py-2 rounded-md"
+                onClick={handleCloseModal}
+                className="bg-gray-200 text-gray-700 ml-2 px-4 py-2 rounded-md"
               >
-                <DeleteOutlineOutlinedIcon />Delete
+                Cancel
               </button>
             </div>
+          </div>
+        </div>
+      );
+    } else if (selectedEvent) {
+      // Viewing event details
+      return (
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-md w-1/3">
+          <div className="flex justify-end">
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-700 ml-2 mb-4 rounded-md hover:text-green-700"
+              >
+                <CloseOutlinedIcon fontSize="medium"/>
+              </button>
+            </div>
+            <div className="mb-4">
+              <div className="font-medium text-2xl bg-green-200 px-2 py-1 rounded-lg text-left border-4 border-l-8 border-green-200 border-l-green-500">
+                {selectedEvent.title}
+              </div>
+            </div>
+            <div className="mb-4 flex items-center">
+              <PlaceOutlinedIcon fontSize="medium" style={{ color: '#14532d' }} />
+              <div className="pl-2 text-lg">{selectedEvent.location}</div>
+              <div className="pl-2 text-lg">
+                ({selectedEvent.startTime} - {selectedEvent.endTime})
+              </div>
+            </div>
+            <div>
+              <div className="mb-4">
+                <div className="font-semibold text-left">Description:</div>
+                <div className="text-left pt-2">{selectedEvent.description}</div>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  className="bg-green-300 text-gray-700 ml-2 px-4 py-2 rounded-md"
+                  onClick={() => handleEditEvent(selectedEvent)} // Handle edit event
+                >
+                  <ModeEditOutlinedIcon />Edit
+                </button>
+                <button
+                  className="bg-red-300 text-gray-700 ml-2 px-4 py-2 rounded-md"
+                  onClick={handleDeleteEvent}
+                >
+                  <DeleteOutlineOutlinedIcon />Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const DeleteConfirmationModal = ({ closeDeleteConfirmation }) => {
+    return (
+      <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-4 rounded-md w-72">
+          <p>Are you sure you want to delete this event?</p>
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={handleConfirmDeleteEvent} // Change this line
+              className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeDeleteConfirmation}
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
+            >
+              No
+            </button>
           </div>
         </div>
       </div>
@@ -398,6 +578,10 @@ export default function Schedule() {
       )}
       {/* Modal for displaying event details */}
       {renderEventDetailsModal()}
+
+      {showDeleteConfirmation && (
+        <DeleteConfirmationModal closeDeleteConfirmation={closeDeleteConfirmation} />
+      )}
     </div>
   );
 }
