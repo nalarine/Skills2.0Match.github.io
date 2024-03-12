@@ -24,6 +24,7 @@ import Schedule from "./pages/OSY/Schedule";
 import SkillsAssessment from "./pages/OSY/SkillsAssessment";
 import JobAvailable from "./components/JobAvailable";
 import HelpCenter from "./pages/OSY/HelpCenter";
+import Settings from  "./pages/OSY/Settings";
 
 //COMPANY 
 import CompanyLayoutDash from "./components/Shared/CompanyLayoutDash";
@@ -119,28 +120,28 @@ function App() {
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-            <Route element={<Dashboard />} />
+            <Route index element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
             <Route path="my-schedule" element={<Schedule />} />
             <Route path="skills-assessment" element={<SkillsAssessment />} />
             <Route path="/user-profile" element={<UserProfile />} />
-            <Route path="settings" element={<div>Settings Page</div>} />
+            <Route path="settings" element={<Settings />} />
             <Route path="help-center" element={<HelpCenter />} />
-            <Route path="/job-available" element={<JobAvailable />} />
+            {/* <Route path="/job-available" element={<JobAvailable />} /> */}
           </Route>
           
           
 
           <Route element={<CompanyLayoutDash />}>
-            <Route index element={<CDashboard />} />
+            <Route element={<CDashboard />} />
             <Route path="CompanyDash" element={<CDashboard />} />
             <Route path="cmessages" element={<CMessages />} />
             <Route path="all-applicants" element={<AllApplicants />} />
             <Route path="schedule" element={<CSchedule />} />
             <Route path="/company-profile" element={<CompanyProfile />} />
             <Route path="cjoblisting" element={<CJobListing />} />
-            </Route>
+          </Route>
 
           <Route path='/AdminDashboard' element={<AdminDashboard><AdminDashboardHOC /></AdminDashboard>} />
           <Route path='/admin/users' element={<DashUsersHOC />} />
