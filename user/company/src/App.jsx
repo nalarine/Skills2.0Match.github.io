@@ -121,6 +121,7 @@ function App() {
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
             <Route index element={<Dashboard />} />
+            <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
             <Route path="my-schedule" element={<Schedule />} />

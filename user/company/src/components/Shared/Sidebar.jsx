@@ -14,6 +14,7 @@ const linkClasses =
 const Sidebar = () => {
   const { user } = useSelector((state) => state.user);
   const { pathname } = useLocation(); // getting current route
+  const profileUrl = user?.profileUrl || '';
 
   return (
     <div className="bg-[#C1E1C1] w-72 p-3 flex flex-col">
@@ -37,7 +38,7 @@ const Sidebar = () => {
       </div>
       <div className="flex flex-col gap-6 items-center py-5">
         <div className="flex items-center gap-4">
-          <Avatar src={user.profile_pic} alt="avatar" />
+          <Avatar src={profileUrl} alt="avatar" />
           <div>
             <Typography variant="h6">{user?.firstName}</Typography>
             <Typography variant="small" color="gray" className="font-normal">

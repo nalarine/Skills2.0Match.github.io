@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 
-const Settings = () => {
+export default function Settings() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [showPasswordAlert, setShowPasswordAlert] = useState(false);
@@ -33,7 +33,7 @@ const Settings = () => {
 
   return (
     <div>
-      <div className="font-semibold text-4xl text-left ml-8 text-green-900 underline underline-offset-8">Settings</div>
+      <div className="font-semibold text-4xl text-left ml-8 text-green-900">Settings</div>
       <div className="mt-8 ml-8 border-[6px] border-green-300 rounded-md p-4 flex items-center w-5/6">
         <div className="mr-4 text-lg">Delete Account</div>
         <button onClick={openDeleteDialog} className="bg-red-500 text-white ml-auto px-4 py-2 rounded-md ">Delete</button>
@@ -70,6 +70,4 @@ const Settings = () => {
       )}
     </div>
   );
-};
-
-export default Settings;
+}

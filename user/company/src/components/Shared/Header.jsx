@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 const Header = () => {
   const { user } = useSelector((state) => state.user);
 
+  const profileUrl = user?.profileUrl || ''; // Initialize profileUrl to empty string if not available
+
 
   return (
     <div className="p-3">
@@ -15,7 +17,7 @@ const Header = () => {
         {DUMMY_DATA_ABOUT.map((item, index) => (
             <React.Fragment key={index}>
               <div>
-                <img src={item.image} height={"72px"} width={"72px"} />
+                <img src={profileUrl} height={"72px"} width={"72px"} />
               </div>
               <div className="flex-1 flex flex-col py-2">
                 <span className="font-normal text-gray">Applicant</span>
