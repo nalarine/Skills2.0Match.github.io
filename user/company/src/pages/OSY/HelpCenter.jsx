@@ -65,7 +65,7 @@ export default function JobPortalFAQs() {
 						flex-direction: column; /* Align items vertically */
 						align-items: center; /* Center align items */
 						gap: 20px; /* Add gap between title and accordion */
-						background: url('../assets/question.png');
+						backgroundImage: url('../../assets/questions.png');
             background-size: cover;
             background-position: center;
             min-height: 100vh;

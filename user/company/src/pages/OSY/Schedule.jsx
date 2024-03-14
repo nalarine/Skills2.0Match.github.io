@@ -22,6 +22,27 @@ export default function Schedule() {
   const [selectedEvent, setSelectedEvent] = useState(null); // State to store the selected event for viewing details
   const [editingEvent, setEditingEvent] = useState(null); // State to store the event being edited
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [filterByMonth, setFilterByMonth] = useState(false);
+  const [filterByWeek, setFilterByWeek] = useState(false);
+  const [filterByDay, setFilterByDay] = useState(false);
+
+  const handleFilterByMonth = () => {
+    setFilterByMonth(!filterByMonth);
+    setFilterByWeek(false);
+    setFilterByDay(false);
+  };
+
+  const handleFilterByWeek = () => {
+    setFilterByWeek(!filterByWeek);
+    setFilterByMonth(false);
+    setFilterByDay(false);
+  };
+
+  const handleFilterByDay = () => {
+    setFilterByDay(!filterByDay);
+    setFilterByMonth(false);
+    setFilterByWeek(false);
+  };
 
   // Function to handle clicking on a day
   const handleDayClick = (date) => {
@@ -197,8 +218,9 @@ export default function Schedule() {
 
   const renderActions = () => (
     <div className="grid items-center">
-      <div className="col-start-1 row-start-1 flex justify-start">
-        <div className="flex">
+{/* Month display and filter buttons */}
+<div className="flex justify-between items-center mb-4">
+        <div>
           <button
             onClick={() => setMonth(month.subtract(1, "month"))}
             className="rounded-l-lg border px-2 py-1 hover:bg-green-100"
@@ -245,11 +267,30 @@ export default function Schedule() {
             Today
           </button>
         </div>
-      </div>
-      <div className="pointer-events-none col-start-1 row-start-1 flex justify-center text-lg">
-        {month.format("MMMM YYYY")}
-      </div>
-      <div className="pointer-events-none  col-start-1 row-start-1 flex justify-end"></div>
+        <div className="pointer-events-none text-lg">
+          {month.format("MMMM YYYY")}
+        </div>
+        <div>
+          <button
+            onClick={handleFilterByMonth}
+            className={`bg-gray-200 text-gray-700 px-4 py-2 rounded-md ${filterByMonth ? 'bg-green-300' : ''}`}
+          >
+            Month
+          </button>
+          <button
+            onClick={handleFilterByWeek}
+            className={`bg-gray-200 text-gray-700 px-4 py-2 rounded-md ${filterByWeek ? 'bg-green-300' : ''}`}
+          >
+            Week
+          </button>
+          <button
+            onClick={handleFilterByDay}
+            className={`bg-gray-200 text-gray-700 px-4 py-2 rounded-md ${filterByDay ? 'bg-green-300' : ''}`}
+          >
+            Day
+          </button>
+        </div>
+    </div>
     </div>
   );
 
@@ -575,7 +616,7 @@ export default function Schedule() {
             </div>
           </div>
         </div>
-      )}
+      )}	
       {/* Modal for displaying event details */}
       {renderEventDetailsModal()}
 
