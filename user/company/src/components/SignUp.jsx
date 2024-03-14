@@ -1,29 +1,31 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, Navigate } from "react-router-dom"; // Import Navigate
 import { useDispatch } from "react-redux";
 import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
 import { apiRequest } from "../utils";
 import { Login } from "../redux/userSlice";
 import Logo from "../assets/header.png";
-import GoogleIcon from "../assets/google-icon.svg"; // Import the Google icon
+import GoogleIcon from "../assets/google-icon.svg";
+import { auth, provider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
 import "../App.css";
 
 const SignUp = ({ open, setOpen }) => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [isRegister, setIsRegister] = useState(true);
   const [accountType, setAccountType] = useState("seeker");
-
   const [errMsg, setErrMsg] = useState(""); // State for error message
+  const [value, setValue] = useState("");
   const {
     register,
     handleSubmit,
     getValues,
-    watch,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -31,6 +33,22 @@ const SignUp = ({ open, setOpen }) => {
   let from = location.state?.from?.pathname || "/";
 
   const closeModal = () => setOpen(false);
+
+  const handleClick = () => {
+    signInWithPopup(auth, provider)
+      .then((data) => {
+        setValue(data.user.email);
+        localStorage.setItem("email", data.user.email);
+        navigate(accountType === "seeker" ? "/Dashboard" : "/CompanyDash"); // Navigate to the appropriate route
+      })
+      .catch((error) => {
+        console.error("Google Sign-in Error:", error);
+      });
+  };
+
+  useEffect(() => {
+    setValue(localStorage.getItem("email"));
+  });
 
   const onSubmit = async (data) => {
     let URL = null;
@@ -54,15 +72,15 @@ const SignUp = ({ open, setOpen }) => {
       });
 
       console.log(res);
-      if (res?.status === "falied") {
-        setErrMsg("Incorrect email or password."); // Set error message for incorrect credentials
-        alert("Incorrect email or password."); // Display alert box
+      if (res?.status === "failed") {
+        setErrMsg("Incorrect email or password.");
+        alert("Incorrect email or password.");
       } else {
         setErrMsg("");
         const userData = { token: res?.token, ...res?.user };
         dispatch(Login(userData));
         localStorage.setItem("userInfo", JSON.stringify(userData));
-        setOpen(false); // Close the dialog after successful login
+        setOpen(false);
       }
     } catch (error) {
       console.log(error);
@@ -274,6 +292,7 @@ const SignUp = ({ open, setOpen }) => {
                     <div className="flex items-center justify-center mt-2">
                       <button
                         className="relative flex items-center bg-white text-[#14532D] font-bold rounded-full h-8 w-auto text-sm px-3 py-5 border border-[#14532D] border-opacity-100 hover:bg-[#14532D] hover:text-[#FFFFFF] focus:outline-none"
+                        onClick={handleClick}
                       >
                         <img
                           src={GoogleIcon}
@@ -310,3 +329,4 @@ const SignUp = ({ open, setOpen }) => {
 };
 
 export default SignUp;
+

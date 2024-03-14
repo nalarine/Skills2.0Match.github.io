@@ -8,7 +8,10 @@ const Header = () => {
   const { user } = useSelector((state) => state.user);
 
   const profileUrl = user?.profileUrl || ''; // Initialize profileUrl to empty string if not available
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
   return (
     <div className="p-3">

@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { HiLocationMarker } from "react-icons/hi";
 import { AiOutlineMail } from "react-icons/ai";
 import { FiPhoneCall } from "react-icons/fi";
-import { CustomButton, TextInput } from "../components";
-import { apiRequest } from "../utils";
+import { CustomButton, TextInput, Loading } from "../components";
 import { handleFileUpload } from "../utils";
+import { apiRequest } from "../utils";
+import { Login } from "../redux/userSlice";
 
 const UserForm = ({ open, setOpen }) => {
   const { user } = useSelector((state) => state.user);
@@ -29,9 +30,9 @@ const UserForm = ({ open, setOpen }) => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const url = profileImage && (await handleFileUpload(profileImage));
+      const uri = profileImage && (await handleFileUpload(profileImage));
 
-      const newData = url ? { ...data, profileUrl: url } : data;
+      const newData = uri ? { ...data, profileUrl: uri } : data;
       
       const res = await apiRequest({
         url: "/users/update-user",
@@ -42,7 +43,7 @@ const UserForm = ({ open, setOpen }) => {
 
       if (res) {
         const newData = { token: res?.token, ...res?.user };
-        dispatch(Login(newData));
+        dispatch(Login(res));
         localStorage.setItem("userInfo", JSON.stringify(res));
         window.location.reload();
       }
@@ -191,7 +192,7 @@ const UserForm = ({ open, setOpen }) => {
                         About
                       </label>
                       <textarea
-                        className='ounded border border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-base px-4 py-2 resize-none'
+                        className='rounded border border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-base px-4 py-2 resize-none'
                         rows={4}
                         cols={6}
                         {...register("about", {
@@ -275,7 +276,7 @@ const UserProfile = () => {
 
             <div className='w-full md:w-1/3 h-44'>
               <img
-                src={userInfo?.profileUrl || NoProfile}
+                src={userInfo?.profileUrl || userInfo?.NoProfile}
                 alt={userInfo?.firstName}
                 className='w-full h-48 object-contain rounded-lg'
               />
