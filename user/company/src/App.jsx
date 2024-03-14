@@ -23,11 +23,8 @@ import AllApplication from "./pages/OSY/AllApplication";
 import Schedule from "./pages/OSY/Schedule";
 import SkillsAssessment from "./pages/OSY/SkillsAssessment";
 import JobAvailable from "./components/JobAvailable";
-<<<<<<< Updated upstream
 import HelpCenter from "./pages/OSY/HelpCenter";
 import Settings from  "./pages/OSY/Settings";
-=======
->>>>>>> Stashed changes
 
 //COMPANY 
 import CompanyLayoutDash from "./components/Shared/CompanyLayoutDash";
@@ -58,7 +55,11 @@ function Layout() {
   const { user } = useSelector((state) => state.user);
   const location = useLocation();
 
-    return <Outlet />;
+  return user?.token ? (
+    <Outlet />
+  ) : (
+    <Navigate to='/user-auth' state={{ from: location }} replace />
+  );
   }
   
 function App() {
@@ -90,7 +91,6 @@ function App() {
 
   const hideExtraComponents = user && (
     location.pathname === "/" || 
-    location.pathname.startsWith("/Dashboard") ||
     location.pathname.startsWith("/AboutPage") ||
     location.pathname.startsWith("/About") ||
     location.pathname.startsWith("/ContactPage") ||
@@ -121,32 +121,22 @@ function App() {
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
             <Route index element={<Dashboard />} />
-<<<<<<< Updated upstream
             <Route path="Dashboard" element={<Dashboard />} />
-=======
-            <Route path="/Dashboard" element={<Dashboard />} />
->>>>>>> Stashed changes
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
             <Route path="my-schedule" element={<Schedule />} />
             <Route path="skills-assessment" element={<SkillsAssessment />} />
             <Route path="/user-profile" element={<UserProfile />} />
-<<<<<<< Updated upstream
             <Route path="settings" element={<Settings />} />
             <Route path="help-center" element={<HelpCenter />} />
             {/* <Route path="/job-available" element={<JobAvailable />} /> */}
-=======
->>>>>>> Stashed changes
           </Route>
           
-    
+          
+
           <Route element={<CompanyLayoutDash />}>
             <Route element={<CDashboard />} />
-<<<<<<< Updated upstream
             <Route path="CompanyDash" element={<CDashboard />} />
-=======
-            <Route path="/CompanyDash" element={<CDashboard />} />
->>>>>>> Stashed changes
             <Route path="cmessages" element={<CMessages />} />
             <Route path="all-applicants" element={<AllApplicants />} />
             <Route path="schedule" element={<CSchedule />} />
