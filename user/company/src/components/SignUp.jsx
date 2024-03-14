@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate, Navigate } from "react-router-dom"; // Import Navigate
+import { useLocation, useNavigate } from "react-router-dom"; // Import Navigate
 import { useDispatch } from "react-redux";
 import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
