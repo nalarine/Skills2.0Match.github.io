@@ -10,14 +10,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Logout } from '../redux/userSlice';
 import { RiAdminLine } from "react-icons/ri";
 import logohead from '../assets/header.png'; // Adjust the path to your logo image
-
+import SignUp from "./SignUp";
 
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(Logout());
   };
-
+  
   return (
     <Menu as='div' className='inline-block text-left'>
       <div className='flex items-center'>
@@ -98,6 +98,11 @@ const Navbar = () => {
   const { user } = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false); 
+
+  const handleSignInRegister = () => {
+    setOpen(true); 
+  };
 
   const handleCloseNavbar = () => {
     setIsOpen((prev) => !prev);
@@ -143,12 +148,12 @@ const Navbar = () => {
           </Link>
           <div className='hidden lg:block'>
             {!user?.token ? (
-              <Link to='/SignUp'>
-              <CustomButton
-                title='Sign-in'
-                containerStyles='border border-green-500 text-green-500 px-4 py-2 rounded-full hover:bg-green-500 hover:text-white'
-              />
-              </Link>
+              <button onClick={handleSignInRegister}>
+                <CustomButton
+                  title='Sign-in'
+                  containerStyles='border border-green-500 text-green-500 px-4 py-2 rounded-full hover:bg-green-500 hover:text-white'
+                />
+              </button>
             ) : (
               <div>
                 <MenuList user={user} />
@@ -157,12 +162,12 @@ const Navbar = () => {
           </div>
           <div className='hidden lg:block'>
             {!user?.token ? (
-              <Link to='/SignUp'>
+              <button onClick={handleSignInRegister}>
                 <CustomButton
                   title='Register'
                   containerStyles='border border-green-500 px-4 py-2 rounded-full bg-green-500 text-white'
                 />
-              </Link>
+              </button>
             ) : null}
           </div>
         </div>
@@ -189,12 +194,12 @@ const Navbar = () => {
         </Link>
         <div className='w-full py-10'>
           {!user?.token ? (
-            <Link to='/SignUp'>
+            <button onClick={handleSignInRegister}>
               <CustomButton
                 title='Sign In'
                 containerStyles='text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600'
               />
-            </Link>
+            </button>
           ) : (
             <div>
               <MenuList user={user} onClick={handleCloseNavbar} />
@@ -202,6 +207,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      {open && <SignUp open={open} setOpen={setOpen} />}
     </>
   );
 };
