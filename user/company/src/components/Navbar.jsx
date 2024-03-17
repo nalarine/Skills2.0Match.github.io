@@ -72,7 +72,7 @@ function MenuList({ user, onClick }) {
                 </button>
               )}
             </Menu.Item>
-            <Menu.Item>
+            {/* <Menu.Item>
                 {({ active }) => (
                   <Link
                       to="/AdminDashboard"
@@ -86,7 +86,7 @@ function MenuList({ user, onClick }) {
                   </Link>
 
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
           </div>
         </Menu.Items>
       </Transition>

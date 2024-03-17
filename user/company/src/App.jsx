@@ -58,11 +58,15 @@ function Layout() {
   return <Outlet />;
   }
 
+  function App() {
+    const { user } = useSelector((state) => state.user);
+    const location = useLocation();
   
-function App() {
-  const { user } = useSelector((state) => state.user);
-  const location = useLocation();
-
+    // Redirect to user-auth if the user is not logged in
+    if (!user) {
+      return <Navigate to="/user-auth" replace />;
+    }
+  
   const hideNavbar =
     location.pathname === "/" || 
     location.pathname.startsWith("/Dashboard") ||
@@ -117,7 +121,20 @@ function App() {
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-            <Route index element={<Dashboard />} />
+          <Route
+            path="/"
+            element={
+              user ? (
+                user.accountType === "seeker" ? (
+                  <Navigate to="/Dashboard" replace={true} />
+                ) : (
+                  <Navigate to="/CompanyDash" replace={true} />
+                )
+              ) : (
+                <Navigate to="/user-auth" replace={true} />
+              )
+            }
+          />
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
