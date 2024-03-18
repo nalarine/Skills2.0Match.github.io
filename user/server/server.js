@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import mongoose from "mongoose";
 
 import xss from "xss-clean";
 import mongoSanitize from "express-mongo-sanitize";
@@ -19,6 +20,26 @@ const PORT = process.env.PORT || 8800;
 
 // MONGODB CONNECTION
 dbConnection();
+
+// Define MongoDB connection string
+const mongoConnectionString = process.env.MONGODB_URL;
+
+// MongoDB connection
+dbConnection();
+
+mongoose.connect(mongoConnectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Define Mongoose schema
+const contactSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  email: String,
+  mobileNumber: String,
+  message: String,
+});
 
 // middlenames
 app.use(cors());
@@ -39,3 +60,20 @@ app.use(errorMiddleware);
 app.listen(PORT, () => {
   console.log(`Dev Server running on port: ${PORT}`);
 });
+
+const Contact = mongoose.model("Contact", contactSchema);
+
+// Define POST route for saving contacts
+app.post("/api-v1/contacts", async (req, res) => {
+  try {
+    const newContact = new Contact(req.body);
+    await newContact.save();
+    console.log("Contact saved to MongoDB:", newContact);
+    res.status(201).json(newContact);
+  } catch (error) {
+    console.error("Error saving contact to MongoDB:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
