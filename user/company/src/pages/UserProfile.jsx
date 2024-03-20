@@ -31,7 +31,7 @@ const UserForm = ({ open, setOpen }) => {
     setIsSubmitting(true);
     try {
       const uri = profileImage && (await handleFileUpload(profileImage));
-
+  
       const newData = uri ? { ...data, profileUrl: uri } : data;
       
       const res = await apiRequest({
@@ -40,12 +40,11 @@ const UserForm = ({ open, setOpen }) => {
         data: newData,
         method: "PUT",
       });
-
+  
       if (res) {
-        const newData = { token: res?.token, ...res?.user };
-        dispatch(Login(res));
-        localStorage.setItem("userInfo", JSON.stringify(res));
-        window.location.reload();
+        const updatedUserInfo = { token: res?.token, ...res?.user };
+        dispatch(Login(updatedUserInfo)); // Update user state in Redux store
+        setOpen(false); // Close the modal after successful update
       }
       setIsSubmitting(false);
     } catch (error) {
