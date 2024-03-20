@@ -91,12 +91,11 @@ export default function Schedule() {
       allDay: false
     };
   
-    setEvents([...events, newEvent]);
+    setEvents(prevEvents => [...prevEvents, newEvent]); // Use a function to update state based on previous state
     setOpenAddEventModal(false);
   };
-
+  
   const handleEventEditSave = () => {
-    // Update the selected event with the new details
     const updatedSelectedEvent = {
       ...selectedEvent,
       title: title,
@@ -107,64 +106,71 @@ export default function Schedule() {
       },
       start: new Date(selectedDate.setHours(startTime.split(":")[0], startTime.split(":")[1])),
       end: new Date(selectedDate.setHours(endTime.split(":")[0], endTime.split(":")[1])),
+      allDay: false
     };
   
-    // Update the selected event state
+    // Update the selectedEvent state
     setSelectedEvent(updatedSelectedEvent);
   
-    // Update the events state with the modified event object
+    // Update the events array in the state
     const updatedEvents = events.map((event) => {
-      if (event === selectedEvent) {
-        return updatedSelectedEvent; // Replace the old event with the updated one
+      if (
+        event.title === selectedEvent.title &&
+        event.start.getTime() === selectedEvent.start.getTime() &&
+        event.end.getTime() === selectedEvent.end.getTime()
+      ) {
+        return updatedSelectedEvent;
       }
       return event;
     });
   
-    // Update the events state
+    // Update the state with the updated events array
     setEvents(updatedEvents);
   
     // Close the edit event modal
     setOpenEditEventModal(false);
-  };
-   
-  const handleEventCancel = () => {
     setOpenAddEventModal(false);
     setOpenEventDetailsModal(false);
+  };
+
+  const handleDeleteConfirmed = () => {
+    const updatedEvents = events.filter(event => event.title !== selectedEvent.title);
+    setEvents(prevEvents => updatedEvents); // Update state based on previous state
+    setOpenEventDetailsModal(false);
+    setOpenConfirmationDialog(false);
+  };
+  
+  const handleDeleteCancelled = () => {
+    setOpenConfirmationDialog(false);
+  };  
+
+  const handleEventCancel = () => {
+    setOpenAddEventModal(false);
     setOpenEditEventModal(false);
+    setOpenEventDetailsModal(false);
   };
 
   const handleDeleteEvent = () => {
     setOpenConfirmationDialog(true);
   };
 
-  const handleDeleteConfirmed = () => {
-    const updatedEvents = events.filter(event => event.title !== selectedEvent.title);
-    setEvents(updatedEvents);
-    setOpenEventDetailsModal(false);
-    setOpenConfirmationDialog(false);
-  };
-
-  const handleDeleteCancelled = () => {
-    setOpenConfirmationDialog(false);
-  };
-
   return (
     <div>
       <style>{calendarStyles}</style>
       <FullCalendar
-      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-      initialView="dayGridMonth"
-      headerToolbar={{
-        start: "today prev,next",
-        center: "title",
-        end: "dayGridMonth,timeGridWeek,timeGridDay"
-      }}
-      height="90vh"
-      themeSystem="standard"
-      events={events} // Pass the updated events array
-      dateClick={handleDateClick}
-      eventClick={handleEventClick}
-    />
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        headerToolbar={{
+          start: "today prev,next",
+          center: "title",
+          end: "dayGridMonth,timeGridWeek,timeGridDay"
+        }}
+        height="90vh"
+        themeSystem="standard"
+        events={events} // Pass the updated events array
+        dateClick={handleDateClick}
+        eventClick={handleEventClick}
+      />
       <Modal open={openAddEventModal} onClose={handleEventCancel}>
         <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", bgcolor: "background.paper", boxShadow: 24, p: 4, minWidth: 400 }}>
           <Typography variant="h6" gutterBottom style={{ marginBottom: "25px", fontSize: "30px", fontWeight: "bold" }}>
