@@ -121,8 +121,8 @@ export const updateJob = async (req, res, next) => {
 
 export const getJobPosts = async (req, res, next) => {
   try {
-    const { search, sort, location, jtype, exp } = req.query;
-    const types = jtype?.split(","); //full-time,part-time
+    const { search, sort, location, jType, exp } = req.query;
+    const types = jType?.split(","); //full-time,part-time
     const experience = exp?.split("-"); //2-6
 
     let queryObject = {};
@@ -131,7 +131,7 @@ export const getJobPosts = async (req, res, next) => {
       queryObject.location = { $regex: location, $options: "i" };
     }
 
-    if (jtype) {
+    if (jType) {
       queryObject.jobType = { $in: types };
     }
 
