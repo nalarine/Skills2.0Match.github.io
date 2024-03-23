@@ -293,7 +293,7 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
                         About
                       </label>
                       <textarea
-                        className='rounded border border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-base px-4 py-2 resize-none'
+                        className='rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none'
                         rows={4}
                         cols={6}
                         {...register("about", {

@@ -70,7 +70,7 @@ const SignUp = ({ open, setOpen }) => {
         data: data,
         method: "POST",
       });
-
+    
       console.log(res);
       if (res?.status === "failed") {
         setErrMsg("Incorrect email or password.");
@@ -83,6 +83,21 @@ const SignUp = ({ open, setOpen }) => {
         setOpen(false);
       }
     } catch (error) {
+      if (error.response && error.response.status === 400) {
+        // Mongoose validation error occurred
+        if (error.response.data && error.response.data.errors && error.response.data.errors.password) {
+          setErrMsg(error.response.data.errors.password.message);
+          alert(error.response.data.errors.password.message);
+        } else {
+          setErrMsg("Validation error occurred.");
+          alert("Validation error occurred.");
+        }
+      } else {
+        // Other errors
+        setErrMsg("An error occurred.");
+        alert("An error occurred.");
+      }
+    } {
       console.log(error);
     }
   };

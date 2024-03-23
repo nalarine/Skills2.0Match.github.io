@@ -110,7 +110,7 @@ const getRecentPost = async() => {
               <div className='w-1/2'>
                 <TextInput
                   name='salary'
-                  label='Salary (USD)'
+                  label='Salary (PHP)'
                   placeholder='eg. 1500'
                   type='number'
                   register={register("salary", {

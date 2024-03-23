@@ -24,6 +24,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is Required!"],
       minlength: [6, "Password length should be greater than 6 character"],
+      validate: {
+        validator: function(value) {
+          // Password should have at least one digit, one special character, and one uppercase letter
+          return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{6,}$/.test(value);
+        },
+        message: props => `${props.value} is not a valid password. It should contain at least one digit, one special character, and one uppercase letter.`
+      },
       select: true,
     },
     accountType: { type: String, default: "seeker" },
