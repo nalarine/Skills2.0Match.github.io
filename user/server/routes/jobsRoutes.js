@@ -19,6 +19,7 @@ router.put("/update-job/:jobId", userAuth, updateJob);
 // GET JOB POST
 router.get("/find-jobs", getJobPosts);
 router.get("/get-job-detail/:id", getJobById);
+router.get("/job-available", getJobPosts);
 
 // DELETE JOB POST
 router.delete("/delete-job/:id", userAuth, deleteJobPost);

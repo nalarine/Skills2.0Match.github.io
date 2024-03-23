@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Avatar, Typography } from "@material-tailwind/react";
 import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
@@ -8,6 +8,9 @@ import {
   COMPANY_DASHBOARD_SIDEBAR_BOTTOM_LINKS,
 } from "../lib/consts/companynavigation";
 
+import { Logout } from "../../redux/userSlice"
+import { AiOutlineLogout } from 'react-icons/ai';
+
 const linkClasses =
   "flex items-center gap-2 font-regular px-3 py-2 hover:bg-light-yellow hover:no-underline rounded-sm text-base";
 
@@ -15,6 +18,10 @@ const CompanySidebar = () => {
   const { user } = useSelector((state) => state.user);
   const { pathname } = useLocation(); // getting current route
   const profileUrl = user?.profileUrl || '';
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(Logout());
+  };
 
   return (
     <div className="bg-[#C1E1C1] w-72 p-3 flex flex-col">
@@ -46,6 +53,13 @@ const CompanySidebar = () => {
             </Typography>
           </div>
         </div>
+        <button
+            onClick={handleLogout}
+            className="group flex items-center rounded-md text-sm text-gray-900 hover:bg-green-500 hover:text-white p-2"
+        >
+            <AiOutlineLogout className="text-gray-600 mr-2 h-5 w-5" aria-hidden="true" />
+            Log Out
+        </button>
       </div>
     </div>
   );

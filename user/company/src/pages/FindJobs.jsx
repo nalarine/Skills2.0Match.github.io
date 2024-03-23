@@ -193,6 +193,7 @@ const FindJobs = () => {
           </div>
 
           <div className='w-full flex flex-wrap gap-4'>
+            
             {data?.map((job, index) => {
               const newJob = {
                 name: job?.company?.name,
