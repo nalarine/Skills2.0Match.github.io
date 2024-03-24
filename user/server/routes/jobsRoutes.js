@@ -25,6 +25,7 @@ router.get("/alljobs", allJobs);
 router.get("/job-available", getJobPosts);
 
 router.get("/get-job-detail/:id", getJobById);
+router.get("/job-available", getJobPosts);
 
 // DELETE JOB POST
 router.delete("/delete-job/:id", userAuth, deleteJobPost);
