@@ -9,11 +9,16 @@ import { useSelector } from "react-redux";
 import { apiRequest } from "../utils";
 import Loading from "../components/Loading";
 import { BsArrowLeft } from "react-icons/bs";
+import Modal from "react-modal";
 
 const JobDetail = () => {
   const { id } = useParams();
 
   const { user } = useSelector((state) => state.user);
+
+  const userInfo = user;
+
+  const [isShowModal, setShowModal] = useState(false);
 
   const [job, setJob] = useState(null);
   const [similarJobs, setSimilarJobs] = useState([]);
@@ -40,6 +45,7 @@ const JobDetail = () => {
     }
   };
 
+
   const handleDeletePost = async () => { 
     setIsFetching(true);
   try {
@@ -61,6 +67,21 @@ const JobDetail = () => {
       setIsFetching(false);
       console.log(error);
     }
+  };
+
+  const handleSubmit = () => {
+    alert("success");
+    console.log(job)
+    toggleModal();
+  }
+
+  // function for modal
+  const toggleModal = () => {
+    setShowModal(!isShowModal);
+  };
+
+  const modalApplyNow= () => {
+    toggleModal();
   };
 
   useEffect(() => {
@@ -208,9 +229,51 @@ const JobDetail = () => {
             ) : (
               <CustomButton
               title='Apply Now'
+              onClick={modalApplyNow}
               containerStyles={`w-full flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
             />
              )}
+
+            <Modal
+              isOpen={isShowModal}
+              onRequestClose={toggleModal}
+              className="fixed inset-0 z-50 overflow-y-auto"
+              overlayClassName="fixed inset-0 custom-overlay"
+            >
+              <div className="flex flex-col items-center justify-center min-h-screen">
+                <div className="bg-white p-10 rounded-lg shadow-md w-1/4 relative items-center">
+                    <h1 className="text-3xl font-bold mb-10">Details</h1>
+                    <p className="block text-lg font-medium">Name: </p>
+                    <p className="mb-4">{userInfo.firstName + " " + userInfo.lastName}</p>
+
+                    <p className="block text-lg font-medium">E-mail: </p>
+                    <p className="mb-4">{userInfo.email}</p>
+
+                    <p className="block text-lg font-medium">Location: </p>
+                    <p className="mb-4">{userInfo.location}</p>
+
+                    <p className="block text-lg font-medium">Job Title: </p>
+                    <p className="mb-4">{userInfo.jobTitle}</p>
+
+                    <p className="block text-lg font-medium">Attach Resume</p>
+                    <input type="file" class="block mb-12 w-full text-sm text-slate-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        hover:file:bg-violet-100"
+                    />
+                    <div className="flex justify-between">
+                        <button
+                            type="submit"
+                            onClick={handleSubmit}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+                        >
+                            Submit
+                        </button>
+                    </div>
+                </div>
+              </div>
+            </Modal>
           </div>
         </div>
         )}
