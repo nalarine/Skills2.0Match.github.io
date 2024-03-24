@@ -28,9 +28,9 @@ const AdminDashboard = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Box sx={{ display: 'flex', backgroundColor: '#e7e8ea' }}> {/* Add a flex display for the layout */}
+            <Box sx={{ display: 'flex', backgroundColor: '#14532d' }}> {/* Change the background color */}
                 <SidebarAdm /> {/* Render the SidebarAdm component */}
-                <Box sx={{ flexGrow: 1 }}> {/* Add flexGrow for the main content */}
+                <Box sx={{ flexGrow: 1, paddingBottom: 9 }}> {/* Add flexGrow for the main content and paddingBottom to remove white space */}
                     <Box sx={{ p: 3 }}>
                         <Typography variant="h4" className="text-black pb-3">
                         Admin Dashboard

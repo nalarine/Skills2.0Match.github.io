@@ -8,7 +8,6 @@ const AdLayout = (Component) => ({ ...props }) => {
             <div className="flex min-h-screen">
                 <SidebarAdm />
                 <div className="w-full bg-green-700">
-                    <HeaderTop />
                     <div className="p-3">
                         <Component {...props} />
                     </div>

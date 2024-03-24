@@ -8,6 +8,7 @@ import {
   register,
   signIn,
   updateCompanyProfile,
+  allCompanies,
 } from "../controllers/companiesController.js";
 import userAuth from "../middlewares/authMiddleware.js";
 
@@ -32,6 +33,7 @@ router.post("/get-company-profile", userAuth, getCompanyProfile);
 router.post("/get-company-joblisting", userAuth, getCompanyJobListing);
 router.get("/", getCompanies);
 router.get("/get-company/:id", getCompanyById);
+router.get("/allcompanies", allCompanies);
 
 // UPDATE DATA
 router.put("/update-company", userAuth, updateCompanyProfile);

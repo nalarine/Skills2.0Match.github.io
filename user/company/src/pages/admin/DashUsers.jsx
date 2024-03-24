@@ -1,113 +1,87 @@
-import React, { useEffect } from 'react'
-import { Box, Button, Paper, Typography } from '@mui/material'
-import { DataGrid, gridClasses, GridToolbar } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add';
-import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment'
-
+import React, { useState, useEffect } from "react";
+import { DataGrid } from "@mui/x-data-grid"; // Import DataGrid from MUI
+import { apiRequest } from "../../utils/index";
 
 const DashUsers = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await apiRequest({
+          url: "/users/allusers",
+          method: "GET",
+        });
+        console.log("API Response:", response); // Log the response
+        const modifiedUsers = response.data.users.map(user => ({ ...user, id: user._id })); // Add id property
+        setUsers(modifiedUsers); // Set modified users array with id property
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setLoading(false);
+      }
+    };
 
-    const { users, loading } = useSelector(state => state.allUsers);
-    let data = [];
-    data = (users !== undefined && users.length > 0) ? users : []
+    fetchUsers();
+  }, []);
 
-    const deleteUserById = (e, id) => {
-        console.log(id);
-    }
+  // Define columns for the DataGrid
+  const columns = [
+    { field: "id", headerName: "ID", width: 150 },
+    { field: "firstName", headerName: "First Name", width: 200 },
+    { field: "lastName", headerName: "Last Name", width: 170 },
+    { field: "email", headerName: "Email", width: 230 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: params => (
+        <div>
+          <button style={{ marginRight: 5, backgroundColor: 'blue', color: 'white', border: 'none', borderRadius: 5, padding: '5px 10px', cursor: 'pointer' }}>Edit</button>
+          <button style={{ backgroundColor: 'red', color: 'white', border: 'none', borderRadius: 5, padding: '5px 10px', cursor: 'pointer' }}>Delete</button>
+        </div>
+      ),
+    },
+  ];
 
-    const columns = [
+  // Apply font family to all text
+  const style = {
+    fontFamily: "Poppins, sans-serif",
+    backgroundColor: "white",
+  };
 
-        {
-            field: '_id',
-            headerName: 'User ID',
-            width: 150,
-            editable: true,
-        },
+  // Center the grid on the page
+  const centerStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+  };
 
-        {
-            field: 'email',
-            headerName: 'E_mail',
-            width: 150,
-        },
+  return (
+    <div style={centerStyle}>
+      <div style={{ width: "90%" }}>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <DataGrid
+            rows={users}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            checkboxSelection
+            components={{
+              header: {
+                cell: () => null,
+              },
+            }}
+            style={{ ...style, height: 600 }}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 
-        {
-            field: 'role',
-            headerName: 'User status',
-            width: 150,
-            renderCell: (params) => (
-                params.row.role === 1 ? "Admin" : "Regular user"
-            )
-        },
-
-        {
-            field: 'createdAt',
-            headerName: 'Creation date',
-            width: 150,
-            renderCell: (params) => (
-                moment(params.row.createdAt).format('YYYY-MM-DD HH:MM:SS')
-            )
-        },
-
-        {
-            field: "Actions",
-            width: 200,
-            renderCell: (values) => (
-                <Box sx={{ display: "flex", justifyContent: "space-between", width: "170px" }}>
-                    <Button variant="contained"><Link style={{ color: "white", textDecoration: "none" }} to={`/admin/edit/user/${values.row._id}`}>Edit</Link></ Button>
-                    < Button onClick={(e) => deleteUserById(e, values.row._id)} variant="contained" color="error">Delete</ Button>
-                </Box>
-            )
-        }
-    ];
-
-    return (
-        <>
-            <Box >
-
-                <Typography variant="h4" sx={{ color: "white", pb: 3 }}>
-                    All users
-                </Typography>
-                <Box sx={{ pb: 2, display: "flex", justifyContent: "right" }}>
-                    <Button variant='contained' color="success" startIcon={<AddIcon />}> Create user</Button>
-                </Box>
-                <Paper sx={{ bgcolor: "secondary.midNightBlue" }} >
-
-                    <Box sx={{ height: 400, width: '100%' }}>
-                        <DataGrid
-                            sx={{
-
-                                '& .MuiTablePagination-displayedRows': {
-                                    color: 'white',
-                                },
-                                color: 'white',
-                                [`& .${gridClasses.row}`]: {
-                                    bgcolor: (theme) =>
-                                        // theme.palette.mode === 'light' ? grey[200] : grey[900],
-                                        theme.palette.secondary.main
-                                },
-                                button: {
-                                    color: '#ffffff'
-                                }
-
-                            }}
-                            getRowId={(row) => row._id}
-                            rows={data}
-                            columns={columns}
-                            pageSize={3}
-                            rowsPerPageOptions={[3]}
-                            checkboxSelection
-                            slots={{ toolbar: GridToolbar }}
-                        />
-                    </Box>
-                </Paper>
-
-            </Box>
-        </>
-    )
-}
-
-export default DashUsers
+export default DashUsers;

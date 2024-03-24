@@ -41,12 +41,14 @@ import DashCreateCategory from "./pages/admin/DashCreateCategory";
 import DashCreateJob from "./pages/admin/DashCreateJob";
 import DashJobs from "./pages/admin/DashJobs";
 import DashUsers from "./pages/admin/DashUsers";
+import DashCompanies from "./pages/admin/DashCompanies";
 
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard);
 const DashUsersHOC = AdLayout(DashUsers);
 const DashJobsHOC = AdLayout(DashJobs);
+const DashCompaniesHOC = AdLayout(DashCompanies);
 const DashCategoryHOC = AdLayout(DashCategory);
 const DashCreateJobHOC = AdLayout(DashCreateJob);
 const DashCreateCategoryHOC = AdLayout(DashCreateCategory);
@@ -87,6 +89,10 @@ function Layout() {
     location.pathname.startsWith("/upload-job") ||
     location.pathname.startsWith("/job-detail/") ||
     location.pathname.startsWith("/companies") ||
+    location.pathname.startsWith("/admin/category") ||
+    location.pathname.startsWith("/admin/users") ||
+    location.pathname.startsWith("/admin/jobs") ||
+    location.pathname.startsWith("/admin/companies") ||
     location.pathname.startsWith("/AdminDashboard");
 
 
@@ -100,6 +106,10 @@ function Layout() {
     location.pathname.startsWith("/job-detail/") ||
     location.pathname.startsWith("/upload-job") ||
     location.pathname.startsWith("/companies") ||
+    location.pathname.startsWith("/admin/category") ||
+    location.pathname.startsWith("/admin/users") ||
+    location.pathname.startsWith("/admin/jobs") ||
+    location.pathname.startsWith("/admin/companies") ||
     location.pathname.startsWith("/AdminDashboard")
 
   );
@@ -124,17 +134,21 @@ function Layout() {
           <Route
             path="/"
             element={
-              user ? (
-                user.accountType === "seeker" ? (
-                  <Navigate to="/Dashboard" replace={true} />
+                user ? (
+                    user.role === 0 && user.accountType === "seeker" ? (
+                        <Navigate to="/Dashboard" replace={true} />
+                    ) : (
+                        user.role === 1 ? (
+                            <Navigate to="/AdminDashboard" replace={true} />
+                        ) : (
+                            <Navigate to="/CompanyDash" replace={true} />
+                        )
+                    )
                 ) : (
-                  <Navigate to="/CompanyDash" replace={true} />
+                    <Navigate to="/user-auth" replace={true} />
                 )
-              ) : (
-                <Navigate to="/user-auth" replace={true} />
-              )
             }
-          />
+        />
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
@@ -161,6 +175,7 @@ function Layout() {
           <Route path='/AdminDashboard' element={<AdminDashboard><AdminDashboardHOC /></AdminDashboard>} />
           <Route path='/admin/users' element={<DashUsersHOC />} />
           <Route path='/admin/jobs' element={<DashJobsHOC />} />
+          <Route path='/admin/companies' element={<DashCompaniesHOC />} />
           <Route path='/admin/category' element={<DashCategoryHOC />} />
           <Route path='/admin/job/create' element={<DashCreateJobHOC />} />
           <Route path='/admin/category/create' element={<DashCreateCategoryHOC />} />

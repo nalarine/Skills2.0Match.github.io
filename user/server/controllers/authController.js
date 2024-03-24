@@ -1,42 +1,38 @@
 import Users from "../models/userModel.js";
 
 export const register = async (req, res, next) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, role } = req.body;
 
-  //validate fileds
-
-  if (!firstName) {
-    next("First Name is required");
-  }
-  if (!email) {
-    next("Email is required");
-  }
-  if (!lastName) {
-    next("Last Name is required");
-  }
-  if (!password) {
-    next("Password is required");
+  // Validate fields
+  if (!firstName || !lastName || !email || !password || !role) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
+    // Check if email already exists
     const userExist = await Users.findOne({ email });
 
     if (userExist) {
-      next("Email Address already exists");
-      return;
+      return res.status(400).json({ message: "Email address already exists" });
     }
 
+    // Create new user with role
     const user = await Users.create({
       firstName,
       lastName,
       email,
       password,
+      role // Include role when creating user
     });
 
-    // user token
-    const token = await user.createJWT();
+    // Generate JWT token
+    const token = user.createJWT();
 
-    res.status(201).send({
+    // Exclude password from response
+    user.password = undefined;
+
+    // Send success response
+    res.status(201).json({
       success: true,
       message: "Account created successfully",
       user: {
@@ -45,53 +41,61 @@ export const register = async (req, res, next) => {
         lastName: user.lastName,
         email: user.email,
         accountType: user.accountType,
+        role: user.role // Include user's role in response
       },
-      token,
+      token
     });
   } catch (error) {
-    console.log(error);
-    res.status(404).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    //validation
+    // Validation
     if (!email || !password) {
-      next("Please Provide AUser Credentials");
-      return;
+      return res.status(400).json({ message: "Please provide user credentials" });
     }
 
-    // find user by email
+    // Find user by email
     const user = await Users.findOne({ email }).select("+password");
 
     if (!user) {
-      next("Invalid -email or password");
-      return;
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // compare password
+    // Compare password
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
-      next("Invalid email or password");
-      return;
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
+    // User password is no longer needed in response, so remove it
     user.password = undefined;
 
+    // Create JWT token
     const token = user.createJWT();
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
-      message: "Login successfully",
-      user,
-      token,
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        accountType: user.accountType,
+        role: user.role // Include the user's role in the response
+      },
+      token
     });
   } catch (error) {
-    console.log(error);
-    res.status(404).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

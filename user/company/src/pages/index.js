@@ -28,6 +28,7 @@ import DashCreateCategory from "../pages/admin/DashCreateCategory";
 import DashCreateJob from "../pages/admin/DashCreateJob";
 import DashJobs from "../pages/admin/DashJobs";
 import DashUsers from "../pages/admin/DashUsers";
+import DashCompanies from "../pages/admin/DashCompanies";
 import AdLayout from "../pages/global/AdLayout";
 
 
@@ -63,5 +64,6 @@ export {
   DashCreateJob,
   DashJobs,
   DashUsers,
+  DashCompanies,
   AdLayout,
 };

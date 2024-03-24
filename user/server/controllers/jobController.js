@@ -2,6 +2,22 @@ import mongoose from "mongoose";
 import Jobs from "../models/jobsModel.js";
 import Companies from "../models/companiesModel.js";
 
+export const allJobs = async (req, res, next) => {
+  try {
+    // Fetch all jobs from the database
+    const allJobs = await Jobs.find();
+
+    // Return the list of jobs
+    res.status(200).json({
+      success: true,
+      data: allJobs,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const createJob = async (req, res, next) => {
   try {
     const {

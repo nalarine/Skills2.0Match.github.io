@@ -2,53 +2,46 @@ import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid"; // Import DataGrid from MUI
 import { apiRequest } from "../../utils/index";
 
-const DashJobs = () => {
-  const [data, setData] = useState([]);
+const DashCompanies = () => {
+  const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchCompanies = async () => {
       try {
         const response = await apiRequest({
-          url: "/jobs/alljobs",
+          url: "/companies/allcompanies",
           method: "GET",
         });
         console.log("API Response:", response);
 
         if (response.data && Array.isArray(response.data)) {
-          const modifiedJobs = response.data.map(job => ({ ...job, id: job._id }));
-          setData(modifiedJobs);
+          const modifiedCompanies = response.data.map(company => ({
+            ...company,
+            id: company._id,
+            jobPosts: company.jobPosts.join(", "), // Convert jobPosts array to comma-separated string
+          }));
+          setCompanies(modifiedCompanies);
           setLoading(false);
         } else {
-          console.error("Error: Jobs data is missing or not an array");
+          console.error("Error: Companies data is missing or not an array");
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        console.error("Error fetching companies:", error);
         setLoading(false);
       }
     };
-    fetchJobs();
+    fetchCompanies();
   }, []);
 
-  // Define columns for the DataGrid
+  // Define columns for the companiesGrid
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
-    { field: "jobTitle", headerName: "Job Title", width: 130 },
-    { field: "company", headerName: "Company", width: 140 },
-    { field: "location", headerName: "Location", width: 150 },
-    {
-      field: "desc",
-      headerName: "Description",
-      width: 200,
-      valueGetter: params => params.row.detail[0]?.desc || "", // Extract job description from 'detail' array
-    },
-    {
-      field: "requirements",
-      headerName: "Requirements",
-      width: 200,
-      valueGetter: params => params.row.detail[0]?.requirements || "", // Extract job requirements from 'detail' array
-    },
+    { field: "name", headerName: "Company Name", width: 200 },
+    { field: "contact", headerName: "Contact", width: 200 },
+    { field: "about", headerName: "About", width: 150 },
+    { field: "jobPosts", headerName: "Job Posts", width: 200 }, // Display job posts
     {
       field: "actions",
       headerName: "Actions",
@@ -106,7 +99,7 @@ const DashJobs = () => {
           <p>Loading...</p>
         ) : (
           <DataGrid
-            rows={data}
+            rows={companies}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
@@ -124,4 +117,4 @@ const DashJobs = () => {
   );
 };
 
-export default DashJobs;
+export default DashCompanies;

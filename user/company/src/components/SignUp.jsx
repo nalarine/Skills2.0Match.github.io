@@ -344,4 +344,3 @@ const SignUp = ({ open, setOpen }) => {
 };
 
 export default SignUp;
-

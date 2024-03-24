@@ -296,3 +296,19 @@ export const getCompanyById = async (req, res, next) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+export const allCompanies = async (req, res, next) => {
+  try {
+    // Fetch all companies from the database
+    const allCompanies = await Companies.find().select("-password");
+
+    // Return the list of companies
+    res.status(200).json({
+      success: true,
+      data: allCompanies,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
