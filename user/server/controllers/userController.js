@@ -36,8 +36,115 @@ export const allUsers = async (req, res, next) => {
     }
 };
 
+export const createUser = async (req, res, next) => {
+    const {
+        firstName,
+        lastName,
+        email,
+        password, // Assuming you also want to create a password
+    } = req.body;
 
+    try {
+        // Check if the user already exists
+        const existingUser = await Users.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists" });
+        }
 
+        // Create a new user
+        const newUser = new Users({
+            firstName,
+            lastName,
+            email,
+            password, // Assuming you also want to create a password
+        });
+
+        // Save the new user to the database
+        await newUser.save();
+
+        res.status(201).json({
+            success: true,
+            message: "User created successfully",
+            user: newUser
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+export const editUser = async (req, res, next) => {
+    try {
+        const userId = req.params.id; // Extract user ID from request parameters
+        const {
+            firstName,
+            lastName,
+            email,
+            contact,
+            location,
+            profileUrl,
+            jobTitle,
+            about,
+        } = req.body; // Extract updated user details from request body
+
+        // Validate user ID
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        // Find the user by ID and update the details
+        const updatedUser = await Users.findByIdAndUpdate(
+            userId,
+            {
+                firstName,
+                lastName,
+                email,
+                contact,
+                location,
+                profileUrl,
+                jobTitle,
+                about,
+            },
+            { new: true } // Return the updated user
+        );
+
+        // Check if user exists
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Respond with the updated user
+        res.status(200).json({ success: true, user: updatedUser });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        const userId = req.params.id; // Extract user ID from request parameters
+        
+        // Validate user ID
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        // Find the user by ID and delete it
+        const deletedUser = await Users.findOneAndDelete({ _id: userId });
+
+        // Check if user exists
+        if (!deletedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Respond with a success message
+        res.status(200).json({ success: true, message: "User deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 export const updateUser = async (req, res, next) => {
     const {
         firstName,

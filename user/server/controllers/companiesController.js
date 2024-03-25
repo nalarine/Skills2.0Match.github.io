@@ -312,3 +312,96 @@ export const allCompanies = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const createCompany = async (req, res, next) => {
+  const { name, email, contact, about, password } = req.body;
+
+  try {
+    // Validation
+    if (!name || !email || !contact || !about || !password) {
+      return res.status(400).json({ success: false, message: "Please provide all required fields" });
+    }
+
+    // Create a new company
+    const newCompany = await Companies.create({
+      name,
+      email,
+      contact,
+      about,
+      password, // Include the password field in the creation
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Company created successfully",
+      company: newCompany,
+    });
+  } catch (error) {
+    console.error("Error creating company:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const editCompany = async (req, res, next) => {
+  const { id } = req.params; // Get the company ID from the request parameters
+  const { name, email, contact, about} = req.body;
+
+  try {
+    // Validation
+    if (!name || !email || !contact || !about) {
+      return res.status(400).json({ success: false, message: "Please provide all required fields" });
+    }
+
+    // Check if the company with the given ID exists
+    const existingCompany = await Companies.findById(id);
+
+    if (!existingCompany) {
+      return res.status(404).json({ success: false, message: "Company not found" });
+    }
+
+    // Update the company details
+    existingCompany.name = name;
+    existingCompany.email = email;
+    existingCompany.contact = contact;
+    existingCompany.about = about;
+
+
+    // Save the updated company details
+    const updatedCompany = await existingCompany.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Company updated successfully",
+      company: updatedCompany,
+    });
+  } catch (error) {
+    console.error("Error updating company:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
+export const deleteCompany = async (req, res, next) => {
+  const { id } = req.params; // Get the company ID from the request parameters
+
+  try {
+    // Check if the company with the given ID exists
+    const existingCompany = await Companies.findById(id);
+
+    if (!existingCompany) {
+      return res.status(404).json({ success: false, message: "Company not found" });
+    }
+
+    // Delete the company
+    await Companies.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Company deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting company:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+

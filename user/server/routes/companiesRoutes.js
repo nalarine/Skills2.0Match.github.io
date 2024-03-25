@@ -9,8 +9,12 @@ import {
   signIn,
   updateCompanyProfile,
   allCompanies,
+  createCompany,
+  editCompany,
+  deleteCompany,
 } from "../controllers/companiesController.js";
 import userAuth from "../middlewares/authMiddleware.js";
+import { deleteUser } from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -29,6 +33,7 @@ router.post("/register", limiter, register);
 router.post("/login", limiter, signIn);
 
 // GET DATA
+router.post("/create-company", createCompany);
 router.post("/get-company-profile", userAuth, getCompanyProfile);
 router.post("/get-company-joblisting", userAuth, getCompanyJobListing);
 router.get("/", getCompanies);
@@ -37,5 +42,8 @@ router.get("/allcompanies", allCompanies);
 
 // UPDATE DATA
 router.put("/update-company", userAuth, updateCompanyProfile);
+router.put("/edit-company/:id", editCompany);
+
+router.delete("/delete/:id", deleteCompany);
 
 export default router;

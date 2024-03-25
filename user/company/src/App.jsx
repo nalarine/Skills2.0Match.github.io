@@ -132,23 +132,24 @@ function Layout() {
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
           <Route
-            path="/"
-            element={
-                user ? (
-                    user.role === 0 && user.accountType === "seeker" ? (
-                        <Navigate to="/Dashboard" replace={true} />
-                    ) : (
-                        user.role === 1 ? (
-                            <Navigate to="/AdminDashboard" replace={true} />
-                        ) : (
-                            <Navigate to="/CompanyDash" replace={true} />
-                        )
-                    )
-                ) : (
-                    <Navigate to="/user-auth" replace={true} />
-                )
-            }
-        />
+    path="/"
+    element={
+        user ? (
+            user.role === 0 && user.accountType === "seeker" ? (
+                <Navigate to="/Dashboard" replace={true} />
+            ) : user.role === 1 ? (
+                <Navigate to="/AdminDashboard" replace={true} />
+            ) : (
+                <>
+                    <Navigate to="/Dashboard" replace={true} />
+                    <Navigate to="/CompanyDash" replace={true} />
+                </>
+            )
+        ) : (
+            <Navigate to="/user-auth" replace={true} />
+        )
+    }
+/>
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />

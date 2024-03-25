@@ -18,6 +18,62 @@ export const allJobs = async (req, res, next) => {
   }
 };
 
+export const editJob = async (req, res, next) => {
+  try {
+    const {
+      jobTitle,
+      jobType,
+      location,
+      salary,
+      vacancies,
+      experience,
+      desc,
+      requirements,
+    } = req.body;
+    const { jobId } = req.params;
+
+    if (
+      !jobTitle ||
+      !jobType ||
+      !location ||
+      !salary ||
+      !desc ||
+      !requirements
+    ) {
+      return res.status(400).json({ message: "Please provide all required fields" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(404).json({ message: `Invalid job ID: ${jobId}` });
+    }
+
+    const updatedJobData = {
+      jobTitle,
+      jobType,
+      location,
+      salary,
+      vacancies,
+      experience,
+      detail: { desc, requirements },
+    };
+
+    const updatedJob = await Jobs.findByIdAndUpdate(jobId, updatedJobData, { new: true });
+
+    if (!updatedJob) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Job updated successfully",
+      updatedJob,
+    });
+  } catch (error) {
+    console.error("Error updating job:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const createJob = async (req, res, next) => {
   try {
     const {
