@@ -12,7 +12,8 @@ import { BsArrowLeft } from "react-icons/bs";
 import Modal from "react-modal";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { auth, storage } from "../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -27,6 +28,12 @@ const JobDetail = () => {
   const [similarJobs, setSimilarJobs] = useState([]);
   const [selected, setSelected] = useState("0");
   const [isFetching, setIsFetching] = useState (false);
+  const [resume, setResume] = useState(null);
+
+  const handleResume = (event) => {
+    const file = event.target.files[0];
+    setResume(file);
+  };
 
   const getJobDetails = async () => {
 
@@ -76,18 +83,19 @@ const JobDetail = () => {
     // alert("success");
     // console.log(job)
     toggleModal();
+    const attachmentRef = ref(storage, "resumeFiles/" + user._id + resume.name);
+    const upload = await uploadBytes(attachmentRef, resume);
+    const url = await getDownloadURL(attachmentRef);
     try {
       const response = await apiRequest({
         url: `/jobs/apply-job/${id}`,
         token: user?.token,
         method: "PUT",
         data: {
-          application: [ user._id ]
+          application: [ user._id ],
+          attachmentURL: url
         }
       });
-      
-      console.log("Job applied:", response);
-      
       // Display toast notification for successful job application
       if (response.success)
         toast.success("Job application successful.");
@@ -285,6 +293,7 @@ const JobDetail = () => {
                         file:rounded-full file:border-0
                         file:text-sm file:font-semibold
                         hover:file:bg-violet-100"
+                        onChange={handleResume}
                     />
                     <div className="flex justify-between">
                         <button

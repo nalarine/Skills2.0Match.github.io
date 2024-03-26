@@ -203,6 +203,7 @@ export const applyJob = async (req, res, next) => {
     let vacancies, applicantId;
     let {
       application = [], // array of user id of applicant,
+      attachmentURL // Resume link
     } = req.body;
     const { jobId } = req.params;
 
@@ -254,7 +255,8 @@ export const applyJob = async (req, res, next) => {
       user,
       jobRole: job.jobTitle,
       appliedDate: new Date(new Date().setHours(0,0,0)),
-      hiringStage: "Pending"
+      hiringStage: "Pending",
+      resume: attachmentURL
     });
     const updatedCompany = await Companies.findByIdAndUpdate(updatedJob.company, company, {
       new: true,
