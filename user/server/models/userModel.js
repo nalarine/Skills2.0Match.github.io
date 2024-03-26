@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema(
     cvUrl: { type: String },
     jobTitle: { type: String },
     about: { type: String },
+    skills: { type: String }
   },
   { timestamps: true }
 );

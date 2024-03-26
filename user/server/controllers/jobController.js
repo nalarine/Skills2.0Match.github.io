@@ -276,16 +276,29 @@ export const applyJob = async (req, res, next) => {
 
 export const getJobPosts = async (req, res, next) => {
   try {
-    const { search, sort, location, jType, exp } = req.query;
+    const { search, sort, location, jType, exp, user_id } = req.query;
     const types = jType?.split(","); //full-time,part-time
     const experience = exp?.split("-"); //2-6
+
+    const user = await User.findById(user_id)
+
+    if (!user)
+      return res.status(400).json({ message: "Invalid user id" });
 
     let date = new Date();
     date.setDate(date.getDate() + 1)
 
     let queryObject = {
       startHiringDate: { $lte: new Date(date.setHours(0,0,0)) },
-      endHiringDate: { $gte: new Date(new Date().setHours(0,0,0)) }
+      endHiringDate: { $gte: new Date(new Date().setHours(0,0,0)) },
+      $or: [
+        { jobTitle: { $regex: user.jobTitle, $options: 'i' } },
+        ...(user.skills || '')
+          .split(/\s/)
+          .map(v => {
+            return { detail: { $elemMatch: {requirements: { $regex: v, $options: 'i' } } } }
+          })
+      ]
     };
 
     if (location) {
