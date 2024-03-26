@@ -52,7 +52,7 @@ const UploadJob = () => {
         setIsLoading(true);
         setErrMsg(null);
         data.requirements = requirementsText;
-        data.location = `${locationRegion.key}-${locationProvince.key}-${locationCity.name}`;
+        data.location = `${locationRegion.name} ${locationProvince.name} ${locationCity.name}`;
         data.jobLocationRegion = locationRegion.key;
         data.jobLocationProvince = locationProvince.key;
         data.jobLocationCity = locationCity.name;
