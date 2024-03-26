@@ -6,6 +6,7 @@ import {
   getJobById,
   getJobPosts,
   updateJob,
+  applyJob,
   allJobs,
   editJob
 } from "../controllers/jobController.js";
@@ -19,6 +20,8 @@ router.post("/upload-job", userAuth, createJob);
 router.put("/update-job/:jobId", userAuth, updateJob);
 
 router.put("/edit-job/:jobId", userAuth, editJob);
+
+router.put("/apply-job/:jobId", applyJob);
 
 // GET JOB POST
 router.get("/find-jobs", getJobPosts);

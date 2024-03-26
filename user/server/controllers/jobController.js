@@ -191,6 +191,57 @@ export const updateJob = async (req, res, next) => {
   }
 };
 
+export const applyJob = async (req, res, next) => {
+  try {
+    let {
+      application = [], // array of user id of applicant,
+      vacancies = 0,
+    } = req.body;
+    const { jobId } = req.params;
+
+    if (
+      !application
+    ) {
+      next("Please Provide All Required Fields");
+      return;
+    }
+
+    const job = await Jobs.findById({ _id: jobId });
+    if (!job)
+      return res.status(404).send(`No Company with id: ${id}`);
+
+    if (job.isArchived)
+      return res.status(400).send(`Sorry, job post is already archived.`);
+
+    if (!job.vacancies)
+      return res.status(400).send(`Sorry, job post has no more vacancies.`);
+  
+    if (job.application && job.application.length) {
+      application = [...application, ...job.application];
+      vacancies = vacancies - 1;
+    }
+ 
+    const jobPost = {
+      application,
+      vacancies,
+      _id: jobId,
+    };
+
+    await Jobs.findByIdAndUpdate(jobId, jobPost, { new: true });
+
+    const updatedJob = await Jobs.findById({ _id: jobId });
+
+    res.status(200).json({
+      success: true,
+      message: "Job Application Successful",
+      updatedJob,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const getJobPosts = async (req, res, next) => {
   try {
     const { search, sort, location, jType, exp } = req.query;
