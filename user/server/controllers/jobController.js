@@ -250,7 +250,7 @@ export const applyJob = async (req, res, next) => {
 
     company.applicants.push({
       fullName: `${user.firstName} ${user.lastName}`,
-      id: `${userid}-${jobid}`,
+      id: `${applicantId}-${job._id}`,
       user,
       jobRole: job.jobTitle,
       appliedDate: new Date(new Date().setHours(0,0,0)),
