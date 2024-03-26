@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Jobs from "../models/jobsModel.js";
 import Companies from "../models/companiesModel.js";
+import User from "../models/userModel.js";
 
 export const allJobs = async (req, res, next) => {
   try {
@@ -193,7 +194,7 @@ export const updateJob = async (req, res, next) => {
 
 export const applyJob = async (req, res, next) => {
   try {
-    let vacancies;
+    let vacancies, applicantId;
     let {
       application = [], // array of user id of applicant,
     } = req.body;
@@ -205,6 +206,8 @@ export const applyJob = async (req, res, next) => {
       next("Please Provide All Required Fields");
       return;
     }
+
+    applicantId = application[0];
 
     const job = await Jobs.findById({ _id: jobId });
     if (!job)
@@ -235,10 +238,24 @@ export const applyJob = async (req, res, next) => {
 
     const updatedJob = await Jobs.findById({ _id: jobId });
 
+    //update the company information with job id
+    const company = await Companies.findById(updatedJob.company);
+
+    company.applicants.push({
+      user: await User.findById(applicantId),
+      jobRole: job.jobTitle,
+      appliedDate: new Date(new Date().setHours(0,0,0)),
+      hiringStage: ""
+    });
+    const updatedCompany = await Companies.findByIdAndUpdate(updatedJob.company, company, {
+      new: true,
+    });
+
     res.status(200).json({
       success: true,
       message: "Job Application Successful",
       updatedJob,
+      updatedCompany
     });
   } catch (error) {
     console.log(error);

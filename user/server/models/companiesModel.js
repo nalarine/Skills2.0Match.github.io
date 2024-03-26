@@ -25,6 +25,7 @@ const companySchema = new Schema({
   about: { type: String },
   profileUrl: { type: String },
   jobPosts: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
+  applicants: [ { type: Object }]
 });
 
 // middlewares
