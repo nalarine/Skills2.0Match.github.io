@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { renderStatus } from "../../components/lib/consts/renderers/renderStatus";
+import ViewApplicantCard from "../../components/ViewApplicantCard";
 
 const columns = [
   { field: "fullName", headerName: "Full Name", minWidth: 200, flex: 1 },
@@ -29,6 +30,8 @@ const columns = [
 
 export default function AllApplicants() {
   const [tableData, setTableData] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch("src/components/lib/consts/dummy/dummy_table.json") // Verify the path to your JSON file
@@ -50,27 +53,42 @@ export default function AllApplicants() {
 
   // console.log(tableData);
 
+  const onCellClick = ({ field, row }) => {
+    console.log('cell click');
+    if (field == 'action') {
+      // TODO: fetch user profile by id
+      setUserInfo(row);
+      setShowModal(true);
+    }
+  }
+
   return (
-    <div className="flex flex-col p-3 gap-5">
-      <div>
-        <span className="text-3xl font-black">
-          Total Applicants: {tableData.length}
-        </span>
+    <>
+      <div className="flex flex-col p-3 gap-5">
+        <div>
+          <span className="text-3xl font-black">
+            Total Applicants: {tableData.length}
+          </span>
+        </div>
+        <div className="w-full max-h-[8rem]">
+          <DataGrid
+            rows={tableData}
+            columns={columns}
+            pagination
+            initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{
+              toolbar: {
+                showQuickFilter: true,
+              },
+            }}
+            onCellClick={onCellClick}
+          />
+        </div>
       </div>
-      <div className="w-full max-h-[8rem]">
-        <DataGrid
-          rows={tableData}
-          columns={columns}
-          pagination
-          initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-            },
-          }}
-        />
+      <div onClick={() => setShowModal(false)}>
+        <ViewApplicantCard userInfo={userInfo} showModal={showModal} setShowModal={setShowModal} />
       </div>
-    </div>
+    </>
   );
 }
