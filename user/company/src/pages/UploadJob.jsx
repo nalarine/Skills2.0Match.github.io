@@ -56,6 +56,8 @@ const UploadJob = () => {
         data.jobLocationRegion = locationRegion.key;
         data.jobLocationProvince = locationProvince.key;
         data.jobLocationCity = locationCity.name;
+        data.startHiringDate = new Date(data.startHiringDate);
+        data.endHiringDate = new Date(data.endHiringDate);
 
         const newData = { ...data, jobType: jobType };
 
@@ -133,6 +135,34 @@ const getRecentPost = async() => {
               })}
               error={errors.jobTitle ? errors.jobTitle?.message : ""}
             />
+
+            <div className='w-full flex gap-4'>
+              <div className='w-1/2'>
+                <TextInput
+                  name='startHiringDate'
+                  label='Start Hiring Date'
+                  placeholder='Select Date'
+                  type='date'
+                  register={register("startHiringDate", {
+                    required: "Start Hiring Date is required",
+                  })}
+                  error={errors.startHiringDate ? errors.startHiringDate?.message : ""}
+                />
+              </div>
+
+              <div className='w-1/2'>
+                <TextInput
+                  name='endHiringDate'
+                  label='End Hiring Date'
+                  placeholder='Select Date'
+                  type='date'
+                  register={register("endHiringDate", {
+                    required: "End Hiring Date is required",
+                  })}
+                  error={errors.endHiringDate ? errors.endHiringDate?.message : ""}
+                />
+              </div>
+            </div>
 
             <div className='w-full flex gap-4'>
               <div className={`w-1/2 mt-2`}>
