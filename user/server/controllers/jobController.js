@@ -246,9 +246,12 @@ export const applyJob = async (req, res, next) => {
 
     //update the company information with job id
     const company = await Companies.findById(updatedJob.company);
+    const user = await User.findById(applicantId)
 
     company.applicants.push({
-      user: await User.findById(applicantId),
+      fullName: `${user.firstName} ${user.lastName}`,
+      id: `${userid}-${jobid}`,
+      user,
       jobRole: job.jobTitle,
       appliedDate: new Date(new Date().setHours(0,0,0)),
       hiringStage: ""
