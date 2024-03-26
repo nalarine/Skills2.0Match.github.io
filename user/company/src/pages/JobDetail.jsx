@@ -214,15 +214,15 @@ const JobDetail = () => {
           <div className='my-6'>
             {selected === "0" ? (
               <>
-                <p className='text-xl font-semibold'>Job Decsription</p>
+                <p className='text-xl font-semibold'>Job Description</p>
 
                 <span className='text-base'>{job?.detail[0]?.desc}</span>
 
                 {job?.detail[0]?.requirements && (
                   <>
                     <p className='text-xl font-semibold mt-8'>Requirement</p>
-                    <span className='text-base'>
-                      {job?.detail[0]?.requirements}
+                    <span className='text-base' dangerouslySetInnerHTML={{ __html: job?.detail[0]?.requirements}}>
+                      {/* {job?.detail[0]?.requirements} */}
                     </span>
                   </>
                 )}
@@ -310,8 +310,8 @@ const JobDetail = () => {
             {similarJobs?.slice(0, 6).map((job, index) => {
 
               const data = {
-                name: job?.company.name,
-                logo: job?.company.profileUrl,
+                name: job?.company?.name,
+                logo: job?.company?.profileUrl,
                 ...job,
               };
               return <JobCard job={data} key={index} />;
