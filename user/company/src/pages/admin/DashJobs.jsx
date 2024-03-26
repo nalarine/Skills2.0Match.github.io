@@ -13,7 +13,7 @@ const DashJobs = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [buttonClicked, setButtonClicked] = useState(false);
-  const [openModal, setOpenModal]\ = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [newJob, setNewJob] = useState({
     jobTitle: "",
     company: "",
@@ -139,7 +139,6 @@ const DashJobs = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
     { field: "jobTitle", headerName: "Job Title", width: 130 },
     { field: "company", headerName: "Company", width: 140 },
     { field: "location", headerName: "Location", width: 150 },

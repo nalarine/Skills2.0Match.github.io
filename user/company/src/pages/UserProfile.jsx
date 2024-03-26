@@ -71,27 +71,38 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const uri = fileList.length > 0 && (await handleFileUpload(fileList[0].originFileObj));
-      const resumeUrl = await handleFileUpload(uploadCv); // Assuming uploadCv is used to store the resume file
-      const newData = uri ? { ...data, profileUrl: uri, resumeUrl } : data; // Include resumeUrl in newData
+      // Upload profile picture
+      const uri = profileImage && (await handleFileUpload(profileImage));
+  
+      // Upload resume
+      const resumeUrl = uploadCv && (await handleFileUpload(uploadCv));
+  
+      // Construct newData with updated profileUrl and resumeUrl
+      const newData = uri ? { ...data, profileUrl: uri, resumeUrl } : data;
+  
+      // Send PUT request to update user data
       const res = await apiRequest({
         url: "/users/update-user",
         token: user?.token,
         data: newData,
         method: "PUT",
       });
+  
       if (res) {
+        // If the request is successful, update user state in Redux store
         const updatedUserInfo = { token: res?.token, ...res?.user };
-        dispatch(Login(updatedUserInfo)); // Update user state in Redux store
-        setOpen(false); // Close the modal after successful update
-        setResumeUrl(resumeUrl); // Update the resumeUrl state in UserProfile component
+        dispatch(Login(updatedUserInfo)); // Update user state in Redux
+        setOpen(false);
+        // Update the resumeUrl state in UserProfile component if available
+        setResumeUrl(resumeUrl);
       }
-      setIsSubmitting(false);
     } catch (error) {
       setIsSubmitting(false);
       console.log(error);
     }
   };
+  
+  
 
   const closeModal = () => setOpen(false);
 
