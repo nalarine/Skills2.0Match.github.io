@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { HiLocationMarker } from "react-icons/hi";
@@ -386,13 +386,31 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
 };
 
 const UserProfile = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
   const [resumeUrl, setResumeUrl] = useState("");
-  
+  const [userInfo, setUserInfo] = useState(null);
 
-  const userInfo = user;
+  const getUser = async () => {
+    const res = await apiRequest({
+      url: "/users/get-user",
+      token: user?.token,
+      method: "POST",
+    });
+    const updatedUserInfo = { token: user?.token, ...res?.user };
+    dispatch(Login(updatedUserInfo)); // Update user state in Redux
+  }
 
+  useEffect(() => {
+    getUser();
+  }, [])
+
+  useEffect(() => {
+    setUserInfo(user);
+  }, [user])
+
+  // const userInfo = user;
   return (
     <div className='container mx-auto flex items-center justify-center pt-10 pb-24 bg-green-200'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
