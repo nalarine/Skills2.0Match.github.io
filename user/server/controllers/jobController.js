@@ -86,6 +86,8 @@ export const createJob = async (req, res, next) => {
       experience,
       desc,
       requirements,
+      startHiringDate,
+      endHiringDate
     } = req.body;
 
     if (
@@ -94,7 +96,9 @@ export const createJob = async (req, res, next) => {
       !location ||
       !salary ||
       !requirements ||
-      !desc
+      !desc ||
+      !startHiringDate ||
+      !endHiringDate
     ) {
       next("Please Provide All Required Fields");
       return;
@@ -114,6 +118,8 @@ export const createJob = async (req, res, next) => {
       experience,
       detail: { desc, requirements },
       company: id,
+      startHiringDate,
+      endHiringDate
     };
 
     const job = new Jobs(jobPost);
