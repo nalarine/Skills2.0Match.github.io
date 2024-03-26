@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { apiRequest } from "../utils"; // Import your API request utility
 import Loading from "../components/Loading"; // Import your Loading component
 import JobCard from "../components/JobCard"; // Import your JobCard component
+import { useSelector } from "react-redux";
 
 const JobAvailable = () => {
+  const { user } = useSelector((state) => state.user);
   const [postedJobs, setPostedJobs] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
@@ -12,7 +14,8 @@ const JobAvailable = () => {
       setIsFetching(true);
       try {
         const response = await apiRequest({
-          url: "/jobs/job-available",
+          // url: "/jobs/job-available",
+          url: "/jobs/job-available?user_id=" + user._id,
           method: "GET",
         });
         setPostedJobs(response.data);
