@@ -6,6 +6,10 @@ import { apiRequest } from "../utils";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BsArrowLeft } from "react-icons/bs";
+import FroalaEditor from 'froala-editor';
+import 'froala-editor/js/plugins/lists.min.js'; 
+import FroalaEditorComponent from 'react-froala-wysiwyg';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
 
 const UploadJob = () => {
   const { user } = useSelector((state) => state.user)
@@ -24,12 +28,18 @@ const UploadJob = () => {
   const [jobType, setJobType] = useState("Full-Time");
   const [isLoading, setIsLoading] = useState(false);
   const [recentPost, setRecentPost] = useState([]);
+  const [requirementsText, setRequirementsText] = useState('');
 
   const onSubmit = async (data) => {;
         setIsLoading(true);
         setErrMsg(null);
+        data.requirements = requirementsText;
 
         const newData = { ...data, jobType: jobType };
+
+        console.log(newData)
+
+        return;
 
         try {
           const res = await apiRequest({
@@ -70,6 +80,10 @@ const getRecentPost = async() => {
 
    useEffect(() => {
     getRecentPost();
+    // Rich Text Editor for Skills Requirement
+    new FroalaEditor('textarea#froala-editor', {
+      listAdvancedTypes: true,
+    })
    }, []);
 
   return (
@@ -183,12 +197,18 @@ const getRecentPost = async() => {
               <label className='text-gray-600 text-sm mb-1'>
                 Requirements
               </label>
-              <textarea
+              {/* <textarea
+                id='froala-editor'
                 className='rounded border border-gray-400 focus:outline-none focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-base px-4 py-2 resize-none'
                 rows={4}
                 cols={6}
                 {...register("requirements")}
-              ></textarea>
+              ></textarea> */}
+              <FroalaEditorComponent
+                tag='textarea'
+                model={requirementsText}
+                onModelChange={setRequirementsText}
+              />
             </div>
 
             {errMsg && (
@@ -214,7 +234,7 @@ const getRecentPost = async() => {
         <p className='text-gray-500 font-semibold'>Recent Job Post</p>
 
         <div className='w-full flex flex-wrap gap-6'>
-        {recentPost.slice(0, 4).map((job, index) => {
+        {recentPost && recentPost.slice(0, 4).map((job, index) => {
 
             const data = {
               name: user?.name,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import Button from "@mui/material/Button";
 import {
@@ -15,6 +15,10 @@ import { DUMMY_JOB_LISTING } from "./lib/consts/dummy/dummy";
 export function PostJob() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
+
+  // useEffect(() => {
+  //   new FroalaEditor('textarea#froala-editor')
+  // }, [])
 
   const [newListing, setNewListing] = useState({
     position: "",

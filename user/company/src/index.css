@@ -6,6 +6,13 @@
   font-weight: 400;
 }
 
+.fr-box ol {
+  list-style: decimal;
+}
+.fr-box ul {
+  list-style: disc;
+}
+
 a {
   font-weight: 400;
   text-decoration: inherit;
