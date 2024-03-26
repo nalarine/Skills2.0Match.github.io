@@ -41,6 +41,8 @@ const JobAvailable = () => {
                 logo: job?.company?.profileUrl,
                 ...job,
               };
+
+              console.log(postedJobs);
               return <JobCard job={newJob} key={index} />;
             })}
           </div>
