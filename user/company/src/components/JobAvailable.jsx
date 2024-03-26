@@ -35,15 +35,14 @@ const JobAvailable = () => {
         <strong className="font-bold text-xl">View All</strong>
       </div>
       <div className='w-full flex flex-wrap gap-4'>
-            {postedJobs.map((job, index) => {
+            {postedJobs && postedJobs.map((job, index) => {
               const newJob = {
                 name: job?.company?.name,
                 logo: job?.company?.profileUrl,
                 ...job,
               };
 
-              console.log(postedJobs);
-              return <JobCard job={newJob} key={index} />;
+              return job.vacancies >= 1 && <JobCard job={newJob} key={index} />;
             })}
           </div>
           {isFetching && (
