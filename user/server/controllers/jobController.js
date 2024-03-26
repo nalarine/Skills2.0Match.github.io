@@ -254,7 +254,7 @@ export const applyJob = async (req, res, next) => {
       user,
       jobRole: job.jobTitle,
       appliedDate: new Date(new Date().setHours(0,0,0)),
-      hiringStage: ""
+      hiringStage: "Pending"
     });
     const updatedCompany = await Companies.findByIdAndUpdate(updatedJob.company, company, {
       new: true,
