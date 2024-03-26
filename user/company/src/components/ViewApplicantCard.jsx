@@ -12,18 +12,18 @@ const ViewApplicantCard = ({ userInfo, showModal, setShowModal }) => {
         <div className="bg-white p-10 rounded-lg shadow-md w-1/4 relative items-center" onClick={e => e.stopPropagation()}>
           <h1 className="text-3xl font-bold mb-10">Details</h1>
           <p className="block text-lg font-medium">Profile Picture: </p>
-          <img className="rounded-full w-40 h-40" src={userInfo.profileUrl} alt="Profile URL" />
+          <img className="rounded-full w-40 h-40" src={userInfo?.profileUrl} alt="Profile URL" />
           <p className="block text-lg font-medium">Name: </p>
-          <p className="mb-4">{userInfo.firstName + " " + userInfo.lastName}</p>
+          <p className="mb-4">{userInfo?.firstName + " " + userInfo?.lastName}</p>
 
           <p className="block text-lg font-medium">E-mail: </p>
           <p className="mb-4">{userInfo?.email}</p>
 
           <p className="block text-lg font-medium">Location: </p>
-          <p className="mb-4">{userInfo.location}</p>
+          <p className="mb-4">{userInfo?.location}</p>
 
           <p className="block text-lg font-medium">Job Title: </p>
-          <p className="mb-4">{userInfo.jobTitle}</p>
+          <p className="mb-4">{userInfo?.jobTitle}</p>
 
           <p className="block text-lg font-medium">View Resume</p>
           <input type="file" class="block mb-12 w-full text-sm text-slate-500
