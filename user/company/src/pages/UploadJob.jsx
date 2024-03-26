@@ -10,6 +10,8 @@ import FroalaEditor from 'froala-editor';
 import 'froala-editor/js/plugins/lists.min.js'; 
 import FroalaEditorComponent from 'react-froala-wysiwyg';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
+import philippines from 'philippines';
+import Dropdown from "../components/Dropdown";
 
 const UploadJob = () => {
   const { user } = useSelector((state) => state.user)
@@ -29,17 +31,33 @@ const UploadJob = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [recentPost, setRecentPost] = useState([]);
   const [requirementsText, setRequirementsText] = useState('');
+  const [locationRegion, setLocationRegion] = useState(philippines.regions[0]);
+  const [locationProvince, setLocationProvince] = useState(philippines.provinces[0]);
+  const [locationCity, setLocationCity] = useState(philippines.cities[5]);
+
+  const onChangeLocationRegion = (v) => {
+    const defaultProvince = philippines.provinces.filter(province => province.region == v.key)[0];
+    const defaultCity = philippines.cities.filter(city => city.province == defaultProvince.key)[0];
+    setLocationRegion(v);
+    setLocationProvince(defaultProvince);
+    setLocationCity(defaultCity);
+  }
+  const onChangeLocationProvince = (v) => {
+    const defaultCity = philippines.cities.filter(city => city.province == v.key)[0];
+    setLocationProvince(v);
+    setLocationCity(defaultCity);
+  }
 
   const onSubmit = async (data) => {;
         setIsLoading(true);
         setErrMsg(null);
         data.requirements = requirementsText;
+        data.location = `${locationRegion.key}-${locationProvince.key}-${locationCity.name}`;
+        data.jobLocationRegion = locationRegion.key;
+        data.jobLocationProvince = locationProvince.key;
+        data.jobLocationCity = locationCity.name;
 
         const newData = { ...data, jobType: jobType };
-
-        console.log(newData)
-
-        return;
 
         try {
           const res = await apiRequest({
@@ -84,6 +102,7 @@ const getRecentPost = async() => {
     new FroalaEditor('textarea#froala-editor', {
       listAdvancedTypes: true,
     })
+    console.log(philippines)
    }, []);
 
   return (
@@ -163,7 +182,7 @@ const getRecentPost = async() => {
               </div>
             </div>
 
-            <TextInput
+            {/* <TextInput
               name='location'
               label='Job Location'
               placeholder='eg. New York'
@@ -172,7 +191,40 @@ const getRecentPost = async() => {
                 required: "Job Location is required",
               })}
               error={errors.location ? errors.location?.message : ""}
-            />
+            /> */}
+            <div className='flex flex-col'>
+              <label className='text-gray-600 text-sm mb-1'>
+                Job Region
+              </label>
+              <Dropdown 
+                title={locationRegion} 
+                setTitle={onChangeLocationRegion} 
+                items={philippines.regions} 
+                key='key'
+              />
+            </div>
+            <div className='flex flex-col'>
+              <label className='text-gray-600 text-sm mb-1'>
+                Job Province
+              </label>
+              <Dropdown 
+                title={locationProvince} 
+                setTitle={onChangeLocationProvince} 
+                items={philippines.provinces.filter(province => province.region == locationRegion.key)} 
+                key='key'
+              />
+            </div>
+            <div className='flex flex-col'>
+              <label className='text-gray-600 text-sm mb-1'>
+                Job City
+              </label>
+              <Dropdown 
+                title={locationCity} 
+                setTitle={setLocationCity} 
+                items={philippines.cities.filter(city => city.province == locationProvince.key)} 
+                key='name'
+              />
+            </div>
             <div className='flex flex-col'>
               <label className='text-gray-600 text-sm mb-1'>
                 Job Description
