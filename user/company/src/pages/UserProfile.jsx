@@ -301,6 +301,30 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
 
                     <div className='flex flex-col'>
                       <label className='text-gray-600 text-sm mb-1'>
+                        Skills
+                      </label>
+                      <textarea
+                        className='rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none'
+                        rows={4}
+                        cols={6}
+                        {...register("skills", {
+                          required:
+                            "Write your skills (e.g. Cleaning, Cooking)",
+                        })}
+                        aria-invalid={errors.skills ? "true" : "false"}
+                      ></textarea>
+                      {errors.skills && (
+                        <span
+                          role='alert'
+                          className='text-xs text-red-500 mt-0.5'
+                        >
+                          {errors.skills?.message}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className='flex flex-col'>
+                      <label className='text-gray-600 text-sm mb-1'>
                         About
                       </label>
                       <textarea
