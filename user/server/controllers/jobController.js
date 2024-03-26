@@ -193,9 +193,9 @@ export const updateJob = async (req, res, next) => {
 
 export const applyJob = async (req, res, next) => {
   try {
+    let vacancies;
     let {
       application = [], // array of user id of applicant,
-      vacancies = 0,
     } = req.body;
     const { jobId } = req.params;
 
@@ -211,15 +211,19 @@ export const applyJob = async (req, res, next) => {
       return res.status(404).send(`No Company with id: ${id}`);
 
     if (job.isArchived)
-      return res.status(400).send(`Sorry, job post is already archived.`);
+      return res.status(400).json({ message: `Job post is already archived.`});
 
     if (!job.vacancies)
-      return res.status(400).send(`Sorry, job post has no more vacancies.`);
+      return res.status(400).json({ message: `Job post has no more vacancies.`});
   
     if (job.application && job.application.length) {
-      application = [...application, ...job.application];
-      vacancies = vacancies - 1;
+      if (job.application.includes(application[0]))
+        return res.status(400).json({ message: `You have already applied to this job post.`});
+      else
+        application = [...application, ...job.application];
     }
+
+    vacancies = job.vacancies - 1;
  
     const jobPost = {
       application,
