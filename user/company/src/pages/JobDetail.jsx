@@ -10,6 +10,9 @@ import { apiRequest } from "../utils";
 import Loading from "../components/Loading";
 import { BsArrowLeft } from "react-icons/bs";
 import Modal from "react-modal";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -69,10 +72,31 @@ const JobDetail = () => {
     }
   };
 
-  const handleSubmit = () => {
-    alert("success");
-    console.log(job)
+  const handleSubmit = async () => {
+    // alert("success");
+    // console.log(job)
     toggleModal();
+    try {
+      const response = await apiRequest({
+        url: `/jobs/apply-job/${id}`,
+        token: user?.token,
+        method: "PUT",
+        data: {
+          application: [ user._id ]
+        }
+      });
+      
+      console.log("Job applied:", response);
+      
+      // Display toast notification for successful job application
+      if (response.success)
+        toast.success("Job application successful.");
+      else
+        toast.error(`Job application failed. ${ response.message }`);
+    } catch (error) {
+      console.error("Error applying for job:", error);
+      toast.error("Error applying for job:", error);
+    }
   }
 
   // function for modal
@@ -295,6 +319,8 @@ const JobDetail = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
+
     </div>
   );
 };

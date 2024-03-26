@@ -21,7 +21,7 @@ router.put("/update-job/:jobId", userAuth, updateJob);
 
 router.put("/edit-job/:jobId", userAuth, editJob);
 
-router.put("/apply-job/:jobId", applyJob);
+router.put("/apply-job/:jobId", userAuth, applyJob);
 
 // GET JOB POST
 router.get("/find-jobs", getJobPosts);
