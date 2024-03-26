@@ -19,7 +19,7 @@ router.post("/upload-job", userAuth, createJob);
 // UPDATE JOB
 router.put("/update-job/:jobId", userAuth, updateJob);
 
-router.put("/edit-job/:jobId", userAuth, editJob);
+router.put("/edit-job/:jobId", editJob);
 
 router.put("/apply-job/:jobId", userAuth, applyJob);
 
@@ -31,8 +31,6 @@ router.get("/alljobs", allJobs);
 router.get("/job-available", getJobPosts);
 
 router.get("/get-job-detail/:id", getJobById);
-
-router.get("/job-available", getJobPosts);
 
 router.post("/create-job", userAuth, createJob);
 

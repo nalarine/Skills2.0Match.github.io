@@ -252,7 +252,13 @@ export const getJobPosts = async (req, res, next) => {
     const types = jType?.split(","); //full-time,part-time
     const experience = exp?.split("-"); //2-6
 
-    let queryObject = {};
+    let date = new Date();
+    date.setDate(date.getDate() + 1)
+
+    let queryObject = {
+      startHiringDate: { $lte: new Date(date.setHours(0,0,0)) },
+      endHiringDate: { $gte: new Date(new Date().setHours(0,0,0)) }
+    };
 
     if (location) {
       queryObject.location = { $regex: location, $options: "i" };
