@@ -10,8 +10,10 @@ import Loading from "../components/Loading";
 import Header from "../components/Header";
 import { experience, jobTypes, jobs } from "../utils/data";
 import { CustomButton, JobCard, ListBox } from "../components";
+import { useSelector } from "react-redux";
 
 const FindJobs = () => {
+  const { user } = useSelector((state) => state.user);
   const [sort, setSort] = useState("Newest");
   const [page, setPage] = useState(1);
   const [numPage, setNumPage] = useState(1);
@@ -45,7 +47,7 @@ const FindJobs = () => {
 
     try {
       const res = await apiRequest({
-        url: "/jobs" + newURL,
+        url: "/jobs" + newURL + '&user_id=' + user._id,
         method: "GET",
       });
 
