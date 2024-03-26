@@ -25,13 +25,10 @@ const ViewApplicantCard = ({ userInfo, showModal, setShowModal }) => {
           <p className="block text-lg font-medium">Job Title: </p>
           <p className="mb-4">{userInfo?.jobTitle}</p>
 
-          <p className="block text-lg font-medium">View Resume</p>
-          <input type="file" class="block mb-12 w-full text-sm text-slate-500
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded-full file:border-0
-                        file:text-sm file:font-semibold
-                        hover:file:bg-violet-100"
-          />
+          {userInfo?.resume ?
+            (<a href={userInfo?.resume} target="_blank" className="block text-lg font-medium text-blue-600 hover:underline hover:text-blue-800">View Resume</a>)
+            :(<p className="mb-4">No Resume</p>)
+          }
         </div>
       </div>
     </Modal>

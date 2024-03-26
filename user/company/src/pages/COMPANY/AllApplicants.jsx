@@ -42,7 +42,6 @@ export default function AllApplicants() {
         url: "/companies/get-company/" + user._id,
         method: "GET",
       });
-      console.log(res.data.applicants);
       setTableData(res.data.applicants);
     } catch (error) {
       console.log(error);
@@ -75,6 +74,7 @@ export default function AllApplicants() {
     console.log('cell click');
     if (field == 'action') {
       // TODO: fetch user profile by id
+      row.user['resume'] = row.resume;
       setUserInfo(row.user);
       setShowModal(true);
     }
