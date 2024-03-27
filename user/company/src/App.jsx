@@ -136,13 +136,13 @@ function Layout() {
     element={
         user ? (
             user.role === 0 && user.accountType === "seeker" ? (
-                <Navigate to="/Dashboard" replace={true} />
+                <Navigate to="/user-profile" replace={true} />
             ) : user.role === 1 ? (
                 <Navigate to="/AdminDashboard" replace={true} />
             ) : (
                 <>
                     <Navigate to="/Dashboard" replace={true} />
-                    <Navigate to="/CompanyDash" replace={true} />
+                    <Navigate to="/company-profile" replace={true} />
                 </>
             )
         ) : (
