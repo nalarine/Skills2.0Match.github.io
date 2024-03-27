@@ -155,10 +155,11 @@ export const updateUser = async (req, res, next) => {
         profileUrl,
         jobTitle,
         about,
+        skills
     } = req.body;
 
     try {
-        if (!firstName || !lastName || !email || !contact || !jobTitle || !about) {
+        if (!firstName || !lastName || !email || !contact || !jobTitle || !about || !skills) {
             return res.status(400).json({ message: "Please provide all required fields" });
         }
 
@@ -177,6 +178,7 @@ export const updateUser = async (req, res, next) => {
             profileUrl,
             jobTitle,
             about,
+            skills,
             _id: id,
         };
 
