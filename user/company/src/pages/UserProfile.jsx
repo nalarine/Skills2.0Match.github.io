@@ -447,10 +447,17 @@ const UserProfile = () => {
               <FiPhoneCall size={24} className="text-green-800" />
               <p className="pl-2 text-lg">{userInfo?.contact ?? "No Contact"}</p>
             </div>
-            {/* Wrap the "About" section with overflow-auto class and set max-height */}
+
+            <p className='text-green-600 font-bold text-lg text-left'>SKILLS</p>
+            <div className='overflow-y-auto max-h-40'>
+              <p className='text-base text-left leading-7 px-3 py-2 text-sm text-slate-600'>
+                {userInfo?.skills ?? "No Skills Indicated"}
+              </p>
+            </div>
+            
             <p className='text-green-600 font-bold text-lg text-left'>ABOUT</p>
             <div className='overflow-y-auto max-h-40'>
-              <p className='text-base text-left leading-7 px-3 py-4 text-sm text-slate-600'>
+              <p className='text-base text-left leading-7 px-3 py-2 text-sm text-slate-600'>
                 {userInfo?.about ?? "No About Found"}
               </p>
             </div>
