@@ -87,6 +87,7 @@ export const editUser = async (req, res, next) => {
             profileUrl,
             jobTitle,
             about,
+            skills
         } = req.body; // Extract updated user details from request body
 
         // Validate user ID
@@ -106,6 +107,7 @@ export const editUser = async (req, res, next) => {
                 profileUrl,
                 jobTitle,
                 about,
+                skills
             },
             { new: true } // Return the updated user
         );
