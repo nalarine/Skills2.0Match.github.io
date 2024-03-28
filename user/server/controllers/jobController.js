@@ -82,6 +82,7 @@ export const createJob = async (req, res, next) => {
       jobType,
       location,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       desc,
@@ -95,6 +96,7 @@ export const createJob = async (req, res, next) => {
       !jobType ||
       !location ||
       !salary ||
+      !salaryPeriod ||
       !requirements ||
       !desc ||
       !startHiringDate ||
@@ -114,6 +116,7 @@ export const createJob = async (req, res, next) => {
       jobType,
       location,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       detail: { desc, requirements },
