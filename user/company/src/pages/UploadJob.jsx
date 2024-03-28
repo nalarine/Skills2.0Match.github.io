@@ -34,6 +34,8 @@ const UploadJob = () => {
   const [locationRegion, setLocationRegion] = useState(philippines.regions[0]);
   const [locationProvince, setLocationProvince] = useState(philippines.provinces[0]);
   const [locationCity, setLocationCity] = useState(philippines.cities[5]);
+  const [salaryPeriod, setSalaryPeriod] = useState('day'); // State to hold selected salary period
+  
 
   const onChangeLocationRegion = (v) => {
     const defaultProvince = philippines.provinces.filter(province => province.region == v.key)[0];
@@ -58,6 +60,7 @@ const UploadJob = () => {
         data.jobLocationCity = locationCity.name;
         data.startHiringDate = new Date(data.startHiringDate);
         data.endHiringDate = new Date(data.endHiringDate);
+        data.salaryPeriod = salaryPeriod; // Add salary period to form data
 
         const newData = { ...data, jobType: jobType };
 
@@ -112,7 +115,7 @@ const getRecentPost = async() => {
     <div className='container mx-auto flex flex-col md:flex-row gap-8 2xl:gap-14 bg-[#f7fdfd] px-5'>
       <div className='w-full h-fit md:w-2/3 2xl:2/4 bg-white px-5 py-10 md:px-10 shadow-md'>
         <div>
-        <Link to="/company-profile" className="absolute top-0 left-0 mt-4 ml-4 flex items-center">
+        <Link to="/CompanyDash" className="absolute top-0 left-0 mt-4 ml-4 flex items-center">
           <button className="text-black text-sm bg-transparent border border-black px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
             <BsArrowLeft className="mr-2" />
             Back
@@ -143,6 +146,7 @@ const getRecentPost = async() => {
                   label='Start Hiring Date'
                   placeholder='Select Date'
                   type='date'
+                  min={new Date().toISOString().split('T')[0]} // Set min attribute to today's date
                   register={register("startHiringDate", {
                     required: "Start Hiring Date is required",
                   })}
@@ -156,6 +160,7 @@ const getRecentPost = async() => {
                   label='End Hiring Date'
                   placeholder='Select Date'
                   type='date'
+                  min={new Date().toISOString().split('T')[0]} // Set min attribute to today's date
                   register={register("endHiringDate", {
                     required: "End Hiring Date is required",
                   })}
@@ -176,11 +181,25 @@ const getRecentPost = async() => {
                   label='Salary (PHP)'
                   placeholder='eg. 1500'
                   type='number'
+                  min={400} // Minimum salary restriction
                   register={register("salary", {
                     required: "Salary is required",
                   })}
                   error={errors.salary ? errors.salary?.message : ""}
                 />
+              </div>
+              {/* Dropdown for salary period */}
+              <div className='flex flex-col'>
+                <label className='text-gray-600 text-sm mb-3'>Salary Period</label>
+                <select
+                  className='rounded border border-gray-400 focus:outline-none focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-base px-4 py-2'
+                  value={salaryPeriod}
+                  onChange={(e) => setSalaryPeriod(e.target.value)}
+                >
+                  <option value='day'>Day</option>
+                  <option value='week'>Week</option>
+                  <option value='month'>Month</option>
+                </select>
               </div>
             </div>
 
@@ -277,7 +296,7 @@ const getRecentPost = async() => {
 
             <div className='flex flex-col'>
               <label className='text-gray-600 text-sm mb-1'>
-                Requirements
+                Skills Requirements
               </label>
               {/* <textarea
                 id='froala-editor'

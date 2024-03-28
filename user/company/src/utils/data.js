@@ -12,6 +12,8 @@ import {
 
 export const jobTypes = ["Full-Time", "Part-Time", "Contract", "Intern"];
 
+export const salaryPeriod = ["Day", "Week", "Month"];
+
 export const experience = [
   { title: "Under 1 Year", value: "0-1" },
   { title: "1 -2 Year", value: "1-2" },
