@@ -178,6 +178,7 @@ const getRecentPost = async() => {
                   label='Salary (PHP)'
                   placeholder='eg. 1500'
                   type='number'
+                  min={400} // Minimum salary restriction
                   register={register("salary", {
                     required: "Salary is required",
                   })}
