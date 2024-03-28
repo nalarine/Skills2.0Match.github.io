@@ -72,7 +72,7 @@ const SignUp = ({ open, setOpen }) => {
       });
     
       console.log(res);
-      if (res?.status === "failed") {
+      if (res?.status === "falied") {
         setErrMsg("Incorrect email or password.");
         alert("Incorrect email or password.");
       } else {

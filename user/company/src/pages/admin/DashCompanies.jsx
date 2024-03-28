@@ -24,94 +24,117 @@ const DashCompanies = () => {
   });
 
   useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const response = await apiRequest({
-          url: "/companies/allcompanies",
-          method: "GET",
-        });
-  
-        if (response.data && Array.isArray(response.data)) {
-          const modifiedCompanies = response.data.map(company => ({
-            ...company,
-            id: company._id
-          }));
-          setCompanies(modifiedCompanies);
-          setLoading(false);
-          return modifiedCompanies; // Return modified companies array
-        } else {
-          console.error("Error: Companies data is missing or not an array");
-          setLoading(false);
-          return []; // Return empty array if no data
-        }
-      } catch (error) {
-        console.error("Error fetching companies:", error);
-        setLoading(false);
-        return []; // Return empty array if error occurs
-      }
-    };
-    const fetchData = async () => {
-      const companiesData = await fetchCompanies();
-      setCompanies(companiesData);
-    };
-    fetchData();
+    fetchCompanies();
   }, []);
-  
+
+  const fetchCompanies = async () => {
+    try {
+      const response = await apiRequest({
+        url: "/companies/allcompanies",
+        method: "GET",
+      });
+
+      if (response.data && Array.isArray(response.data)) {
+        const modifiedCompanies = response.data.map(company => ({
+          ...company,
+          id: company._id
+        }));
+        setCompanies(modifiedCompanies);
+        setLoading(false);
+      } else {
+        console.error("Error: Companies data is missing or not an array");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching companies:", error);
+      setLoading(false);
+    }
+  };
+
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
     { field: "name", headerName: "Company Name", width: 200 },
     { field: "email", headerName: "Email", width: 200 },
     { field: "contact", headerName: "Contact", width: 150 },
-    { field: "about", headerName: "about", width: 200 },
+    { field: "about", headerName: "About", width: 200 },
+    { 
+      field: "status",
+      headerName: "Status",
+      width: 120,
+      renderCell: (params) => (
+        <span style={{ color: params.row.status === "Pending" ? "orange" : params.row.status === "Approved" ? "green" : "red" }}>
+          {params.row.status}
+        </span>
+      )
+    },
     {
       field: "actions",
       headerName: "Actions",
-      width: 150,
+      width: 200,
       renderCell: params => (
         <div>
-          <button
-            style={{
-              marginRight: 5,
-              backgroundColor: 'blue',
-              color: 'white',
-              border: 'none',
-              borderRadius: 5,
-              padding: '5px 10px',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleEdit(params.row)}
-          >
-            Edit
-          </button>
-          <button
-            style={{
-              backgroundColor: 'red',
-              color: 'white',
-              border: 'none',
-              borderRadius: 5,
-              padding: '5px 10px',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleDelete(params.row)}
-          >
-            Delete
-          </button>
+          {params.row.status === "Pending" && (
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleApprove(params.row)}
+                style={{ marginRight: 5 }}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleDecline(params.row)}
+              >
+                Decline
+              </Button>
+            </>
+          )}
         </div>
       ),
     },
   ];
 
+  const handleApprove = (company) => {
+    toast.success(`Company "${company.name}" approved successfully`);
+    updateCompanyStatus(company.id, "Approved");
+  };
+
+  const handleDecline = (company) => {
+    toast.error(`Company "${company.name}" declined`);
+    updateCompanyStatus(company.id, "Declined");
+  };
+
+  const updateCompanyStatus = async (companyId, status) => {
+    try {
+      const response = await apiRequest({
+        url: `/companies/update-status/${companyId}`,
+        method: "PUT",
+        data: { status },
+      });
+      console.log("Company status updated:", response.data);
+      fetchCompanies();
+    } catch (error) {
+      console.error("Error updating company status:", error);
+    }
+  };
+
   const style = {
     fontFamily: "Poppins, sans-serif",
     backgroundColor: "white",
+    position: 'relative',
+    background: 'radial-gradient(circle, rgba(229,231,235,1) 0%, rgba(193,225,193,1) 100%)',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.6)',
+    borderRadius: '10px',
+    padding: '30px',
   };
-
 
   const createCompanyStyle = {
     backgroundColor: buttonClicked ? 'green' : 'white',
     color: buttonClicked ? 'white' : 'green',
     border: 'none',
-    borderRadius: 5,
+    borderRadius: 20,
     padding: '5px 10px',
     cursor: 'pointer',
     display: 'flex',
@@ -122,20 +145,9 @@ const DashCompanies = () => {
     transition: 'background-color 0.3s',
   };
 
-  const handleButtonClick = () => { // Define handleButtonClick function
+  const handleButtonClick = () => {
     setButtonClicked(!buttonClicked);
     setOpenModal(true);
-  };
-
-  const handleEdit = (company) => {
-    setEditCompany(company);
-    setNewCompany(company);
-    setOpenModal(true);
-  };
-
-  const handleDelete = (company) => {
-    setEditCompany(company);
-    setDeleteConfirmationOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -173,9 +185,9 @@ const DashCompanies = () => {
           data: newCompany
         });
       }
-  
+
       console.log("Company created/updated:", response.data);
-  
+
       if (response.success) {
         setOpenModal(false);
         if (editCompany) {
@@ -183,9 +195,8 @@ const DashCompanies = () => {
         } else {
           toast.success('Company created successfully');
         }
-  
-        const updatedCompanies = await fetchCompanies();
-        setCompanies(updatedCompanies);
+
+        fetchCompanies();
       } else {
         toast.error(response.message || 'Error creating/updating company');
       }
@@ -194,153 +205,90 @@ const DashCompanies = () => {
       toast.error(`${editCompany ? 'Error updating company. ' : 'Error creating company. '}Please try again.`);
     }
   };
-  
-  
-
-  const confirmDelete = async () => {
-    try {
-      const response = await apiRequest({
-        url: `/delete/${editCompany.id}`,
-        method: "DELETE",
-      });
-      console.log("Company deleted:", response.data);
-      setDeleteConfirmationOpen(false);
-      toast.success("Company deleted successfully");
-
-      // Refresh the companies list after deletion
-      const updatedCompanies = await fetchCompanies();
-      setCompanies(updatedCompanies);
-    } catch (error) {
-      console.error("Error deleting company:", error);
-      toast.error("Error deleting company. Please try again.");
-    }
-  };
-
-  const cancelDelete = () => {
-    setDeleteConfirmationOpen(false);
-  };
 
   return (
     <div style={{ position: 'relative' }}>
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: "90%" }}>
-        <button style={createCompanyStyle} onClick={handleButtonClick}>
-          <AddCircleIcon style={{ marginRight: '5px' }} />
-          Create Company
-        </button>
-        <div style={{ marginTop: "50px" }}>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <DataGrid
-            rows={companies}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            checkboxSelection
-            components={{
-              header: {
-                cell: () => null,
-              },
-            }}
-            style={{ ...style, height: 600 }}
-          />
-        )}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ width: "95%" }}>
+          <div style={{ marginTop: "0px" }}>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div style={{ paddingTop: 0, paddingBottom: 20 }}>
+                <DataGrid
+                  rows={companies}
+                  columns={columns}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  components={{
+                    header: {
+                      cell: () => null,
+                    },
+                    toolbar: () => (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <button style={createCompanyStyle} onClick={handleButtonClick}>
+                          <AddCircleIcon style={{ marginRight: '5px' }} />
+                            Create Company
+                          </button>
+                      </div>
+                    ),
+                  }}
+                  style={{ ...style, height: 'calc(100% - 40px)' }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <Modal
-  open={openModal}
-  onClose={handleCloseModal}
-  aria-labelledby="modal-modal-title"
-  aria-describedby="modal-modal-description"
->
-  <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 5, width: 400, maxHeight: '80vh', overflowY: 'auto', fontFamily: 'Poppins, sans-serif' }}>
-    <h2 id="modal-modal-title" style={{ textAlign: 'center' }}>{editCompany ? 'Edit Company' : 'Create New Company'}</h2>
-    <TextField
-      fullWidth
-      label="Company Name"
-      variant="outlined"
-      margin="normal"
-      name="name"
-      value={newCompany.name}
-      onChange={handleInputChange}
-      style={{ marginBottom: '10px' }}
-      InputProps={{
-        style: { fontFamily: 'Poppins, sans-serif' }
-      }}
-    />
-    <TextField
-      fullWidth
-      label="Contact"
-      variant="outlined"
-      margin="normal"
-      name="contact"
-      value={newCompany.contact}
-      onChange={handleInputChange}
-      style={{ marginBottom: '10px' }}
-      InputProps={{
-        style: { fontFamily: 'Poppins, sans-serif' }
-      }}
-    />
-    <TextField
-      fullWidth
-      label="About"
-      variant="outlined"
-      margin="normal"
-      name="about"
-      value={newCompany.about}
-      onChange={handleInputChange}
-      style={{ marginBottom: '10px' }}
-      InputProps={{
-        style: { fontFamily: 'Poppins, sans-serif' }
-      }}
-    />
-    <TextField
-      fullWidth
-      label="Email"
-      type="email"
-      variant="outlined"
-      margin="normal"
-      name="email"
-      value={newCompany.email}
-      onChange={handleInputChange}
-      style={{ marginBottom: '10px' }}
-      InputProps={{
-        style: { fontFamily: 'Poppins, sans-serif' }
-      }}
-    />
-    <TextField
-      fullWidth
-      label="Password"
-      type="password"
-      variant="outlined"
-      margin="normal"
-      name="password"
-      value={newCompany.password}
-      onChange={handleInputChange}
-      style={{ marginBottom: '20px' }}
-      InputProps={{
-        style: { fontFamily: 'Poppins, sans-serif' }
-      }}
-    />
-    <Button variant="contained" onClick={handleSubmit} style={{ backgroundColor: '#4CAF50', color: 'white', marginTop: '10px', fontFamily: 'Poppins, sans-serif' }}>{editCompany ? 'Update' : 'Submit'}</Button>
-  </Box>
-</Modal>
-
 
       <Modal
-        open={deleteConfirmationOpen}
-        onClose={cancelDelete}
-        aria-labelledby="delete-confirmation-modal-title"
-        aria-describedby="delete-confirmation-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 5, width: 400, fontFamily: 'Poppins, sans-serif' }}>
-          <h1 id="delete-confirmation-modal-title" style={{ textAlign: 'center' }}>Confirm Deletion</h1>
-          <p id="delete-confirmation-modal-description" style={{ marginBottom: '10px', textAlign: 'center' }}>Are you sure you want to delete this company?</p>
-          <Button variant="contained" onClick={confirmDelete} style={{ backgroundColor: 'red', color: 'white', marginLeft: '30px', fontFamily: 'Poppins, sans-serif' }}>Yes, Delete</Button>
-          <Button variant="contained" onClick={cancelDelete} style={{ backgroundColor: '#4CAF50', color: 'white', marginLeft: '30px', fontFamily: 'Poppins, sans-serif' }}>Cancel</Button>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 5, width: 400, maxHeight: '80vh', overflowY: 'auto', fontFamily: 'Poppins, sans-serif' }}>
+          <h2 id="modal-modal-title" style={{ textAlign: 'center' }}>{editCompany ? 'Edit Company' : 'Create New Company'}</h2>
+          <TextField
+            fullWidth
+            label="Company Name"
+            variant="outlined"
+            margin="normal"
+            name="name"
+            value={newCompany.name}
+            onChange={handleInputChange}
+            style={{ marginBottom: '10px' }}
+            InputProps={{
+              style: { fontFamily: 'Poppins, sans-serif' }
+            }}
+          />
+          <TextField
+            fullWidth
+            label="Contact"
+            variant="outlined"
+            margin="normal"
+            name="contact"
+            value={newCompany.contact}
+            onChange={handleInputChange}
+            style={{ marginBottom: '10px' }}
+            InputProps={{
+              style: { fontFamily: 'Poppins, sans-serif' }
+            }}
+          />
+          <TextField
+            fullWidth
+            label="About"
+            variant="outlined"
+            margin="normal"
+            name="about"
+            value={newCompany.about}
+            onChange={handleInputChange}
+            style={{ marginBottom: '10px' }}
+            InputProps={{
+              style: { fontFamily: 'Poppins, sans-serif' }
+            }}
+          />
+          <Button variant="contained" onClick={handleSubmit} style={{ backgroundColor: '#4CAF50', color: 'white', marginTop: '10px', fontFamily: 'Poppins, sans-serif' }}>{editCompany ? 'Update' : 'Submit'}</Button>
         </Box>
       </Modal>
 
@@ -350,4 +298,3 @@ const DashCompanies = () => {
 };
 
 export default DashCompanies;
-     

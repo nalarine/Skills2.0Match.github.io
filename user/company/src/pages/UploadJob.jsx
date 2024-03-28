@@ -112,7 +112,7 @@ const getRecentPost = async() => {
     <div className='container mx-auto flex flex-col md:flex-row gap-8 2xl:gap-14 bg-[#f7fdfd] px-5'>
       <div className='w-full h-fit md:w-2/3 2xl:2/4 bg-white px-5 py-10 md:px-10 shadow-md'>
         <div>
-        <Link to="/CompanyDash" className="absolute top-0 left-0 mt-4 ml-4 flex items-center">
+        <Link to="/company-profile" className="absolute top-0 left-0 mt-4 ml-4 flex items-center">
           <button className="text-black text-sm bg-transparent border border-black px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
             <BsArrowLeft className="mr-2" />
             Back

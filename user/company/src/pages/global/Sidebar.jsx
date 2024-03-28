@@ -1,84 +1,97 @@
-import React from 'react';
-import { useSelector } from 'react-redux'; // Importing useSelector from react-redux
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { Box, Typography } from '@mui/material'; // Importing Typography from @mui/material
+import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import WorkIcon from '@mui/icons-material/Work';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CategoryIcon from '@mui/icons-material/Category';
-import Avatar from '@mui/material/Avatar';
-import logoDashboard from '../../assets/logo.svg'; // Import logo image
 import { Logout } from '../../redux/userSlice';
-import { AiOutlineLogout } from 'react-icons/ai'; // Import Logout icon
-import { useDispatch } from 'react-redux'; // Import useDispatch from react-redux
+import { useDispatch } from 'react-redux';
+import logoDashboard from '../../assets/logo.svg';
 
 const SidebarAdm = () => {
-    const { user } = useSelector((state) => state.user); // Using useSelector to access user state
-    const profileUrl = user?.profileUrl || '';
-    const dispatch = useDispatch(); // Using useDispatch to dispatch actions
+    const { user } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
     const handleLogout = () => {
         dispatch(Logout());
     };
 
+    const [activeItem, setActiveItem] = useState('');
+
+    const handleItemClick = (itemName) => {
+        if (activeItem !== itemName) {
+            setActiveItem(itemName);
+        }
+    };
+
     return (
-        <Sidebar backgroundColor="#C1E1C1" style={{ borderRightStyle: "none" }}>
-            <Box className="flex flex-col justify-between h-full">
+        <div style={{ backgroundColor: '#E5E7EB', padding: '0px', margin: '0px' }}>
+            <Sidebar
+                backgroundColor="#C1E1C1"
+                style={{
+                    borderTopRightRadius: '30px',
+                    borderBottomRightRadius: '30px',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.6)',
+                    overflow: 'hidden',
+                    height: '100%',
+                    marginBottom: 0, // Ensure no margin at the bottom
+                    marginTop: 15,
+                    flexDirection: 'column',
+                }}
+            >
                 <Box>
-                    <Box className="pt-3 pb-5 flex justify-center items-center"> {/* Added items-center to center the text */}
+                    <Box className="pt-3 pb-5 flex justify-center items-center">
                         <img
-                            src={logoDashboard} // Use the imported logo image here
+                            src={logoDashboard}
                             alt="LOGO"
-                            className="h-[60px] w-[60px]" // You might adjust the size as needed
+                            className="h-[60px] w-[60px]"
                         />
-                        <span className="font-bold ml-2">Skills2.0Match</span> {/* Added ml-2 for spacing */}
+                        <span className="font-bold ml-2">Skills2.0Match</span>
                     </Box>
-                    <Menu className="text-[#14532d]">
-                        <MenuItem icon={<DashboardIcon />}>
-                            <Link to="/AdminDashboard">Dashboard</Link>
+                    <div style={{ paddingLeft: '16px', marginLeft: '-120px', color: '#000000', marginBottom: '5px', font: 'bold' }}>
+                        <p>Dashboard</p>
+                    </div>
+                    <Menu className="text-[#14532d]" style={{ paddingLeft: '0', marginLeft: '-16px' }}>
+                        <MenuItem icon={<DashboardIcon />} className="text-left" style={{ color: activeItem === 'dashboard' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('dashboard')}>
+                            <Link to="/AdminDashboard">Overview</Link>
                         </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<GroupAddIcon />}>
+                        <MenuItem icon={<GroupAddIcon />} className="text-left" style={{ color: activeItem === 'users' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('users')}>
                             <Link to="/admin/users">Users</Link>
                         </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<GroupsIcon />}>
+                        <MenuItem icon={<GroupsIcon />} className="text-left" style={{ color: activeItem === 'companies' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('companies')}>
                             <Link to="/admin/companies">Companies</Link>
                         </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<WorkIcon />}>
+                        <MenuItem icon={<WorkIcon />} className="text-left" style={{ color: activeItem === 'jobs' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('jobs')}>
                             <Link to="/admin/jobs">Jobs</Link>
                         </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<CategoryIcon />}>
+                        <MenuItem icon={<CategoryIcon />} className="text-left" style={{ color: activeItem === 'category' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('category')}>
                             <Link to="/admin/category">Category</Link>
                         </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
+                    </Menu>
+                    <div style={{ paddingLeft: '16px', marginLeft: '-120px', color: '#000000', marginBottom: '5px' }}>
+                        <p>Reports</p>
+                    </div>
+                    <Menu className="text-[#14532d]" style={{ paddingLeft: '0', marginLeft: '-16px' }}>
+                        <MenuItem icon={<CategoryIcon />} className="text-left" style={{ color: activeItem === 'pinnedReports' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('pinnedReports')}>
+                            <Link to="/admin/reports/pinned">Pinned Reports</Link>
+                        </MenuItem>
+                        <MenuItem icon={<CategoryIcon />} className="text-left" style={{ color: activeItem === 'currentReports' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('currentReports')}>
+                            <Link to="/admin/reports/current">Current Reports</Link>
+                        </MenuItem>
+                        <MenuItem icon={<CategoryIcon />} className="text-left" style={{ color: activeItem === 'exportReports' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('exportReports')}>
+                            <Link to="/admin/reports/export">Export Reports</Link>
+                        </MenuItem>
+                        <MenuItem icon={<CategoryIcon />} className="text-left" style={{ color: activeItem === 'securityReports' ? '#14532d' : '#808080' }} onClick={() => handleItemClick('securityReports')}>
+                            <Link to="/admin/reports/security">Security Reports</Link>
+                        </MenuItem>
                     </Menu>
                 </Box>
-                <div className="flex flex-col gap-6 items-center py-5">
-                    <div className="flex items-center gap-4">
-                        <Avatar src={profileUrl} alt="avatar" />
-                        <div>
-                            <Typography variant="h6">{user?.firstName}</Typography>
-                            <Typography variant="body2" color="textSecondary" className="font-normal">
-                                {user?.email}
-                            </Typography>
-                        </div>
-                    </div>
-                    {/* Logout button */}
-                    <button
-                        onClick={handleLogout}
-                        className="group flex items-center rounded-md px-2 py-2 text-sm text-gray-900 hover:bg-green-500 hover:text-white"
-                    >
-                        <AiOutlineLogout className="text-gray-600 mr-2 h-5 w-5" aria-hidden="true" />
-                        Log Out
-                    </button>
-                </div>
-            </Box>
-        </Sidebar>
+            </Sidebar>
+        </div>
     );
 };
 

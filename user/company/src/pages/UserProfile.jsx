@@ -15,37 +15,81 @@ import { apiRequest } from "../utils";
 import { Login } from "../redux/userSlice";
 
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
 
-const UserForm = ({ open, setOpen, setResumeUrl }) => {
+const UserForm = ({ open, setOpen }) => {
   const { user } = useSelector((state) => state.user);
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    watch,
-    formState: { errors },
-  } = useForm({
-    mode: "onChange",
-    defaultValues: { ...user },
-  });
-
   const dispatch = useDispatch();
-  const [profileImage, setProfileImage] = useState("");
-  const [uploadCv, setUploadCv] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [resumeUrl, setResumeUrl] = useState(null);
 
   const handleCancel = () => setPreviewOpen(false);
+
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+
+  const closeModal = () => setOpen(false);
+
+  useEffect(() => {
+    // Set default values if user exists
+    if (user) {
+      Object.entries(user).forEach(([key, value]) => {
+        setValue(key, value);
+      });
+    }
+  }, [user, setValue]);
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      // Upload profile picture if available
+      let profileUrl = null;
+      if (profileImage) {
+        const profileImageData = new FormData();
+        profileImageData.append("file", profileImage);
+        const response = await handleFileUpload(profileImageData);
+        profileUrl = response.data.url;
+      }
+
+      // Construct data with updated profileUrl and resumeUrl
+      const newData = {
+        ...data,
+        profileUrl,
+        resumeUrl,
+      };
+
+      // Send PUT request to update user data
+      const res = await apiRequest({
+        url: "/users/update-user",
+        token: user.token,
+        data: newData,
+        method: "PUT",
+      });
+
+      if (res) {
+        // If the request is successful, update user state in Redux store
+        dispatch(Login(res)); // Update user state in Redux
+        setOpen(false);
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      console.log(error);
+    }
+  };
+
+  const handleProfileImageChange = (info) => {
+    const fileList = [...info.fileList];
+    setFileList(fileList);
+
+    // Display preview if available
+    if (info.file.status === 'done' && info.file.originFileObj) {
+      const imageUrl = URL.createObjectURL(info.file.originFileObj);
+      setProfileImage(info.file.originFileObj);
+    }
+  };
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -68,62 +112,7 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
     }
   };
 
-  const onSubmit = async (data) => {
-    setIsSubmitting(true);
-    try {
-      // Upload profile picture
-      const uri = profileImage && (await handleFileUpload(profileImage));
-  
-      // Upload resume
-      const resumeUrl = uploadCv && (await handleFileUpload(uploadCv));
-  
-      // Construct newData with updated profileUrl and resumeUrl
-      const newData = uri ? { ...data, profileUrl: uri, resumeUrl } : data;
-  
-      // Send PUT request to update user data
-      const res = await apiRequest({
-        url: "/users/update-user",
-        token: user?.token,
-        data: newData,
-        method: "PUT",
-      });
-  
-      if (res) {
-        // If the request is successful, update user state in Redux store
-        const updatedUserInfo = { token: res?.token, ...res?.user };
-        dispatch(Login(updatedUserInfo)); // Update user state in Redux
-        setOpen(false);
-        // Update the resumeUrl state in UserProfile component if available
-        setResumeUrl(resumeUrl);
-      }
-    } catch (error) {
-      setIsSubmitting(false);
-      console.log(error);
-    }
-  };
-  
-  
 
-  const closeModal = () => setOpen(false);
-
-  // const uploadButton = (
-  //   <button
-  //     style={{
-  //       border: 0,
-  //       background: "none",
-  //     }}
-  //     type="button"
-  //   >
-  //     <PlusOutlined />
-  //     <div
-  //       style={{
-  //         marginTop: 8,
-  //       }}
-  //     >
-  //       Upload
-  //     </div>
-  //   </button>
-  // );
 
   return (
     <>

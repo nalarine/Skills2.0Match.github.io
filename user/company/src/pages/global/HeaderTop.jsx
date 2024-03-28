@@ -1,83 +1,51 @@
-import * as React from 'react';
-import { styled, alpha, ThemeProvider } from '@mui/material/styles'; // Import ThemeProvider
-import AppBar from '@mui/material/AppBar';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import { DarkMode, LightMode } from "@mui/icons-material";
-import { toggleActionTheme } from '../../redux/themeAction';
-import { useTheme } from '@emotion/react';
+import { AiOutlineLogout } from 'react-icons/ai';
+import { Logout } from '../../redux/userSlice';
 import { useDispatch } from 'react-redux';
 
-// Define your theme here
-const theme = {
-  palette: {
-    mode: 'light', // Set initial mode if needed
-    // Add other theme properties as needed
-  },
-};
-
-// Your HeaderTop component remains the same
+// Define your theme here if needed
+const theme = {};
 
 const HeaderTop = () => {
-    const { palette } = useTheme();
+    const { user } = useSelector((state) => state.user);
+    const profileUrl = user?.profileUrl || '';
     const dispatch = useDispatch();
 
+    const handleLogout = () => {
+        dispatch(Logout());
+    };
+
     return (
-        <Box className="flex-grow">
-            <AppBar position="static" className="shadow-none bg-primary">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        className="mr-2"
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        className="flex-grow hidden sm:block"
-                    >
-                        HR APP
-                    </Typography>
-
-                    {/* toggle dark theme */}
-                    <IconButton className="mr-4" onClick={() => dispatch(toggleActionTheme())}>
-                        {palette && palette.mode === "dark" ? (
-                            <DarkMode className="text-white text-xl" />
-                        ) : (
-                            <LightMode className="text-white text-xl" />
-                        )}
-                    </IconButton>
-
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
-                </Toolbar>
-            </AppBar>
+        <Box flexGrow={1} boxShadow={1} borderRadius={4} bgcolor="white" p={1} mt={2} ml={2} mr={2} mb={2}>
+            <Toolbar style={{ paddingRight: '10px', paddingLeft: 0, display: 'flex', justifyContent: 'flex-end' }}>
+                <div className="flex items-center gap-4">
+                    <Avatar src={profileUrl} alt="avatar" />
+                    <div>
+                        <Typography variant="h6" style={{ fontFamily: 'Poppins, sans-serif' }}>{user?.firstName}</Typography>
+                        <Typography variant="body2" color="textSecondary" className="font-normal" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                            {user?.email}
+                        </Typography>
+                    </div>
+                </div>
+                <IconButton onClick={handleLogout} style={{ marginLeft: '10px' }}>
+                    <AiOutlineLogout />
+                </IconButton>
+            </Toolbar>
         </Box>
     );
-}
+};
 
-// Wrap your HeaderTop component with ThemeProvider and provide the theme
 const ThemedHeaderTop = () => (
-  <ThemeProvider theme={theme}>
-    <HeaderTop />
-  </ThemeProvider>
+    <ThemeProvider theme={theme}>
+        <HeaderTop />
+    </ThemeProvider>
 );
 
 export default ThemedHeaderTop;

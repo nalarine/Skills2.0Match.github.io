@@ -4,6 +4,7 @@ import { apiRequest } from "../../utils/index";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import { Avatar } from "@material-tailwind/react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { toast, ToastContainer } from 'react-toastify';
@@ -44,6 +45,28 @@ const DashUsers = () => {
   }, []);
 
   const columns = [
+    { 
+      field: "profileUrl", 
+      headerName: "Profile", 
+      width: 100,
+      renderCell: (params) => (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingLeft: 20, paddingTop: 5, paddingBottom: 5 }}>
+          {params.row.profileUrl ? (
+            <Avatar alt={`${params.row.firstName} ${params.row.lastName}`} src={params.row.profileUrl} style={{ width: '40px', height: '40px', borderRadius: '50px', marginRight: 10 }} />
+          ) : (
+            <Avatar alt={`${params.row.firstName} ${params.row.lastName}`} style={{ width: '40px', height: '40px', borderRadius: '50px', marginRight: 10 }} />
+          )}
+        </div>
+        ),
+        sortable: false, // Disable sorting on the avatar column
+        filterable: false, // Disable filtering on the avatar column
+        resizable: false, // Disable resizing on the avatar column
+        hide: false, // Ensure the column is not hidden
+        headerAlign: 'center', // Align the header text to the center
+        align: 'center', // Align the cell content to the center
+        disableColumnMenu: true, // Disable the column menu
+        disableColumnSelector: true, // Disable the column selector
+      },
     { field: "firstName", headerName: "First Name", width: 150 },
     { field: "lastName", headerName: "Last Name", width: 150 },
     { field: "email", headerName: "Email", width: 250 },
@@ -64,13 +87,18 @@ const DashUsers = () => {
     fontFamily: "Poppins, sans-serif",
     backgroundColor: "white",
     position: 'relative',
+    background: 'radial-gradient(circle, rgba(229,231,235,1) 0%, rgba(193,225,193,1) 100%)',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.6)',
+    borderRadius: '10px',
+    padding: '30px',
   };
+  
 
   const createUserStyle = {
     backgroundColor: buttonClicked ? 'green' : 'white',
     color: buttonClicked ? 'white' : 'green',
     border: 'none',
-    borderRadius: 5,
+    borderRadius: 20,
     padding: '5px 10px',
     cursor: 'pointer',
     display: 'flex',
@@ -81,12 +109,12 @@ const DashUsers = () => {
     transition: 'background-color 0.3s',
   };
 
-  const handleButtonClick = () => { // Define handleButtonClick function
+  const handleButtonClick = () => {
     setButtonClicked(!buttonClicked);
     setOpenModal(true);
   };
 
-  const handleCloseModal = () => { // Define handleCloseModal function
+  const handleCloseModal = () => {
     setOpenModal(false);
     setEditUser(null);
     setNewUser({
@@ -98,7 +126,7 @@ const DashUsers = () => {
     });
   };
 
-  const handleInputChange = (e) => { // Define handleInputChange function
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewUser(prevState => ({
       ...prevState,
@@ -178,31 +206,37 @@ const DashUsers = () => {
   const cancelDelete = () => {
     setDeleteConfirmationOpen(false);
   };
+
   return (
     <div style={{ position: 'relative' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: "90%" }}>
-          <button style={createUserStyle} onClick={handleButtonClick}>
-            <AddCircleIcon style={{ marginRight: '5px' }} />
-            Create Account
-          </button>
-          <div style={{ marginTop: "50px" }}>
+        <div style={{ width: "95%" }}>
+          <div style={{ marginTop: "0px" }}>
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <DataGrid
+              <div style={{ paddingTop: 0, paddingBottom: 20 }}>
+              <DataGrid 
                 rows={users}
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                checkboxSelection
                 components={{
                   header: {
                     cell: () => null,
                   },
+                  toolbar: () => (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <button style={createUserStyle} onClick={handleButtonClick}>
+                        <AddCircleIcon style={{ marginRight: '5px' }} />
+                        Create Account
+                      </button>
+                    </div>
+                  ),
                 }}
-                style={{ ...style, height: 600 }}
+                style={{ ...style, height: 'calc(100% - 40px)' }} 
               />
+              </div>
             )}
           </div>
         </div>

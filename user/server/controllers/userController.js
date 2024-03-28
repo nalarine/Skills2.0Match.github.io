@@ -17,6 +17,7 @@ export const allUsers = async (req, res, next) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            profileUrl: user.profileUrl,
             role: user.role // Include user's role
         }));
 
