@@ -143,6 +143,7 @@ const getRecentPost = async() => {
                   label='Start Hiring Date'
                   placeholder='Select Date'
                   type='date'
+                  min={new Date().toISOString().split('T')[0]} // Set min attribute to today's date
                   register={register("startHiringDate", {
                     required: "Start Hiring Date is required",
                   })}
@@ -156,6 +157,7 @@ const getRecentPost = async() => {
                   label='End Hiring Date'
                   placeholder='Select Date'
                   type='date'
+                  min={new Date().toISOString().split('T')[0]} // Set min attribute to today's date
                   register={register("endHiringDate", {
                     required: "End Hiring Date is required",
                   })}
