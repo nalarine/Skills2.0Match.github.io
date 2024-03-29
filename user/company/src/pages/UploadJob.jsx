@@ -12,6 +12,7 @@ import FroalaEditorComponent from 'react-froala-wysiwyg';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import philippines from 'philippines';
 import Dropdown from "../components/Dropdown";
+import { jobCategories } from "../utils/data";
 
 const UploadJob = () => {
   const { user } = useSelector((state) => state.user)
@@ -35,6 +36,11 @@ const UploadJob = () => {
   const [locationProvince, setLocationProvince] = useState(philippines.provinces[0]);
   const [locationCity, setLocationCity] = useState(philippines.cities[5]);
   const [salaryPeriod, setSalaryPeriod] = useState('day'); // State to hold selected salary period
+  const [jobCategory, setJobCategory] = useState(""); // State to hold selected job category
+  const [jobSubcategory, setJobSubcategory] = useState(""); // State to hold selected job subcategory
+
+  const categories = jobCategories.map(category => category.category);
+  const subcategories = jobCategories.find(category => category.category === jobCategory)?.subcategories || [];
   
 
   const onChangeLocationRegion = (v) => {
@@ -188,6 +194,7 @@ const getRecentPost = async() => {
                   error={errors.salary ? errors.salary?.message : ""}
                 />
               </div>
+
               {/* Dropdown for salary period */}
               <div className='flex flex-col'>
                 <label className='text-gray-600 text-sm mb-3'>Salary Period</label>
@@ -231,16 +238,30 @@ const getRecentPost = async() => {
               </div>
             </div>
 
-            {/* <TextInput
-              name='location'
-              label='Job Location'
-              placeholder='eg. New York'
-              type='text'
-              register={register("location", {
-                required: "Job Location is required",
-              })}
-              error={errors.location ? errors.location?.message : ""}
-            /> */}
+            <div className='flex flex-col'>
+              <label className='text-gray-600 text-sm mb-1'>
+                Job Category
+              </label>
+              <Dropdown
+                title={jobCategory}
+                setTitle={setJobCategory}
+                items={categories}
+              />
+            </div>
+
+            {jobCategory && (
+              <div className='flex flex-col'>
+                <label className='text-gray-600 text-sm mb-1'>
+                  Job Subcategory
+                </label>
+                <Dropdown
+                  title={jobSubcategory}
+                  setTitle={setJobSubcategory}
+                  items={subcategories}
+                />
+              </div>
+            )}
+            
             <div className='flex flex-col'>
               <label className='text-gray-600 text-sm mb-1'>
                 Job Region
