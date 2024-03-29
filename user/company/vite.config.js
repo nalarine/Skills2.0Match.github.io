@@ -18,10 +18,20 @@ export default defineConfig({
       },
 
       // A minimatch pattern, or array of patterns, which specifies the files in the build the plugin should include. By default all svg files will be included.
-      include: "**/*.svg?react",
+      include: '**/*.svg?react',
 
       //  A minimatch pattern, or array of patterns, which specifies the files in the build the plugin should ignore. By default no files are ignored.
-      exclude: "",
+      exclude: '',
     }),
   ],
+  server: {
+    proxy: {
+      // with options: http://localhost:5173/api/bar-> http://jsonplaceholder.typicode.com/bar
+      '/api': {
+        target: import.meta.env.VITE_SERVER_BASE_URL,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, 'api-v1'),
+      },
+    },
+  },
 })
