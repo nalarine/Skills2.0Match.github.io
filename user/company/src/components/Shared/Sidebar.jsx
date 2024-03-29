@@ -1,27 +1,26 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Avatar, Typography } from "@material-tailwind/react";
-import { Link, useLocation } from "react-router-dom";
-import classNames from "classnames";
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Avatar, Typography } from '@material-tailwind/react'
+import { Link, useLocation } from 'react-router-dom'
+import classNames from 'classnames'
 import {
   DASHBOARD_SIDEBAR_LINKS,
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
-} from "../lib/consts/navigation";
-import { Logout } from "../../redux/userSlice"
-import { AiOutlineLogout } from 'react-icons/ai';
-
+} from '../lib/consts/navigation'
+import { Logout } from '../../redux/userSlice'
+import { AiOutlineLogout } from 'react-icons/ai'
 
 const linkClasses =
-  "flex items-center gap-2 font-regular px-3 py-2 hover:bg-light-yellow hover:no-underline rounded-sm text-base";
+  'flex items-center gap-2 font-regular px-3 py-2 hover:bg-light-yellow hover:no-underline rounded-sm text-base'
 
 const Sidebar = () => {
-  const { user } = useSelector((state) => state.user);
-  const { pathname } = useLocation(); // getting current route
-  const profileUrl = user?.profileUrl || '';
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user)
+  const { pathname } = useLocation() // getting current route
+  const profileUrl = user?.profileUrl || ''
+  const dispatch = useDispatch()
   const handleLogout = () => {
-    dispatch(Logout());
-  };
+    dispatch(Logout())
+  }
 
   return (
     <div className="bg-[#C1E1C1] w-72 p-3 flex flex-col">
@@ -50,20 +49,23 @@ const Sidebar = () => {
             <Typography variant="h6">{user?.firstName}</Typography>
             <Typography variant="small" color="gray" className="font-normal">
               {user?.email}
-            </Typography>            
-          </div>          
+            </Typography>
+          </div>
         </div>
         <button
-            onClick={handleLogout}
-            className="group flex items-center rounded-md text-sm text-gray-900 hover:bg-green-500 hover:text-white p-2"
+          onClick={handleLogout}
+          className="group flex items-center rounded-md text-sm text-gray-900 hover:bg-green-500 hover:text-white p-2"
         >
-            <AiOutlineLogout className="text-gray-600 mr-2 h-5 w-5" aria-hidden="true" />
-            Log Out
+          <AiOutlineLogout
+            className="text-gray-600 mr-2 h-5 w-5"
+            aria-hidden="true"
+          />
+          Log Out
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 function SidebarLink({ item, pathname }) {
   return (
@@ -71,13 +73,13 @@ function SidebarLink({ item, pathname }) {
       to={item.path}
       className={classNames(
         linkClasses,
-        pathname === item.path && "bg-green-500" // Add bg-green-500 class conditionally
+        pathname === item.path && 'bg-green-500', // Add bg-green-500 class conditionally
       )}
     >
       <span className="text-xl">{item.icon}</span>
       {item.label}
     </Link>
-  );
+  )
 }
 
-export default Sidebar;
+export default Sidebar

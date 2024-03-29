@@ -1,8 +1,8 @@
-import React from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import React from 'react'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
 
 export default function Schedule() {
   const calendarStyles = `
@@ -22,21 +22,21 @@ export default function Schedule() {
     color: #ffffff !important; 
     border-color: #008000 !important; 
   }
-`;
+`
   return (
     <div>
       <style>{calendarStyles}</style>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={"dayGridMonth"}
+        initialView={'dayGridMonth'}
         headerToolbar={{
-          start: "today prev,next",
-          center: "title",
-          end: "dayGridMonth,timeGridWeek,timeGridDay"
+          start: 'today prev,next',
+          center: 'title',
+          end: 'dayGridMonth,timeGridWeek,timeGridDay',
         }}
-        height={"90vh"}
+        height={'90vh'}
         themeSystem="standard" // Set theme system to standard
       />
     </div>
-  );
+  )
 }

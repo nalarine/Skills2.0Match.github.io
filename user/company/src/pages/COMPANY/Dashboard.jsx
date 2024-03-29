@@ -1,13 +1,13 @@
-import { DUMMY_DATA_INFO } from "../../components/lib/consts/dummy/dummy";
-import React from "react";
-import { IoCalendar } from "react-icons/io5";
-import { useSelector } from "react-redux";
-import DashboardStatsGrid from "../../components/DashboardStatsGrid";
-import JobStatistics from "../../components/JobStatistics";
-import ApplicantsSummary from "../../components/ApplicantsSummary";
+import { DUMMY_DATA_INFO } from '../../components/lib/consts/dummy/dummy'
+import React from 'react'
+import { IoCalendar } from 'react-icons/io5'
+import { useSelector } from 'react-redux'
+import DashboardStatsGrid from '../../components/DashboardStatsGrid'
+import JobStatistics from '../../components/JobStatistics'
+import ApplicantsSummary from '../../components/ApplicantsSummary'
 
 export default function Dashboard() {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user)
 
   return (
     <>
@@ -37,10 +37,8 @@ export default function Dashboard() {
           <JobStatistics />
           <ApplicantsSummary />
         </div>
-        <div className="flex flex-row gap-4 w-full py-3">
-
-        </div>
+        <div className="flex flex-row gap-4 w-full py-3"></div>
       </div>
     </>
-  );
+  )
 }

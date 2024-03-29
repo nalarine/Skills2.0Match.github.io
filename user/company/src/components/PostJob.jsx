@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { HiOutlinePlusSm } from "react-icons/hi";
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from 'react'
+import { HiOutlinePlusSm } from 'react-icons/hi'
+import Button from '@mui/material/Button'
 import {
   Dialog,
   Card,
@@ -9,24 +9,24 @@ import {
   CardFooter,
   Typography,
   Input,
-} from "@material-tailwind/react";
-import { DUMMY_JOB_LISTING } from "./lib/consts/dummy/dummy";
+} from '@material-tailwind/react'
+import { DUMMY_JOB_LISTING } from './lib/consts/dummy/dummy'
 
 export function PostJob() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen((cur) => !cur);
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen((cur) => !cur)
 
   // useEffect(() => {
   //   new FroalaEditor('textarea#froala-editor')
   // }, [])
 
   const [newListing, setNewListing] = useState({
-    position: "",
-    location: "",
-    salary: "",
+    position: '',
+    location: '',
+    salary: '',
     reqSkills: [],
-    jobType: "",
-  });
+    jobType: '',
+  })
 
   const handleAddListing = () => {
     if (
@@ -37,24 +37,24 @@ export function PostJob() {
       newListing.jobType
     ) {
       // Add the new listing to DUMMY_JOB_LISTING
-      DUMMY_JOB_LISTING.push(newListing);
+      DUMMY_JOB_LISTING.push(newListing)
 
       // Clear the form
       setNewListing({
-        position: "",
-        location: "",
-        salary: "",
+        position: '',
+        location: '',
+        salary: '',
         reqSkills: [],
-        jobType: "",
-      });
+        jobType: '',
+      })
     } else {
-      alert("Please fill out all fields before adding a new listing.");
+      alert('Please fill out all fields before adding a new listing.')
     }
-  };
+  }
 
   const handleInputClick = (e) => {
-    e.stopPropagation(); // Prevent event propagation when clicking on Input
-  };
+    e.stopPropagation() // Prevent event propagation when clicking on Input
+  }
 
   return (
     <Button
@@ -136,5 +136,5 @@ export function PostJob() {
       </Dialog>
       Post a job listing
     </Button>
-  );
+  )
 }

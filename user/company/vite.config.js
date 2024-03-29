@@ -2,6 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 
+// const backendUrl =
+//   import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8800'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -18,10 +21,19 @@ export default defineConfig({
       },
 
       // A minimatch pattern, or array of patterns, which specifies the files in the build the plugin should include. By default all svg files will be included.
-      include: "**/*.svg?react",
+      include: '**/*.svg?react',
 
       //  A minimatch pattern, or array of patterns, which specifies the files in the build the plugin should ignore. By default no files are ignored.
-      exclude: "",
+      exclude: '',
     }),
   ],
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: backendUrl,
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, 'api-v1'),
+  //     },
+  //   },
+  // },
 })

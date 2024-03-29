@@ -1,10 +1,10 @@
-import React from "react";
-import { ResponsiveContainer, Cell, Legend, PieChart, Pie } from "recharts";
-import { APPLICANTS } from "./lib/consts/dummy/dummy";
+import React from 'react'
+import { ResponsiveContainer, Cell, Legend, PieChart, Pie } from 'recharts'
+import { APPLICANTS } from './lib/consts/dummy/dummy'
 
-const COLORS = ["#0E64B4", "#E8A01A"];
+const COLORS = ['#0E64B4', '#E8A01A']
 
-const RADIAN = Math.PI / 180;
+const RADIAN = Math.PI / 180
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -13,29 +13,29 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
 }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5
+  const x = cx + radius * Math.cos(-midAngle * RADIAN)
+  const y = cy + radius * Math.sin(-midAngle * RADIAN)
 
   return (
     <text
       x={x}
       y={y}
       fill="black"
-      textAnchor={x > cx ? "start" : "end"}
+      textAnchor={x > cx ? 'start' : 'end'}
       dominantBaseline="central"
     >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
-  );
-};
+  )
+}
 
 export default function ApplicantsSummary() {
-  const values = APPLICANTS.map((item) => item.value);
+  const values = APPLICANTS.map((item) => item.value)
   const totalApplicants = values.reduce(
     (accumulator, currentValue) => accumulator + currentValue,
-    0
-  );
+    0,
+  )
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -77,5 +77,5 @@ export default function ApplicantsSummary() {
         </div>
       </div>
     </>
-  );
+  )
 }

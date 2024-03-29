@@ -1,5 +1,5 @@
-import { Outlet, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals } from "./components";
+import { Outlet, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals } from './components'
 import {
   About,
   AuthPage,
@@ -12,144 +12,141 @@ import {
   UploadJob,
   UserProfile,
   AdLayout,
-} from "./pages";
-import { useSelector } from "react-redux";
-import './App.css';
+} from './pages'
+import { useSelector } from 'react-redux'
+import './App.css'
 
 //USER/APPLICANT
-import Dashboard from "./pages/OSY/Dashboard";
-import Messages from "./pages/OSY/Messages";
-import AllApplication from "./pages/OSY/AllApplication";
-import Schedule from "./pages/OSY/Schedule";
-import SkillsAssessment from "./pages/OSY/SkillsAssessment";
-import JobAvailable from "./components/JobAvailable";
-import HelpCenter from "./pages/OSY/HelpCenter";
-import Settings from  "./pages/OSY/Settings";
+import Dashboard from './pages/OSY/Dashboard'
+import Messages from './pages/OSY/Messages'
+import AllApplication from './pages/OSY/AllApplication'
+import Schedule from './pages/OSY/Schedule'
+import SkillsAssessment from './pages/OSY/SkillsAssessment/SkillsAssessment'
+import JobAvailable from './components/JobAvailable'
+import HelpCenter from './pages/OSY/HelpCenter'
+import Settings from './pages/OSY/Settings'
 
-//COMPANY 
-import CompanyLayoutDash from "./components/Shared/CompanyLayoutDash";
-import CDashboard from "./pages/COMPANY/Dashboard";
-import CMessages from "./pages/COMPANY/Messages";
-import AllApplicants from "./pages/COMPANY/AllApplicants";
-import CSchedule from "./pages/COMPANY/Schedule";
-import CJobListing from "./pages/COMPANY/JobListing";
+//COMPANY
+import CompanyLayoutDash from './components/Shared/CompanyLayoutDash'
+import CDashboard from './pages/COMPANY/Dashboard'
+import CMessages from './pages/COMPANY/Messages'
+import AllApplicants from './pages/COMPANY/AllApplicants'
+import CSchedule from './pages/COMPANY/Schedule'
+import CJobListing from './pages/COMPANY/JobListing'
 
 //ADMIN
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import DashCategory from "./pages/admin/DashCategory";
-import DashCreateCategory from "./pages/admin/DashCreateCategory";
-import DashCreateJob from "./pages/admin/DashCreateJob";
-import DashJobs from "./pages/admin/DashJobs";
-import DashUsers from "./pages/admin/DashUsers";
-import DashCompanies from "./pages/admin/DashCompanies";
-
+import AdminDashboard from './pages/admin/AdminDashboard'
+import DashCategory from './pages/admin/DashCategory'
+import DashCreateCategory from './pages/admin/DashCreateCategory'
+import DashCreateJob from './pages/admin/DashCreateJob'
+import DashJobs from './pages/admin/DashJobs'
+import DashUsers from './pages/admin/DashUsers'
+import DashCompanies from './pages/admin/DashCompanies'
 
 //HOC
-const AdminDashboardHOC = AdLayout(AdminDashboard);
-const DashUsersHOC = AdLayout(DashUsers);
-const DashJobsHOC = AdLayout(DashJobs);
-const DashCompaniesHOC = AdLayout(DashCompanies);
-const DashCategoryHOC = AdLayout(DashCategory);
-const DashCreateJobHOC = AdLayout(DashCreateJob);
-const DashCreateCategoryHOC = AdLayout(DashCreateCategory);
+const AdminDashboardHOC = AdLayout(AdminDashboard)
+const DashUsersHOC = AdLayout(DashUsers)
+const DashJobsHOC = AdLayout(DashJobs)
+const DashCompaniesHOC = AdLayout(DashCompanies)
+const DashCategoryHOC = AdLayout(DashCategory)
+const DashCreateJobHOC = AdLayout(DashCreateJob)
+const DashCreateCategoryHOC = AdLayout(DashCreateCategory)
 
 function Layout() {
-  const { user } = useSelector((state) => state.user);
-  const location = useLocation();
+  const { user } = useSelector((state) => state.user)
+  const location = useLocation()
 
-  return <Outlet />;
+  return <Outlet />
+}
+
+function App() {
+  const { user } = useSelector((state) => state.user)
+  const location = useLocation()
+
+  // Redirect to user-auth if the user is not logged in
+  if (!user) {
+    return <Navigate to="/user-auth" replace />
   }
 
-  function App() {
-    const { user } = useSelector((state) => state.user);
-    const location = useLocation();
-  
-    // Redirect to user-auth if the user is not logged in
-    if (!user) {
-      return <Navigate to="/user-auth" replace />;
-    }
-  
   const hideNavbar =
-    location.pathname === "/" || 
-    location.pathname.startsWith("/Dashboard") ||
-    location.pathname.startsWith("/messages") ||
-    location.pathname.startsWith("/all-application") ||
-    location.pathname.startsWith("/my-schedule") ||
-    location.pathname.startsWith("/skills-assessment") ||
-    location.pathname.startsWith("/user-profile") ||
-    location.pathname.startsWith("/settings") ||
-    location.pathname.startsWith("/help-center") ||
-    location.pathname.startsWith("/job-available") ||
-    location.pathname.startsWith("/CompanyDash") ||
-    location.pathname.startsWith("/cmessages") ||
-    location.pathname.startsWith("/all-applicants") ||
-    location.pathname.startsWith("/schedule") ||
-    location.pathname.startsWith("/company-profile") ||
-    location.pathname.startsWith("/cjoblisting") ||
-    location.pathname.startsWith("/upload-job") ||
-    location.pathname.startsWith("/job-detail/") ||
-    location.pathname.startsWith("/companies") ||
-    location.pathname.startsWith("/admin/category") ||
-    location.pathname.startsWith("/admin/users") ||
-    location.pathname.startsWith("/admin/jobs") ||
-    location.pathname.startsWith("/admin/companies") ||
-    location.pathname.startsWith("/AdminDashboard");
+    location.pathname === '/' ||
+    location.pathname.startsWith('/Dashboard') ||
+    location.pathname.startsWith('/messages') ||
+    location.pathname.startsWith('/all-application') ||
+    location.pathname.startsWith('/my-schedule') ||
+    location.pathname.startsWith('/skills-assessment') ||
+    location.pathname.startsWith('/user-profile') ||
+    location.pathname.startsWith('/settings') ||
+    location.pathname.startsWith('/help-center') ||
+    location.pathname.startsWith('/job-available') ||
+    location.pathname.startsWith('/CompanyDash') ||
+    location.pathname.startsWith('/cmessages') ||
+    location.pathname.startsWith('/all-applicants') ||
+    location.pathname.startsWith('/schedule') ||
+    location.pathname.startsWith('/company-profile') ||
+    location.pathname.startsWith('/cjoblisting') ||
+    location.pathname.startsWith('/upload-job') ||
+    location.pathname.startsWith('/job-detail/') ||
+    location.pathname.startsWith('/companies') ||
+    location.pathname.startsWith('/admin/category') ||
+    location.pathname.startsWith('/admin/users') ||
+    location.pathname.startsWith('/admin/jobs') ||
+    location.pathname.startsWith('/admin/companies') ||
+    location.pathname.startsWith('/AdminDashboard')
 
-
-  const hideExtraComponents = user && (
-    location.pathname === "/" || 
-    location.pathname.startsWith("/AboutPage") ||
-    location.pathname.startsWith("/About") ||
-    location.pathname.startsWith("/ContactPage") ||
-    location.pathname.startsWith("/find-jobs") ||
-    location.pathname.startsWith("/company-profile") ||
-    location.pathname.startsWith("/job-detail/") ||
-    location.pathname.startsWith("/upload-job") ||
-    location.pathname.startsWith("/companies") ||
-    location.pathname.startsWith("/admin/category") ||
-    location.pathname.startsWith("/admin/users") ||
-    location.pathname.startsWith("/admin/jobs") ||
-    location.pathname.startsWith("/admin/companies") ||
-    location.pathname.startsWith("/AdminDashboard")
-
-  );
+  const hideExtraComponents =
+    user &&
+    (location.pathname === '/' ||
+      location.pathname.startsWith('/AboutPage') ||
+      location.pathname.startsWith('/About') ||
+      location.pathname.startsWith('/ContactPage') ||
+      location.pathname.startsWith('/find-jobs') ||
+      location.pathname.startsWith('/company-profile') ||
+      location.pathname.startsWith('/job-detail/') ||
+      location.pathname.startsWith('/upload-job') ||
+      location.pathname.startsWith('/companies') ||
+      location.pathname.startsWith('/admin/category') ||
+      location.pathname.startsWith('/admin/users') ||
+      location.pathname.startsWith('/admin/jobs') ||
+      location.pathname.startsWith('/admin/companies') ||
+      location.pathname.startsWith('/AdminDashboard'))
 
   return (
-    <main className='bg-[#f7fdfd]'>
-      {!hideNavbar && <Navbar />} 
+    <main className="bg-[#f7fdfd]">
+      {!hideNavbar && <Navbar />}
       {user && !hideExtraComponents && (
         <>
-          <NewestDeals/>
-          <AboutUs/>
+          <NewestDeals />
+          <AboutUs />
           <Footer />
         </>
       )}
       <Routes>
         <Route path="/user-auth" element={<AuthPage />} />
-        <Route path='/find-jobs' element={<FindJobs />} />
-          <Route path='/companies' element={<Companies />} />
+        <Route path="/find-jobs" element={<FindJobs />} />
+        <Route path="/companies" element={<Companies />} />
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-          <Route
-    path="/"
-    element={
-        user ? (
-            user.role === 0 && user.accountType === "seeker" ? (
-                <Navigate to="/user-profile" replace={true} />
-            ) : user.role === 1 ? (
-                <Navigate to="/AdminDashboard" replace={true} />
-            ) : (
-                <>
-                    <Navigate to="/Dashboard" replace={true} />
-                    <Navigate to="/company-profile" replace={true} />
-                </>
-            )
-        ) : (
-            <Navigate to="/user-auth" replace={true} />
-        )
-    }
-/>
+            <Route
+              path="/"
+              element={
+                user ? (
+                  user.role === 0 && user.accountType === 'seeker' ? (
+                    <Navigate to="/user-profile" replace={true} />
+                  ) : user.role === 1 ? (
+                    <Navigate to="/AdminDashboard" replace={true} />
+                  ) : (
+                    <>
+                      <Navigate to="/Dashboard" replace={true} />
+                      <Navigate to="/company-profile" replace={true} />
+                    </>
+                  )
+                ) : (
+                  <Navigate to="/user-auth" replace={true} />
+                )
+              }
+            />
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
@@ -160,8 +157,6 @@ function Layout() {
             <Route path="help-center" element={<HelpCenter />} />
             {/* <Route path="/job-available" element={<JobAvailable />} /> */}
           </Route>
-          
-          
 
           <Route element={<CompanyLayoutDash />}>
             <Route element={<CDashboard />} />
@@ -173,35 +168,44 @@ function Layout() {
             <Route path="cjoblisting" element={<CJobListing />} />
           </Route>
 
-          <Route path='/AdminDashboard' element={<AdminDashboard><AdminDashboardHOC /></AdminDashboard>} />
-          <Route path='/admin/users' element={<DashUsersHOC />} />
-          <Route path='/admin/jobs' element={<DashJobsHOC />} />
-          <Route path='/admin/companies' element={<DashCompaniesHOC />} />
-          <Route path='/admin/category' element={<DashCategoryHOC />} />
-          <Route path='/admin/job/create' element={<DashCreateJobHOC />} />
-          <Route path='/admin/category/create' element={<DashCreateCategoryHOC />} />
-          
+          <Route
+            path="/AdminDashboard"
+            element={
+              <AdminDashboard>
+                <AdminDashboardHOC />
+              </AdminDashboard>
+            }
+          />
+          <Route path="/admin/users" element={<DashUsersHOC />} />
+          <Route path="/admin/jobs" element={<DashJobsHOC />} />
+          <Route path="/admin/companies" element={<DashCompaniesHOC />} />
+          <Route path="/admin/category" element={<DashCategoryHOC />} />
+          <Route path="/admin/job/create" element={<DashCreateJobHOC />} />
+          <Route
+            path="/admin/category/create"
+            element={<DashCreateCategoryHOC />}
+          />
+
           <Route
             path={
-              user?.accountType === "seeker"
-                ? "/user-profile"
-                : "/user-profile/:id"
+              user?.accountType === 'seeker'
+                ? '/user-profile'
+                : '/user-profile/:id'
             }
             element={<UserProfile />}
           />
-    
-          <Route path={"/company-profile"} element={<CompanyProfile />} />
-          <Route path={"/company-profile/:id"} element={<CompanyProfile />} />
-          <Route path={"/upload-job"} element={<UploadJob />} />
-          <Route path={"/job-detail/:id"} element={<JobDetail />} />
 
-          </Route>
-          <Route path='/AboutPage' element={<AboutPage />} />
-          <Route path='/ContactPage' element={<ContactPage />} />
-          <Route path='/about-us' element={<About />} />
+          <Route path={'/company-profile'} element={<CompanyProfile />} />
+          <Route path={'/company-profile/:id'} element={<CompanyProfile />} />
+          <Route path={'/upload-job'} element={<UploadJob />} />
+          <Route path={'/job-detail/:id'} element={<JobDetail />} />
+        </Route>
+        <Route path="/AboutPage" element={<AboutPage />} />
+        <Route path="/ContactPage" element={<ContactPage />} />
+        <Route path="/about-us" element={<About />} />
       </Routes>
     </main>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,16 +1,16 @@
-import React, { Children, useState } from "react";
-import { Avatar } from "@material-tailwind/react";
-import { TextField } from "@mui/material";
-import { CONTACTS } from "../../components/lib/consts/dummy/dummy";
-import { BiDotsVertical } from "react-icons/bi";
-import { AiOutlinePushpin, AiOutlineStar } from "react-icons/ai";
+import React, { Children, useState } from 'react'
+import { Avatar } from '@material-tailwind/react'
+import { TextField } from '@mui/material'
+import { CONTACTS } from '../../components/lib/consts/dummy/dummy'
+import { BiDotsVertical } from 'react-icons/bi'
+import { AiOutlinePushpin, AiOutlineStar } from 'react-icons/ai'
 
 export default function Messages() {
-  const [activeContact, setActiveContact] = useState(null);
+  const [activeContact, setActiveContact] = useState(null)
 
   const handleContactClick = (contact) => {
-    setActiveContact(contact);
-  };
+    setActiveContact(contact)
+  }
 
   return (
     <div className="flex flex-col p-3 gap-5">
@@ -40,17 +40,17 @@ export default function Messages() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function Contact({ contact, isActive, onClick }) {
   return (
     <div
       className={`flex flex-row justify-start py-3 gap-3 border-b border-gray-50 ${
-        isActive ? "bg-light-green" : ""
+        isActive ? 'bg-light-green' : ''
       }`}
       onClick={onClick}
-      style={{ cursor: "pointer" }}
+      style={{ cursor: 'pointer' }}
     >
       <Avatar src={contact.profile} alt="avatar" />
 
@@ -65,7 +65,7 @@ function Contact({ contact, isActive, onClick }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function MessageContent({ contact }) {
@@ -115,5 +115,5 @@ function MessageContent({ contact }) {
         </div>
       )}
     </div>
-  );
+  )
 }
