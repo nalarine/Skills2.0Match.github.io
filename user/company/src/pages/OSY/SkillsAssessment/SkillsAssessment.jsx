@@ -10,6 +10,54 @@ import {
 import { useForm } from 'react-hook-form'
 import { questions } from './constants'
 
+// Mock candidate profile
+const candidate = {
+  skills: ['cleaning', 'data entry', 'food server', 'cook'],
+  experience: 1,
+  location: 'NCR Metro Manila Manila',
+  desiredSalary: 2000,
+}
+
+// Function to calculate job suitability score
+function calculateJobScore(job, candidate) {
+  let score = 0
+
+  // Check if candidate has required skills
+  job?.skillsRequired?.forEach((skill) => {
+    if (candidate.skills.includes(skill)) {
+      score += 1
+    }
+  })
+
+  // Check if candidate's experience matches
+  if (job.experience <= candidate.experience) {
+    score += 1
+  }
+
+  // Check if job location matches candidate's preference
+  if (job.location === candidate.location) {
+    score += 1
+  }
+
+  // Check if job salary is within candidate's desired range
+  if (job.salary >= candidate.desiredSalary) {
+    score += 1
+  }
+
+  return score
+}
+
+// Function to find suitable jobs for the candidate
+function findSuitableJobs(candidate, jobs) {
+  return jobs
+    .map((job) => ({
+      ...job,
+      score: calculateJobScore(job, candidate),
+    }))
+    .filter((job) => job.score >= 2) // Adjust the threshold as needed
+    .sort((a, b) => b.score - a.score) // Sort by score in descending order
+}
+
 const SkillsAssessment = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -23,7 +71,7 @@ const SkillsAssessment = () => {
   console.log('question', currentQuestion)
   console.log('answer:', watch(`answer${currentQuestion}`))
 
-  const [jobs, setJobs] = useState({})
+  const [jobs, setJobs] = useState([])
   const [error, setError] = useState(null)
 
   const fetchAllJobs = async () => {
@@ -33,7 +81,7 @@ const SkillsAssessment = () => {
         'http://localhost:8800/api-v1/jobs/alljobs',
       )
       if (response.data.success) {
-        setJobs(response.data)
+        setJobs(response.data.data)
       }
     } catch (error) {
       setError(error.message)
@@ -43,6 +91,14 @@ const SkillsAssessment = () => {
   useEffect(() => {
     fetchAllJobs()
   }, [])
+
+  useEffect(() => {
+    console.log('jobs', jobs)
+    console.log(
+      'candidate match suitable jobs',
+      findSuitableJobs(candidate, jobs),
+    )
+  }, [jobs])
 
   const handleAnswerChange = (value) => {
     console.log(value)
