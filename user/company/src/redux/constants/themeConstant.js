@@ -1,1 +1,1 @@
-export const THEME_MODE = "THEME_MODE";
+export const THEME_MODE = 'THEME_MODE'
