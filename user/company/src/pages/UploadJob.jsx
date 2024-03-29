@@ -247,7 +247,6 @@ const getRecentPost = async() => {
                 title={jobCategory}
                 setTitle={setJobCategory}
                 items={categories}
-                key='category'
               />
             </div>
 
