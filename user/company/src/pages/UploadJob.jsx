@@ -11,8 +11,10 @@ import 'froala-editor/js/plugins/lists.min.js';
 import FroalaEditorComponent from 'react-froala-wysiwyg';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import philippines from 'philippines';
-import Dropdown from "../components/Dropdown";
+import Dropdown from "../components/Dropdown"; // Import Dropdown component
+import DropdownCategories from "../components/DropdownCategories"
 import { jobCategories } from "../utils/data";
+
 
 const UploadJob = () => {
   const { user } = useSelector((state) => state.user)
@@ -42,7 +44,6 @@ const UploadJob = () => {
   const categories = jobCategories.map(category => category.category);
   const subcategories = jobCategories.find(category => category.category === jobCategory)?.subcategories || [];
   
-
   const onChangeLocationRegion = (v) => {
     const defaultProvince = philippines.provinces.filter(province => province.region == v.key)[0];
     const defaultCity = philippines.cities.filter(city => city.province == defaultProvince.key)[0];
@@ -242,10 +243,11 @@ const getRecentPost = async() => {
               <label className='text-gray-600 text-sm mb-1'>
                 Job Category
               </label>
-              <Dropdown
+              <DropdownCategories
                 title={jobCategory}
                 setTitle={setJobCategory}
                 items={categories}
+                key='category'
               />
             </div>
 
@@ -254,10 +256,11 @@ const getRecentPost = async() => {
                 <label className='text-gray-600 text-sm mb-1'>
                   Job Subcategory
                 </label>
-                <Dropdown
+                <DropdownCategories
                   title={jobSubcategory}
                   setTitle={setJobSubcategory}
                   items={subcategories}
+                  key='subcategories'
                 />
               </div>
             )}
@@ -319,13 +322,6 @@ const getRecentPost = async() => {
               <label className='text-gray-600 text-sm mb-1'>
                 Skills Requirements
               </label>
-              {/* <textarea
-                id='froala-editor'
-                className='rounded border border-gray-400 focus:outline-none focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-base px-4 py-2 resize-none'
-                rows={4}
-                cols={6}
-                {...register("requirements")}
-              ></textarea> */}
               <FroalaEditorComponent
                 tag='textarea'
                 model={requirementsText}
