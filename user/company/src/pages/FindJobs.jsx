@@ -7,8 +7,6 @@ import { updateURL } from "../utils";
 import { apiRequest } from "../utils";
 import Loading from "../components/Loading";
 
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-
 import Header from "../components/Header";
 import { experience, jobTypes, jobCategories } from "../utils/data";
 import { CustomButton, JobCard, ListBox } from "../components";

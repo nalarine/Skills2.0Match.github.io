@@ -212,17 +212,6 @@ const UserForm = ({ open, setOpen }) => {
                         />
                       </div>
                     </div>
-
-                    <TextInput
-                      name='jobTitle'
-                      label='Job Title'
-                      placeholder='Software Engineer'
-                      type='text'
-                      register={register("jobTitle", {
-                        required: "Job Title is required",
-                      })}
-                      error={errors.jobTitle ? errors.jobTitle?.message : ""}
-                    />
                     {/* Profile Picture */}
                     <div className="w-full flex gap-2 text-sm">
                       <div className="w-1/2">
@@ -415,7 +404,7 @@ const UserProfile = () => {
               {userInfo?.firstName + " " + userInfo?.lastName}
             </h1>
             <h5 className='text-green-900 text-lg font-bold mb-4 mt-4'>
-              {userInfo?.jobTitle || "Add Job Title"}
+              Applicant
             </h5>
           </div>
         </div>

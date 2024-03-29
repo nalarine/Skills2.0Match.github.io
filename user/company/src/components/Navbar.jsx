@@ -27,7 +27,7 @@ function MenuList({ user, onClick }) {
               {user?.firstName ?? user?.name}
             </p>
             <span className='text-sm text-blue-600'>
-              {user?.jobTitle ?? user?.email}
+              Applicant
             </span>
           </div>
           <img
