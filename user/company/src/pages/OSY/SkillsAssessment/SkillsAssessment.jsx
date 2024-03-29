@@ -30,7 +30,7 @@ const SkillsAssessment = () => {
     try {
       const response = await axios.get(
         // TODO: proxy server
-        'http://localhost:8800/api-v1/jobs/alljobs'
+        'http://localhost:8800/api-v1/jobs/alljobs',
       )
       if (response.data.success) {
         setJobs(response.data)

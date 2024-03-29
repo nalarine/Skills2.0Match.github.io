@@ -1,12 +1,12 @@
-import React from "react";
-import { Avatar } from "@material-tailwind/react";
+import React from 'react'
+import { Avatar } from '@material-tailwind/react'
 
 export const Profile = () => {
   return (
     <div className="p-3">
       <div class="flex">
         <div class="flex-initial w-60">
-          <img src="src/assets/dell-logo.svg" height={"200"} width={"200px"} />
+          <img src="src/assets/dell-logo.svg" height={'200'} width={'200px'} />
         </div>
         <div>
           <div class="flex-auto w-80 text-6xl font-bold">
@@ -34,7 +34,7 @@ export const Profile = () => {
       <br></br>
       <div class="grid grid-cols-3 gap-4">
         <div class="col-start-1 col-end-3">
-          {" "}
+          {' '}
           <p class="text-3xl font-bold">Company Profile</p>
           <div class="text-xl">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore
@@ -63,22 +63,22 @@ export const Profile = () => {
           <p class="text-3xl font-bold">Skills Expertise</p>
           <div class="grid grid-cols-3 gap-2">
             <div class="...">
-              <img src="src/assets/dell-logo.svg" height={"90"} width={"90"} />
+              <img src="src/assets/dell-logo.svg" height={'90'} width={'90'} />
             </div>
             <div class=" ...">
-              <img src="src/assets/dell-logo.svg" height={"90"} width={"90"} />
+              <img src="src/assets/dell-logo.svg" height={'90'} width={'90'} />
             </div>
             <div class="...">
-              <img src="src/assets/dell-logo.svg" height={"90"} width={"90"} />
+              <img src="src/assets/dell-logo.svg" height={'90'} width={'90'} />
             </div>
             <div class="...">
-              <img src="src/assets/dell-logo.svg" height={"90"} width={"90"} />
+              <img src="src/assets/dell-logo.svg" height={'90'} width={'90'} />
             </div>
             <div class="...">
-              <img src="src/assets/dell-logo.svg" height={"90"} width={"90"} />
+              <img src="src/assets/dell-logo.svg" height={'90'} width={'90'} />
             </div>
             <div class="...">
-              <img src="src/assets/dell-logo.svg" height={"90"} width={"90"} />
+              <img src="src/assets/dell-logo.svg" height={'90'} width={'90'} />
             </div>
           </div>
         </div>
@@ -98,8 +98,8 @@ export const Profile = () => {
         <div class=" ...">Show all jobs</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 function PositionWrapper() {
   return (
@@ -121,5 +121,5 @@ function PositionWrapper() {
         </div>
       </div>
     </div>
-  );
+  )
 }

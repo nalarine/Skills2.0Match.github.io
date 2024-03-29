@@ -1,6 +1,6 @@
-import React from "react";
-import { DUMMY_JOB_LISTING } from "../components/lib/consts/dummy/dummy";
-import { HiPencilAlt } from "react-icons/hi";
+import React from 'react'
+import { DUMMY_JOB_LISTING } from '../components/lib/consts/dummy/dummy'
+import { HiPencilAlt } from 'react-icons/hi'
 
 export default function JobListing() {
   return (
@@ -17,7 +17,7 @@ export default function JobListing() {
             <div
               className="p-3 bg-light-blue flex flex-row items-center gap-1 border w-24 justify-center"
               onClick={null}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
             >
               <HiPencilAlt />
               <span>edit</span>
@@ -52,5 +52,5 @@ export default function JobListing() {
         </div>
       ))}
     </div>
-  );
+  )
 }

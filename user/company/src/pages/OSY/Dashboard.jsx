@@ -1,17 +1,17 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { IoCalendar } from "react-icons/io5";
-import DashboardStatsGrid from "../../components/DashboardStatsGrid";
-import JobAvailable from "../../components/JobAvailable";
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { IoCalendar } from 'react-icons/io5'
+import DashboardStatsGrid from '../../components/DashboardStatsGrid'
+import JobAvailable from '../../components/JobAvailable'
 
 const Dashboard = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user)
 
   const handleCalendarClick = () => {
     // Add your functionality for when the calendar is clicked
-    alert("Calendar button clicked!");
+    alert('Calendar button clicked!')
     // You can perform any actions you want here
-  };
+  }
 
   return (
     <>
@@ -43,7 +43,7 @@ const Dashboard = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
