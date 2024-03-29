@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { AiOutlineSearch, AiOutlineCloseCircle } from "react-icons/ai";
 import { CiLocationOn } from "react-icons/ci";
 import CustomButton from "./CustomButton";
-import { popularSearch } from "../utils/data";
+// import { popularSearch } from "../utils/data";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -47,7 +47,7 @@ const Header = ({
       background: 'url(\'../../src/assets/find-jobs-header.png\') center',
       backgroundSize: 'contain',
     }}>
-      <div className={`container mx-auto px-5 ${type ? "h-[500px]" : "h-[500px]"} flex items-center relative`}>
+      <div className={`container mx-auto px-5 ${type ? "h-[500px]" : "h-[500px]"} flex top-16 relative`}>
 
         <div className='w-full z-10' data-aos="fade-right" data-aos-duration="2500">
           <div className='mb-8'>
@@ -80,7 +80,7 @@ const Header = ({
             </div>
           </div>
 
-          {type && (
+          {/* {type && (
             <div className='w-full lg:1/2 mx-9 flex flex-wrap gap-4 md:gap-6 py-10 md:py-14'>
               {popularSearch.map((search, index) => (
                 <span
@@ -93,7 +93,7 @@ const Header = ({
                 </span>
               ))}
             </div>
-          )}
+          )} */}
         </div>
 
       </div>

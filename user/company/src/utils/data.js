@@ -21,16 +21,95 @@ export const experience = [
   { title: "Over 6 Years", value: "6" },
 ];
 
-export const popularSearch = [
-  "Software Engineer",
-  "Developer",
-  "Full-Stack Developer",
-  "Data Scientist",
-  "Remote",
-  "Full-Time",
-  "Sales",
-  "Office Assistant",
+export const jobCategories = [
+  {
+    category: "Retail and Sales",
+    subcategories: ["Sales Associate", "Cashier", "Merchandiser", "Store Assistant"],
+  },
+  {
+    category: "Customer Service",
+    subcategories: ["Call Center Agent", "Customer Service Representative"],
+  },
+  {
+    category: "Food Service and Hospitality",
+    subcategories: ["Food Server", "Kitchen Staff", "Hotel Attendants"],
+  },
+  {
+    category: "Construction and Manual Labor",
+    subcategories: ["General Laborers", "Helpers", "Skilled Trade Assistants"],
+  },
+  {
+    category: "Domestic Helper",
+    subcategories: ["Household Helper", "Household Cleaner", "Caregiver"],
+  },
+  {
+    category: "Informal Sector Jobs",
+    subcategories: ["Street Vending", "Peddling Goods"],
+  },
+  {
+    category: "manufacturing and Factory Work",
+    subcategories: ["Product Line Workers", "Machine Operators"],
+  },
+  {
+    category: "Security Guard Services",
+    subcategories: ["Seucurity Guard Services"],
+  },
+  {
+    category: "Domestic Helper",
+    subcategories: ["Domestic Helper"],
+  },
+  {
+    category: "Warehouse Worker",
+    subcategories: ["Packeging, Sortingm and Inventory Management"],
+  },
+  {
+    category: "Childcare Assistant",
+    subcategories: ["Childcare Assistant"],
+  },
+  {
+    category: "Data Entry Clerk",
+    subcategories: ["Data Entry Clerk"],
+  },
+  {
+    category: "Fitness Instructor",
+    subcategories: ["Fitness Instructor"],
+  },
+  {
+    category: "Event Staff",
+    subcategories: ["Event Setup", "Crowd Management", "Audio and Visual Support"],
+  },
+  {
+    category: "Photography Assistant",
+    subcategories: ["Photographer", "Photo Editing", "Equipment Setup"],
+  },
+  {
+    category: "Research Assistant",
+    subcategories: ["Research Assistant"],
+  },
+  {
+    category: "Social Service Aid",
+    subcategories: ["Outreach", "Resource Coordinator", "Client Assistant"],
+  },
+  {
+    category: "Pet Caretaker",
+    subcategories: ["Pet Caretaker"],
+  },
+  {
+    category: "Event Planning Assistant",
+    subcategories: ["Venue Scouting", "Logistics Coordinator", "Vendor Management", "Onsite Event Support"],
+  },
 ];
+
+// export const popularSearch = [
+//   "Software Engineer",
+//   "Developer",
+//   "Full-Stack Developer",
+//   "Data Scientist",
+//   "Remote",
+//   "Full-Time",
+//   "Sales",
+//   "Office Assistant",
+// ];
 
 export const jobs = [
   {

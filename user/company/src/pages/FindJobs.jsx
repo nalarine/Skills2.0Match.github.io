@@ -7,8 +7,10 @@ import { updateURL } from "../utils";
 import { apiRequest } from "../utils";
 import Loading from "../components/Loading";
 
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+
 import Header from "../components/Header";
-import { experience, jobTypes, jobs } from "../utils/data";
+import { experience, jobTypes, jobCategories } from "../utils/data";
 import { CustomButton, JobCard, ListBox } from "../components";
 import { useSelector } from "react-redux";
 
@@ -125,6 +127,7 @@ const FindJobs = () => {
         <div className='hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm'>
           <p className='text-lg font-semibold text-green-500'>Filter Search</p>
 
+          {/* Job Types Start */}
           <div className='py-2'>
             <div className='flex justify-between mb-3'>
               <p className='flex items-center gap-2 font-semibold'>
@@ -151,7 +154,9 @@ const FindJobs = () => {
               ))}
             </div>
           </div>
-
+          {/* Job Types End */}
+          
+          {/* Experiend Start */}
           <div className='py-2 mt-4'>
             <div className='flex justify-between mb-3'>
               <p className='flex items-center gap-2 font-semibold'>
@@ -178,6 +183,41 @@ const FindJobs = () => {
               ))}
             </div>
           </div>
+          {/* Experience End */}
+
+          {/* Job Categories Start */}
+          <div className='py-2 mt-4'>
+            <div className='flex justify-between mb-3'>
+              <p className='flex items-center gap-2 font-semibold'>
+                <BiBriefcaseAlt2 />
+                Job Category
+              </p>
+
+              <button>
+                <MdOutlineKeyboardArrowDown />
+              </button>
+            </div>
+
+            <div className='flex flex-col gap-2'>
+              {jobCategories.map((category, index) => (
+                <div key={index} className='flex flex-col gap-2'>
+                  <p className='font-semibold self-start py-2'>{category.category}</p>
+                  {category.subcategories.map((subcategory, idx) => (
+                    <div key={idx} className='flex gap-2 text-xs md:text-base '>
+                      <input
+                        type='checkbox'
+                        value={subcategory}
+                        className='w-4 h-4 ml-4'
+                        onChange={(e) => filterJobs(e.target.value)}
+                      />
+                      <span className='text-sm self-start'>{subcategory}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Job Categories End */}
         </div>
 
         <div className='w-full md:w-5/6 px-5 md:px-0'>
