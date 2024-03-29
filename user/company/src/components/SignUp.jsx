@@ -1,66 +1,66 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom"; // Import Navigate
-import { useDispatch } from "react-redux";
-import TextInput from "./TextInput";
-import CustomButton from "./CustomButton";
-import { apiRequest } from "../utils";
-import { Login } from "../redux/userSlice";
-import Logo from "../assets/header.png";
-import GoogleIcon from "../assets/google-icon.svg";
-import { auth, provider } from "../firebase";
-import { signInWithPopup } from "firebase/auth";
-import "../App.css";
+import React, { Fragment, useState, useEffect } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { useForm } from 'react-hook-form'
+import { useLocation, useNavigate } from 'react-router-dom' // Import Navigate
+import { useDispatch } from 'react-redux'
+import TextInput from './TextInput'
+import CustomButton from './CustomButton'
+import { apiRequest } from '../utils'
+import { Login } from '../redux/userSlice'
+import Logo from '../assets/header.png'
+import GoogleIcon from '../assets/google-icon.svg'
+import { auth, provider } from '../firebase'
+import { signInWithPopup } from 'firebase/auth'
+import '../App.css'
 
 const SignUp = ({ open, setOpen }) => {
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  const [isRegister, setIsRegister] = useState(true);
-  const [accountType, setAccountType] = useState("seeker");
-  const [errMsg, setErrMsg] = useState(""); // State for error message
-  const [value, setValue] = useState("");
+  const [isRegister, setIsRegister] = useState(true)
+  const [accountType, setAccountType] = useState('seeker')
+  const [errMsg, setErrMsg] = useState('') // State for error message
+  const [value, setValue] = useState('')
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors },
   } = useForm({
-    mode: "onChange",
-  });
-  let from = location.state?.from?.pathname || "/";
+    mode: 'onChange',
+  })
+  let from = location.state?.from?.pathname || '/'
 
-  const closeModal = () => setOpen(false);
+  const closeModal = () => setOpen(false)
 
   const handleClick = () => {
     signInWithPopup(auth, provider)
       .then((data) => {
-        setValue(data.user.email);
-        localStorage.setItem("email", data.user.email);
-        navigate(accountType === "seeker" ? "/Dashboard" : "/CompanyDash"); // Navigate to the appropriate route
+        setValue(data.user.email)
+        localStorage.setItem('email', data.user.email)
+        navigate(accountType === 'seeker' ? '/Dashboard' : '/CompanyDash') // Navigate to the appropriate route
       })
       .catch((error) => {
-        console.error("Google Sign-in Error:", error);
-      });
-  };
+        console.error('Google Sign-in Error:', error)
+      })
+  }
 
   useEffect(() => {
-    setValue(localStorage.getItem("email"));
-  });
+    setValue(localStorage.getItem('email'))
+  })
 
   const onSubmit = async (data) => {
-    let URL = null;
+    let URL = null
     if (isRegister) {
-      if (accountType === "seeker") {
-        URL = "auth/register";
-      } else URL = "companies/register";
+      if (accountType === 'seeker') {
+        URL = 'auth/register'
+      } else URL = 'companies/register'
     } else {
-      if (accountType === "seeker") {
-        URL = "auth/login";
+      if (accountType === 'seeker') {
+        URL = 'auth/login'
       } else {
-        URL = "companies/login";
+        URL = 'companies/login'
       }
     }
 
@@ -68,39 +68,44 @@ const SignUp = ({ open, setOpen }) => {
       const res = await apiRequest({
         url: URL,
         data: data,
-        method: "POST",
-      });
-    
-      console.log(res);
-      if (res?.status === "falied") {
-        setErrMsg("Incorrect email or password.");
-        alert("Incorrect email or password.");
+        method: 'POST',
+      })
+
+      console.log(res)
+      if (res?.status === 'falied') {
+        setErrMsg('Incorrect email or password.')
+        alert('Incorrect email or password.')
       } else {
-        setErrMsg("");
-        const userData = { token: res?.token, ...res?.user };
-        dispatch(Login(userData));
-        localStorage.setItem("userInfo", JSON.stringify(userData));
-        setOpen(false);
+        setErrMsg('')
+        const userData = { token: res?.token, ...res?.user }
+        dispatch(Login(userData))
+        localStorage.setItem('userInfo', JSON.stringify(userData))
+        setOpen(false)
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         // Mongoose validation error occurred
-        if (error.response.data && error.response.data.errors && error.response.data.errors.password) {
-          setErrMsg(error.response.data.errors.password.message);
-          alert(error.response.data.errors.password.message);
+        if (
+          error.response.data &&
+          error.response.data.errors &&
+          error.response.data.errors.password
+        ) {
+          setErrMsg(error.response.data.errors.password.message)
+          alert(error.response.data.errors.password.message)
         } else {
-          setErrMsg("Validation error occurred.");
-          alert("Validation error occurred.");
+          setErrMsg('Validation error occurred.')
+          alert('Validation error occurred.')
         }
       } else {
         // Other errors
-        setErrMsg("An error occurred.");
-        alert("An error occurred.");
+        setErrMsg('An error occurred.')
+        alert('An error occurred.')
       }
-    } {
-      console.log(error);
     }
-  };
+    {
+      console.log(error)
+    }
+  }
 
   return (
     <>
@@ -143,27 +148,27 @@ const SignUp = ({ open, setOpen }) => {
                       alt="Logo"
                       className="h-30 w-40 mr-2 justify-items-center"
                     />
-                    {isRegister ? "" : ""}
+                    {isRegister ? '' : ''}
                   </Dialog.Title>
 
                   <div className="w-full flex items-center justify-center py-4 ">
                     <button
                       className={`flex-1 px-4 py-2 rounded text-sm outline-none ${
-                        accountType === "seeker"
-                          ? "bg-[#C1E1C1] text-[#14532d] font-semibold"
-                          : "bg-white border border-[#14532d]"
+                        accountType === 'seeker'
+                          ? 'bg-[#C1E1C1] text-[#14532d] font-semibold'
+                          : 'bg-white border border-[#14532d]'
                       }`}
-                      onClick={() => setAccountType("seeker")}
+                      onClick={() => setAccountType('seeker')}
                     >
                       User Account
                     </button>
                     <button
                       className={`flex-1 px-4 py-2 rounded text-sm outline-none ${
-                        accountType !== "seeker"
-                          ? "bg-[#C1E1C1] text-[#14532d] font-semibold"
-                          : "bg-white border border-[#14532d]"
+                        accountType !== 'seeker'
+                          ? 'bg-[#C1E1C1] text-[#14532d] font-semibold'
+                          : 'bg-white border border-[#14532d]'
                       }`}
-                      onClick={() => setAccountType("company")}
+                      onClick={() => setAccountType('company')}
                     >
                       Company Account
                     </button>
@@ -178,67 +183,67 @@ const SignUp = ({ open, setOpen }) => {
                       label="Email Address"
                       placeholder="email@example.com"
                       type="email"
-                      register={register("email", {
-                        required: "Email Address is required!",
+                      register={register('email', {
+                        required: 'Email Address is required!',
                       })}
-                      error={errors.email ? errors.email.message : ""}
+                      error={errors.email ? errors.email.message : ''}
                     />
 
                     {isRegister && (
                       <div className="w-full flex gap-1 md:gap-2">
                         <div
                           className={`${
-                            accountType === "seeker" ? "w-1/2" : "w-full"
+                            accountType === 'seeker' ? 'w-1/2' : 'w-full'
                           }`}
                         >
                           <TextInput
                             name={
-                              accountType === "seeker" ? "firstName" : "name"
+                              accountType === 'seeker' ? 'firstName' : 'name'
                             }
                             label={
-                              accountType === "seeker"
-                                ? "First Name"
-                                : "Company Name"
+                              accountType === 'seeker'
+                                ? 'First Name'
+                                : 'Company Name'
                             }
                             placeholder={
-                              accountType === "seeker"
-                                ? "eg. James"
-                                : "Company name"
+                              accountType === 'seeker'
+                                ? 'eg. James'
+                                : 'Company name'
                             }
                             type="text"
                             register={register(
-                              accountType === "seeker" ? "firstName" : "name",
+                              accountType === 'seeker' ? 'firstName' : 'name',
                               {
                                 required:
-                                  accountType === "seeker"
-                                    ? "First Name is required"
-                                    : "Company Name is required",
-                              }
+                                  accountType === 'seeker'
+                                    ? 'First Name is required'
+                                    : 'Company Name is required',
+                              },
                             )}
                             error={
-                              accountType === "seeker"
+                              accountType === 'seeker'
                                 ? errors.firstName
                                   ? errors.firstName?.message
-                                  : ""
+                                  : ''
                                 : errors.name
-                                ? errors.name?.message
-                                : ""
+                                  ? errors.name?.message
+                                  : ''
                             }
                           />
                         </div>
 
-                        {accountType === "seeker" && isRegister && (
+                        {accountType === 'seeker' && isRegister && (
                           <div className="w-1/2">
                             <TextInput
                               name="lastName"
                               label="Last Name"
                               placeholder="Wagonner"
                               type="text"
-                              register={register("lastName", {
-                                required: "Last Name is required",
+                              register={register('lastName', {
+                                required: 'Last Name is required',
                               })}
                               error={
-                                errors.lastName ? errors.lastName?.message : ""
+                                errors.lastName ? errors.lastName?.message : ''
                               }
                             />
                           </div>
@@ -247,17 +252,17 @@ const SignUp = ({ open, setOpen }) => {
                     )}
 
                     <div className="w-full flex gap-1 md:gap-2">
-                      <div className={`${isRegister ? "w-1/2" : "w-full"}`}>
+                      <div className={`${isRegister ? 'w-1/2' : 'w-full'}`}>
                         <TextInput
                           name="password"
                           label="Password"
                           placeholder="Password"
                           type="password"
-                          register={register("password", {
-                            required: "Password is required!",
+                          register={register('password', {
+                            required: 'Password is required!',
                           })}
                           error={
-                            errors.password ? errors.password?.message : ""
+                            errors.password ? errors.password?.message : ''
                           }
                         />
                       </div>
@@ -268,20 +273,20 @@ const SignUp = ({ open, setOpen }) => {
                             label="Confirm Password"
                             placeholder="Password"
                             type="password"
-                            register={register("cPassword", {
+                            register={register('cPassword', {
                               validate: (value) => {
-                                const { password } = getValues();
+                                const { password } = getValues()
 
                                 if (password !== value) {
-                                  return "Passwords do not match";
+                                  return 'Passwords do not match'
                                 }
                               },
                             })}
                             error={
                               errors.cPassword &&
-                              errors.cPassword.type === "validate"
+                              errors.cPassword.type === 'validate'
                                 ? errors.cPassword?.message
-                                : ""
+                                : ''
                             }
                           />
                         </div>
@@ -292,7 +297,7 @@ const SignUp = ({ open, setOpen }) => {
                       <CustomButton
                         type="submit"
                         containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
-                        title={isRegister ? "Create Account" : "Login Account"}
+                        title={isRegister ? 'Create Account' : 'Login Account'}
                       />
                     </div>
 
@@ -322,14 +327,14 @@ const SignUp = ({ open, setOpen }) => {
                   <div className="mt-4">
                     <p className="text-sm text-gray-700">
                       {isRegister
-                        ? "Already have an account?"
-                        : "Do not have an account?"}
+                        ? 'Already have an account?'
+                        : 'Do not have an account?'}
 
                       <span
                         className="text-sm text-border-[#14532d] ml-2 hover:text-[#C1E1C1] hover:font-semibold cursor-pointer"
                         onClick={() => setIsRegister((prev) => !prev)}
                       >
-                        {isRegister ? "Login" : "Create Account"}
+                        {isRegister ? 'Login' : 'Create Account'}
                       </span>
                     </p>
                   </div>
@@ -340,7 +345,7 @@ const SignUp = ({ open, setOpen }) => {
         </Dialog>
       </Transition>
     </>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp
