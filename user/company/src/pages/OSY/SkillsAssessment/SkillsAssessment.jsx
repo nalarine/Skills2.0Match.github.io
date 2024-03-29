@@ -116,10 +116,6 @@ const SkillsAssessment = () => {
       </Card>
 
       {error && <div>Error: {error}</div>}
-      {/* Display error message if there is any */}
-
-      {JSON.stringify(jobs)}
-      {/* Display fetched jobs data */}
     </div>
   )
 }
