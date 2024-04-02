@@ -136,6 +136,59 @@ export const updateCompanyProfile = async (req, res, next) => {
   }
 };
 
+export const updateCompanyApplicant = async (req, res, next) => {
+  // fullName: `${user.firstName} ${user.lastName}`,
+  // id: `${applicantId}-${job._id}`,
+  // user,
+  // jobRole: job.jobTitle,
+  // appliedDate: new Date(new Date().setHours(0,0,0)),
+  // hiringStage: "Pending",
+  // resume: attachmentURL
+
+  const { company_id } = req.params;
+  const { id, hiringStage } = req.body;
+  const validHiringStages = ['Pending', 'Hired', 'Declined', 'Shortlisted'];
+
+  try {
+    // validation
+    if (!id || !hiringStage) {
+      next("Please Provide All Required Fields");
+      return;
+    }
+
+    if (!validHiringStages.includes(hiringStage)) {
+      next("Please input valid hiring stage");
+      return;  
+    }
+
+    const company = await Companies.findById(company_id);
+    if (!company) 
+      return res.status(400).json({ message: "Invalid company." });
+
+    company.applicants = company.applicants.map(v => {
+      if (v.id == id) {
+        v.hiringStage = hiringStage
+      }
+      return v
+    })
+
+    const updatedCompanyApplicant = await Companies.findByIdAndUpdate(company_id, company, { new: true });
+
+    if (!updatedCompanyApplicant) {
+      return res.status(404).json({ message: "Company Applicant not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully updated applicant",
+      data: updatedCompanyApplicant
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const getCompanyProfile = async (req, res, next) => {
   try {
     const id = req.body.user.userId;

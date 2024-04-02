@@ -8,6 +8,7 @@ import {
   register,
   signIn,
   updateCompanyProfile,
+  updateCompanyApplicant,
   allCompanies,
   createCompany,
   editCompany,
@@ -43,6 +44,7 @@ router.get("/allcompanies", allCompanies);
 // UPDATE DATA
 router.put("/update-company", userAuth, updateCompanyProfile);
 router.put("/edit-company/:id", editCompany);
+router.put("/update-company-applicant/:company_id", updateCompanyApplicant);
 
 router.delete("/delete/:id", deleteCompany);
 

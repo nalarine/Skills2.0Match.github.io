@@ -252,6 +252,10 @@ export const applyJob = async (req, res, next) => {
     const company = await Companies.findById(updatedJob.company);
     const user = await User.findById(applicantId)
 
+    if ((company.applicants || []).map(v => v.id).includes(`${applicantId}-${job._id}`)) {
+      return res.status(400).json({ message: `You have already applied to this job post.`});
+    }
+
     company.applicants.push({
       fullName: `${user.firstName} ${user.lastName}`,
       id: `${applicantId}-${job._id}`,
