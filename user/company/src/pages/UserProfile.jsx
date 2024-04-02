@@ -62,11 +62,26 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
         token: user.token,
         data: newData,
         method: 'PUT',
-      });
-      if (res) {
-        dispatch(Login(res));
-        setOpen(false);
+      })
+
+      const getUser = async () => {
+        const resUser = await apiRequest({
+          url: '/users/get-user',
+          token: user?.token,
+          method: 'POST',
+        })
+        const updatedUserInfo = { token: user?.token, ...resUser?.user }
+        dispatch(Login(updatedUserInfo)) // Update user state in Redux
       }
+
+
+      if (res) {
+        // If the request is successful, update user state in Redux store
+        // dispatch(Login(res.user)) // Update user state in Redux
+        getUser();
+        setOpen(false)
+      }
+      setIsSubmitting(false)
     } catch (error) {
       setIsSubmitting(false);
       console.log(error);
@@ -77,14 +92,16 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
     const { file, fileList } = info;
     setFileList(fileList);
   
-    if (file.status === 'done' && file.originFileObj) {
-      const imageFile = file.originFileObj;
-      const imageUrl = URL.createObjectURL(imageFile);
-      console.log('Image URL:', imageUrl);
+    // if (file.status === 'done' && file.originFileObj) {
+    //   const imageFile = file.originFileObj;
+    //   const imageUrl = URL.createObjectURL(imageFile);
+    //   console.log('Image URL:', imageUrl);
   
-      setProfileImage(imageFile);
-      handlePreview(imageFile);
-    }
+    //   setProfileImage(imageFile);
+    //   handlePreview(imageFile);
+    // }
+
+    setProfileImage(file);
   };
   
   
