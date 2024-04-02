@@ -1,86 +1,111 @@
-import React, { useEffect, useState } from 'react'
-import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import { apiRequest } from '../../utils'
-import { useSelector } from 'react-redux' // Importing useSelector to access user from Redux store
+import React, { useEffect, useState } from 'react';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { renderStatus } from '../../components/lib/consts/renderers/renderStatus';
+import ViewApplicantCard from '../../components/ViewApplicantCard';
+import { apiRequest } from '../../utils';
+import { useSelector } from 'react-redux';
 
 const columns = [
   { field: 'companyName', headerName: 'Company', minWidth: 200, flex: 1 },
-  { field: 'hiringStage', headerName: 'Hiring Stage', minWidth: 200, flex: 1 },
+  {
+    field: 'hiringStage',
+    headerName: 'Hiring Stage',
+    type: 'singleSelect',
+    renderCell: renderStatus,
+    minWidth: 150,
+    flex: 1,
+    valueOptions: ({ row }) => {
+      if (row === 'Interview') {
+        return (
+          <div className="border p-3 border-dark-yellow">
+            <span className="text-dark-yellow">{row}</span>
+          </div>
+        );
+      }
+    },
+  },
   { field: 'appliedDate', headerName: 'Applied Date', minWidth: 200, flex: 1 },
   { field: 'jobRole', headerName: 'Job Role', minWidth: 200, flex: 1 },
-  { field: 'action', headerName: 'Action', minWidth: 200, flex: 1 },
-]
+  {
+    field: 'action',
+    headerName: 'Action',
+    minWidth: 200,
+    flex: 1,
+    valueGetter: () => 'See Profile',
+  },
+];
 
-export default function AllApplicants() {
-  const { user } = useSelector((state) => state.user) // Accessing user from Redux store
-  const [tableData, setTableData] = useState([])
-  const [loading, setLoading] = useState(true) // State to track loading status
-  const [error, setError] = useState(null) // State to track errors
+export default function AllApplication() {
+  const { user } = useSelector((state) => state.user);
+  const [tableData, setTableData] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await apiRequest({
-          url: '/companies/get-company/' + user._id,
-          method: 'GET',
-        })
-        console.log('API Response:', res) // Log the API response
-        if (res.data && res.data.applicants) {
-          setTableData(res.data.applicants)
-        } else {
-          console.log('No applicants found in the response:', res)
-        }
-      } catch (error) {
-        console.error('Error fetching company data:', error) // Log any errors that occur
-        setError(error.message || 'An error occurred while fetching data')
-      } finally {
-        setLoading(false) // Set loading to false regardless of success or failure
-      }
+  const getUser = async () => {
+    try {
+      const res = await apiRequest({
+        url: '/users/get-user/' + user._id,
+        method: 'GET',
+      });
+      setTableData(res.data.application);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    fetchData() // Call fetchData function to fetch data when component mounts
-  }, [user]) // Adding user to dependency array to refetch data when user changes
+    useEffect(() => {
+    getUser()
+    // fetch("src/components/lib/consts/dummy/dummy_table.json") // Verify the path to your JSON file
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error(
+    //         `Network response was not ok: ${response.statusText}`
+    //       );
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     setTableData(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error loading data:", error);
+    //   });
+  }, [])
 
-  // Render loading state if data is being fetched
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  // Render error message if an error occurred
-  if (error) {
-    return <div>Error: {error}</div>
-  }
+  const onCellClick = ({ field, row }) => {
+    if (field === 'action') {
+      row.user['resume'] = row.resume;
+      setUserInfo(row.user);
+      setShowModal(true);
+    }
+  };
 
   return (
-    <div style={{ width: '100%', height: '400px' }}>
-      {' '}
-      {/* Set a fixed container size */}
-      <div className="flex flex-col p-3 gap-5" style={{ height: '100%' }}>
-        {' '}
-        {/* Set a fixed container size */}
+    <>
+      <div className="flex flex-col p-3 gap-5" style={{ height: 'calc(100vh - 5rem)' }}>
         <div>
           <span className="text-3xl font-black">
-            Total Applied Jobs: {tableData.length}
+            Total Jobs Applied: {tableData.length}
           </span>
         </div>
-        <div
-          style={{
-            width: '100%',
-            height: 'calc(100% - 2.5rem)',
-            overflowY: 'auto',
-          }}
-        >
-          {' '}
-          {/* Set a fixed height and overflow-y:auto */}
+        <div style={{ height: 'calc(100% - 3rem)' }}>
           <DataGrid
             rows={tableData}
             columns={columns}
             pagination
             pageSize={10}
             components={{ Toolbar: GridToolbar }}
+            onCellClick={onCellClick}
           />
         </div>
       </div>
-    </div>
-  )
+      <div onClick={() => setShowModal(false)}>
+        <ViewApplicantCard
+          userInfo={userInfo}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      </div>
+    </>
+  );
 }

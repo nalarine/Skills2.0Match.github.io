@@ -18,7 +18,8 @@ export const allUsers = async (req, res, next) => {
             lastName: user.lastName,
             email: user.email,
             profileUrl: user.profileUrl,
-            role: user.role // Include user's role
+            role: user.role,
+            application: user.application // Include user's role
         }));
 
         const paginatedUsers = modifiedUsers.slice(pageSize * (page - 1), pageSize * page);

@@ -28,15 +28,17 @@ const UploadJob = () => {
     defaultValues: {},
   });
 
-  const [errMsg, setErrMsg] = useState("");
-  const [jobType, setJobType] = useState("Full-Time");
-  const [isLoading, setIsLoading] = useState(false);
-  const [recentPost, setRecentPost] = useState([]);
-  const [requirementsText, setRequirementsText] = useState('');
-  const [locationRegion, setLocationRegion] = useState(philippines.regions[0]);
-  const [locationProvince, setLocationProvince] = useState(philippines.provinces[0]);
-  const [locationCity, setLocationCity] = useState(philippines.cities[5]);
-  const [salaryPeriod, setSalaryPeriod] = useState('day'); // State to hold selected salary period
+  const [errMsg, setErrMsg] = useState('')
+  const [jobType, setJobType] = useState('Full-Time')
+  const [isLoading, setIsLoading] = useState(false)
+  const [recentPost, setRecentPost] = useState([])
+  const [requirementsText, setRequirementsText] = useState('')
+  const [locationRegion, setLocationRegion] = useState(philippines.regions[0])
+  const [locationProvince, setLocationProvince] = useState(
+    philippines.provinces[0],
+  )
+  const [locationCity, setLocationCity] = useState(philippines.cities[5])
+  const [salaryPeriod, setSalaryPeriod] = useState('day') // State to hold selected salary period
   const [jobCategory, setJobCategory] = useState('') // State to hold selected job category
   const [jobSubcategory, setJobSubcategory] = useState('') // State to hold selected job subcategory
 
@@ -58,17 +60,17 @@ const UploadJob = () => {
     setLocationCity(defaultCity);
   }
 
-  const onSubmit = async (data) => {;
-        setIsLoading(true);
-        setErrMsg(null);
-        data.requirements = requirementsText;
-        data.location = `${locationRegion.name} ${locationProvince.name} ${locationCity.name}`;
-        data.jobLocationRegion = locationRegion.key;
-        data.jobLocationProvince = locationProvince.key;
-        data.jobLocationCity = locationCity.name;
-        data.startHiringDate = new Date(data.startHiringDate);
-        data.endHiringDate = new Date(data.endHiringDate);
-        data.salaryPeriod = salaryPeriod; // Add salary period to form data
+  const onSubmit = async (data) => {
+    setIsLoading(true)
+    setErrMsg(null)
+    data.requirements = requirementsText
+    data.location = `${locationRegion.name} ${locationProvince.name} ${locationCity.name}`
+    data.jobLocationRegion = locationRegion.key
+    data.jobLocationProvince = locationProvince.key
+    data.jobLocationCity = locationCity.name
+    data.startHiringDate = new Date(data.startHiringDate)
+    data.endHiringDate = new Date(data.endHiringDate)
+    data.salaryPeriod = salaryPeriod // Add salary period to form data
 
         const newData = { ...data, jobType: jobType };
 
@@ -261,17 +263,28 @@ const getRecentPost = async() => {
                 setSelectedSubcategory={setJobSubcategory}
               />
             </div>
-            {/* Job Categories END */}
 
-            <div className='flex flex-col'>
-              <label className='text-gray-600 text-sm mb-1'>
-                Job Region
-              </label>
-              <Dropdown 
-                title={locationRegion} 
-                setTitle={onChangeLocationRegion} 
-                items={philippines.regions} 
-                key='key'
+            {jobCategory && (
+              <div className="flex flex-col">
+                <label className="text-gray-600 text-sm mb-1">
+                  Job Subcategory
+                </label>
+                <DropdownCategories
+                  title={jobSubcategory}
+                  setTitle={setJobSubcategory}
+                  items={subcategories}
+                  key="subcategories"
+                />
+              </div>
+            )}
+
+            <div className="flex flex-col">
+              <label className="text-gray-600 text-sm mb-1">Job Region</label>
+              <Dropdown
+                title={locationRegion}
+                setTitle={onChangeLocationRegion}
+                items={philippines.regions}
+                key="key"
               />
             </div>
             <div className='flex flex-col'>

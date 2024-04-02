@@ -1,84 +1,87 @@
-import axios from 'axios'
-const API_URL = 'http://localhost:8800/api-v1'
+import axios from "axios"
+const API_URL = "http://localhost:8800/api-v1";
+
 
 export const API = axios.create({
-  baseURL: API_URL,
-  responseType: 'json',
-})
+    baseURL: API_URL,
+    responseType: "json",
+});
 
-export const apiRequest = async ({ url, token, data, method }) => {
-  try {
-    const result = await API(url, {
-      method: method || 'GET',
-      data: data,
-      headers: {
-        'content-type': 'application/json',
-        Authorization: token ? `Bearer ${token}` : '',
-      },
-    })
+export const apiRequest = async ({url, token, data, method}) => {
+        try {
+            const result = await API(url, {
+                method: method || "GET",
+                data: data,
+                headers:{
+                    "content-type": "application/json",
+            Authorization: token ? `Bearer ${token}` : 
+            "",
+            },
+        });
 
-    return result?.data
-  } catch (error) {
-    const err = error.response.data
-    console.log(err)
-    return { status: err.success, message: err.message }
-  }
-}
+        return result?.data;
+
+} catch (error) {
+  const err = error.response.data;
+  console.log(err);
+  return { status: err.success, message: err.message };
+ }
+};
 
 export const handleFileUpload = async (uploadFile) => {
-  const formData = new FormData()
-  formData.append('file', uploadFile)
-  formData.append('upload_preset', 'usaidproject')
+    const formData = new FormData();
+    formData.append("file", uploadFile);
+    formData.append("upload_preset", "USAIDPROJECT");
 
-  try {
-    const response = await axios.post(
-      'https://api.cloudinary.com/v1_1/demrmreao/image/upload/',
-      formData,
-    )
-    return response.data.secure_url
-  } catch (error) {
-    console.log(error)
-  }
-}
+    try {
+        const response = await axios.post(
+            "https://api.cloudinary.com/v1_1/demrmreao/image/upload/",
+            formData
+        );
+        return response.data.secure_url;
+    }   catch (error) {
+        console.log(error);
+    }
+};
 
-export const updateURL = ({
-  pageNum,
-  query,
-  cmpLoc,
-  sort,
-  navigate,
-  location,
-  jType,
-  exp,
+export const updateURL =({
+    pageNum,
+    query,
+    cmpLoc,
+    sort,
+    navigate,
+    location,
+    jType,
+    exp,
 }) => {
-  const params = new URLSearchParams()
+    const params = new URLSearchParams();
 
-  if (pageNum && pageNum > 1) {
-    params.set('page', pageNum)
-  }
+    if (pageNum && pageNum >1) {
+        params.set("page", pageNum);
+    }
 
-  if (query) {
-    params.set('search', query)
-  }
+    if (query) {
+        params.set("search", query);
+    }
 
-  if (cmpLoc) {
-    params.set('location', cmpLoc)
-  }
+    if (cmpLoc) {
+        params.set("location", cmpLoc);
+    }
 
-  if (sort) {
-    params.set('sort', sort)
-  }
+    if (sort) {
+        params.set("sort", sort);
+    }
 
-  if (jType) {
-    params.set('jType', jType)
-  }
+    if (jType) {
+        params.set("jType", jType);
+    }
 
-  if (exp) {
-    params.set('exp', exp)
-  }
+    if (exp) {
+        params.set("exp", exp);
+    }
 
-  const newURL = `${location.pathname}?${params.toString()}`
-  navigate(newURL, { replace: true })
+    const newURL = `${location.pathname}?${params.toString()}`;
+        navigate(newURL, { replace: true });
 
-  return newURL
-}
+        return newURL;
+};

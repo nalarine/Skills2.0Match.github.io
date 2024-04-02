@@ -10,108 +10,112 @@ import { Modal, Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import { CustomButton, TextInput, Loading } from '../components'
-import { apiRequest, handleFileUpload } from '../utils'
+import { handleFileUpload } from '../utils'
+import { apiRequest } from '../utils'
 import { Login } from '../redux/userSlice'
 
-const UserForm = ({ open, setOpen }) => {
-  const { user } = useSelector((state) => state.user)
-  const dispatch = useDispatch()
-  const [profileImage, setProfileImage] = useState(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [previewOpen, setPreviewOpen] = useState(false)
-  const [previewImage, setPreviewImage] = useState('')
-  const [previewTitle, setPreviewTitle] = useState('')
-  const [fileList, setFileList] = useState([])
-  const [resumeUrl, setResumeUrl] = useState(null)
+const UserForm = ({ open, setOpen, user, profileUrl }) => {
+  const dispatch = useDispatch();
+  const [profileImage, setProfileImage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [fileList, setFileList] = useState([]);
 
-  const handleCancel = () => setPreviewOpen(false)
+  const handleCancel = () => setPreviewOpen(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm()
+  } = useForm();
 
-  const closeModal = () => setOpen(false)
+  const closeModal = () => setOpen(false);
 
   useEffect(() => {
-    // Set default values if user exists
     if (user) {
       Object.entries(user).forEach(([key, value]) => {
-        setValue(key, value)
-      })
+        setValue(key, value);
+      });
     }
-  }, [user, setValue])
+  }, [user, setValue]);
 
   const onSubmit = async (data) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      // Upload profile picture if available
-      let profileUrl = null
       if (profileImage) {
-        profileUrl = await handleFileUpload(profileImage)
+        const profileImageData = new FormData()
+        profileImageData.append('file', profileImage)
+        const response = await handleFileUpload(profileImageData)
+        profileUrl = response.data.url
       }
 
       // Construct data with updated profileUrl and resumeUrl
       const newData = {
         ...data,
         profileUrl,
-        resumeUrl,
-      }
-
-      // Send PUT request to update user data
+      };
       const res = await apiRequest({
         url: '/users/update-user',
         token: user.token,
         data: newData,
         method: 'PUT',
-      })
-
+      });
       if (res) {
-        // If the request is successful, update user state in Redux store
-        dispatch(Login(res)) // Update user state in Redux
-        setOpen(false)
+        dispatch(Login(res));
+        setOpen(false);
       }
     } catch (error) {
-      setIsSubmitting(false)
-      console.log(error)
+      setIsSubmitting(false);
+      console.log(error);
     }
-  }
+  };
 
-  const handleProfileImageChange = (info) => {
-    const fileList = [...info.fileList]
-    setFileList(fileList)
-
-    // Display preview if available
-    if (info.file.status === 'done' && info.file.originFileObj) {
-      const imageUrl = URL.createObjectURL(info.file.originFileObj)
-      setProfileImage(info.file.originFileObj)
+  const handleProfileImageChange = async (info) => {
+    const { file, fileList } = info;
+    setFileList(fileList);
+  
+    if (file.status === 'done' && file.originFileObj) {
+      const imageFile = file.originFileObj;
+      const imageUrl = URL.createObjectURL(imageFile);
+      console.log('Image URL:', imageUrl);
+  
+      setProfileImage(imageFile);
+      handlePreview(imageFile);
     }
-  }
-
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj)
-    }
-    setPreviewImage(file.url || file.preview)
-    setPreviewOpen(true)
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
-    )
-  }
-
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList)
+  };
+  
+  
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
 
   const handleResumeChange = async (info) => {
-    const { status, response } = info.file
+    const { status, response } = info.file;
     if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`)
-      setResumeUrl(response.url) // Update the resumeUrl state in UserProfile component
+      message.success(`${info.file.name} file uploaded successfully.`);
     } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`)
+      message.error(`${info.file.name} file upload failed.`);
     }
+  };
+
+  const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
+const handlePreview = async (file) => {
+  if (!file.url && !file.preview) {
+    file.preview = await getBase64(file.originFileObj);
   }
+  setPreviewImage(file.url || file.preview);
+  setPreviewOpen(true);
+  setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+};
+
 
   return (
     <>
@@ -365,31 +369,32 @@ const UserForm = ({ open, setOpen }) => {
 
 
 const UserProfile = () => {
-  const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.user)
-  const [open, setOpen] = useState(false)
-  const [resumeUrl, setResumeUrl] = useState('')
-  const [userInfo, setUserInfo] = useState(null)
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const [open, setOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [resumeUrl, setResumeUrl] = useState(null); // Define resumeUrl state
 
   const getUser = async () => {
     const res = await apiRequest({
       url: '/users/get-user',
       token: user?.token,
       method: 'POST',
-    })
-    const updatedUserInfo = { token: user?.token, ...res?.user }
-    dispatch(Login(updatedUserInfo)) // Update user state in Redux
-  }
+    });
+    const updatedUserInfo = { token: user?.token, ...res?.user };
+    dispatch(Login(updatedUserInfo));
+  };
 
   useEffect(() => {
-    getUser()
-  }, [])
+    getUser();
+  }, []);
 
   useEffect(() => {
-    setUserInfo(user)
-  }, [user])
+    if (user) {
+      setUserInfo(user);
+    }
+  }, [user]);
 
-  // const userInfo = user;
   return (
     <div className="container mx-auto flex items-center justify-center pt-10 pb-24 bg-green-200">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -397,7 +402,7 @@ const UserProfile = () => {
         <div className="bg-slate-100 p-6 pb-2 rounded-lg flex flex-col items-center overflow-hidden">
           <div>
             <img
-              src={userInfo?.profileUrl}
+              src={userInfo?.profileUrl || userInfo?.NoProfile}
               alt={userInfo?.firstName}
               className="w-full h-48 object-contain rounded-lg mb-4"
             />
@@ -468,7 +473,7 @@ const UserProfile = () => {
           )}
         </div>
       </div>
-      <UserForm open={open} setOpen={setOpen} setResumeUrl={setResumeUrl} />
+       <UserForm open={open} setOpen={setOpen} user={user} profileUrl={userInfo?.profileUrl} />
     </div>
   )
 }

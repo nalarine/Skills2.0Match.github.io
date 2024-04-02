@@ -19,6 +19,7 @@ import Schedule from '../pages/OSY/Schedule'
 import SkillsAssessment from '../pages/OSY/SkillsAssessment/SkillsAssessment'
 import JobAvailable from '../components/JobAvailable'
 import HelpCenter from '../pages/OSY/HelpCenter'
+import VerificationSuccess from './VerificationSuccessPage'
 
 export {
   Navbar,
@@ -42,4 +43,5 @@ export {
   SkillsAssessment,
   JobAvailable,
   HelpCenter,
+  VerificationSuccess,
 }

@@ -1,5 +1,5 @@
 import { Outlet, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals } from './components'
+import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals, VerificationSuccess } from './components'
 import {
   About,
   AuthPage,
@@ -92,6 +92,7 @@ function App() {
     location.pathname.startsWith('/admin/users') ||
     location.pathname.startsWith('/admin/jobs') ||
     location.pathname.startsWith('/admin/companies') ||
+    location.pathname.startsWith('/verification-success') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -109,6 +110,7 @@ function App() {
       location.pathname.startsWith('/admin/users') ||
       location.pathname.startsWith('/admin/jobs') ||
       location.pathname.startsWith('/admin/companies') ||
+      location.pathname.startsWith('/verification-success') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -123,6 +125,7 @@ function App() {
       )}
       <Routes>
         <Route path="/user-auth" element={<AuthPage />} />
+        <Route path="/verification-success/:verificationToken" element={<VerificationSuccess />} />
         <Route path="/find-jobs" element={<FindJobs />} />
         <Route path="/companies" element={<Companies />} />
 
@@ -133,13 +136,13 @@ function App() {
               element={
                 user ? (
                   user.role === 0 && user.accountType === 'seeker' ? (
-                    <Navigate to="/user-profile" replace={true} />
+                    <Navigate to="/company-profile" replace={true} />
                   ) : user.role === 1 ? (
                     <Navigate to="/AdminDashboard" replace={true} />
                   ) : (
                     <>
                       <Navigate to="/Dashboard" replace={true} />
-                      <Navigate to="/company-profile" replace={true} />
+                      <Navigate to="/user-profile" replace={true} />
                     </>
                   )
                 ) : (

@@ -1,27 +1,29 @@
-import React, { Fragment, useState, useEffect } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { useForm } from 'react-hook-form'
-import { useLocation, useNavigate } from 'react-router-dom' // Import Navigate
-import { useDispatch } from 'react-redux'
-import TextInput from './TextInput'
-import CustomButton from './CustomButton'
-import { apiRequest } from '../utils'
-import { Login } from '../redux/userSlice'
-import Logo from '../assets/header.png'
-import GoogleIcon from '../assets/google-icon.svg'
-import { auth, provider } from '../firebase'
-import { signInWithPopup } from 'firebase/auth'
-import '../App.css'
+import React, { Fragment, useState, useEffect } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import TextInput from './TextInput';
+import CustomButton from './CustomButton';
+import { apiRequest } from '../utils';
+import { Login } from '../redux/userSlice';
+import Logo from '../assets/header.png';
+import GoogleIcon from '../assets/google-icon.svg';
+import { auth, provider } from '../firebase';
+import { signInWithPopup } from 'firebase/auth';
+import '../App.css';
 
 const SignUp = ({ open, setOpen }) => {
-  const dispatch = useDispatch()
-  const location = useLocation()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const [isRegister, setIsRegister] = useState(true)
-  const [accountType, setAccountType] = useState('seeker')
-  const [errMsg, setErrMsg] = useState('') // State for error message
-  const [value, setValue] = useState('')
+  const [isRegister, setIsRegister] = useState(true);
+  const [accountType, setAccountType] = useState('seeker');
+  const [errMsg, setErrMsg] = useState('');
+  const [value, setValue] = useState('');
+  const [isEmailExisting, setIsEmailExisting] = useState(false);
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -29,84 +31,81 @@ const SignUp = ({ open, setOpen }) => {
     formState: { errors },
   } = useForm({
     mode: 'onChange',
-  })
-  let from = location.state?.from?.pathname || '/'
+  });
+  let from = location.state?.from?.pathname || '/';
 
-  const closeModal = () => setOpen(false)
+  const closeModal = () => setOpen(false);
 
   const handleClick = () => {
     signInWithPopup(auth, provider)
       .then((data) => {
-        setValue(data.user.email)
-        localStorage.setItem('email', data.user.email)
-        navigate(accountType === 'seeker' ? '/Dashboard' : '/CompanyDash') // Navigate to the appropriate route
+        setValue(data.user.email);
+        localStorage.setItem('email', data.user.email);
+        navigate(accountType === 'seeker' ? '/Dashboard' : '/CompanyDash');
       })
       .catch((error) => {
-        console.error('Google Sign-in Error:', error)
-      })
-  }
+        console.error('Google Sign-in Error:', error);
+      });
+  };
 
   useEffect(() => {
-    setValue(localStorage.getItem('email'))
-  })
+    setValue(localStorage.getItem('email'));
+  }, []);
 
   const onSubmit = async (data) => {
-    let URL = null
+    let URL = null;
     if (isRegister) {
-      if (accountType === 'seeker') {
-        URL = 'auth/register'
-      } else URL = 'companies/register'
+      URL = accountType === 'seeker' ? 'auth/register' : 'companies/register';
     } else {
-      if (accountType === 'seeker') {
-        URL = 'auth/login'
-      } else {
-        URL = 'companies/login'
-      }
+      URL = accountType === 'seeker' ? 'auth/login' : 'companies/login';
     }
-
+  
     try {
       const res = await apiRequest({
         url: URL,
         data: data,
         method: 'POST',
-      })
-
-      console.log(res)
-      if (res?.status === 'falied') {
-        setErrMsg('Incorrect email or password.')
-        alert('Incorrect email or password.')
+      });
+  
+      console.log(res);
+      if (res?.status === 'failed') {
+        if (res?.message === 'Email already exists') {
+          setIsEmailExisting(true);
+        } else {
+          setErrMsg('Incorrect email or password.');
+        }
       } else {
-        setErrMsg('')
-        const userData = { token: res?.token, ...res?.user }
-        dispatch(Login(userData))
-        localStorage.setItem('userInfo', JSON.stringify(userData))
-        setOpen(false)
+        setErrMsg('');
+        setIsRegistrationSuccess(true);
+        const userData = { token: res?.token, ...res?.user };
+        dispatch(Login(userData));
+        localStorage.setItem('userInfo', JSON.stringify(userData));
+        setOpen(false);
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        // Mongoose validation error occurred
         if (
           error.response.data &&
           error.response.data.errors &&
           error.response.data.errors.password
         ) {
-          setErrMsg(error.response.data.errors.password.message)
-          alert(error.response.data.errors.password.message)
+          setErrMsg(error.response.data.errors.password.message);
         } else {
-          setErrMsg('Validation error occurred.')
-          alert('Validation error occurred.')
+          setErrMsg('Validation error occurred.');
         }
       } else {
-        // Other errors
-        setErrMsg('An error occurred.')
-        alert('An error occurred.')
+        if (error.response?.data?.message !== 'Email already exists') {
+          setErrMsg('An error occurred.');
+          alert('An error occurred.');
+        }
       }
     }
-    {
-      console.log(error)
-    }
-  }
+  };
 
+  if (isRegistrationSuccess) {
+    return <RegistrationSuccessPage />;
+  }
+  
   return (
     <>
       <Transition appear show={open || false}>
@@ -189,6 +188,30 @@ const SignUp = ({ open, setOpen }) => {
                       error={errors.email ? errors.email.message : ''}
                     />
 
+                    <TextInput
+                      name="birthdate"
+                      label="Date of Birth"
+                      placeholder="YYYY-MM-DD"
+                      type="date"
+                      register={register('birthdate', {
+                        required: 'Date of Birth is required!',
+                        validate: (value) => {
+                          const birthdate = new Date(value);
+                          const today = new Date();
+                          const minDate = new Date(today.getFullYear() - 24, today.getMonth(), today.getDate());
+                          const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                      
+                          if (birthdate < minDate || birthdate > maxDate) {
+                            return 'You must be between 18 and 24 years old to register or login.';
+                          }
+                      
+                          return true;
+                        },
+                      })}
+                      
+                      error={errors.birthdate ? errors.birthdate.message : ''}
+                    />
+
                     {isRegister && (
                       <div className="w-full flex gap-1 md:gap-2">
                         <div
@@ -226,8 +249,8 @@ const SignUp = ({ open, setOpen }) => {
                                   ? errors.firstName?.message
                                   : ''
                                 : errors.name
-                                  ? errors.name?.message
-                                  : ''
+                                ? errors.name?.message
+                                : ''
                             }
                           />
                         </div>
@@ -260,10 +283,12 @@ const SignUp = ({ open, setOpen }) => {
                           type="password"
                           register={register('password', {
                             required: 'Password is required!',
+                            pattern: {
+                              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                              message: 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character',
+                            },
                           })}
-                          error={
-                            errors.password ? errors.password?.message : ''
-                          }
+                          error={errors.password ? errors.password.message : ''}
                         />
                       </div>
 
@@ -275,10 +300,10 @@ const SignUp = ({ open, setOpen }) => {
                             type="password"
                             register={register('cPassword', {
                               validate: (value) => {
-                                const { password } = getValues()
+                                const { password } = getValues();
 
                                 if (password !== value) {
-                                  return 'Passwords do not match'
+                                  return 'Passwords do not match';
                                 }
                               },
                             })}
@@ -301,7 +326,6 @@ const SignUp = ({ open, setOpen }) => {
                       />
                     </div>
 
-                    {/* Add sign up with social text and Google icon */}
                     <div className="flex items-center justify-center mt-2">
                       <hr className="w-24 border-gray-500" />
                       <p className="text-base text-gray-700 mx-3">
@@ -344,8 +368,81 @@ const SignUp = ({ open, setOpen }) => {
           </div>
         </Dialog>
       </Transition>
-    </>
-  )
-}
 
-export default SignUp
+      {/* Email Existing Dialog */}
+      <Transition appear show={isEmailExisting}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-50 overflow-y-aut0"
+          onClose={() => setIsEmailExisting(false)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <div className="fixed inset-0 flex items-center justify-center">
+              <div className="bg-white p-8 rounded-lg shadow-xl">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                  Email Already Exists
+                </h2>
+                <p className="text-gray-700">
+                  The email you entered is already registered. Please use a different email or login with your existing account.
+                </p>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600 focus:outline-none"
+                  onClick={() => setIsEmailExisting(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </Transition.Child>
+        </Dialog>
+      </Transition>
+    </>
+  );
+};
+
+// Registration Success Page Component
+const RegistrationSuccessPage = () => {
+  const navigate = useNavigate();
+
+  // Handle redirection to dashboard after email verification
+  useEffect(() => {
+    // Simulate email verification delay
+    const delay = setTimeout(() => {
+      navigate('/Dashboard'); // Redirect to dashboard after email verification
+    }, 3000);
+
+    return () => clearTimeout(delay);
+  }, [navigate]);
+
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold mb-4">Account Created Successfully!</h1>
+        <p>Please check your email for verification.</p>
+        <p>Redirecting you to the dashboard...</p>
+      </div>
+    </div>
+  );
+};
+
+export default SignUp;

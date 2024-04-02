@@ -1,4 +1,6 @@
 import Users from "../models/userModel.js";
+import { sendVerificationEmail } from "../emailService.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const register = async (req, res, next) => {
   const { firstName, lastName, email, password, role } = req.body;
@@ -16,34 +18,34 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ message: "Email address already exists" });
     }
 
-    // Create new user with role
+    // Generate unique verification token
+    const verificationToken = uuidv4();
+
+    // Create new user with role and verification token
     const user = await Users.create({
       firstName,
       lastName,
       email,
       password,
-      role // Include role when creating user
+      role,
+      verificationToken,
+      isEmailVerified: false // Set email verification status to false by default
     });
+    // Send verification email
+    await sendVerificationEmail(user, verificationToken);
 
-    // Generate JWT token
-    const token = user.createJWT();
-
-    // Exclude password from response
-    user.password = undefined;
-
-    // Send success response
+    // Send success response with both tokens
     res.status(201).json({
       success: true,
-      message: "Account created successfully",
+      message: "Account created successfully. Please verify your email to log in.",
       user: {
         _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        accountType: user.accountType,
-        role: user.role // Include user's role in response
+        role: user.role
       },
-      token
+      verificationToken,
     });
   } catch (error) {
     console.error(error);
@@ -51,6 +53,33 @@ export const register = async (req, res, next) => {
   }
 };
 
+export async function verifyEmail(verificationToken) {
+  try {
+    // Check if the verification token is provided
+    if (!verificationToken) {
+      throw new Error("Verification token is missing");
+    }
+
+    // Query the database to find the user with the provided verification token
+    const user = await Users.findOne({ verificationToken });
+
+    // Check if the user exists
+    if (!user) {
+      throw new Error("User not found or verification token is invalid");
+    }
+
+    // Update the user's email verification status (example: setting emailVerified to true)
+    user.emailVerified = true;
+    await user.save();
+
+    // Return the user object or a success message
+    return { success: true, user };
+  } catch (error) {
+    // Handle errors
+    console.error("Error verifying email:", error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+}
 
 export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
@@ -62,10 +91,15 @@ export const signIn = async (req, res, next) => {
     }
 
     // Find user by email
-    const user = await Users.findOne({ email }).select("+password");
+    const user = await Users.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Check if email is verified
+    if (!user.emailVerified) {
+      return res.status(401).json({ message: "Email not verified" });
     }
 
     // Compare password
@@ -75,12 +109,10 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // User password is no longer needed in response, so remove it
-    user.password = undefined;
-
-    // Create JWT token
+    // Generate JWT token
     const token = user.createJWT();
 
+    // Send success response with JWT token
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -89,8 +121,7 @@ export const signIn = async (req, res, next) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        accountType: user.accountType,
-        role: user.role // Include the user's role in the response
+        role: user.role
       },
       token
     });

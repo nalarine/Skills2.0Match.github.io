@@ -46,7 +46,7 @@ const Sidebar = () => {
         <div className="flex items-center gap-4">
           <Avatar src={profileUrl} alt="avatar" />
           <div>
-            <Typography variant="h6">{user?.firstName}</Typography>
+          <Typography variant="h6">{user?.firstName || 'No First Name'}</Typography>
             <Typography variant="small" color="gray" className="font-normal">
               {user?.email}
             </Typography>

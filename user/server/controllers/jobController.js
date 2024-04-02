@@ -261,9 +261,23 @@ export const applyJob = async (req, res, next) => {
       hiringStage: "Pending",
       resume: attachmentURL
     });
+
+    user.applications.push({
+      companyName: company.name, 
+      jobRole: job.jobTitle,
+      appliedDate: new Date(new Date().setHours(0,0,0)),
+      hiringStage: "Pending",
+      resume: attachmentURL
+    });
+
     const updatedCompany = await Companies.findByIdAndUpdate(updatedJob.company, company, {
       new: true,
     });
+
+      const updatedUser = await User.findByIdAndUpdate(applicantId, user, {
+      new: true,
+    });
+
 
     res.status(200).json({
       success: true,
