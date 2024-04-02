@@ -32,7 +32,20 @@ const columns = [
     headerName: 'Action',
     minWidth: 200,
     flex: 1,
-    valueGetter: () => 'See Profile',
+    renderCell: (params) => (
+      <button
+        className="bg-green-500 py-1 px-2 rounded-md"
+        onClick={() => {
+          const row = params.row;
+          // TODO: fetch user profile by id
+          row.user['resume'] = row.resume;
+          setUserInfo(row.user);
+          setShowModal(true);
+        }}
+      >
+        See Profile
+      </button>
+    ),
   },
 ]
 

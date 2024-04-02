@@ -10,8 +10,7 @@ import { Modal, Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import { CustomButton, TextInput, Loading } from '../components'
-import { handleFileUpload } from '../utils'
-import { apiRequest } from '../utils'
+import { apiRequest, handleFileUpload } from '../utils'
 import { Login } from '../redux/userSlice'
 
 const UserForm = ({ open, setOpen }) => {
@@ -51,10 +50,7 @@ const UserForm = ({ open, setOpen }) => {
       // Upload profile picture if available
       let profileUrl = null
       if (profileImage) {
-        const profileImageData = new FormData()
-        profileImageData.append('file', profileImage)
-        const response = await handleFileUpload(profileImageData)
-        profileUrl = response.data.url
+        profileUrl = await handleFileUpload(profileImage)
       }
 
       // Construct data with updated profileUrl and resumeUrl
@@ -226,7 +222,7 @@ const UserForm = ({ open, setOpen }) => {
                           listType="picture-card"
                           fileList={fileList}
                           onPreview={handlePreview}
-                          onChange={handleChange}
+                          onChange={handleProfileImageChange}
                           beforeUpload={() => false}
                         >
                           {fileList.length >= 1 ? null : (
@@ -367,6 +363,7 @@ const UserForm = ({ open, setOpen }) => {
   )
 }
 
+
 const UserProfile = () => {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user)
@@ -400,7 +397,7 @@ const UserProfile = () => {
         <div className="bg-slate-100 p-6 pb-2 rounded-lg flex flex-col items-center overflow-hidden">
           <div>
             <img
-              src={userInfo?.profileUrl || userInfo?.NoProfile}
+              src={userInfo?.profileUrl}
               alt={userInfo?.firstName}
               className="w-full h-48 object-contain rounded-lg mb-4"
             />

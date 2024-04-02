@@ -248,6 +248,7 @@ const CompanyProfile = () => {
             <div className="flex items-center justifu-center py-5 md:py-0 gap-4">
               <CustomButton
                 onClick={() => setOpenForm(true)}
+                title="Edit Profile"
                 iconRight={<FiEdit3 />}
                 containerStyles={`py-1.5 px-3 md:px-5 focus:outline-none bg-green-600  hover:bg-green-700 text-white rounded text-sm md:text-base border border-green-600`}
               />

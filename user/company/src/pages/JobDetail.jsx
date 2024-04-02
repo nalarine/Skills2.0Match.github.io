@@ -193,6 +193,13 @@ const JobDetail = () => {
               </div>
             </div>
 
+            {/* <div className="bg-[#bdf4c8] w-40 h-16 rounded-lg flex flex-col items-center justify-center">
+              <span className="text-sm">Category</span>
+              <p className="text-lg font-semibold text-gray-700">
+                {category?.category} ● {cat?.subcategories}  
+              </p>
+            </div> */}
+
             <div className="w-full flex gap-4 py-5">
               <CustomButton
                 onClick={() => setSelected('0')}
