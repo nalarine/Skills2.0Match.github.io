@@ -4,6 +4,7 @@ import { renderStatus } from '../../components/lib/consts/renderers/renderStatus
 import ViewApplicantCard from '../../components/ViewApplicantCard'
 import { apiRequest } from '../../utils'
 import { useSelector } from 'react-redux'
+import { MenuItem, Select } from '@mui/material'
 
 const columns = [
   { field: 'fullName', headerName: 'Full Name', minWidth: 200, flex: 1 },
@@ -11,7 +12,7 @@ const columns = [
     field: 'hiringStage',
     headerName: 'Hiring Stage',
     type: 'singleSelect',
-    renderCell: renderStatus,
+    // renderCell: renderStatus,
     // editable: true,
     minWidth: 150,
     flex: 1,
@@ -23,6 +24,52 @@ const columns = [
           </div>
         )
       }
+    },
+    renderCell: (params) => {
+      const [status, setStatus] = useState(params.value);
+      const { user } = useSelector((state) => state.user)
+
+      const handleChange = async (event) => {
+
+        const res = await apiRequest({
+          url: '/companies/update-company-applicant/' + user._id,
+          token: user.token,
+          data: {
+            id: params.id,
+            hiringStage: event.target.value
+          },
+          method: 'PUT',
+        })
+
+        setStatus(event.target.value);
+      };
+
+      return (
+        <Select
+          value={status}
+          onChange={handleChange}
+          inputProps={{ 'aria-label': 'Status' }}
+          sx={{
+            minWidth: '100%',
+            padding: '8px',
+            fontSize: 'inherit',
+            fontWeight: 'inherit',
+            lineHeight: 'inherit',
+            fontFamily: 'inherit',
+            backgroundColor: 'inherit',
+            border: 'none',
+            borderRadius: 0,
+            '&:focus': {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <MenuItem value="Pending">Pending</MenuItem>
+          <MenuItem value="Hired">Hired</MenuItem>
+          <MenuItem value="Declined">Declined</MenuItem>
+          <MenuItem value="Shortlisted">Shortlisted</MenuItem>
+        </Select>
+      );
     },
   },
   { field: 'appliedDate', headerName: 'Applied Date', minWidth: 200, flex: 1 },
@@ -90,9 +137,7 @@ export default function AllApplicants() {
   // console.log(tableData);
 
   const onCellClick = ({ field, row }) => {
-    console.log('cell click')
     if (field == 'action') {
-      // TODO: fetch user profile by id
       row.user['resume'] = row.resume
       setUserInfo(row.user)
       setShowModal(true)
