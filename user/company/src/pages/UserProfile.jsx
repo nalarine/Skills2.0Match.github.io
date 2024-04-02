@@ -46,10 +46,12 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
     setIsSubmitting(true);
     try {
       if (profileImage) {
-        const profileImageData = new FormData()
-        profileImageData.append('file', profileImage)
-        const response = await handleFileUpload(profileImageData)
-        profileUrl = response.data.url
+        // const profileImageData = new FormData()
+        // profileImageData.append('file', profileImage)
+        // const response = await handleFileUpload(profileImageData)
+        // profileUrl = response.data.url
+        const response = await handleFileUpload(profileImage)
+        profileUrl = response;
       }
 
       // Construct data with updated profileUrl and resumeUrl
@@ -68,7 +70,7 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
         const resUser = await apiRequest({
           url: '/users/get-user',
           token: user?.token,
-          method: 'POST',
+          method: 'GET',
         })
         const updatedUserInfo = { token: user?.token, ...resUser?.user }
         dispatch(Login(updatedUserInfo)) // Update user state in Redux
@@ -396,7 +398,7 @@ const UserProfile = () => {
     const res = await apiRequest({
       url: '/users/get-user',
       token: user?.token,
-      method: 'POST',
+      method: 'GET',
     });
     const updatedUserInfo = { token: user?.token, ...res?.user };
     dispatch(Login(updatedUserInfo));
