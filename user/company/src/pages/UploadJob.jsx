@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { CustomButton, JobCard, JobTypes, TextInput } from "../components";
 import { jobs } from "../utils/data";
 import { apiRequest } from "../utils";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BsArrowLeft } from "react-icons/bs";
 import FroalaEditor from 'froala-editor';
@@ -16,12 +16,14 @@ import DropdownCategories from '../components/DropdownCategories'
 import { jobCategories } from '../utils/data'
 
 const UploadJob = () => {
+  const { id } = useParams()
   const { user } = useSelector((state) => state.user)
   const {
     register,
     handleSubmit,
     getValues,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -76,10 +78,10 @@ const UploadJob = () => {
 
         try {
           const res = await apiRequest({
-            url: "/jobs/upload-job",
+            url: id ? "/jobs/update-job/" + id : "/jobs/upload-job",
             token: user?.token,
             data: newData,
-            method: "POST", 
+            method: id ? "PUT" : "POST", 
           });
 
           if (res.status === "failed") {
@@ -117,8 +119,46 @@ const getRecentPost = async() => {
     new FroalaEditor('textarea#froala-editor', {
       listAdvancedTypes: true,
     })
-    console.log(philippines)
    }, []);
+
+   useEffect(() => {
+    if (id) {
+      const getJobDetails = async () => {
+        try {
+          const { data } = await apiRequest({
+            url: '/jobs/get-job-detail/' + id,
+            method: 'GET',
+          })
+
+          Object.keys(data).map(key => {
+            setValue(key, data[key]);
+          })
+          setValue('startHiringDate', new Date(data.startHiringDate).toISOString().split('T')[0])
+          setValue('endHiringDate', new Date(data.endHiringDate).toISOString().split('T')[0])
+          setJobType(data.jobType);
+          if (data.jobLocationRegion) {
+            const region = philippines.regions.filter(region => region.key == data.jobLocationRegion)[0];
+            setLocationRegion(region);
+          }
+          if (data.jobLocationProvince) {
+            const province = philippines.provinces.filter(province => province.key == data.jobLocationProvince)[0];
+            setLocationProvince(province);
+          }
+          if (data.jobLocationCity) {
+            const city = philippines.cities.filter(city => city.name == data.jobLocationCity)[0];
+            setLocationCity(city);
+          }
+          setSalaryPeriod(data.salaryPeriod);
+          setValue('desc', data.detail[0].desc);
+          setRequirementsText(data.detail[0].requirements);
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      getJobDetails();
+    }
+   }, [id])
 
   return (
     

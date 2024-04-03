@@ -81,6 +81,9 @@ export const createJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
       salaryPeriod,
       vacancies,
@@ -95,6 +98,9 @@ export const createJob = async (req, res, next) => {
       !jobTitle ||
       !jobType ||
       !location ||
+      !jobLocationRegion ||
+      !jobLocationProvince ||
+      !jobLocationCity ||
       !salary ||
       !salaryPeriod ||
       !requirements ||
@@ -115,6 +121,9 @@ export const createJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
       salaryPeriod,
       vacancies,
@@ -153,11 +162,17 @@ export const updateJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       desc,
       requirements,
+      startHiringDate,
+      endHiringDate
     } = req.body;
     const { jobId } = req.params;
 
@@ -165,9 +180,15 @@ export const updateJob = async (req, res, next) => {
       !jobTitle ||
       !jobType ||
       !location ||
+      !jobLocationRegion ||
+      !jobLocationProvince ||
+      !jobLocationCity ||
       !salary ||
+      !salaryPeriod ||
       !desc ||
-      !requirements
+      !requirements ||
+      !startHiringDate ||
+      !endHiringDate
     ) {
       next("Please Provide All Required Fields");
       return;
@@ -181,10 +202,16 @@ export const updateJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       detail: { desc, requirements },
+      startHiringDate,
+      endHiringDate,
       _id: jobId,
     };
 

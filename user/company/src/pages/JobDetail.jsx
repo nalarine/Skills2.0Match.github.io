@@ -261,11 +261,17 @@ const JobDetail = () => {
 
             <div className="w-full">
               {user?._id === job?.company?._id ? (
-                <CustomButton
-                  title="Delete Post"
-                  onClick={handleDeletePost}
-                  containerStyles={`w-full flex items-center justify-center text-white bg-[#B91C1C] py-3 px-5 outline-none rounded-full text-base`}
-                />
+                <>
+                  <a
+                    href={"/upload-job/" + job._id}
+                    className={`w-full flex items-center justify-center text-white bg-black py-3 px-5 mb-4 outline-none rounded-full text-base`}
+                  >Edit Post</a>
+                  <CustomButton
+                    title="Delete Post"
+                    onClick={handleDeletePost}
+                    containerStyles={`w-full flex items-center justify-center text-white bg-[#B91C1C] py-3 px-5 outline-none rounded-full text-base`}
+                  />
+                </>
               ) : (
                 <CustomButton
                   title="Apply Now"
