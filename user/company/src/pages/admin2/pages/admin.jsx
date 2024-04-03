@@ -4,11 +4,11 @@ import { AppView } from '../sections/overview/view';
 
 // ----------------------------------------------------------------------
 
-export default function AppPage() {
+export default function Admin2() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Skills 2.0 Match | Admin </title>
       </Helmet>
 
       <AppView />

@@ -31,6 +31,9 @@ import DashUsers from '../pages/admin/DashUsers'
 import DashCompanies from '../pages/admin/DashCompanies'
 import AdLayout from '../pages/global/AdLayout'
 import Admin2 from './admin2/Admin2'
+import UserPage from './admin2/pages/user'
+import ProductsPage from './admin2/pages/products'
+
 
 export {
   FindJobs,
@@ -66,4 +69,6 @@ export {
   DashCompanies,
   AdLayout,
   Admin2,
+  UserPage,
+  ProductsPage,
 }

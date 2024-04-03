@@ -3,23 +3,23 @@ import SvgColor from '../../components/svg-color';
 // ----------------------------------------------------------------------
 
 const icon = (name) => (
-  <SvgColor src={`../../assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+  <SvgColor src={`/src/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
 
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/',
+    path: '/Admin2',
     icon: icon('ic_analytics'),
   },
   {
     title: 'user',
-    path: '/user',
+    path: '/User',
     icon: icon('ic_user'),
   },
   {
     title: 'product',
-    path: '/products',
+    path: '/Products',
     icon: icon('ic_cart'),
   },
   {

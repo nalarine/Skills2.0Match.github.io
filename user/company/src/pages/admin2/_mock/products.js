@@ -47,7 +47,7 @@ export const products = [...Array(24)].map((_, index) => {
 
   return {
     id: faker.string.uuid(),
-    cover: `../admin2/assets/images/products/product_${setIndex}.jpg`,
+    cover: `/src/assets/images/products/product_${setIndex}.jpg`,
     name: PRODUCT_NAME[index],
     price: faker.number.int({ min: 4, max: 99, precision: 0.01 }),
     priceSale: setIndex % 3 ? null : faker.number.int({ min: 19, max: 29, precision: 0.01 }),

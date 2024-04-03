@@ -45,6 +45,10 @@ import DashCompanies from './pages/admin/DashCompanies'
 
 //Admin 2
 import Admin2 from './pages/admin2/Admin2'
+import UserPage from './pages/admin2/pages/user'
+import ProductsPage from './pages/admin2/pages/products'
+import DashboardLayout from './pages/admin2/layouts/dashboard'
+
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
@@ -97,6 +101,8 @@ function App() {
     location.pathname.startsWith('/admin/companies') ||
     location.pathname.startsWith('/verification-success') ||
     location.pathname.startsWith('/Admin2') ||
+    location.pathname.startsWith('/User') ||
+    location.pathname.startsWith('/Products') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -116,6 +122,8 @@ function App() {
       location.pathname.startsWith('/admin/companies') ||
       location.pathname.startsWith('/verification-success') ||
       location.pathname.startsWith('/Admin2') ||
+      location.pathname.startsWith('/User') ||
+      location.pathname.startsWith('/Products') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -194,7 +202,11 @@ function App() {
             element={<DashCreateCategoryHOC />}
           />
 
+          <Route element={<DashboardLayout />}>
           <Route path="/Admin2/*" element={<Admin2 />} />
+          <Route path="/User" element={<UserPage />} />
+          <Route path="/Products" element={<ProductsPage />} />
+          </Route>
 
           <Route
             path={
