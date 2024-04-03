@@ -31,7 +31,14 @@ const columns = [
     headerName: 'Action',
     minWidth: 200,
     flex: 1,
-    valueGetter: () => 'See Profile',
+    renderCell: (params) => (
+      <a
+        href={'/job-detail/' + params.id.split('-')[1]}
+        className="bg-green-500 py-1 px-2 rounded-md"
+      >
+        See Job Post
+      </a>
+    ),
   },
 ];
 
@@ -44,10 +51,20 @@ export default function AllApplication() {
   const getUser = async () => {
     try {
       const res = await apiRequest({
-        url: '/users/get-user/' + user._id,
+        url: '/jobs/job-applications/' + user._id,
         method: 'GET',
+        token: user?.token
       });
-      setTableData(res.data.application);
+      let tableData = [];
+      for (let data of res.data) {
+        for (let applicant of data.applicants) {
+          tableData.push({
+            companyName: data.companyName,
+            ...applicant
+          })
+        }
+      }
+      setTableData(tableData);
     } catch (error) {
       console.log(error);
     }
@@ -72,14 +89,6 @@ export default function AllApplication() {
     //   });
   }, [])
 
-  const onCellClick = ({ field, row }) => {
-    if (field === 'action') {
-      row.user['resume'] = row.resume;
-      setUserInfo(row.user);
-      setShowModal(true);
-    }
-  };
-
   return (
     <>
       <div className="flex flex-col p-3 gap-5" style={{ height: 'calc(100vh - 5rem)' }}>
@@ -95,7 +104,6 @@ export default function AllApplication() {
             pagination
             pageSize={10}
             components={{ Toolbar: GridToolbar }}
-            onCellClick={onCellClick}
           />
         </div>
       </div>
