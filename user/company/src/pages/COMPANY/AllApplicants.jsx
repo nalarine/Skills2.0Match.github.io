@@ -49,7 +49,9 @@ const columns = [
           value={status}
           onChange={handleChange}
           inputProps={{ 'aria-label': 'Status' }}
+          disableUnderline={true}
           sx={{
+            outline: 'none',
             minWidth: '100%',
             padding: '8px',
             fontSize: 'inherit',
@@ -58,10 +60,15 @@ const columns = [
             fontFamily: 'inherit',
             backgroundColor: 'inherit',
             border: 'none',
+            borderWidth: 0,
             borderRadius: 0,
             '&:focus': {
               backgroundColor: 'transparent',
             },
+            boxShadow: 'none',
+            '.MuiOutlinedInput-notchedOutline': { border: 0 },
+            "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": { border: 0 },
+            "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": { border: 0 },
           }}
         >
           <MenuItem value="Pending">Pending</MenuItem>
