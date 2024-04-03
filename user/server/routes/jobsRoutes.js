@@ -31,7 +31,7 @@ router.get("/alljobs", allJobs);
 
 router.get("/job-available", getJobPosts);
 
-router.get("/job-applications/:companyId/:userId", getJobApplications);
+router.get("/job-applications/:userId", getJobApplications);
 
 router.get("/get-job-detail/:id", getJobById);
 
