@@ -194,7 +194,7 @@ function App() {
             element={<DashCreateCategoryHOC />}
           />
 
-          <Route path="/Admin2" element={<Admin2 />} />
+          <Route path="/Admin2/*" element={<Admin2 />} />
 
           <Route
             path={
