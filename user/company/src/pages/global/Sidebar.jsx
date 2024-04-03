@@ -11,6 +11,7 @@ import CategoryIcon from '@mui/icons-material/Category'
 import { Logout } from '../../redux/userSlice'
 import { useDispatch } from 'react-redux'
 import logoDashboard from '../../assets/logo.svg'
+import MenuIcon from '@mui/icons-material/Menu';
 
 const SidebarAdm = () => {
   const { user } = useSelector((state) => state.user)
@@ -21,6 +22,7 @@ const SidebarAdm = () => {
   }
 
   const [activeItem, setActiveItem] = useState('')
+  const [collapsed, setCollapsed] = useState(false);
 
   const handleItemClick = (itemName) => {
     if (activeItem !== itemName) {
@@ -28,9 +30,15 @@ const SidebarAdm = () => {
     }
   }
 
+  const handleToggleSidebar = () => {
+    setCollapsed(!collapsed);
+  }
+
   return (
     <div style={{ backgroundColor: '#E5E7EB', padding: '0px', margin: '0px' }}>
       <Sidebar
+        collapsed={collapsed}
+        onCollapse={handleToggleSidebar}
         backgroundColor="#C1E1C1"
         style={{
           borderTopRightRadius: '30px',
@@ -46,19 +54,8 @@ const SidebarAdm = () => {
         <Box>
           <Box className="pt-3 pb-5 flex justify-center items-center">
             <img src={logoDashboard} alt="LOGO" className="h-[60px] w-[60px]" />
-            <span className="font-bold ml-2">Skills2.0Match</span>
+            {!collapsed && <span className="font-bold ml-2">Skills2.0Match</span>}
           </Box>
-          <div
-            style={{
-              paddingLeft: '16px',
-              marginLeft: '-120px',
-              color: '#000000',
-              marginBottom: '5px',
-              font: 'bold',
-            }}
-          >
-            <p>Dashboard</p>
-          </div>
           <Menu
             className="text-[#14532d]"
             style={{ paddingLeft: '0', marginLeft: '-16px' }}
@@ -71,7 +68,7 @@ const SidebarAdm = () => {
               }}
               onClick={() => handleItemClick('dashboard')}
             >
-              <Link to="/AdminDashboard">Overview</Link>
+              {!collapsed && <Link to="/AdminDashboard">Overview</Link>}
             </MenuItem>
             <MenuItem
               icon={<GroupAddIcon />}
@@ -79,7 +76,7 @@ const SidebarAdm = () => {
               style={{ color: activeItem === 'users' ? '#14532d' : '#808080' }}
               onClick={() => handleItemClick('users')}
             >
-              <Link to="/admin/users">Users</Link>
+              {!collapsed && <Link to="/admin/users">Users</Link>}
             </MenuItem>
             <MenuItem
               icon={<GroupsIcon />}
@@ -89,7 +86,7 @@ const SidebarAdm = () => {
               }}
               onClick={() => handleItemClick('companies')}
             >
-              <Link to="/admin/companies">Companies</Link>
+              {!collapsed && <Link to="/admin/companies">Companies</Link>}
             </MenuItem>
             <MenuItem
               icon={<WorkIcon />}
@@ -97,7 +94,7 @@ const SidebarAdm = () => {
               style={{ color: activeItem === 'jobs' ? '#14532d' : '#808080' }}
               onClick={() => handleItemClick('jobs')}
             >
-              <Link to="/admin/jobs">Jobs</Link>
+              {!collapsed && <Link to="/admin/jobs">Jobs</Link>}
             </MenuItem>
             <MenuItem
               icon={<CategoryIcon />}
@@ -107,66 +104,77 @@ const SidebarAdm = () => {
               }}
               onClick={() => handleItemClick('category')}
             >
-              <Link to="/admin/category">Category</Link>
+              {!collapsed && <Link to="/admin/category">Category</Link>}
             </MenuItem>
           </Menu>
-          <div
-            style={{
-              paddingLeft: '16px',
-              marginLeft: '-120px',
-              color: '#000000',
-              marginBottom: '5px',
-            }}
-          >
-            <p>Reports</p>
-          </div>
-          <Menu
-            className="text-[#14532d]"
-            style={{ paddingLeft: '0', marginLeft: '-16px' }}
-          >
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'pinnedReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('pinnedReports')}
-            >
-              <Link to="/admin/reports/pinned">Pinned Reports</Link>
-            </MenuItem>
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'currentReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('currentReports')}
-            >
-              <Link to="/admin/reports/current">Current Reports</Link>
-            </MenuItem>
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'exportReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('exportReports')}
-            >
-              <Link to="/admin/reports/export">Export Reports</Link>
-            </MenuItem>
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'securityReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('securityReports')}
-            >
-              <Link to="/admin/reports/security">Security Reports</Link>
-            </MenuItem>
-          </Menu>
+          {!collapsed && (
+            <div>
+              <div
+                style={{
+                  paddingLeft: '16px',
+                  marginLeft: '-120px',
+                  color: '#000000',
+                  marginBottom: '5px',
+                }}
+              >
+                <p>Reports</p>
+              </div>
+              <Menu
+                className="text-[#14532d]"
+                style={{ paddingLeft: '0', marginLeft: '-16px' }}
+              >
+                <MenuItem
+                  icon={<CategoryIcon />}
+                  className="text-left"
+                  style={{
+                    color: activeItem === 'pinnedReports' ? '#14532d' : '#808080',
+                  }}
+                  onClick={() => handleItemClick('pinnedReports')}
+                >
+                  <Link to="/admin/reports/pinned">Pinned Reports</Link>
+                </MenuItem>
+                <MenuItem
+                  icon={<CategoryIcon />}
+                  className="text-left"
+                  style={{
+                    color: activeItem === 'currentReports' ? '#14532d' : '#808080',
+                  }}
+                  onClick={() => handleItemClick('currentReports')}
+                >
+                  <Link to="/admin/reports/current">Current Reports</Link>
+                </MenuItem>
+                <MenuItem
+                  icon={<CategoryIcon />}
+                  className="text-left"
+                  style={{
+                    color: activeItem === 'exportReports' ? '#14532d' : '#808080',
+                  }}
+                  onClick={() => handleItemClick('exportReports')}
+                >
+                  <Link to="/admin/reports/export">Export Reports</Link>
+                </MenuItem>
+                <MenuItem
+                  icon={<CategoryIcon />}
+                  className="text-left"
+                  style={{
+                    color: activeItem === 'securityReports' ? '#14532d' : '#808080',
+                  }}
+                  onClick={() => handleItemClick('securityReports')}
+                >
+                  <Link to="/admin/reports/security">Security Reports</Link>
+                </MenuItem>
+              </Menu>
+            </div>
+          )}
         </Box>
       </Sidebar>
+      {/* Button to toggle sidebar */}
+      <button 
+        onClick={handleToggleSidebar} 
+        style={{ position: 'absolute', top: '20px', left: collapsed ? '0' : '200px' }}
+      >
+        <MenuIcon />
+      </button>
     </div>
   )
 }

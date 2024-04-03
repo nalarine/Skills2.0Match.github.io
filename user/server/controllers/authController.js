@@ -97,10 +97,10 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Check if email is verified
-    if (!user.emailVerified) {
-      return res.status(401).json({ message: "Email not verified" });
-    }
+    // // Check if email is verified
+    // if (!user.emailVerified) {
+    //   return res.status(401).json({ message: "Email not verified" });
+    // }
 
     // Compare password
     const isMatch = await user.comparePassword(password);

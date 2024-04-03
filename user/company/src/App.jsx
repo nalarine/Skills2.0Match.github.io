@@ -43,6 +43,9 @@ import DashJobs from './pages/admin/DashJobs'
 import DashUsers from './pages/admin/DashUsers'
 import DashCompanies from './pages/admin/DashCompanies'
 
+//Admin 2
+import Admin2 from './pages/admin2/Admin2'
+
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
 const DashUsersHOC = AdLayout(DashUsers)
@@ -93,6 +96,7 @@ function App() {
     location.pathname.startsWith('/admin/jobs') ||
     location.pathname.startsWith('/admin/companies') ||
     location.pathname.startsWith('/verification-success') ||
+    location.pathname.startsWith('/Admin2') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -111,6 +115,7 @@ function App() {
       location.pathname.startsWith('/admin/jobs') ||
       location.pathname.startsWith('/admin/companies') ||
       location.pathname.startsWith('/verification-success') ||
+      location.pathname.startsWith('/Admin2') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -138,7 +143,7 @@ function App() {
                   user.role === 0 && user.accountType === 'seeker' ? (
                     <Navigate to="/company-profile" replace={true} />
                   ) : user.role === 1 ? (
-                    <Navigate to="/AdminDashboard" replace={true} />
+                    <Navigate to="/Admin2" replace={true} />
                   ) : (
                     <>
                       <Navigate to="/Dashboard" replace={true} />
@@ -188,6 +193,8 @@ function App() {
             path="/admin/category/create"
             element={<DashCreateCategoryHOC />}
           />
+
+          <Route path="/Admin2" element={<Admin2 />} />
 
           <Route
             path={

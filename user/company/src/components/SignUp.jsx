@@ -188,29 +188,33 @@ const SignUp = ({ open, setOpen }) => {
                       error={errors.email ? errors.email.message : ''}
                     />
 
-                    <TextInput
-                      name="birthdate"
-                      label="Date of Birth"
-                      placeholder="YYYY-MM-DD"
-                      type="date"
-                      register={register('birthdate', {
-                        required: 'Date of Birth is required!',
-                        validate: (value) => {
-                          const birthdate = new Date(value);
-                          const today = new Date();
-                          const minDate = new Date(today.getFullYear() - 24, today.getMonth(), today.getDate());
-                          const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-                      
-                          if (birthdate < minDate || birthdate > maxDate) {
-                            return 'You must be between 18 and 24 years old to register or login.';
-                          }
-                      
-                          return true;
-                        },
-                      })}
-                      
-                      error={errors.birthdate ? errors.birthdate.message : ''}
-                    />
+                  {isRegister && (
+                      <>
+                        <TextInput
+                          name="birthdate"
+                          label="Date of Birth"
+                          placeholder="YYYY-MM-DD"
+                          type="date"
+                          register={register('birthdate', {
+                            required: 'Date of Birth is required!',
+                            validate: (value) => {
+                              const birthdate = new Date(value);
+                              const today = new Date();
+                              const minDate = new Date(today.getFullYear() - 24, today.getMonth(), today.getDate());
+                              const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                          
+                              if (birthdate < minDate || birthdate > maxDate) {
+                                return 'You must be between 18 and 24 years old to register or login.';
+                              }
+                          
+                              return true;
+                            },
+                          })}
+                          
+                          error={errors.birthdate ? errors.birthdate.message : ''}
+                        />
+                      </>
+                    )}
 
                     {isRegister && (
                       <div className="w-full flex gap-1 md:gap-2">
@@ -274,7 +278,7 @@ const SignUp = ({ open, setOpen }) => {
                       </div>
                     )}
 
-                    <div className="w-full flex gap-1 md:gap-2">
+                  <div className="w-full flex gap-1 md:gap-2">
                       <div className={`${isRegister ? 'w-1/2' : 'w-full'}`}>
                         <TextInput
                           name="password"
@@ -283,10 +287,12 @@ const SignUp = ({ open, setOpen }) => {
                           type="password"
                           register={register('password', {
                             required: 'Password is required!',
-                            pattern: {
-                              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                              message: 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character',
-                            },
+                            // pattern: {
+                            //   value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                            //   message: isRegister
+                            //     ? 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character'
+                            //     : '',
+                            // },
                           })}
                           error={errors.password ? errors.password.message : ''}
                         />
