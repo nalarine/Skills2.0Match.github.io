@@ -425,7 +425,7 @@ export const getJobPosts = async (req, res, next) => {
 
 export const getJobApplications = async (req, res, next) => {
   try {
-    const { userId } = req.params; 
+    const { companyId, userId } = req.params; 
 
     if (
       !userId
@@ -434,15 +434,15 @@ export const getJobApplications = async (req, res, next) => {
       return;
     }
 
-    const company = await Companies.find({ applicants: { $elemMatch: { id: { $regex: userId } } } });
+    const company = await Companies.find({ _id: companyId, applicants: { $elemMatch: { id: { $regex: userId } } } });
     //  return res.status(400).json(company)
 
-    const jobApplications = company.map(v => v.applicants.filter(a => a.id ? a.id.includes(userId) : false))
+    const jobApplications = company[0].map(v => v.applicants.filter(a => a.id ? a.id.includes(userId) : false))
 
     res.status(200).json({
       success: true,
       message: "Job Application Successful",
-      data: jobApplications[0]
+      data: jobApplications
     });
   } catch (error) {
     console.log(error);
