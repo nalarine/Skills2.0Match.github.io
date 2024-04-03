@@ -160,7 +160,7 @@ export default function AppView() {
               id: faker.string.uuid(),
               title: faker.person.jobTitle(),
               description: faker.commerce.productDescription(),
-              image: `/assets/images/covers/cover_${index + 1}.jpg`,
+              image: `/src/assets/images/covers/cover_${index + 1}.jpg`,
               postedAt: faker.date.recent(),
             }))}
           />

@@ -135,7 +135,7 @@ export default function PostCard({ post, index }) {
   const renderShape = (
     <SvgColor
       color="paper"
-      src="/assets/icons/shape-avatar.svg"
+      src="/src/assets/icons/shape-avatar.svg"
       sx={{
         width: 80,
         height: 36,

@@ -8,6 +8,10 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import WorkIcon from '@mui/icons-material/Work'
 import GroupsIcon from '@mui/icons-material/Groups'
 import CategoryIcon from '@mui/icons-material/Category'
+import PushPinIcon from '@mui/icons-material/PushPin'
+import IosShareIcon from '@mui/icons-material/IosShare'
+import SecurityIcon from '@mui/icons-material/Security'
+import AssessmentIcon from '@mui/icons-material/Assessment'
 import { Logout } from '../../redux/userSlice'
 import { useDispatch } from 'react-redux'
 import logoDashboard from '../../assets/logo.svg'
@@ -41,14 +45,15 @@ const SidebarAdm = () => {
         onCollapse={handleToggleSidebar}
         backgroundColor="#C1E1C1"
         style={{
-          borderTopRightRadius: '30px',
-          borderBottomRightRadius: '30px',
+          borderRadius: '10px',
+          // borderBottomRightRadius: '30px',
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.6)',
           overflow: 'hidden',
-          height: '100%',
+          height: '94.8%',
           marginBottom: 0, // Ensure no margin at the bottom
           marginTop: 15,
           flexDirection: 'column',
+          marginLeft: 10,
         }}
       >
         <Box>
@@ -107,65 +112,61 @@ const SidebarAdm = () => {
               {!collapsed && <Link to="/admin/category">Category</Link>}
             </MenuItem>
           </Menu>
-          {!collapsed && (
-            <div>
-              <div
-                style={{
-                  paddingLeft: '16px',
-                  marginLeft: '-120px',
-                  color: '#000000',
-                  marginBottom: '5px',
-                }}
-              >
-                <p>Reports</p>
-              </div>
-              <Menu
-                className="text-[#14532d]"
-                style={{ paddingLeft: '0', marginLeft: '-16px' }}
-              >
-                <MenuItem
-                  icon={<CategoryIcon />}
-                  className="text-left"
-                  style={{
-                    color: activeItem === 'pinnedReports' ? '#14532d' : '#808080',
-                  }}
-                  onClick={() => handleItemClick('pinnedReports')}
-                >
-                  <Link to="/admin/reports/pinned">Pinned Reports</Link>
-                </MenuItem>
-                <MenuItem
-                  icon={<CategoryIcon />}
-                  className="text-left"
-                  style={{
-                    color: activeItem === 'currentReports' ? '#14532d' : '#808080',
-                  }}
-                  onClick={() => handleItemClick('currentReports')}
-                >
-                  <Link to="/admin/reports/current">Current Reports</Link>
-                </MenuItem>
-                <MenuItem
-                  icon={<CategoryIcon />}
-                  className="text-left"
-                  style={{
-                    color: activeItem === 'exportReports' ? '#14532d' : '#808080',
-                  }}
-                  onClick={() => handleItemClick('exportReports')}
-                >
-                  <Link to="/admin/reports/export">Export Reports</Link>
-                </MenuItem>
-                <MenuItem
-                  icon={<CategoryIcon />}
-                  className="text-left"
-                  style={{
-                    color: activeItem === 'securityReports' ? '#14532d' : '#808080',
-                  }}
-                  onClick={() => handleItemClick('securityReports')}
-                >
-                  <Link to="/admin/reports/security">Security Reports</Link>
-                </MenuItem>
-              </Menu>
-            </div>
-          )}
+          <div
+            style={{
+              paddingLeft: '16px',
+              marginLeft: '-120px',
+              color: '#000000',
+              marginBottom: '5px',
+            }}
+          >
+            <p>Reports</p>
+          </div>
+          <Menu
+            className="text-[#14532d]"
+            style={{ paddingLeft: '0', marginLeft: '-16px' }}
+          >
+            <MenuItem
+              icon={<CategoryIcon />}
+              className="text-left"
+              style={{
+                color: activeItem === 'pinnedReports' ? '#14532d' : '#808080',
+              }}
+              onClick={() => handleItemClick('pinnedReports')}
+            >
+              <Link to="/admin/reports/pinned">Pinned Reports</Link>
+            </MenuItem>
+            <MenuItem
+              icon={<CategoryIcon />}
+              className="text-left"
+              style={{
+                color: activeItem === 'currentReports' ? '#14532d' : '#808080',
+              }}
+              onClick={() => handleItemClick('currentReports')}
+            >
+              <Link to="/admin/reports/current">Current Reports</Link>
+            </MenuItem>
+            <MenuItem
+              icon={<CategoryIcon />}
+              className="text-left"
+              style={{
+                color: activeItem === 'exportReports' ? '#14532d' : '#808080',
+              }}
+              onClick={() => handleItemClick('exportReports')}
+            >
+              <Link to="/admin/reports/export">Export Reports</Link>
+            </MenuItem>
+            <MenuItem
+              icon={<CategoryIcon />}
+              className="text-left"
+              style={{
+                color: activeItem === 'securityReports' ? '#14532d' : '#808080',
+              }}
+              onClick={() => handleItemClick('securityReports')}
+            >
+              <Link to="/admin/reports/security">Security Reports</Link>
+            </MenuItem>
+          </Menu>
         </Box>
       </Sidebar>
       {/* Button to toggle sidebar */}
