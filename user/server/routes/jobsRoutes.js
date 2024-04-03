@@ -5,6 +5,7 @@ import {
   deleteJobPost,
   getJobById,
   getJobPosts,
+  getJobApplications,
   updateJob,
   applyJob,
   allJobs,
@@ -29,6 +30,8 @@ router.get("/find-jobs", getJobPosts);
 router.get("/alljobs", allJobs);
 
 router.get("/job-available", getJobPosts);
+
+router.get("/job-applications/:userId", getJobApplications);
 
 router.get("/get-job-detail/:id", getJobById);
 

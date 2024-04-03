@@ -286,6 +286,7 @@ export const applyJob = async (req, res, next) => {
     company.applicants.push({
       fullName: `${user.firstName} ${user.lastName}`,
       id: `${applicantId}-${job._id}`,
+      jobPost: updatedJob,
       user,
       jobRole: job.jobTitle,
       appliedDate: new Date(new Date().setHours(0,0,0)),
@@ -420,6 +421,35 @@ export const getJobPosts = async (req, res, next) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+
+export const getJobApplications = async (req, res, next) => {
+  try {
+    const { userId } = req.params; 
+
+    if (
+      !userId
+    ) {
+      next("Please Provide All Required Fields");
+      return;
+    }
+
+    const company = await Companies.find({ applicants: { $elemMatch: { id: { $regex: userId } } } });
+    //  return res.status(400).json(company)
+
+    const jobApplications = company.map(v => v.applicants.filter(a => a.id ? a.id.includes(userId) : false))
+
+    res.status(200).json({
+      success: true,
+      message: "Job Application Successful",
+      data: jobApplications[0]
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
 
 export const getJobById = async (req, res, next) => {
   try {
