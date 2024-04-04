@@ -274,7 +274,7 @@ const DashUsers = () => {
     <div style={{ position: 'relative' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '98%' }}>
-          <div style={{ marginTop: '0px' }}>
+          <div style={{ marginTop: '80px' }}>
             {loading ? (
               <p>Loading...</p>
             ) : (

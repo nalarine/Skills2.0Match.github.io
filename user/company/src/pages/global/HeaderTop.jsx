@@ -1,78 +1,79 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { ThemeProvider } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import Avatar from '@mui/material/Avatar'
-import Typography from '@mui/material/Typography'
-import { AiOutlineLogout } from 'react-icons/ai'
-import { Logout } from '../../redux/userSlice'
-import { useDispatch } from 'react-redux'
+import PropTypes from 'prop-types';
 
-// Define your theme here if needed
-const theme = {}
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import { useTheme } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 
-const HeaderTop = () => {
-  const { user } = useSelector((state) => state.user)
-  const profileUrl = user?.profileUrl || ''
-  const dispatch = useDispatch()
+import { useResponsive } from '../admin2/hooks/use-responsive';
 
-  const handleLogout = () => {
-    dispatch(Logout())
-  }
+import { bgBlur } from '../admin2/theme/css';
+
+import Iconify from '../admin2/components/iconify';
+
+import Searchbar from '../admin2/layouts/dashboard/common/searchbar';
+import { NAV, HEADER } from '../admin2/layouts/dashboard/config-layout';
+import AccountPopover from '../admin2/layouts/dashboard/common/account-popover';
+import NotificationsPopover from '../admin2/layouts/dashboard/common/notifications-popover';
+
+// ----------------------------------------------------------------------
+
+export default function Header({ onOpenNav }) {
+  const theme = useTheme();
+
+  const lgUp = useResponsive('up', 'lg');
+
+  const renderContent = (
+    <>
+      {!lgUp && (
+        <IconButton onClick={onOpenNav} sx={{ mr: 1 }}>
+          <Iconify icon="eva:menu-2-fill" />
+        </IconButton>
+      )}
+
+      <Searchbar />
+
+      <Box sx={{ flexGrow: 1 }} />
+
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <NotificationsPopover />
+        <AccountPopover />
+      </Stack>
+    </>
+  );
 
   return (
-    <Box
-      flexGrow={1}
-      boxShadow={1}
-      borderRadius={4}
-      bgcolor="white"
-      p={1}
-      mt={2}
-      ml={2}
-      mr={2}
-      mb={2}
+    <AppBar
+      sx={{
+        boxShadow: 'none',
+        height: HEADER.H_MOBILE,
+        zIndex: theme.zIndex.appBar + 1,
+        ...bgBlur({
+          color: theme.palette.background.default,
+        }),
+        transition: theme.transitions.create(['height'], {
+          duration: theme.transitions.duration.shorter,
+        }),
+        ...(lgUp && {
+          width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+          height: HEADER.H_DESKTOP,
+        }),
+      }}
     >
       <Toolbar
-        style={{
-          paddingRight: '10px',
-          paddingLeft: 0,
-          display: 'flex',
-          justifyContent: 'flex-end',
+        sx={{
+          height: 1,
+          px: { lg: 5 },
         }}
       >
-        <div className="flex items-center gap-4">
-          <Avatar src={profileUrl} alt="avatar" />
-          <div>
-            <Typography
-              variant="h6"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              {user?.firstName}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              className="font-normal"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              {user?.email}
-            </Typography>
-          </div>
-        </div>
-        <IconButton onClick={handleLogout} style={{ marginLeft: '10px' }}>
-          <AiOutlineLogout />
-        </IconButton>
+        {renderContent}
       </Toolbar>
-    </Box>
-  )
+    </AppBar>
+  );
 }
 
-const ThemedHeaderTop = () => (
-  <ThemeProvider theme={theme}>
-    <HeaderTop />
-  </ThemeProvider>
-)
-
-export default ThemedHeaderTop
+Header.propTypes = {
+  onOpenNav: PropTypes.func,
+};
