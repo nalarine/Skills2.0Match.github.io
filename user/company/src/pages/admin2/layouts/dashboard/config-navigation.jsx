@@ -18,13 +18,13 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'jobs',
-    path: '/admin/jobs',
+    title: 'companies',
+    path: '/admin/companies',
     icon: icon('ic_cart'),
   },
   {
-    title: 'categories',
-    path: '/blog',
+    title: 'jobs',
+    path: '/admin/jobs',
     icon: icon('ic_blog'),
   },
 ];
