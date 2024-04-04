@@ -151,7 +151,7 @@ function App() {
                   user.role === 0 && user.accountType === 'seeker' ? (
                     <Navigate to="/company-profile" replace={true} />
                   ) : user.role === 1 ? (
-                    <Navigate to="/Admin2" replace={true} />
+                    <Navigate to="/AdminDashboard" replace={true} />
                   ) : (
                     <>
                       <Navigate to="/Dashboard" replace={true} />
