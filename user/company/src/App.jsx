@@ -202,11 +202,11 @@ function App() {
             element={<DashCreateCategoryHOC />}
           />
 
-          <Route element={<DashboardLayout />}>
+          {/* <Route element={<DashboardLayout />}>
           <Route path="/Admin2/*" element={<Admin2 />} />
           <Route path="/User" element={<UserPage />} />
           <Route path="/Products" element={<ProductsPage />} />
-          </Route>
+          </Route> */}
 
           <Route
             path={

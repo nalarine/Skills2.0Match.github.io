@@ -1,183 +1,204 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar'
-import { Box } from '@mui/material'
-import { Link } from 'react-router-dom'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import WorkIcon from '@mui/icons-material/Work'
-import GroupsIcon from '@mui/icons-material/Groups'
-import CategoryIcon from '@mui/icons-material/Category'
-import PushPinIcon from '@mui/icons-material/PushPin'
-import IosShareIcon from '@mui/icons-material/IosShare'
-import SecurityIcon from '@mui/icons-material/Security'
-import AssessmentIcon from '@mui/icons-material/Assessment'
-import { Logout } from '../../redux/userSlice'
-import { useDispatch } from 'react-redux'
-import logoDashboard from '../../assets/logo.svg'
-import MenuIcon from '@mui/icons-material/Menu';
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-const SidebarAdm = () => {
-  const { user } = useSelector((state) => state.user)
-  const dispatch = useDispatch()
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
+import { alpha } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import ListItemButton from '@mui/material/ListItemButton';
 
-  const handleLogout = () => {
-    dispatch(Logout())
-  }
+import { usePathname } from '../admin2/routes/hooks';
+import { RouterLink } from '../admin2/routes/components';
 
-  const [activeItem, setActiveItem] = useState('')
-  const [collapsed, setCollapsed] = useState(false);
+import { useResponsive } from '../admin2/hooks/use-responsive';
 
-  const handleItemClick = (itemName) => {
-    if (activeItem !== itemName) {
-      setActiveItem(itemName)
+import { account } from '../admin2/_mock/account';
+
+import Logo from '../admin2/components/logo';
+import Scrollbar from '../admin2/components/scrollbar';
+
+import { NAV } from '../admin2/layouts/dashboard/config-layout';
+import navConfig from '../admin2/layouts/dashboard/config-navigation';
+
+// ----------------------------------------------------------------------
+
+export default function Nav({ openNav, onCloseNav }) {
+  const pathname = usePathname();
+
+  const upLg = useResponsive('up', 'lg');
+
+  useEffect(() => {
+    if (openNav) {
+      onCloseNav();
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
-  const handleToggleSidebar = () => {
-    setCollapsed(!collapsed);
-  }
+  const renderAccount = (
+    <Box
+      sx={{
+        my: 3,
+        mx: 2.5,
+        py: 2,
+        px: 2.5,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
+      }}
+    >
+      <Avatar src={account.photoURL} alt="photoURL" />
+
+      <Box sx={{ ml: 2 }}>
+        <Typography variant="subtitle2">{account.displayName}</Typography>
+
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {account.role}
+        </Typography>
+      </Box>
+    </Box>
+  );
+
+  const renderMenu = (
+    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+      {navConfig.map((item) => (
+        <NavItem key={item.title} item={item} />
+      ))}
+    </Stack>
+  );
+
+  const renderUpgrade = (
+    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
+      <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
+        <Box
+          component="img"
+          src="/src/assets/illustrations/illustration_avatar.png"
+          sx={{ width: 100, position: 'absolute', top: -50 }}
+        />
+
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography variant="h6">Get more?</Typography>
+
+          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+            From only $69
+          </Typography>
+        </Box>
+
+        <Button
+          href="https://material-ui.com/store/items/minimal-dashboard/"
+          target="_blank"
+          variant="contained"
+          color="inherit"
+        >
+          Upgrade to Pro
+        </Button>
+      </Stack>
+    </Box>
+  );
+
+  const renderContent = (
+    <Scrollbar
+      sx={{
+        height: 1,
+        '& .simplebar-content': {
+          height: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        },
+      }}
+    >
+      <Logo sx={{ mt: 3, ml: 4 }} />
+
+      {renderAccount}
+
+      {renderMenu}
+
+      <Box sx={{ flexGrow: 1 }} />
+
+      {renderUpgrade}
+    </Scrollbar>
+  );
 
   return (
-    <div style={{ backgroundColor: '#E5E7EB', padding: '0px', margin: '0px' }}>
-      <Sidebar
-        collapsed={collapsed}
-        onCollapse={handleToggleSidebar}
-        backgroundColor="#C1E1C1"
-        style={{
-          borderRadius: '10px',
-          // borderBottomRightRadius: '30px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.6)',
-          overflow: 'hidden',
-          height: '94.8%',
-          marginBottom: 0, // Ensure no margin at the bottom
-          marginTop: 15,
-          flexDirection: 'column',
-          marginLeft: 10,
-        }}
-      >
-        <Box>
-          <Box className="pt-3 pb-5 flex justify-center items-center">
-            <img src={logoDashboard} alt="LOGO" className="h-[60px] w-[60px]" />
-            {!collapsed && <span className="font-bold ml-2">Skills2.0Match</span>}
-          </Box>
-          <Menu
-            className="text-[#14532d]"
-            style={{ paddingLeft: '0', marginLeft: '-16px' }}
-          >
-            <MenuItem
-              icon={<DashboardIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'dashboard' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('dashboard')}
-            >
-              {!collapsed && <Link to="/AdminDashboard">Overview</Link>}
-            </MenuItem>
-            <MenuItem
-              icon={<GroupAddIcon />}
-              className="text-left"
-              style={{ color: activeItem === 'users' ? '#14532d' : '#808080' }}
-              onClick={() => handleItemClick('users')}
-            >
-              {!collapsed && <Link to="/admin/users">Users</Link>}
-            </MenuItem>
-            <MenuItem
-              icon={<GroupsIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'companies' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('companies')}
-            >
-              {!collapsed && <Link to="/admin/companies">Companies</Link>}
-            </MenuItem>
-            <MenuItem
-              icon={<WorkIcon />}
-              className="text-left"
-              style={{ color: activeItem === 'jobs' ? '#14532d' : '#808080' }}
-              onClick={() => handleItemClick('jobs')}
-            >
-              {!collapsed && <Link to="/admin/jobs">Jobs</Link>}
-            </MenuItem>
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'category' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('category')}
-            >
-              {!collapsed && <Link to="/admin/category">Category</Link>}
-            </MenuItem>
-          </Menu>
-          <div
-            style={{
-              paddingLeft: '16px',
-              marginLeft: '-120px',
-              color: '#000000',
-              marginBottom: '5px',
-            }}
-          >
-            <p>Reports</p>
-          </div>
-          <Menu
-            className="text-[#14532d]"
-            style={{ paddingLeft: '0', marginLeft: '-16px' }}
-          >
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'pinnedReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('pinnedReports')}
-            >
-              <Link to="/admin/reports/pinned">Pinned Reports</Link>
-            </MenuItem>
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'currentReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('currentReports')}
-            >
-              <Link to="/admin/reports/current">Current Reports</Link>
-            </MenuItem>
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'exportReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('exportReports')}
-            >
-              <Link to="/admin/reports/export">Export Reports</Link>
-            </MenuItem>
-            <MenuItem
-              icon={<CategoryIcon />}
-              className="text-left"
-              style={{
-                color: activeItem === 'securityReports' ? '#14532d' : '#808080',
-              }}
-              onClick={() => handleItemClick('securityReports')}
-            >
-              <Link to="/admin/reports/security">Security Reports</Link>
-            </MenuItem>
-          </Menu>
+    <Box
+      sx={{
+        flexShrink: { lg: 0 },
+        width: { lg: NAV.WIDTH },
+      }}
+    >
+      {upLg ? (
+        <Box
+          sx={{
+            height: 1,
+            position: 'fixed',
+            width: NAV.WIDTH,
+            borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+          }}
+        >
+          {renderContent}
         </Box>
-      </Sidebar>
-      {/* Button to toggle sidebar */}
-      <button 
-        onClick={handleToggleSidebar} 
-        style={{ position: 'absolute', top: '20px', left: collapsed ? '0' : '200px' }}
-      >
-        <MenuIcon />
-      </button>
-    </div>
-  )
+      ) : (
+        <Drawer
+          open={openNav}
+          onClose={onCloseNav}
+          PaperProps={{
+            sx: {
+              width: NAV.WIDTH,
+            },
+          }}
+        >
+          {renderContent}
+        </Drawer>
+      )}
+    </Box>
+  );
 }
 
-export default SidebarAdm
+Nav.propTypes = {
+  openNav: PropTypes.bool,
+  onCloseNav: PropTypes.func,
+};
+
+// ----------------------------------------------------------------------
+
+function NavItem({ item }) {
+  const pathname = usePathname();
+
+  const active = item.path === pathname;
+
+  return (
+    <ListItemButton
+      component={RouterLink}
+      href={item.path}
+      sx={{
+        minHeight: 44,
+        borderRadius: 0.75,
+        typography: 'body2',
+        color: 'text.secondary',
+        textTransform: 'capitalize',
+        fontWeight: 'fontWeightMedium',
+        ...(active && {
+          color: 'primary.main',
+          fontWeight: 'fontWeightSemiBold',
+          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          '&:hover': {
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+          },
+        }),
+      }}
+    >
+      <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+        {item.icon}
+      </Box>
+
+      <Box component="span">{item.title} </Box>
+    </ListItemButton>
+  );
+}
+
+NavItem.propTypes = {
+  item: PropTypes.object,
+};
