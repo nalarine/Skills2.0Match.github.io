@@ -150,13 +150,13 @@ function NavItem({ item }) {
         typography: 'body2',
         color: 'text.secondary',
         textTransform: 'capitalize',
-        fontWeight: 'fontWeightMedium',
+        fontWeight: 'fontWeightBold',
         ...(active && {
-          color: 'primary.main',
-          fontWeight: 'fontWeightSemiBold',
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          color: 'green',
+          fontWeight: 'fontWeightBold',
+          bgcolor: '#B0D9B1',
           '&:hover': {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+            bgcolor: '#D0E7D2',
           },
         }),
       }}
