@@ -1,3 +1,6 @@
+import React, { useState } from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { renderStatus } from "../../components/lib/consts/renderers/renderStatus";
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { renderStatus } from '../../components/lib/consts/renderers/renderStatus';
@@ -15,7 +18,7 @@ const columns = [
     minWidth: 150,
     flex: 1,
     valueOptions: ({ row }) => {
-      if (row === 'Interview') {
+      if (row === "Interview") {
         return (
           <div className="border p-3 border-dark-yellow">
             <span className="text-dark-yellow">{row}</span>
@@ -24,88 +27,67 @@ const columns = [
       }
     },
   },
-  { field: 'appliedDate', headerName: 'Applied Date', minWidth: 200, flex: 1 },
-  { field: 'jobRole', headerName: 'Job Role', minWidth: 200, flex: 1 },
-  {
-    field: 'action',
-    headerName: 'Action',
-    minWidth: 200,
-    flex: 1,
-    valueGetter: () => 'See Profile',
-  },
+  { field: "appliedDate", headerName: "Applied Date", minWidth: 200, flex: 1 },
+  { field: "jobRole", headerName: "Job Role", minWidth: 200, flex: 1 },
+  { field: "action", headerName: "Action", minWidth: 200, flex: 1 },
 ];
 
-export default function AllApplication() {
-  const { user } = useSelector((state) => state.user);
+const dummyData = [
+  {
+    id: 1,
+    companyName: "Dell Philippines",
+    hiringStage: "Interview",
+    appliedDate: "13 July 2023",
+    jobRole: "Analyst",
+    action: "See Profile",
+  },
+  // Add more dummy data here
+];
+
+export default function AllApplicants() {
   const [tableData, setTableData] = useState([]);
-  const [userInfo, setUserInfo] = useState(null);
-  const [showModal, setShowModal] = useState(false);
 
-  const getUser = async () => {
-    try {
-      const res = await apiRequest({
-        url: '/users/get-user/' + user._id,
-        method: 'GET',
+  useEffect(() => {
+    fetch("src/components/lib/consts/dummy/dummy_table.json") // Verify the path to your JSON file
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Network response was not ok: ${response.statusText}`
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setTableData(data);
+      })
+      .catch((error) => {
+        console.error("Error loading data:", error);
       });
-      setTableData(res.data.application);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, []);
 
-    useEffect(() => {
-    getUser()
-    // fetch("src/components/lib/consts/dummy/dummy_table.json") // Verify the path to your JSON file
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error(
-    //         `Network response was not ok: ${response.statusText}`
-    //       );
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setTableData(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error loading data:", error);
-    //   });
-  }, [])
-
-  const onCellClick = ({ field, row }) => {
-    if (field === 'action') {
-      row.user['resume'] = row.resume;
-      setUserInfo(row.user);
-      setShowModal(true);
-    }
-  };
+  // console.log(tableData);
 
   return (
-    <>
-      <div className="flex flex-col p-3 gap-5" style={{ height: 'calc(100vh - 5rem)' }}>
-        <div>
-          <span className="text-3xl font-black">
-            Total Jobs Applied: {tableData.length}
-          </span>
-        </div>
-        <div style={{ height: 'calc(100% - 3rem)' }}>
-          <DataGrid
-            rows={tableData}
-            columns={columns}
-            pagination
-            pageSize={10}
-            components={{ Toolbar: GridToolbar }}
-            onCellClick={onCellClick}
-          />
-        </div>
+    <div className="flex flex-col p-3 gap-5">
+      <div>
+        <span className="text-3xl font-black">
+          Total Applied Jobs: {tableData.length}
+        </span>
       </div>
-      <div onClick={() => setShowModal(false)}>
-        <ViewApplicantCard
-          userInfo={userInfo}
-          showModal={showModal}
-          setShowModal={setShowModal}
+      <div className="w-full max-h-[8rem]">
+        <DataGrid
+          rows={tableData}
+          columns={columns}
+          pagination
+          initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+            },
+          }}
         />
       </div>
-    </>
+    </div>
   );
 }
