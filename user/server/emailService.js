@@ -9,8 +9,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'skillsmatchproject@gmail.com',
-    pass: 'gmxo yabw mrth hbyp',
+    user: 'skills2match2024@gmail.com',
+    pass: 'hcxy bjfv tmcv vcuo',
   },
 });
 
@@ -92,7 +92,7 @@ export const sendVerificationEmail = async (user) => {
 
   try {
     await transporter.sendMail({
-      from: 'Skills 2.0 Match <skillsmatchproject@gmail.com>',
+      from: 'Skills 2.0 Match <skills2match2024@gmail.com>',
       to: user.email,
       subject: subject,
       html: message,

@@ -23,7 +23,6 @@ const SignUp = ({ open, setOpen }) => {
   const [errMsg, setErrMsg] = useState('');
   const [value, setValue] = useState('');
   const [isEmailExisting, setIsEmailExisting] = useState(false);
-  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -69,14 +68,13 @@ const SignUp = ({ open, setOpen }) => {
   
       console.log(res);
       if (res?.status === 'failed') {
-        if (res?.message === 'Email already exists') {
+        if (res?.message === 'Email address already exists') {
           setIsEmailExisting(true);
         } else {
           setErrMsg('Incorrect email or password.');
         }
       } else {
         setErrMsg('');
-        setIsRegistrationSuccess(true);
         const userData = { token: res?.token, ...res?.user };
         dispatch(Login(userData));
         localStorage.setItem('userInfo', JSON.stringify(userData));
@@ -94,7 +92,7 @@ const SignUp = ({ open, setOpen }) => {
           setErrMsg('Validation error occurred.');
         }
       } else {
-        if (error.response?.data?.message !== 'Email already exists') {
+        if (error.response?.data?.message !== 'Email address already exists') {
           setErrMsg('An error occurred.');
           alert('An error occurred.');
         }
@@ -102,10 +100,6 @@ const SignUp = ({ open, setOpen }) => {
     }
   };
 
-  if (isRegistrationSuccess) {
-    return <RegistrationSuccessPage />;
-  }
-  
   return (
     <>
       <Transition appear show={open || false}>
@@ -287,12 +281,12 @@ const SignUp = ({ open, setOpen }) => {
                           type="password"
                           register={register('password', {
                             required: 'Password is required!',
-                            // pattern: {
-                            //   value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                            //   message: isRegister
-                            //     ? 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character'
-                            //     : '',
-                            // },
+                            pattern: {
+                              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                              message: isRegister
+                                ? 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character'
+                                : '',
+                            },
                           })}
                           error={errors.password ? errors.password.message : ''}
                         />
@@ -423,31 +417,6 @@ const SignUp = ({ open, setOpen }) => {
         </Dialog>
       </Transition>
     </>
-  );
-};
-
-// Registration Success Page Component
-const RegistrationSuccessPage = () => {
-  const navigate = useNavigate();
-
-  // Handle redirection to dashboard after email verification
-  useEffect(() => {
-    // Simulate email verification delay
-    const delay = setTimeout(() => {
-      navigate('/Dashboard'); // Redirect to dashboard after email verification
-    }, 3000);
-
-    return () => clearTimeout(delay);
-  }, [navigate]);
-
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Account Created Successfully!</h1>
-        <p>Please check your email for verification.</p>
-        <p>Redirecting you to the dashboard...</p>
-      </div>
-    </div>
   );
 };
 

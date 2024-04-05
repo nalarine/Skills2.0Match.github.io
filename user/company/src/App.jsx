@@ -144,18 +144,17 @@ function App() {
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-            <Route
+           <Route
               path="/"
               element={
                 user ? (
-                  user.role === 0 && user.accountType === 'seeker' ? (
-                    <Navigate to="/company-profile" replace={true} />
+                  user.accountType === 'seeker' ? (
+                    <Navigate to="/user-profile" replace={true} />
                   ) : user.role === 1 ? (
                     <Navigate to="/AdminDashboard" replace={true} />
                   ) : (
                     <>
-                      <Navigate to="/Dashboard" replace={true} />
-                      <Navigate to="/user-profile" replace={true} />
+                      <Navigate to="/company-profile" replace={true} />
                     </>
                   )
                 ) : (
@@ -163,6 +162,7 @@ function App() {
                 )
               }
             />
+
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />

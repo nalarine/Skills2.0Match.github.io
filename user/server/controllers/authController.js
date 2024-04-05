@@ -21,6 +21,7 @@ export const register = async (req, res, next) => {
     // Generate unique verification token
     const verificationToken = uuidv4();
 
+
     // Create new user with role and verification token
     const user = await Users.create({
       firstName,
@@ -34,6 +35,8 @@ export const register = async (req, res, next) => {
     // Send verification email
     await sendVerificationEmail(user, verificationToken);
 
+    const token = await user.createJWT();
+
     // Send success response with both tokens
     res.status(201).json({
       success: true,
@@ -43,9 +46,11 @@ export const register = async (req, res, next) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        role: user.role
+        role: user.role,
+        accountType: user.accountType,
       },
       verificationToken,
+      token,
     });
   } catch (error) {
     console.error(error);
@@ -97,10 +102,10 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // // Check if email is verified
-    // if (!user.emailVerified) {
-    //   return res.status(401).json({ message: "Email not verified" });
-    // }
+    // Check if email is verified
+    if (!user.emailVerified) {
+      return res.status(401).json({ message: "Email not verified" });
+    }
 
     // Compare password
     const isMatch = await user.comparePassword(password);
@@ -121,7 +126,8 @@ export const signIn = async (req, res, next) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        role: user.role
+        role: user.role,
+        accountType: user.accountType,
       },
       token
     });

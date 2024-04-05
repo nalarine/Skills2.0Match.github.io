@@ -18,6 +18,8 @@ function MenuList({ user, onClick }) {
     dispatch(Logout())
   }
 
+  const userType = user?.accountType === 'seeker' ? 'Applicant' : 'Company'; // Determine user type
+
   return (
     <Menu as="div" className="inline-block text-left">
       <div className="flex items-center">
@@ -26,7 +28,7 @@ function MenuList({ user, onClick }) {
             <p className="text-sm font-semibold">
               {user?.firstName ?? user?.name}
             </p>
-            <span className="text-sm text-blue-600">Applicant</span>
+            <span className="text-sm text-blue-600">{userType}</span> {/* Render user type */}
           </div>
           <img
             src={user.profileUrl}
@@ -79,21 +81,6 @@ function MenuList({ user, onClick }) {
                 </button>
               )}
             </Menu.Item>
-            {/* <Menu.Item>
-                {({ active }) => (
-                  <Link
-                      to="/AdminDashboard"
-                      onClick={() => console.log("Clicked on Dashboard button")}
-                      className={`${
-                        active ? 'bg-green-500 text-white' : 'text-gray-900'
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                       <RiAdminLine className={`${active ? 'text-white' : 'text-gray-600'} mr-2 h-5 w-5`} aria-hidden='true' />
-                      Admin Dashboard
-                  </Link>
-
-                )}
-              </Menu.Item> */}
           </div>
         </Menu.Items>
       </Transition>
