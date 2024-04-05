@@ -86,7 +86,7 @@ const DashJobs = () => {
                 }}
                 sx={{
                   [`& .${gridClasses.row}`]: {
-                    bgcolor: 'lightgreen', // Replace 'lightblue' with your desired color
+                    bgcolor: 'radial-gradient(circle, rgba(229,231,235,1) 0%, rgba(193,225,193,1) 100%)', // Replace 'lightblue' with your desired color
                   },
                 }}
               />

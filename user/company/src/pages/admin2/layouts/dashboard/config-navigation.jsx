@@ -10,22 +10,22 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/AdminDashboard',
-    icon: icon('ic_analytics'),
+    icon: icon('admin_dash'),
   },
   {
     title: 'user',
     path: '/admin/users',
-    icon: icon('ic_user'),
+    icon: icon('admin_applicant'),
   },
   {
     title: 'companies',
     path: '/admin/companies',
-    icon: icon('ic_cart'),
+    icon: icon('admin_company'),
   },
   {
     title: 'jobs',
     path: '/admin/jobs',
-    icon: icon('ic_blog'),
+    icon: icon('admin_job'),
   },
 ];
 
