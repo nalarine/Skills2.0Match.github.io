@@ -340,15 +340,27 @@ export const getJobPosts = async (req, res, next) => {
     let queryObject = {
       startHiringDate: { $lte: new Date(date.setHours(0,0,0)) },
       endHiringDate: { $gte: new Date(new Date().setHours(0,0,0)) },
-      $or: [
-        { jobTitle: { $regex: user.jobTitle, $options: 'i' } },
-        ...(user.skills || '')
-          .split(/\s/)
-          .map(v => {
-            return { detail: { $elemMatch: {requirements: { $regex: v, $options: 'i' } } } }
-          })
-      ]
     };
+    
+    // If user provides skills, include skill matching logic in the query
+    if (user.skills) {
+      const skillQueries = user.skills.split(/\s/).map(skill => {
+        return { 'detail.requirements': { $regex: skill, $options: 'i' } };
+      });
+      queryObject.$or = skillQueries;
+    }
+    
+    // If user provides job title, include job title matching logic in the query
+    if (user.jobTitle) {
+      queryObject.$or = queryObject.$or || [];
+      queryObject.$or.push({ jobTitle: { $regex: user.jobTitle, $options: 'i' } });
+    }
+    
+    // If neither job title nor skills provided, return an error or handle as appropriate
+    if (!queryObject.$or || queryObject.$or.length === 0) {
+      return res.status(400).json({ message: 'Please provide either job title or skills' });
+    }
+
 
     if (location) {
       queryObject.location = { $regex: location, $options: "i" };

@@ -99,6 +99,7 @@ const DashUsers = () => {
     { field: 'firstName', headerName: 'First Name', width: 150 },
     { field: 'lastName', headerName: 'Last Name', width: 150 },
     { field: 'email', headerName: 'Email', width: 250 },
+    { field: 'age', headerName: 'Age', width: 100 },
     {
       field: 'action',
       headerName: 'Action',
