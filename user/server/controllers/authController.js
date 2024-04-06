@@ -21,7 +21,6 @@ export const register = async (req, res, next) => {
     // Generate unique verification token
     const verificationToken = uuidv4();
 
-
     // Create new user with role and verification token
     const user = await Users.create({
       firstName,
@@ -35,7 +34,7 @@ export const register = async (req, res, next) => {
     // Send verification email
     await sendVerificationEmail(user, verificationToken);
 
-    const token = await user.createJWT();
+    const token = user.createJWT();
 
     // Send success response with both tokens
     res.status(201).json({
@@ -102,10 +101,10 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Check if email is verified
-    if (!user.emailVerified) {
-      return res.status(401).json({ message: "Email not verified" });
-    }
+    // // Check if email is verified
+    // if (!user.emailVerified) {
+    //   return res.status(401).json({ message: "Email not verified" });
+    // }
 
     // Compare password
     const isMatch = await user.comparePassword(password);

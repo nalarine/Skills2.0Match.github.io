@@ -1,5 +1,5 @@
 import { Outlet, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals, VerificationSuccess } from './components'
+import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals, VerificationSuccess, PrivacyPolicy } from './components'
 import {
   About,
   AuthPage,
@@ -42,12 +42,6 @@ import DashCreateJob from './pages/admin/DashCreateJob'
 import DashJobs from './pages/admin/DashJobs'
 import DashUsers from './pages/admin/DashUsers'
 import DashCompanies from './pages/admin/DashCompanies'
-
-//Admin 2
-import Admin2 from './pages/admin2/Admin2'
-import UserPage from './pages/admin2/pages/user'
-import ProductsPage from './pages/admin2/pages/products'
-import DashboardLayout from './pages/admin2/layouts/dashboard'
 
 
 //HOC
@@ -94,15 +88,11 @@ function App() {
     location.pathname.startsWith('/cjoblisting') ||
     location.pathname.startsWith('/upload-job') ||
     location.pathname.startsWith('/job-detail/') ||
-    location.pathname.startsWith('/companies') ||
     location.pathname.startsWith('/admin/category') ||
     location.pathname.startsWith('/admin/users') ||
     location.pathname.startsWith('/admin/jobs') ||
     location.pathname.startsWith('/admin/companies') ||
     location.pathname.startsWith('/verification-success') ||
-    location.pathname.startsWith('/Admin2') ||
-    location.pathname.startsWith('/User') ||
-    location.pathname.startsWith('/Products') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -121,9 +111,7 @@ function App() {
       location.pathname.startsWith('/admin/jobs') ||
       location.pathname.startsWith('/admin/companies') ||
       location.pathname.startsWith('/verification-success') ||
-      location.pathname.startsWith('/Admin2') ||
-      location.pathname.startsWith('/User') ||
-      location.pathname.startsWith('/Products') ||
+      location.pathname.startsWith('/privacy-policy') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -202,12 +190,6 @@ function App() {
             element={<DashCreateCategoryHOC />}
           />
 
-          {/* <Route element={<DashboardLayout />}>
-          <Route path="/Admin2/*" element={<Admin2 />} />
-          <Route path="/User" element={<UserPage />} />
-          <Route path="/Products" element={<ProductsPage />} />
-          </Route> */}
-
           <Route
             path={
               user?.accountType === 'seeker'
@@ -225,6 +207,7 @@ function App() {
         </Route>
         <Route path="/AboutPage" element={<AboutPage />} />
         <Route path="/ContactPage" element={<ContactPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/about-us" element={<About />} />
       </Routes>
     </main>

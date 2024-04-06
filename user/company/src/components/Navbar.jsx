@@ -126,19 +126,21 @@ const Navbar = () => {
           <Link to="/user-auth" className="hover:hover:text-green-500">
             Home
           </Link>
-          <ul className="list-none">
-            <li>
-              <Link
-                to={
-                  user?.accountType === 'seeker'
-                    ? '/applications'
-                    : '/upload-job'
-                }
-              >
-                {user?.accountType === 'seeker' ? 'Applications' : 'Upload Job'}
-              </Link>
-            </li>
-          </ul>
+          {user?.token && (
+            <ul className="list-none">
+              <li>
+                <Link
+                  to={
+                    user?.accountType === 'seeker'
+                      ? '/applications'
+                      : '/upload-job'
+                  }
+                >
+                  {user?.accountType === 'seeker' ? 'Applications' : 'Upload Job'}
+                </Link>
+              </li>
+            </ul>
+          )}
           <Link to="/companies" className="hover:hover:text-green-500">
             Companies
           </Link>

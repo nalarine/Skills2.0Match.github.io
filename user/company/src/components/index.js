@@ -20,6 +20,7 @@ import SkillsAssessment from '../pages/OSY/SkillsAssessment/SkillsAssessment'
 import JobAvailable from '../components/JobAvailable'
 import HelpCenter from '../pages/OSY/HelpCenter'
 import VerificationSuccess from './VerificationSuccessPage'
+import PrivacyPolicy from './PrivacyPolicy'
 
 export {
   Navbar,
@@ -44,4 +45,5 @@ export {
   JobAvailable,
   HelpCenter,
   VerificationSuccess,
+  PrivacyPolicy,
 }
