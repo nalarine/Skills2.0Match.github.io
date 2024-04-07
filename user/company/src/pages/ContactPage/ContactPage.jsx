@@ -215,7 +215,6 @@ const ContactPage = () => {
                 <img
                   src={footerimg}
                   className="cursor-pointer items-center justify-center w-44"
-                  alt="Footer Logo"
                 />
               </a>
             </div>
@@ -225,70 +224,40 @@ const ContactPage = () => {
               <AiFillInstagram className="icon text-3xl bg-green-800 text-white rounded-full p-2 hover:bg-green-600" />
             </div>
           </div>
-          <div
-            data-aos="fade-up"
-            data-aos-duration="3000"
-            className="footerLinks flex flex-col items-center"
-          >
-            <span className="linkTitle pb-1 font-semibold">Quick Links</span>
-            <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
-                Home
-              </a>
-            </li>
-            <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
-                About
-              </a>
-            </li>
-            <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
-                Contact
-              </a>
-            </li>
-            <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
-                Privacy Policy
-              </a>
-            </li>
-            <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
-                Terms & Conditions
-              </a>
-            </li>
-          </div>
+
           <div
             data-aos="fade-up"
             data-aos-duration="4000"
-            className="footerLinks flex flex-col items-center"
+            className="footerLinks flex flex-col  items-center"
           >
             <span className="linkTitle pb-1 font-semibold">Quick Links</span>
             <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
+              <a href="/user-auth" className="text-gray-500 hover:text-green-800">
                 Home
               </a>
             </li>
             <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
+              <a href="/AboutPage" className="text-gray-500 hover:text-green-800">
                 About
               </a>
             </li>
             <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
+              <a href="/ContactPage" className="text-gray-500 hover:text-green-800">
                 Contact
               </a>
             </li>
             <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
+              <a href="/privacy-policy" className="text-gray-500 hover:text-green-800">
                 Privacy Policy
               </a>
             </li>
             <li className="hover:transform hover:translate-x-2 list-none transition ease-in-out">
-              <a href="#" className="text-gray-500 hover:text-green-800">
+              <a href="/terms-of-service" className="text-gray-500 hover:text-green-800">
                 Terms & Conditions
               </a>
             </li>
           </div>
+
           <div
             data-aos="fade-up"
             data-aos-duration="5000"
@@ -305,7 +274,7 @@ const ContactPage = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default ContactPage

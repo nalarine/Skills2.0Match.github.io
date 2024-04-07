@@ -21,6 +21,7 @@ import JobAvailable from '../components/JobAvailable'
 import HelpCenter from '../pages/OSY/HelpCenter'
 import VerificationSuccess from './VerificationSuccessPage'
 import PrivacyPolicy from './PrivacyPolicy'
+import TermsOfService from './TermsOfService'
 
 export {
   Navbar,
@@ -46,4 +47,5 @@ export {
   HelpCenter,
   VerificationSuccess,
   PrivacyPolicy,
+  TermsOfService,
 }

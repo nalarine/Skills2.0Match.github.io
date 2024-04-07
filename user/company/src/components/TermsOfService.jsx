@@ -6,7 +6,7 @@ import Aos from 'aos';
 import 'aos/dist/aos.css';
 import footerimg from '../assets/header.png';
 
-const PrivacyPolicy = () => {
+const TermsOfService = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const PrivacyPolicy = () => {
       className="absolute top-0 left-0 h-full mt-24"
       style={{
         background:
-          "linear-gradient(rgba(33,33,33,0.522), rgba(33,33,33,0.522)) no-repeat, url('../../src/assets/header2.png') center / cover",
+          "linear-gradient(rgba(33,33,33,0.522), rgba(33,33,33,0.522)) no-repeat, url('../../src/assets/terms.png') center / cover",
         height: '50vh',
         zIndex: 2,
         left: '1.5%', // Adjust the left positioning as needed
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
             data-aos="fade-up"
             className="title text-white text-6xl font-semibold" // Example animation class
           >
-            PRIVACY POLICY
+            TERMS AND CONDITIONS
           </h1>
         </div>
       </div>
@@ -47,10 +47,9 @@ const PrivacyPolicy = () => {
   <div className="container mx-auto p-8 text-left mt-24">
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b-2 border-gray-500 pb-2">PRIVACY STATEMENT</h2>
         <div>
           <p className="mb-4 text-gray-700">
-            We assure our users that their shared information and data will never be sold or rented. We care about your privacy and spam is something that we detest. By agreeing with the Privacy Statement, you permit Skills2.0Match to use your personal information as stated in this Privacy Statement when you use this website.
+          The stated Terms and Conditions will govern your use of Skills2.0Match as an applicant and a company and any related services offered by the website. By accessing or using Skills2.0Match, you acknowledge that these Terms will take effect once you started.
           </p>
         </div>
       </div>
@@ -58,14 +57,11 @@ const PrivacyPolicy = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">PERSONAL INFORMATION</h3>
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">USE OF SERVICE</h3>
         <div>
           <p className="mb-4 text-gray-700">
-            We may collect and use the gained personal information for the following purposes:
-            <ul className="list-disc pl-4 text-gray-700">
-              <li>Improve our support services</li>
-              <li>Improve user functionality and experience</li>
-            </ul>
+          Skills2.0Match is an automated skills matching system specifically designed to help Out-of-School Youth to have wider access to various job opportunites based on the skills they have.  By using out services, you agree to use the platform only based on its intended purpose.
+            To be able to use the services for the applicant, you must be atleast 18 to 24 yeaars old.  If you are accessing the platform to share job opportunities on behalf of your company or organization, you claim and permit to bindi such etity and terms.
           </p>
         </div>
       </div>
@@ -73,10 +69,11 @@ const PrivacyPolicy = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">Company</h4>
+        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">JOB MATCHING AND RECOMMENDATION</h4>
         <div>
           <p className="mb-4 text-gray-700">
-            The company must provide their personally identifiable information such as the company name, location, company logo, and description about their company.
+          The Skills2.0Match utilizes Regex Algorithm to mach OSY's users with job opportunities based on the skills, qualification, and preferences entered.  As we strive to produce precise, accurate, and relevant jobs, we do not guarantee employment or job placement.
+        We encourage our applicants to analyze and review job listings that matched their profile and apply on jobs that align and suites their preference and interests.  Skills2.0Match is not responsible for the results of any job application or employment that walkthrough or facilitated by the platform.
           </p>
         </div>
       </div>
@@ -84,10 +81,10 @@ const PrivacyPolicy = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">Applicant</h4>
+        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">INTELLECTUAL PROPERTY</h4>
         <div>
           <p className="mb-4 text-gray-700">
-            The applicant must provide with their name, last name, location, email, about, location, and profile picture. They can also enter their skills and show the jobs recommended for them.
+          The service provided by the Skills2.0Match is and will continue to be a sole property of the said website and its licensors and developers, along with its features, functionality, and content.  The laws of copyright and trademark in the Philippines will provide protection against individuas who plan to copy or distribute services without prior written approval.
           </p>
         </div>
       </div>
@@ -95,10 +92,10 @@ const PrivacyPolicy = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">EMAIL</h3>
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">TERMINATION</h3>
         <div>
           <p className="mb-4 text-gray-700">
-            Skills2.0Match does not sell or rent users' email addresses to anyone. We ensure that only verified users will be able to enter the website and companies that have been only approved by the admin will be able to post a job.
+          We may terminate or suspend your accout and access immediately, wihtout prior notice if breach of terms has been proven.  Upon termination, your access to any service and to your account will be immediately ceased. 
           </p>
         </div>
       </div>
@@ -106,16 +103,11 @@ const PrivacyPolicy = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">CONTACT INFORMATION</h3>
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">CHANGES</h3>
         <div>
           <p className="mb-4 text-gray-700">
-            If you have any concerns or questions about our Privacy Statement or any queries, you may contact us through the following:
+          We reserve and maintain the authority to amend or update these Terms at any instance, in our sole discretion.  Before doing any modification, we will send a notice at least 30 days prior to any new terms that will take effect if the adjustment is substantial.  Our sole judgment will be considered to identify and deciding what changes are qualified material.
           </p>
-          <ul className="list-disc pl-4 mb-4 text-gray-700">
-            <li>E-mail: your@email.com</li>
-            <li>Phone Number: +123456789</li>
-            <li>Address: Your Address</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -200,4 +192,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default TermsOfService;

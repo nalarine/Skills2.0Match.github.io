@@ -324,23 +324,24 @@ const SignUp = ({ open, setOpen }) => {
                       )}
                     </div>
 
-                {/* Checkbox for agreeing to terms */}
-                <div className="flex items-center mt-4">
-                <input
-                  type="checkbox"
-                  id="agreeTerms"
-                  className="form-checkbox h-8 w-8 text-green-500 rounded focus:ring-green-400"
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  style={{ backgroundColor: agreedToTerms ? '#d1fae5' : 'inherit', transition: 'background-color 0.3s ease' }}
-                />
-                <label htmlFor="agreeTerms" className="ml-2 text-sm text-gray-700">
-                  By creating an account, you are agreeing to the{' '}
-                  <a href="/privacy-policy" className="text-green-500 hover:underline">Privacy Policy</a> and{' '}
-                  <a href="/terms-of-service" className="text-green-500 hover:underline">Terms of Service</a>.
-                </label>
-              </div>
-                    <div className="mt-2 flex items-center justify-center">
+                    {isRegister && (
+                 <div className="flex items-center mt-4">
+                    <input
+                      type="checkbox"
+                      id="agreeTerms"
+                      className="form-checkbox h-8 w-8 text-green-500 rounded focus:ring-green-400"
+                      checked={agreedToTerms}
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                      style={{ backgroundColor: agreedToTerms ? '#d1fae5' : 'inherit', transition: 'background-color 0.3s ease' }}
+                    />
+                    <label htmlFor="agreeTerms" className="ml-2 text-sm text-gray-700">
+                      By creating an account, you are agreeing to the{' '}
+                      <a href="/privacy-policy" className="text-green-500 hover:underline">Privacy Policy</a> and{' '}
+                      <a href="/terms-of-service" className="text-green-500 hover:underline">Terms of Service</a>.
+                    </label>
+                  </div>
+                )}
+                        <div className="mt-2 flex items-center justify-center">
                       <CustomButton
                         type="submit"
                         containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}

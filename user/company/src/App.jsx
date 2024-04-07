@@ -1,5 +1,5 @@
 import { Outlet, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals, VerificationSuccess, PrivacyPolicy } from './components'
+import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals, VerificationSuccess, PrivacyPolicy, TermsOfService } from './components'
 import {
   About,
   AuthPage,
@@ -112,6 +112,7 @@ function App() {
       location.pathname.startsWith('/admin/companies') ||
       location.pathname.startsWith('/verification-success') ||
       location.pathname.startsWith('/privacy-policy') ||
+      location.pathname.startsWith('/terms-of-service') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -208,6 +209,7 @@ function App() {
         <Route path="/AboutPage" element={<AboutPage />} />
         <Route path="/ContactPage" element={<ContactPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/about-us" element={<About />} />
       </Routes>
     </main>
