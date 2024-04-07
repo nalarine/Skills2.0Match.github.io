@@ -30,12 +30,12 @@ const JobAvailable = () => {
 
   return (
     <div
-      className="bg-white p-4 rounded-lg border border-gray flex flex-col flex-2 w-full"
+      className="p-4 rounded-lg border border-gray flex flex-col flex-2 w-full"
       style={{ height: '32rem' }}
     >
       <div className="flex flex-row justify-between items-center">
-        <strong className="font-bold text-3xl">Job Available</strong>
-        <strong className="font-bold text-xl">View All</strong>
+        <strong className="font-bold text-3xl mb-4">Job Matches</strong>
+        {/* <strong className="font-bold text-xl">View All</strong> */}
       </div>
       <div className="w-full flex flex-wrap gap-4">
         {postedJobs &&

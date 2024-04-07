@@ -127,35 +127,32 @@ export default function JobPortalFAQs() {
             >
               <div className="custom-accordion-header"></div>
               <div className="custom-accordion-content font-normal">
-                OSYs can explore various entry-level positions, internships, and
-                apprenticeships tailored to their skill levels and interests. We
-                partner with companies offering opportunities suitable for OSYs
+                OSYs can explore various jobs that tailored to their skill levels and interests. 
+                We partner with companies and organization offering opportunities suitable for OSYs
                 to kickstart their careers.
               </div>
             </AccordionItem>
 
             <AccordionItem
               key="2"
-              aria-label="What opportunities are available for OSYs on our job portal?"
-              title="What opportunities are available for OSYs on your job portal?"
+              aria-label="How does Skills2.0Match work?"
+              title="How does Skills2.0Match work?" 
               className={`custom-accordion-item ${
                 activeIndex === 2 ? 'active' : ''
               }`}
               onClick={() => handleClick(2)}
+              style={{ paddingBottom: '20px' }}
             >
               <div className="custom-accordion-header"></div>
               <div className="custom-accordion-content font-normal">
-                OSYs can explore various entry-level positions, internships, and
-                apprenticeships tailored to their skill levels and interests. We
-                partner with companies offering opportunities suitable for OSYs
-                to kickstart their careers.
+                Skills2.0Match utilizes automated algorithms to analyze the skills and qualifications of OSY users and match them with job opportunities listed on our platform. Users can create a profile, input their skills and preferences, and receive personalized job recommendations.
               </div>
             </AccordionItem>
 
             <AccordionItem
               key="3"
-              aria-label="What opportunities are available for OSYs on our job portal?"
-              title="What opportunities are available for OSYs on your job portal?"
+              aria-label="What kind of job opportunities can I find on Skills2.0Match?"
+              title="What kind of job opportunities can I find on Skills2.0Match?"
               className={`custom-accordion-item ${
                 activeIndex === 3 ? 'active' : ''
               }`}
@@ -163,10 +160,7 @@ export default function JobPortalFAQs() {
             >
               <div className="custom-accordion-header"></div>
               <div className="custom-accordion-content font-normal">
-                OSYs can explore various entry-level positions, internships, and
-                apprenticeships tailored to their skill levels and interests. We
-                partner with companies offering opportunities suitable for OSYs
-                to kickstart their careers.
+                Skills2.0Match features a wide range of job opportunities across various industries, and categories.
               </div>
             </AccordionItem>
           </Accordion>
@@ -175,8 +169,8 @@ export default function JobPortalFAQs() {
           <Accordion variant="splitted">
             <AccordionItem
               key="4"
-              aria-label="What support services are available for OSYs on your job portal?"
-              title="What support services are available for OSYs on your job portal?"
+              aria-label="Can employers post job opportunities on Skills2.0Match?"
+              title="Can employers post job opportunities on Skills2.0Match?"
               className={`custom-accordion-item ${
                 activeIndex === 4 ? 'active' : ''
               }`}
@@ -184,46 +178,39 @@ export default function JobPortalFAQs() {
             >
               <div className="custom-accordion-header"></div>
               <div className="custom-accordion-content font-normal">
-                We provide various support services for OSYs, including resume
-                building assistance, interview preparation workshops, and access
-                to career counseling sessions. Our goal is to empower OSYs and
-                help them succeed in their job search and career development.
+                Yes, employers can post job opportunities on Skills2.0Match to reach a diverse pool of talented OSY users. If you're an employer interested in posting a job listing, please contact us for more information on our employer services.
               </div>
             </AccordionItem>
 
             <AccordionItem
               key="5"
-              aria-label="What support services are available for OSYs on your job portal?"
-              title="What support services are available for OSYs on your job portal?"
+              aria-label="How can I update my profile on Skills2.0Match?"
+              title="How can I update my profile on Skills2.0Match?"
               className={`custom-accordion-item ${
                 activeIndex === 5 ? 'active' : ''
               }`}
               onClick={() => handleClick(5)}
+              style={{ paddingBottom: '20px' }}
             >
               <div className="custom-accordion-header"></div>
               <div className="custom-accordion-content font-normal">
-                We provide various support services for OSYs, including resume
-                building assistance, interview preparation workshops, and access
-                to career counseling sessions. Our goal is to empower OSYs and
-                help them succeed in their job search and career development.
+                You can update your profile information, including your skills, qualifications, and preferences, at any time by logging into your Skills2.0Match account and accessing the profile settings. Make sure to keep your profile up to date to receive the best job matches!
               </div>
             </AccordionItem>
 
             <AccordionItem
               key="6"
-              aria-label="What support services are available for OSYs on your job portal?"
-              title="What support services are available for OSYs on your job portal?"
+              aria-label="How can I contact Skills2.0Match for support?"
+              title="How can I contact Skills2.0Match for support?"
               className={`custom-accordion-item ${
                 activeIndex === 6 ? 'active' : ''
               }`}
               onClick={() => handleClick(6)}
+              style={{ paddingBottom: '20px' }}
             >
               <div className="custom-accordion-header"></div>
               <div className="custom-accordion-content font-normal">
-                We provide various support services for OSYs, including resume
-                building assistance, interview preparation workshops, and access
-                to career counseling sessions. Our goal is to empower OSYs and
-                help them succeed in their job search and career development.
+                If you have any questions or need assistance, you can contact our support team by emailing support@skills2match.com or filling out the contact form on our website. We're here to help!
               </div>
             </AccordionItem>
           </Accordion>
