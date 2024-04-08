@@ -9,7 +9,7 @@ import {
 } from '../lib/consts/navigation';
 
 import { Logout } from '../../redux/userSlice';
-import { AiOutlineLogout } from 'react-icons/ai';
+import { FiLogOut } from 'react-icons/fi';
 
 const linkClasses =
   'flex items-center gap-2 font-regular px-3 py-2 hover:bg-light-yellow hover:no-underline rounded-sm text-base';
@@ -34,7 +34,7 @@ const Sidebar = () => {
         <div className="flex items-center gap-2">
           <img
             src="../../src/assets/logo.svg"
-            className="w-10 h-10"
+            className="w-12 h-12"
             alt="Logo"
           />
           <h1 className="ml-2 font-bold">Skills 2.0 Match</h1>
@@ -42,13 +42,13 @@ const Sidebar = () => {
       )}
       <button
         onClick={() => setExpanded((curr) => !curr)}
-        className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+        className="p-1.5 rounded-lg hover:bg-[#14532d] hover:text-[#ffffff]"
       >
         {expanded ? <ChevronFirst /> : <ChevronLast />}
       </button>
     </div>
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3">
+          <ul className="flex-1 px-3 mb-3">
             {/* Render the sidebar links */}
             {DASHBOARD_SIDEBAR_LINKS.map((item) => (
               <SidebarLink key={item.key} item={item} pathname={pathname} />
@@ -57,7 +57,7 @@ const Sidebar = () => {
         </SidebarContext.Provider>
 
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3">
+          <ul className="flex-1 px-3 flex flex-col gap-1.5 pt-2 border-t border-green-500">
             {/* Render the sidebar links */}
             {DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((item) => (
               <SidebarLink key={item.key} item={item} pathname={pathname} />
@@ -82,8 +82,9 @@ const Sidebar = () => {
               <span className="text-xs text-gray-600">{user?.email}</span>
             </div>
             {expanded && (
-              <button onClick={handleLogout} style={{ cursor: 'pointer' }}>
-                <AiOutlineLogout size={20} />
+              <button onClick={handleLogout}    
+              className="p-1.5 rounded-lg hover:bg-[#14532d] hover:text-[#ffffff]">
+                 <FiLogOut size={20} />
               </button>
             )}
           </div>
@@ -103,6 +104,9 @@ function SidebarLink({ item, pathname }) {
         linkClasses,
         pathname === item.path && 'bg-green-500', // Add bg-green-500 class conditionally
       )}
+      style={{
+        borderRadius: expanded ? '0.5rem' : '0.5rem', // Add border radius conditionally
+      }}
     >
       {!expanded && <span className="text-xl">{item.icon}</span>}
       {expanded && (
