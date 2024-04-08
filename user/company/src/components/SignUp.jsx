@@ -53,10 +53,10 @@ const SignUp = ({ open, setOpen }) => {
   }, []);
 
   const onSubmit = async (data) => {
-    if (!agreedToTerms) { // Check if terms are agreed to before submitting
-      setErrMsg('Please agree to the Privacy Policy and Terms of Service.');
-      return;
-    }
+    // if (!agreedToTerms) { // Check if terms are agreed to before submitting
+    //   setErrMsg('Please agree to the Privacy Policy and Terms of Service.');
+    //   return;
+    // }
 
     let URL = null;
     if (isRegister) {

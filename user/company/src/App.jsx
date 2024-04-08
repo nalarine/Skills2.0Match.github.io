@@ -98,6 +98,15 @@ function App() {
   const hideExtraComponents =
     user &&
     (location.pathname === '/' ||
+    location.pathname.startsWith('/Dashboard') ||
+    location.pathname.startsWith('/messages') ||
+    location.pathname.startsWith('/all-application') ||
+    location.pathname.startsWith('/my-schedule') ||
+    location.pathname.startsWith('/skills-assessment') ||
+    location.pathname.startsWith('/user-profile') ||
+    location.pathname.startsWith('/settings') ||
+    location.pathname.startsWith('/help-center') ||
+    location.pathname.startsWith('/job-available') ||
       location.pathname.startsWith('/AboutPage') ||
       location.pathname.startsWith('/About') ||
       location.pathname.startsWith('/ContactPage') ||
