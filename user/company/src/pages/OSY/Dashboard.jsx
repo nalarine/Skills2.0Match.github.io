@@ -26,15 +26,6 @@ const Dashboard = () => {
                 Here is your job listing statistic report from {user?.date}
               </span>
             </div>
-            <button
-              onClick={handleCalendarClick}
-              className="w-full md:w-48 p-3 bg-green-700 rounded-md cursor-pointer"
-            >
-              <span className="justify-center items-center text-white font-bold flex flex-row gap-2.5">
-                {user?.date}
-                <IoCalendar className="text-white" />
-              </span>
-            </button>
           </div>
         </div>
         <DashboardStatsGrid />
