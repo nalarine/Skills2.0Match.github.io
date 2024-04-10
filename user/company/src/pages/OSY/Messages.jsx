@@ -14,7 +14,7 @@ const Dashboard = () => {
     const profileUrl = user?.profileUrl || '';
 
     useEffect(() => {
-        setSocket(io('http://localhost:'));
+        setSocket(io('http://localhost:5713'));
     }, []);
 
     useEffect(() => {

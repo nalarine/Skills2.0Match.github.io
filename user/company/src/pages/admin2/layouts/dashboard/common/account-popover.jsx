@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
@@ -8,8 +8,8 @@ import { alpha } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import { Logout } from '../../../../../redux/userSlice'
-import { account } from '../../../_mock/account';
+import { Logout } from '../../../../../redux/userSlice';
+import { Link } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -17,14 +17,17 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
+    path: '/Dashboard', // Path for Dashboard
   },
   {
     label: 'Profile',
     icon: 'eva:person-fill',
+    path: '/user-profile', // Path for UserProfile
   },
   {
     label: 'Settings',
     icon: 'eva:settings-2-fill',
+    path: '/settings', // Path for Settings
   },
 ];
 
@@ -32,14 +35,15 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-  const { user } = useSelector((state) => state.user)
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  const profileUrl = user?.profileUrl || '' // Initialize profileUrl to empty string if not available
-  const dispatch = useDispatch()
+  const profileUrl = user?.profileUrl || '';
 
   const handleLogout = () => {
-    dispatch(Logout())
-  }
+    dispatch(Logout());
+  };
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -102,9 +106,11 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
-          </MenuItem>
+          <Link to={option.path} key={option.label} onClick={handleClose}>
+            <MenuItem>
+              {option.label}
+            </MenuItem>
+          </Link>
         ))}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />

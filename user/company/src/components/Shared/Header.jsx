@@ -3,13 +3,23 @@ import { useSelector } from 'react-redux';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import NotificationsPopover from '../../pages/admin2/layouts/dashboard/common/notifications-popover'
+import AccountPopover from '../../pages/admin2/layouts/dashboard/common/account-popover';
 
 const Header = ({ newJobDetails }) => {
   const { user } = useSelector((state) => state.user);
+  const [isClicked, setIsClicked] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
 
   const profileUrl = user?.profileUrl || ''; // Initialize profileUrl to empty string if not available
+
+  const handleButtonClick = () => {
+    setIsClicked(true);
+    setTimeout(() => {
+      setIsClicked(false);
+    }, 200);
+    // Add any other functionality you want to perform on button click
+  };
 
   useEffect(() => {
     // Calculate the number of unread notifications
@@ -43,17 +53,28 @@ const Header = ({ newJobDetails }) => {
             <span className="font-bold text-lg">{user?.firstName}</span>
           </div>
         </div>
-        <div className="flex items-center gap-3 p-3 relative" onClick={toggleNotifications}>
-               <NotificationsPopover newJobDetails={newJobDetails} showNotifications={showNotifications} />
-        </div>
-        <Link to="/find-jobs">
-          <button className="bg-green-700 border border-dark-yellow text-white font-bold py-2 px-4 rounded">
-            Apply now
-          </button>
-        </Link>
       </div>
+      <div className="flex items-center gap-1 p-1 relative" onClick={toggleNotifications}>
+        <NotificationsPopover newJobDetails={newJobDetails} showNotifications={showNotifications} />
+      </div>
+      <div className="flex items-center gap-3 p-3 relative">
+        <AccountPopover />
+      </div>
+      <Link to="/find-jobs">
+        <button
+          className={`bg-green-700 hover:bg-green-500 border border-dark-yellow text-white font-bold py-2 px-4 rounded transition-transform ${isClicked ? 'scale-95' : ''}`}
+          style={{ borderRadius: '20px / 50%', transitionProperty: 'border-radius' }}
+          onClick={handleButtonClick}
+          onMouseDown={() => setIsClicked(true)}
+          onMouseUp={() => setIsClicked(false)}
+          onMouseLeave={() => setIsClicked(false)}
+        >
+          Apply now
+        </button>
+      </Link>
     </div>
-  );
+  </div>
+);
 };
 
 export default Header;
