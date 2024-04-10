@@ -33,10 +33,10 @@ const Header = ({ newJobDetails }) => {
 
   return (
     <div className="p-3 relative">
-      <div className="items-center h-28 px-5 py-5 flex flex-row pt-2 border-b border-blue gap relative">
+      <div className="items-center h-24 px-5 py-3 flex flex-row pt-2 border-b border-blue gap relative bg-zinc-100">
         <div className="flex-1 flex flex-row gap-3">
           <div>
-            <img src={profileUrl} height={'72px'} width={'72px'} alt="Profile" />
+            <img src={profileUrl} height={'65px'} width={'65px'} alt="Profile" />
           </div>
           <div className="flex-1 flex flex-col py-2">
             <span className="font-normal text-gray">Applicant</span>

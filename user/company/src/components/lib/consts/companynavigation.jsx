@@ -3,6 +3,7 @@ import { BiBuildings } from 'react-icons/bi'
 import { IoCalendar, IoSettingsSharp } from 'react-icons/io5'
 import { PiQuestionDuotone } from 'react-icons/pi'
 import { TbNotes } from 'react-icons/tb'
+import { BiSolidReport } from "react-icons/bi";
 
 export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
   {
@@ -34,6 +35,12 @@ export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
     label: 'My Schedule',
     path: '/schedule',
     icon: <IoCalendar className="text-[#14532d]" />,
+  },
+  {
+    key: 'reports',
+    label: 'Generate Reports',
+    path: '/',
+    icon: <BiSolidReport className="text-[#14532d]" />,
   },
 ]
 

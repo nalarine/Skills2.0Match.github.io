@@ -29,7 +29,7 @@ const Sidebar = () => {
   return (
     <aside className="h-screen">
       <nav className="h-full flex flex-col bg-[#C1E1C1] border-r shadow-sm">
-      <div className="p-4 pb-2 flex justify-between items-center">
+      <div className="p-4 pb-4 flex justify-between items-center">
       {expanded && (
         <div className="flex items-center gap-2">
           <img

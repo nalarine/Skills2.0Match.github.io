@@ -3,6 +3,7 @@ import { apiRequest } from '../utils' // Import your API request utility
 import Loading from '../components/Loading' // Import your Loading component
 import JobCard from '../components/JobCard' // Import your JobCard component
 import { useSelector } from 'react-redux'
+import DashboardStatsGrid from '../components/DashboardStatsGrid'
 
 const JobAvailable = () => {
   const { user } = useSelector((state) => state.user)
@@ -26,13 +27,14 @@ const JobAvailable = () => {
       }
     }
     fetchJobs()
-  }, [])
+  }, [user._id])
 
   return (
     <div
       className="p-4 rounded-lg border border-gray flex flex-col flex-2 w-full"
       style={{ height: '32rem' }}
     >
+      <DashboardStatsGrid jobMatches={postedJobs.length} />
       <div className="flex flex-row justify-between items-center">
         <strong className="font-bold text-3xl mb-4">Job Matches</strong>
         {/* <strong className="font-bold text-xl">View All</strong> */}
