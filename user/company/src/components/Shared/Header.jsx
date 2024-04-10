@@ -53,7 +53,7 @@ const Header = ({ newJobDetails }) => {
             <span className="font-bold text-lg">{user?.firstName}</span>
           </div>
         </div>
-      </div>
+     
       <div className="flex items-center gap-1 p-1 relative" onClick={toggleNotifications}>
         <NotificationsPopover newJobDetails={newJobDetails} showNotifications={showNotifications} />
       </div>
@@ -73,7 +73,7 @@ const Header = ({ newJobDetails }) => {
         </button>
       </Link>
     </div>
-  </div>
+    </div>
 );
 };
 

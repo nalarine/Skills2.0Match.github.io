@@ -1,179 +1,174 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import {
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-  Button,
-} from '@mui/material'
-import { useForm } from 'react-hook-form'
-import { questions } from './constants'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Card, CardContent, CardActions, Typography, Button, FormControlLabel, Radio, RadioGroup, Container, Paper, CircularProgress } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { questions } from './constants';
+import { Link } from 'react-router-dom';
 
-// Mock candidate profile
 const candidate = {
   skills: ['cleaning', 'data entry', 'food server', 'cook'],
   experience: 1,
   location: 'NCR Metro Manila Manila',
   desiredSalary: 2000,
-}
+};
 
-// Function to calculate job suitability score
 function calculateJobScore(job, candidate) {
-  let score = 0
+  let score = 0;
 
-  // Check if candidate has required skills
   job?.skillsRequired?.forEach((skill) => {
     if (candidate.skills.includes(skill)) {
-      score += 1
+      score += 1;
     }
-  })
+  });
 
-  // Check if candidate's experience matches
   if (job.experience <= candidate.experience) {
-    score += 1
+    score += 1;
   }
 
-  // Check if job location matches candidate's preference
   if (job.location === candidate.location) {
-    score += 1
+    score += 1;
   }
 
-  // Check if job salary is within candidate's desired range
   if (job.salary >= candidate.desiredSalary) {
-    score += 1
+    score += 1;
   }
 
-  return score
+  return score;
 }
 
-// Function to find suitable jobs for the candidate
 function findSuitableJobs(candidate, jobs) {
   return jobs
     .map((job) => ({
       ...job,
       score: calculateJobScore(job, candidate),
     }))
-    .filter((job) => job.score >= 2) // Adjust the threshold as needed
-    .sort((a, b) => b.score - a.score) // Sort by score in descending order
+    .filter((job) => job.score >= 2)
+    .sort((a, b) => b.score - a.score);
 }
 
 const SkillsAssessment = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState({})
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm()
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [jobs, setJobs] = useState([]);
+  const [error, setError] = useState(null);
+  const [showQuestions, setShowQuestions] = useState(false); // State to manage visibility of questions
+  const [loading, setLoading] = useState(false); // State to manage loading indicator
 
-  console.log('question', currentQuestion)
-  console.log('answer:', watch(`answer${currentQuestion}`))
-
-  const [jobs, setJobs] = useState([])
-  const [error, setError] = useState(null)
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   const fetchAllJobs = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(
-        // TODO: proxy server
-        'http://localhost:8800/api-v1/jobs/alljobs',
-      )
+      const response = await axios.get('http://localhost:8800/api-v1/jobs/alljobs');
       if (response.data.success) {
-        setJobs(response.data.data)
+        setJobs(response.data.data);
       }
     } catch (error) {
-      setError(error.message)
+      setError('Failed to fetch jobs');
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchAllJobs()
-  }, [])
-
-  useEffect(() => {
-    console.log('jobs', jobs)
-    console.log(
-      'candidate match suitable jobs',
-      findSuitableJobs(candidate, jobs),
-    )
-  }, [jobs])
+  const handleStartAssessment = () => {
+    setShowQuestions(true);
+  };
 
   const handleAnswerChange = (value) => {
-    console.log(value)
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [questions[currentQuestion].category]: value,
-    }))
-  }
+    }));
+  };
 
-  const onSubmit = () => console.log('on submit')
+  const onSubmit = () => console.log('on submit');
 
   const handleNextQuestion = () => {
-    setCurrentQuestion((prevQuestion) => prevQuestion + 1)
-  }
+    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+  };
 
   const handlePreviousQuestion = () => {
-    setCurrentQuestion((prevQuestion) => prevQuestion - 1)
-  }
+    setCurrentQuestion((prevQuestion) => prevQuestion - 1);
+  };
 
   return (
-    <div>
-      <Card variant="outlined" className="m-10">
-        <CardContent>
-          <Typography variant="h5" component="div">
-            Skill Assessment
-          </Typography>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <h3>{questions[currentQuestion].question}</h3>
-            {questions[currentQuestion].choices.map((choice, index) => (
-              <div key={index}>
-                <label>
-                  {JSON.stringify(answers[`answer${currentQuestion}`])}
-                  <input
-                    type="radio"
-                    name={`answer${currentQuestion}`}
-                    value={index}
-                    onChange={() => console.log('on change')}
-                    checked={answers[`answer${currentQuestion}`] === index}
-                    {...register(`answer${currentQuestion}`)}
-                  />
-                  {choice}
-                </label>
-              </div>
-            ))}
-          </form>
-        </CardContent>
-        <CardActions>
-          <div className="button-container">
-            <Button
-              variant="contained"
-              onClick={handlePreviousQuestion}
-              style={{ marginRight: '8px' }}
-              disabled={currentQuestion === 0}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleNextQuestion}
-              disabled={currentQuestion === questions.length - 1}
-            >
-              Next
+    <Container maxWidth="md" style={{ marginTop: '20px' }}>
+      <Paper elevation={3} style={{ padding: '20px', borderRadius: '10px', background: '#fff' }}>
+        {/* Show landing page if showQuestions is false */}
+        {!showQuestions && (
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="h3" gutterBottom style={{ color: '#333', marginBottom: '20px' }}>
+              Welcome to Skills Assessment
+            </Typography>
+            <Typography variant="body1" gutterBottom style={{ color: '#666', marginBottom: '20px' }}>
+              Discover your strengths and find the perfect job match!
+            </Typography>
+            <Button variant="contained" color="primary" onClick={handleStartAssessment}>
+              {loading ? <CircularProgress size={24} /> : 'Start Assessment'}
             </Button>
           </div>
-          {currentQuestion === questions.length - 1 && (
-            <Button variant="contained" onClick={handleSubmit}>
-              Submit
-            </Button>
-          )}
-        </CardActions>
-      </Card>
+        )}
 
-      {error && <div>Error: {error}</div>}
-    </div>
-  )
-}
+        {/* Show questions if showQuestions is true */}
+        {showQuestions && (
+          <div>
+            <Typography variant="h4" gutterBottom style={{ color: '#333', marginBottom: '20px' }}>
+              Skill Assessment
+            </Typography>
+            <Card variant="outlined" style={{ marginBottom: '20px', background: '#fff' }}>
+              <CardContent>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Typography variant="h6" gutterBottom style={{ marginBottom: '20px', color: '#333' }}>
+                    {questions[currentQuestion].question}
+                  </Typography>
+                  <RadioGroup>
+                    {questions[currentQuestion].choices.map((choice, index) => (
+                      <FormControlLabel
+                        key={index}
+                        control={<Radio />}
+                        label={choice}
+                        value={index}
+                        onChange={() => handleAnswerChange(index)}
+                        checked={answers[questions[currentQuestion].category] === index}
+                        style={{ color: '#666', marginBottom: '10px' }}
+                      />
+                    ))}
+                  </RadioGroup>
+                </form>
+              </CardContent>
+              <CardActions style={{ justifyContent: 'space-between', padding: '16px', background: '#fff' }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={handlePreviousQuestion}
+                    disabled={currentQuestion === 0}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleNextQuestion}
+                    disabled={currentQuestion === questions.length - 1}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Next
+                  </Button>
+                </div>
+                <Typography variant="body2" style={{ color: '#666', marginRight: 'auto' }}>{`${currentQuestion + 1} / ${questions.length}`}</Typography>
+                {currentQuestion === questions.length - 1 && (
+                  <Button variant="contained" onClick={handleSubmit} color="primary">
+                    Submit
+                  </Button>
+                )}
+              </CardActions>
+            </Card>
+          </div>
+        )}
 
-export default SkillsAssessment
+        {error && <div style={{ textAlign: 'center', color: 'red' }}>Error: {error}</div>}
+      </Paper>
+    </Container>
+  );
+};
+
+export default SkillsAssessment;

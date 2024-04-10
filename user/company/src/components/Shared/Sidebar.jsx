@@ -81,12 +81,12 @@ const Sidebar = () => {
               <h4 className="font-semibold">{user?.firstName || 'No First Name'}</h4>
               <span className="text-xs text-gray-600">{user?.email}</span>
             </div>
-            {expanded && (
+            {/* {expanded && (
               <button onClick={handleLogout}    
-              className="p-1.5 rounded-lg hover:bg-[#14532d] hover:text-[#ffffff]">
+              className="">
                  <FiLogOut size={20} />
               </button>
-            )}
+            )} */}
           </div>
         </div>
       </nav>
