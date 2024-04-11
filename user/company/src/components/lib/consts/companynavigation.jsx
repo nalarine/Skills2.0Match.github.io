@@ -3,12 +3,8 @@ import { BiBuildings } from 'react-icons/bi'
 import { IoCalendar, IoSettingsSharp } from 'react-icons/io5'
 import { PiQuestionDuotone } from 'react-icons/pi'
 import { TbNotes } from 'react-icons/tb'
-<<<<<<< Updated upstream
-import { BiSolidReport } from "react-icons/bi";
-=======
 import { BiSolidReport } from 'react-icons/bi'
 
->>>>>>> Stashed changes
 export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
   {
     key: 'dashboard',
