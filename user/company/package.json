@@ -13,6 +13,7 @@
   "dependencies": {
     "@ag-grid-enterprise/all-modules": "^27.3.0",
     "@ant-design/icons": "^5.3.6",
+    "@babel/code-frame": "^7.24.2",
     "@cloudinary/react": "^1.11.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",

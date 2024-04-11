@@ -45,19 +45,12 @@ const Header = ({ newJobDetails }) => {
     <div className="p-3 relative">
       <div className="items-center h-24 px-5 py-3 flex flex-row pt-2 border-b border-blue gap relative bg-zinc-100">
         <div className="flex-1 flex flex-row gap-3">
-          <div>
-            <img src={profileUrl} height={'65px'} width={'65px'} alt="Profile" />
-          </div>
-          <div className="flex-1 flex flex-col py-2">
+          <div className="flex flex-col py-2">
+          <span className="font-bold text-xl">{user?.firstName}</span>
             <span className="font-normal text-gray">Applicant</span>
-            <span className="font-bold text-lg">{user?.firstName}</span>
           </div>
         </div>
-<<<<<<< Updated upstream
-     
-      <div className="flex items-center gap-1 p-1 relative" onClick={toggleNotifications}>
-=======
-      </div>
+
       {/* <div className="flex items-center gap-1 p-1 relative" onClick={toggleNotifications}>
 >>>>>>> Stashed changes
         <NotificationsPopover newJobDetails={newJobDetails} showNotifications={showNotifications} />

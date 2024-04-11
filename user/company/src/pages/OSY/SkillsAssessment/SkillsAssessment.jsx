@@ -97,10 +97,10 @@ const SkillsAssessment = () => {
         {/* Show landing page if showQuestions is false */}
         {!showQuestions && (
           <div style={{ textAlign: 'center' }}>
-            <Typography variant="h3" gutterBottom style={{ color: '#333', marginBottom: '20px' }}>
+            <Typography variant="h3" gutterBottom style={{ color: '#333', marginBottom: '20px', fontFamily: 'Poppins' }}>
               Welcome to Skills Assessment
             </Typography>
-            <Typography variant="body1" gutterBottom style={{ color: '#666', marginBottom: '20px' }}>
+            <Typography variant="body1" gutterBottom style={{ color: '#666', marginBottom: '20px', fontFamily: 'Poppins' }}>
               Discover your strengths and find the perfect job match!
             </Typography>
             <Button variant="contained" color="primary" onClick={handleStartAssessment}>
@@ -112,13 +112,13 @@ const SkillsAssessment = () => {
         {/* Show questions if showQuestions is true */}
         {showQuestions && (
           <div>
-            <Typography variant="h4" gutterBottom style={{ color: '#333', marginBottom: '20px' }}>
+            <Typography variant="h4" gutterBottom style={{ color: '#333', marginBottom: '20px', fontFamily: 'Poppins' }}>
               Skill Assessment
             </Typography>
             <Card variant="outlined" style={{ marginBottom: '20px', background: '#fff' }}>
               <CardContent>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  <Typography variant="h6" gutterBottom style={{ marginBottom: '20px', color: '#333' }}>
+                  <Typography variant="h6" gutterBottom style={{ marginBottom: '20px', color: '#333', fontFamily: 'Poppins' }}>
                     {questions[currentQuestion].question}
                   </Typography>
                   <RadioGroup>
@@ -130,7 +130,7 @@ const SkillsAssessment = () => {
                         value={index}
                         onChange={() => handleAnswerChange(index)}
                         checked={answers[questions[currentQuestion].category] === index}
-                        style={{ color: '#666', marginBottom: '10px' }}
+                        style={{ color: '#666', marginBottom: '10px', fontFamily: 'Poppins' }}
                       />
                     ))}
                   </RadioGroup>
@@ -154,7 +154,7 @@ const SkillsAssessment = () => {
                     Next
                   </Button>
                 </div>
-                <Typography variant="body2" style={{ color: '#666', marginRight: 'auto' }}>{`${currentQuestion + 1} / ${questions.length}`}</Typography>
+                <Typography variant="body2" style={{ color: '#666', marginRight: 'auto', fontFamily: 'Poppins' }}>{`${currentQuestion + 1} / ${questions.length}`}</Typography>
                 {currentQuestion === questions.length - 1 && (
                   <Button variant="contained" onClick={handleSubmit} color="primary">
                     Submit
@@ -165,7 +165,7 @@ const SkillsAssessment = () => {
           </div>
         )}
 
-        {error && <div style={{ textAlign: 'center', color: 'red' }}>Error: {error}</div>}
+        {error && <div style={{ textAlign: 'center', color: 'red', fontFamily: 'Poppins' }}>Error: {error}</div>}
       </Paper>
     </Container>
   );
