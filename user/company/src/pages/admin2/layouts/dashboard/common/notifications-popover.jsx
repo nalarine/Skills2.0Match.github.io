@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createTheme } from '@mui/material/styles';
-import { set, sub } from 'date-fns';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import Badge from '@mui/material/Badge';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Tooltip from '@mui/material/Tooltip';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
@@ -20,11 +12,14 @@ import Scrollbar from '../../../components/scrollbar';
 import Iconify from '../../../components/iconify';
 import { fToNow } from '../../../utils/format-time';
 
+
 const NotificationsPopover = ({ showNotifications, newJobDetails }) => {
-  const [notifications, setNotifications] = useState(newJobDetails);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    setNotifications(newJobDetails);
+    if (newJobDetails) {
+      setNotifications(newJobDetails);
+    }
   }, [newJobDetails]);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
@@ -153,7 +148,7 @@ const NotificationsPopover = ({ showNotifications, newJobDetails }) => {
 
 NotificationsPopover.propTypes = {
   showNotifications: PropTypes.bool.isRequired,
-  newJobDetails: PropTypes.array.isRequired,
+  newJobDetails: PropTypes.array,
 };
 
 export default NotificationsPopover;

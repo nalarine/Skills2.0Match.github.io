@@ -1,13 +1,23 @@
 import { GoLocation } from 'react-icons/go'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
+import React, { useState } from 'react'; // Import useState from React
 
 const JobCard = ({ job }) => {
+  // State to manage hover state
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <Link to={`/job-detail/${job?._id}`}>
       <div
         className="w-full md:w-[20rem] 2xl:w-[18rem] min-h-[16rem] md:min-h-[18rem] bg-white flex flex-col justify-between shadow-lg 
                rounded-md px-3 py-5 overflow-hidden"
+        style={{
+          outline: isHovered ? '2px solid green' : 'none', // Apply outline when hovered
+          transition: 'outline 0.1s ease', // Smooth transition
+        }}
+        onMouseEnter={() => setIsHovered(true)} // Set isHovered to true on mouse enter
+        onMouseLeave={() => setIsHovered(false)} // Set isHovered to false on mouse leave
       >
         <div className="w-full h-full flex flex-col justify-between"></div>
         <div className="flex gap-3">

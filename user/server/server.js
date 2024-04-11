@@ -58,8 +58,9 @@ app.use(router);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => {
-  console.log(`Dev Server running on port: ${PORT}`);
-});
+    console.log(`Dev Server running on port: ${PORT}`);
+  });
+  
 
 const Contact = mongoose.model("Contact", contactSchema);
 
@@ -75,4 +76,3 @@ app.post("/api-v1/contacts", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-

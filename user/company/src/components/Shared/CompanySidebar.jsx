@@ -119,4 +119,8 @@ function SidebarLink({ item, pathname }) {
   );
 }
 
+<<<<<<< Updated upstream
 export default CompanySidebar;
+=======
+export default CompanySidebar;
+>>>>>>> Stashed changes

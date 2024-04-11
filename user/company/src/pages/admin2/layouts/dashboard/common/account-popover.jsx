@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import { Logout } from '../../../../../redux/userSlice';
 import { Link } from 'react-router-dom';
 
+
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -66,16 +67,16 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar
+       <Avatar
           src={profileUrl}
-          alt={user?.firstName}
+          alt={user?.firstName || user?.name} // Use user's name if available
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {user?.firstName.charAt(0).toUpperCase()}
+          {user?.type === 'individual' ? user?.firstName?.charAt(0).toUpperCase() : user?.name?.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -96,7 +97,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.firstName}
+          {user?.firstName || user?.name} 
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user?.email}

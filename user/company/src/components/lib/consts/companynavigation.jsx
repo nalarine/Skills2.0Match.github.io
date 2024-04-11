@@ -4,7 +4,10 @@ import { IoCalendar, IoSettingsSharp } from 'react-icons/io5'
 import { PiQuestionDuotone } from 'react-icons/pi'
 import { TbNotes } from 'react-icons/tb'
 import { BiSolidReport } from "react-icons/bi";
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
   {
     key: 'dashboard',
