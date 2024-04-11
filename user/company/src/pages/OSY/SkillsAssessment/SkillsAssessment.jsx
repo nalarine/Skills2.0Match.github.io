@@ -97,12 +97,19 @@ const SkillsAssessment = () => {
         {/* Show landing page if showQuestions is false */}
         {!showQuestions && (
           <div style={{ textAlign: 'center' }}>
+<<<<<<< Updated upstream
             <Typography variant="h3" gutterBottom style={{ color: '#333', marginBottom: '20px', fontFamily: 'Poppins' }}>
               Welcome to Skills Assessment
             </Typography>
             <Typography variant="body1" gutterBottom style={{ color: '#666', marginBottom: '20px', fontFamily: 'Poppins' }}>
+=======
+            <div variant="h3" gutterBottom style={{ color: '#333', marginBottom: '20px', textAlign: 'left' }}>
+              Welcome to Skills Assessment
+            </div>
+            <div variant="body1" gutterBottom style={{ color: '#666', marginBottom: '20px' }}>
+>>>>>>> Stashed changes
               Discover your strengths and find the perfect job match!
-            </Typography>
+            </div>
             <Button variant="contained" color="primary" onClick={handleStartAssessment}>
               {loading ? <CircularProgress size={24} /> : 'Start Assessment'}
             </Button>
