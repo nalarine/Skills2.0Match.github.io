@@ -154,7 +154,7 @@ const SkillsAssessment = () => {
                     Next
                   </Button>
                 </div>
-                <Typography variant="body2" style={{ color: '#666', marginRight: 'auto', fontFamily: 'Poppins' }}>{`${currentQuestion + 1} / ${questions.length}`}</Typography>
+                <Typography variant="body2" style={{ color: '#666', marginRight: 'auto' }}>{`${currentQuestion + 1} / ${questions.length}`}</Typography>
                 {currentQuestion === questions.length - 1 && (
                   <Button variant="contained" onClick={handleSubmit} color="primary">
                     Submit
@@ -165,7 +165,7 @@ const SkillsAssessment = () => {
           </div>
         )}
 
-        {error && <div style={{ textAlign: 'center', color: 'red', fontFamily: 'Poppins' }}>Error: {error}</div>}
+        {error && <div style={{ textAlign: 'center', color: 'red' }}>Error: {error}</div>}
       </Paper>
     </Container>
   );
