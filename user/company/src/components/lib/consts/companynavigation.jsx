@@ -38,7 +38,7 @@ export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
   {
     key: 'reports',
     label: 'Generate Reports',
-    path: '/',
+    path: '/generate-reports',
     icon: <BiSolidReport className="text-[#14532d]" />,
   },
 ]

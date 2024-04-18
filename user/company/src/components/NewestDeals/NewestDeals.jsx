@@ -183,23 +183,6 @@ const NewestDeals = () => {
                     {destTitle}
                   </h3>
                   <p className=" text-xs font-normal pt-2">{desc}</p>
-                  <div className="flex items-center justify-end w-full p-3">
-                    <svg
-                      className="rounded-full bg-green-800 p-2 w-10 h-10 text-white-800 dark:text-white transition duration-300 transform hover:bg-slate-600 hover:border-green-800 hover:text-green-500"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 12H5m14 0-4 4m4-4-4-4"
-                      />
-                    </svg>
-                  </div>
                 </div>
               </div>
 

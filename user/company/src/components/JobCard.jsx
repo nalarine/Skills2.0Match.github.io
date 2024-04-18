@@ -1,11 +1,23 @@
-import { GoLocation } from 'react-icons/go'
-import moment from 'moment'
-import { Link } from 'react-router-dom'
-import React, { useState } from 'react'; // Import useState from React
+import { GoLocation } from 'react-icons/go';
+import moment from 'moment';
+import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'; // Import useState and useEffect from React
+import { Skeleton } from "@nextui-org/react";
 
 const JobCard = ({ job }) => {
-  // State to manage hover state
+  // State to manage hover state and loading state for Skeleton components
   const [isHovered, setIsHovered] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    // Set a timer to hide Skeleton components after 3 seconds
+    const timer = setTimeout(() => {
+      setShowSkeleton(false);
+    }, 2000);
+
+    // Clear the timer on component unmount
+    return () => clearTimeout(timer);
+  }, []); // Run this effect only once after the initial render
 
   return (
     <Link to={`/job-detail/${job?._id}`}>
@@ -19,38 +31,74 @@ const JobCard = ({ job }) => {
         onMouseEnter={() => setIsHovered(true)} // Set isHovered to true on mouse enter
         onMouseLeave={() => setIsHovered(false)} // Set isHovered to false on mouse leave
       >
-        <div className="w-full h-full flex flex-col justify-between"></div>
         <div className="flex gap-3">
-          <img src={job?.logo} alt={job?.name} className="w-16 h-16" />
-
+          {showSkeleton ? (
+            <Skeleton img src={job?.logo} alt={job?.name} className="w-16 h-16" />
+          ) : (
+            <img src={job?.logo} alt={job?.name} className="w-16 h-16" />
+          )}
+          
           <div className="w-full h-16 flex flex-col justify-center">
-            <p className="w-full h-12 flex items-center text-lg font-semibold overflow-hidden leading-5">
-              {job?.jobTitle}
-            </p>
-            <span className="flex gap-2 items-center">
-              <GoLocation className="text-slate-900 text-sm" />
-              {job?.location}
-            </span>
+            {showSkeleton ? (
+              <>
+                <Skeleton className="w-full h-12 flex items-center text-lg font-semibold overflow-hidden leading-5">
+                  {job?.jobTitle}
+                </Skeleton>
+                <Skeleton className="flex gap-2 items-center">
+                  <GoLocation className="text-slate-900 text-sm" />
+                  {job?.location}
+                </Skeleton>
+              </>
+            ) : (
+              <>
+                <div className="w-full h-12 flex items-center text-lg font-semibold overflow-hidden leading-5">
+                  {job?.jobTitle}
+                </div>
+                <div className="flex gap-2 items-center">
+                  <GoLocation className="text-slate-900 text-sm" />
+                  {job?.location}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
         <div className="py-3">
-          <p className="text-sm">
-            {job?.detail[0]?.desc?.slice(0, 150) + '...'}
-          </p>
+          {showSkeleton ? (
+            <Skeleton className="text-sm">
+              {job?.detail[0]?.desc?.slice(0, 150) + '...'}
+            </Skeleton>
+          ) : (
+            <div className="text-sm">
+              {job?.detail[0]?.desc?.slice(0, 150) + '...'}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
-          <p className="bg-[#BEF264] text-[#86CA16 ] py-0.5 px-1.5 rounded font-semibold text-sm">
-            {job?.jobType}
-          </p>
-          <span className="text-gray-500 text-sm">
-            {moment(job?.createdAt).fromNow()}
-          </span>
+          {showSkeleton ? (
+            <>
+              <Skeleton className="bg-[#BEF264] text-[#86CA16 ] py-0.5 px-1.5 rounded font-semibold text-sm">
+                {job?.jobType}
+              </Skeleton>
+              <Skeleton className="text-gray-500 text-sm">
+                {moment(job?.createdAt).fromNow()}
+              </Skeleton>
+            </>
+          ) : (
+            <>
+              <div className="bg-[#BEF264] text-[#86CA16 ] py-0.5 px-1.5 rounded font-semibold text-sm">
+                {job?.jobType}
+              </div>
+              <div className="text-gray-500 text-sm">
+                {moment(job?.createdAt).fromNow()}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Link>
-  )
-}
+  );
+};
 
-export default JobCard
+export default JobCard;

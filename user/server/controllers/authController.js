@@ -67,10 +67,10 @@ export async function verifyEmail(verificationToken) {
     // Query the database to find the user with the provided verification token
     const user = await Users.findOne({ verificationToken });
 
-    // // Check if the user exists
-    // if (!user) {
-    //   throw new Error("User not found or verification token is invalid");
-    // }
+    // Check if the user exists
+    if (!user) {
+      throw new Error("User not found or verification token is invalid");
+    }
 
     // Update the user's email verification status (example: setting emailVerified to true)
     user.emailVerified = true;
@@ -128,6 +128,7 @@ export const signIn = async (req, res, next) => {
         role: user.role,
         accountType: user.accountType,
       },
+      // verificationToken,
       token
     });
   } catch (error) {

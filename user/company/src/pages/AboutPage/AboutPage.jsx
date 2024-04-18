@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import './AboutPage.css'
+import { Image, Button } from "@nextui-org/react";
+
 
 import { ImFacebook } from 'react-icons/im'
 import { BsTwitter } from 'react-icons/bs'
@@ -83,16 +84,20 @@ const AboutPage = () => {
 
       {/* ABOUT US START --------------------------------------- */}
 
-      <section className="flex justify-center items-center pt-64 pl-5">
+      <section className="flex justify-center items-center pt-64 pl-14 text-left">
         <div
           data-aos="fade-right"
           data-aos-duration="2000"
           className="flex-1 w-1/2 mx-4"
         >
-          <h2 className="text-4xl mb-4 text-green-800 font-bold">
-            Welcome to Skills 2.0 Match
-          </h2>
-          <p className="text-base mb-4">
+         <h1 className="mb-5 text-3xl font-extrabold text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
+          Welcome to
+          <br />
+          <span className="pt-3 text-transparent bg-clip-text bg-gradient-to-r to-green-500 from-yellow-500 block">
+            Skills 2.0 Match
+          </span>
+        </h1>
+          <p className="mb-3 text-gray-500 dark:text-gray-400 first-line:uppercase first-line:tracking-widest first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 dark:first-letter:text-gray-100 first-letter:me-3 first-letter:float-start">
             At Skills 2.0 Match, we believe in the boundless potential of every
             individual, and we're committed to transforming aspirations into
             achievements. We're more than just a job portal – we're a catalyst
@@ -105,9 +110,9 @@ const AboutPage = () => {
                 <br />
                 Our story is one of innovation, collaboration, and a shared
                 vision to create a world where educational backgrounds don't
-                define destiny. With the unwavering support of Technological
-                Institute of the Philippines and the partnership of the United
-                States Agency for International Development (USAID), we've
+                define destiny. With the unwavering support of <strong class="font-semibold text-gray-900 dark:text-black">
+                Technological Institute of the Philippines and the partnership of the United
+                States Agency for International Development (USAID)</strong>, we've
                 embarked on a mission to revolutionize the way OSY candidates
                 access meaningful employment.
                 <br />
@@ -121,20 +126,28 @@ const AboutPage = () => {
               </>
             )}
           </p>
-          <button
-            onClick={toggleReadMore}
-            className="bg-green-800 text-white px-4 py-2 rounded-full hover:bg-green-600 transition duration-300"
-          >
-            {isExpanded ? 'Read less' : 'Read more'}
-          </button>
+          <div className="flex justify-center pr-16">
+          <Button color="success" variant="ghost" onClick={toggleReadMore} className="text-black">
+            {isExpanded ? 'Show less' : 'Show more'}
+          </Button>
+          </div>
         </div>
         <div
           data-aos="fade-left"
           data-aos-duration="2500"
           className="flex-1 w-1/2 mx-4"
         >
-          <img src={logo} alt="" className="w-3/4 mx-auto" />
+        <div className="relative flex justify-center items-center h-96">
+          <Image
+            isBlurred
+            width={350} // Increase the width of the image
+            height={350} // Increase the height of the image
+            src={logo}
+            alt=""
+            className="m-5" // Ensure the image fills the container
+          />
         </div>
+          </div>
       </section>
 
       <div className="section w-full">
@@ -145,7 +158,7 @@ const AboutPage = () => {
               data-aos-duration="3000"
               className="text-5xl text-green-500 font-bold"
             >
-              GUIDING PRINCIPLES
+              GUIDING PRINCIPLES                                                                                       
             </h1>
           </div>
         </div>

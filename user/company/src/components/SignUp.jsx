@@ -11,13 +11,14 @@ import Logo from '../assets/header.png';
 import GoogleIcon from '../assets/google-icon.svg';
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
+import { Checkbox, DatePicker } from '@nextui-org/react'; 
+import StrongPasswordInput from './StrongPasswordInput';
 import '../App.css';
 
 const SignUp = ({ open, setOpen }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-
   const [isRegister, setIsRegister] = useState(true);
   const [accountType, setAccountType] = useState('seeker');
   const [errMsg, setErrMsg] = useState('');
@@ -64,14 +65,14 @@ const SignUp = ({ open, setOpen }) => {
     } else {
       URL = accountType === 'seeker' ? 'auth/login' : 'companies/login';
     }
-  
+
     try {
       const res = await apiRequest({
         url: URL,
         data: data,
         method: 'POST',
       });
-  
+
       console.log(res);
       if (res?.status === 'failed') {
         if (res?.message === 'Email address already exists') {
@@ -104,6 +105,10 @@ const SignUp = ({ open, setOpen }) => {
         }
       }
     }
+  };
+
+  const handleCheckboxChange = (event) => {
+    setAgreedToTerms(event.target.checked);
   };
 
   return (
@@ -187,8 +192,7 @@ const SignUp = ({ open, setOpen }) => {
                       })}
                       error={errors.email ? errors.email.message : ''}
                     />
-
-                  {isRegister && (
+                   {isRegister && accountType === 'seeker' && (
                       <>
                         <TextInput
                           name="birthdate"
@@ -204,9 +208,8 @@ const SignUp = ({ open, setOpen }) => {
                               const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
                           
                               if (birthdate < minDate || birthdate > maxDate) {
-                                return 'You must be between 18 and 24 years old to register or login.';
+                                return 'You must be between 18 to 24 years old to register.';
                               }
-                          
                               return true;
                             },
                           })}
@@ -215,7 +218,7 @@ const SignUp = ({ open, setOpen }) => {
                         />
                       </>
                     )}
-
+                    
                     {isRegister && (
                       <div className="w-full flex gap-1 md:gap-2">
                         <div
@@ -278,32 +281,21 @@ const SignUp = ({ open, setOpen }) => {
                       </div>
                     )}
 
-                  <div className="w-full flex gap-1 md:gap-2">
+                    <div className="w-full flex gap-1 md:gap-2">
                       <div className={`${isRegister ? 'w-1/2' : 'w-full'}`}>
-                        <TextInput
-                          name="password"
-                          label="Password"
-                          placeholder="Password"
-                          type="password"
-                          register={register('password', {
-                            required: 'Password is required!',
-                            pattern: {
-                              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                              message: isRegister
-                                ? 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character'
-                                : '',
-                            },
-                          })}
-                          error={errors.password ? errors.password.message : ''}
+                        <StrongPasswordInput
+                          isRegister={isRegister}
+                          register={register}
+                          errors={errors}
                         />
                       </div>
 
                       {isRegister && (
                         <div className="w-1/2">
                           <TextInput
-                            label="Confirm Password"
-                            placeholder="Password"
-                            type="password"
+                            label='Confirm Password'
+                            placeholder='Password'
+                            type='password'
                             register={register('cPassword', {
                               validate: (value) => {
                                 const { password } = getValues();
@@ -325,23 +317,31 @@ const SignUp = ({ open, setOpen }) => {
                     </div>
 
                     {isRegister && (
-                 <div className="flex items-center mt-4">
-                    <input
-                      type="checkbox"
-                      id="agreeTerms"
-                      className="form-checkbox h-8 w-8 text-green-500 rounded focus:ring-green-400"
-                      checked={agreedToTerms}
-                      onChange={(e) => setAgreedToTerms(e.target.checked)}
-                      style={{ backgroundColor: agreedToTerms ? '#d1fae5' : 'inherit', transition: 'background-color 0.3s ease' }}
-                    />
-                    <label htmlFor="agreeTerms" className="ml-2 text-sm text-gray-700">
-                      By creating an account, you are agreeing to the{' '}
-                      <a href="/privacy-policy" className="text-green-500 hover:underline">Privacy Policy</a> and{' '}
-                      <a href="/terms-of-service" className="text-green-500 hover:underline">Terms of Service</a>.
-                    </label>
-                  </div>
-                )}
-                        <div className="mt-2 flex items-center justify-center">
+                      <div className="flex items-center mt-4">
+                        <Checkbox
+                          defaultChecked={agreedToTerms}
+                          onChange={handleCheckboxChange}
+                          color="success"
+                        >
+                          By creating an account, you are agreeing to the{' '}
+                          <a
+                            href="/privacy-policy"
+                            className="text-green-500 hover:underline"
+                          >
+                            Privacy Policy
+                          </a>{' '}
+                          and{' '}
+                          <a
+                            href="/terms-of-service"
+                            className="text-green-500 hover:underline"
+                          >
+                            Terms of Service
+                          </a>
+                          .
+                        </Checkbox>
+                      </div>
+                    )}
+                    <div className="mt-2 flex items-center justify-center">
                       <CustomButton
                         type="submit"
                         containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
