@@ -31,6 +31,12 @@ const FindJobs = () => {
   const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false);
   const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] = useState(false);
 
+  const [activeTab, setActiveTab] = useState('Best Matches');
+
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
+  };
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -246,7 +252,40 @@ const FindJobs = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-wrap gap-4">
+          <div className="text-md font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+            <ul className="flex flex-wrap -mb-px">
+              <li className="me-2">
+                <a
+                  href="#"
+                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${activeTab === 'Best Matches' ? 'text-green-600 border-green-600' : 'border-transparent'}`}
+                  onClick={() => handleTabClick('Best Matches')}
+                >
+                  Best Matches
+                </a>
+              </li>
+
+              <li className="me-2">
+                <a
+                  href="#"
+                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${activeTab === 'Most Recent Searches' ? 'text-green-600 border-green-600' : 'border-transparent'}`}
+                  onClick={() => handleTabClick('Most Recent Searches')}
+                >
+                  Most Recent Searches
+                </a>
+              </li>
+              <li className="me-2">
+                <a
+                  href="#"
+                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${activeTab === 'Saved Jobs' ? 'text-green-600 border-green-600' : 'border-transparent'}`}
+                  onClick={() => handleTabClick('Saved Jobs')}
+                >
+                  Saved Jobs
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="mt-6 w-full flex flex-wrap gap-4">
             {data?.map((job, index) => {
               const newJob = {
                 name: job?.company?.name,
