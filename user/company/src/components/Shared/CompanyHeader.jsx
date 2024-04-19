@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { IoIosNotificationsOutline } from 'react-icons/io';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { IoIosNotificationsOutline } from 'react-icons/io'
+import { Link } from 'react-router-dom'
 // import NotificationsPopover from '../../pages/admin2/layouts/dashboard/common/notifications-popover';
 // import AccountPopover from '../../pages/admin2/layouts/dashboard/common/account-popover';
 
 const Header = ({ newJobDetails }) => {
-  const { user } = useSelector((state) => state.user);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [unreadNotifications, setUnreadNotifications] = useState(0);
-  const [isClicked, setIsClicked] = useState(false);
+  const { user } = useSelector((state) => state.user)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [unreadNotifications, setUnreadNotifications] = useState(0)
+  const [isClicked, setIsClicked] = useState(false)
 
-  const profileUrl = user?.profileUrl || ''; // Initialize profileUrl to empty string if not available
+  const profileUrl = user?.profileUrl || '' // Initialize profileUrl to empty string if not available
 
   const handleButtonClick = () => {
-    setIsClicked(true);
+    setIsClicked(true)
     setTimeout(() => {
-      setIsClicked(false);
-    }, 200);
+      setIsClicked(false)
+    }, 200)
     // Add any other functionality you want to perform on button click
-  };
+  }
 
   // useEffect(() => {
   //   if (newJobDetails) {
@@ -49,7 +49,7 @@ const Header = ({ newJobDetails }) => {
         <div className="flex-1 flex flex-row gap-3">
           <div className="flex flex-col py-2">
             <span className="font-bold text-xl">{user?.name}</span>
-            <span className="font-normal text-gray">Company</span>
+            <span className="font-normal text-gray">Company for the go</span>
           </div>
         </div>
         {/* <div className="flex items-center gap-3 p-3 relative" onClick={toggleNotifications}>
@@ -61,7 +61,10 @@ const Header = ({ newJobDetails }) => {
         <Link to="/find-jobs">
           <button
             className={`bg-green-700 hover:bg-green-500 border border-dark-yellow text-white font-bold py-2 px-4 rounded transition-transform ${isClicked ? 'scale-95' : ''}`}
-            style={{ borderRadius: '20px / 50%', transitionProperty: 'border-radius' }}
+            style={{
+              borderRadius: '20px / 50%',
+              transitionProperty: 'border-radius',
+            }}
             onClick={handleButtonClick}
             onMouseDown={() => setIsClicked(true)}
             onMouseUp={() => setIsClicked(false)}
@@ -72,7 +75,7 @@ const Header = ({ newJobDetails }) => {
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
