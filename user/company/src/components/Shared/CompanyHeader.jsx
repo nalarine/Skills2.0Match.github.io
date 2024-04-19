@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { IoIosNotificationsOutline } from 'react-icons/io'
 import { Link } from 'react-router-dom'
-// import NotificationsPopover from '../../pages/admin2/layouts/dashboard/common/notifications-popover';
-// import AccountPopover from '../../pages/admin2/layouts/dashboard/common/account-popover';
+import NotificationsPopover from './Companyusernotifications-popover'
+import AccountPopover from './Companyaccount-popover'
 
 const Header = ({ newJobDetails }) => {
   const { user } = useSelector((state) => state.user)
@@ -21,27 +21,29 @@ const Header = ({ newJobDetails }) => {
     // Add any other functionality you want to perform on button click
   }
 
-  // useEffect(() => {
-  //   if (newJobDetails) {
-  //     // Calculate the number of unread notifications
-  //     const newUnreadNotifications = newJobDetails.filter(job => job.isUnread).length;
-  //     setUnreadNotifications(newUnreadNotifications);
-  //   }
-  // }, [newJobDetails]);
+  useEffect(() => {
+    if (newJobDetails) {
+      // Calculate the number of unread notifications
+      const newUnreadNotifications = newJobDetails.filter(
+        (job) => job.isUnread,
+      ).length
+      setUnreadNotifications(newUnreadNotifications)
+    }
+  }, [newJobDetails])
 
-  // // Function to toggle visibility of notifications popup
-  // const toggleNotifications = () => {
-  //   setShowNotifications(!showNotifications);
-  //   if (showNotifications) {
-  //     setUnreadNotifications(0); // Reset unread notifications count when closing
-  //   }
-  // };
+  // Function to toggle visibility of notifications popup
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications)
+    if (showNotifications) {
+      setUnreadNotifications(0) // Reset unread notifications count when closing
+    }
+  }
 
-  // // Function to close notifications popup
-  // const closeNotifications = () => {
-  //   setShowNotifications(false);
-  //   setUnreadNotifications(0); // Reset unread notifications count when closing
-  // };
+  // Function to close notifications popup
+  const closeNotifications = () => {
+    setShowNotifications(false)
+    setUnreadNotifications(0) // Reset unread notifications count when closing
+  }
 
   return (
     <div className="p-3 relative">
@@ -52,12 +54,18 @@ const Header = ({ newJobDetails }) => {
             <span className="font-normal text-gray">Company for the go</span>
           </div>
         </div>
-        {/* <div className="flex items-center gap-3 p-3 relative" onClick={toggleNotifications}>
-          <NotificationsPopover newJobDetails={newJobDetails} showNotifications={showNotifications} />
+        <div
+          className="flex items-center gap-3 p-3 relative"
+          onClick={toggleNotifications}
+        >
+          <NotificationsPopover
+            newJobDetails={newJobDetails}
+            showNotifications={showNotifications}
+          />
         </div>
         <div className="flex items-center gap-3 p-3 relative">
-        <AccountPopover />
-      </div>  */}
+          <AccountPopover />
+        </div>
         <Link to="/find-jobs">
           <button
             className={`bg-green-700 hover:bg-green-500 border border-dark-yellow text-white font-bold py-2 px-4 rounded transition-transform ${isClicked ? 'scale-95' : ''}`}
