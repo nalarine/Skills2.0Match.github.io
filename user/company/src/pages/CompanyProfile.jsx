@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { HiLocationMarker } from 'react-icons/hi'
 import { AiOutlineMail } from 'react-icons/ai'
-import { FiPhoneCall, FiEdit3, FiUpload } from 'react-icons/fi'
+import { FiPhoneCall, FiEdit, FiUpload } from 'react-icons/fi'
 import { Link, useParams } from 'react-router-dom'
 import { companies, jobs } from '../utils/data'
 import { CustomButton, JobCard, Loading, TextInput } from '../components'
@@ -249,7 +249,7 @@ const CompanyProfile = () => {
               <CustomButton
                 onClick={() => setOpenForm(true)}
                 title="Edit Profile"
-                iconRight={<FiEdit3 />}
+                iconRight={<FiEdit />}
                 containerStyles={`py-1.5 px-3 md:px-5 focus:outline-none bg-green-600  hover:bg-green-700 text-white rounded text-sm md:text-base border border-green-600`}
               />
 

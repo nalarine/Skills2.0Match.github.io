@@ -51,7 +51,7 @@ const Header = ({ newJobDetails }) => {
         <div className="flex-1 flex flex-row gap-3">
           <div className="flex flex-col py-2">
             <span className="font-bold text-xl">{user?.name}</span>
-            <span className="font-normal text-gray">Company for the go</span>
+            <span className="font-normal text-gray">Company</span>
           </div>
         </div>
         <div
