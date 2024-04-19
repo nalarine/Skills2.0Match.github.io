@@ -1,59 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { BiBriefcaseAlt2 } from 'react-icons/bi';
-import { BsStars } from 'react-icons/bs';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import { updateURL } from '../utils';
-import { apiRequest } from '../utils';
-import Loading from '../components/Loading';
+import React, { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { BiBriefcaseAlt2 } from 'react-icons/bi'
+import { BsStars } from 'react-icons/bs'
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
+import { updateURL } from '../utils'
+import { apiRequest } from '../utils'
+import Loading from '../components/Loading'
 
-import Header from '../components/Header';
-import { experience, jobTypes, jobCategories } from '../utils/data';
-import { CustomButton, JobCard, ListBox } from '../components';
-import { useSelector } from 'react-redux';
+import Header from '../components/Header'
+import { experience, jobTypes, jobCategories } from '../utils/data'
+import { CustomButton, JobCard, ListBox } from '../components'
+import { useSelector } from 'react-redux'
 
 const FindJobs = () => {
-  const { user } = useSelector((state) => state.user);
-  const [sort, setSort] = useState('Newest');
-  const [page, setPage] = useState(1);
-  const [numPage, setNumPage] = useState(1);
-  const [recordCount, setRecordCount] = useState(0);
-  const [data, setData] = useState([]);
+  const { user } = useSelector((state) => state.user)
+  const [sort, setSort] = useState('Newest')
+  const [page, setPage] = useState(1)
+  const [numPage, setNumPage] = useState(1)
+  const [recordCount, setRecordCount] = useState(0)
+  const [data, setData] = useState([])
+  const [savedJobs, setSavedJobs] = useState([])
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [jobLocation, setJobLocation] = useState('');
-  const [filterJobTypes, setFilterJobTypes] = useState([]);
-  const [filterExp, setFilterExp] = useState('');
-  const [expVal, setExpVal] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('')
+  const [jobLocation, setJobLocation] = useState('')
+  const [filterJobTypes, setFilterJobTypes] = useState([])
+  const [filterExp, setFilterExp] = useState('')
+  const [expVal, setExpVal] = useState([])
+  const [isFetching, setIsFetching] = useState(false)
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false);
-  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false)
+  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] =
+    useState(false)
 
-  const [activeTab, setActiveTab] = useState('Best Matches');
+  const [activeTab, setActiveTab] = useState('Best Matches')
 
   const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
-  };
+    setActiveTab(tabName)
+  }
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+    setIsDropdownOpen(!isDropdownOpen)
+  }
 
   const toggleJobTypesDropdown = () => {
-    setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen);
-  };
+    setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen)
+  }
 
   const toggleExperienceDropdown = () => {
-    setIsExperienceDropdownOpen(!isExperienceDropdownOpen);
-  };
+    setIsExperienceDropdownOpen(!isExperienceDropdownOpen)
+  }
 
   const fetchJobs = async () => {
-    setIsFetching(true);
+    setIsFetching(true)
 
     const newURL = updateURL({
       pageNum: page,
@@ -64,69 +66,83 @@ const FindJobs = () => {
       location: location,
       jType: filterJobTypes,
       exp: filterExp,
-    });
+    })
 
     try {
       const res = await apiRequest({
         url: '/jobs' + newURL + '&user_id=' + user._id,
         method: 'GET',
-      });
+      })
 
-      setNumPage(res?.numOfPage);
-      setRecordCount(res?.totalJobs);
-      setData(res?.data);
+      setNumPage(res?.numOfPage)
+      setRecordCount(res?.totalJobs)
+      setData(res?.data)
 
-      setIsFetching(false);
+      setIsFetching(false)
     } catch (error) {
-      setIsFetching(false);
-      console.log(error);
+      setIsFetching(false)
+      console.log(error)
     }
-  };
+  }
 
   const filterJobs = (val) => {
     if (filterJobTypes?.includes(val)) {
-      setFilterJobTypes(filterJobTypes.filter((el) => el !== val));
+      setFilterJobTypes(filterJobTypes.filter((el) => el !== val))
     } else {
-      setFilterJobTypes([...filterJobTypes, val]);
+      setFilterJobTypes([...filterJobTypes, val])
     }
-  };
+  }
 
   const filterExperience = async (e) => {
     if (expVal?.includes(e)) {
-      setExpVal(expVal?.filter((el) => el !== e));
+      setExpVal(expVal?.filter((el) => el !== e))
     } else {
-      setExpVal([...expVal, e]);
+      setExpVal([...expVal, e])
     }
-  };
+  }
 
   const handleSearchSubmit = async (e) => {
-    e.preventDefault();
-    await fetchJobs();
-  };
+    e.preventDefault()
+    await fetchJobs()
+  }
 
   const handleShowMore = async (e) => {
-    e.preventDefault();
-    setPage((prev) => prev + 1);
-  };
+    e.preventDefault()
+    setPage((prev) => prev + 1)
+  }
+
+  const handleSaveJob = (job) => {
+    const jobIndex = savedJobs.findIndex((savedJob) => savedJob._id === job._id)
+
+    if (jobIndex === -1) {
+      // Job is not already saved, so add it to the savedJobs array
+      setSavedJobs((prevSavedJobs) => [...prevSavedJobs, job])
+    } else {
+      // Job is already saved, so remove it from the savedJobs array
+      setSavedJobs((prevSavedJobs) =>
+        prevSavedJobs.filter((savedJob) => savedJob._id !== job._id),
+      )
+    }
+  }
 
   useEffect(() => {
     if (expVal.length > 0) {
-      let newExpVal = [];
+      let newExpVal = []
 
       expVal?.map((el) => {
-        const newEl = el?.split('-');
-        newExpVal.push(Number(newEl[0]), Number(newEl[1]));
-      });
+        const newEl = el?.split('-')
+        newExpVal.push(Number(newEl[0]), Number(newEl[1]))
+      })
 
-      newExpVal?.sort((a, b) => a - b);
+      newExpVal?.sort((a, b) => a - b)
 
-      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal?.length - 1]}`);
+      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal?.length - 1]}`)
     }
-  }, [expVal]);
+  }, [expVal])
 
   useEffect(() => {
-    fetchJobs();
-  }, [sort, filterJobTypes, filterExp, page]);
+    fetchJobs()
+  }, [sort, filterJobTypes, filterExp, page])
 
   return (
     <div>
@@ -148,7 +164,10 @@ const FindJobs = () => {
           {/* Job Types Start */}
           <div className="py-2">
             <div className="flex justify-between mb-3">
-              <p className="flex items-center gap-2 font-semibold" onClick={toggleJobTypesDropdown}>
+              <p
+                className="flex items-center gap-2 font-semibold"
+                onClick={toggleJobTypesDropdown}
+              >
                 <BiBriefcaseAlt2 />
                 Job Type
               </p>
@@ -156,7 +175,11 @@ const FindJobs = () => {
                 <MdOutlineKeyboardArrowDown />
               </button>
             </div>
-            <div className={`overflow-hidden transition-max-height duration-300 ${isJobTypesDropdownOpen ? 'max-h-32' : 'max-h-0'}`}>
+            <div
+              className={`overflow-hidden transition-max-height duration-300 ${
+                isJobTypesDropdownOpen ? 'max-h-32' : 'max-h-0'
+              }`}
+            >
               <div className="flex flex-col gap-2">
                 {jobTypes.map((jtype, index) => (
                   <div key={index} className="flex gap-2 text-sm md:text-base ">
@@ -177,7 +200,10 @@ const FindJobs = () => {
           {/* Experience Start */}
           <div className="py-2 mt-4">
             <div className="flex justify-between mb-3">
-              <p className="flex items-center gap-2 font-semibold" onClick={toggleExperienceDropdown}>
+              <p
+                className="flex items-center gap-2 font-semibold"
+                onClick={toggleExperienceDropdown}
+              >
                 <BsStars />
                 Experience
               </p>
@@ -185,7 +211,11 @@ const FindJobs = () => {
                 <MdOutlineKeyboardArrowDown />
               </button>
             </div>
-            <div className={`overflow-hidden transition-max-height duration-300 ${isExperienceDropdownOpen ? 'max-h-32' : 'max-h-0'}`}>
+            <div
+              className={`overflow-hidden transition-max-height duration-300 ${
+                isExperienceDropdownOpen ? 'max-h-32' : 'max-h-0'
+              }`}
+            >
               <div className="flex flex-col gap-2">
                 {experience.map((exp) => (
                   <div key={exp.title} className="flex gap-3">
@@ -206,7 +236,10 @@ const FindJobs = () => {
           {/* Job Categories Start */}
           <div className="py-2 mt-4">
             <div className="flex justify-between mb-3">
-              <p className="flex items-center gap-2 font-semibold" onClick={toggleDropdown}>
+              <p
+                className="flex items-center gap-2 font-semibold"
+                onClick={toggleDropdown}
+              >
                 <BiBriefcaseAlt2 />
                 Job Category
               </p>
@@ -219,16 +252,23 @@ const FindJobs = () => {
                 {/* Place your dropdown content here */}
                 {jobCategories.map((category, index) => (
                   <div key={index} className="flex flex-col gap-2">
-                    <p className="font-semibold self-start py-2">{category.category}</p>
+                    <p className="font-semibold self-start py-2">
+                      {category.category}
+                    </p>
                     {category.subcategories.map((subcategory, idx) => (
-                      <div key={idx} className="flex gap-2 text-xs md:text-base">
+                      <div
+                        key={idx}
+                        className="flex gap-2 text-xs md:text-base"
+                      >
                         <input
                           type="checkbox"
                           value={subcategory}
                           className="w-4 h-4 ml-4"
                           onChange={(e) => filterJobs(e.target.value)}
                         />
-                        <span className="text-sm self-start">{subcategory}</span>
+                        <span className="text-sm self-start">
+                          {subcategory}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -242,7 +282,8 @@ const FindJobs = () => {
         <div className="w-full md:w-5/6 px-5 md:px-0">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm md:text-base">
-              Showing: <span className="font-semibold">{recordCount}</span> Jobs Available
+              Showing: <span className="font-semibold">{recordCount}</span> Jobs
+              Available
             </p>
 
             <div className="flex flex-col md:flex-row gap-0 md:gap-2 md:items-center">
@@ -257,7 +298,11 @@ const FindJobs = () => {
               <li className="me-2">
                 <a
                   href="#"
-                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${activeTab === 'Best Matches' ? 'text-green-600 border-green-600' : 'border-transparent'}`}
+                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${
+                    activeTab === 'Best Matches'
+                      ? 'text-green-600 border-green-600'
+                      : 'border-transparent'
+                  }`}
                   onClick={() => handleTabClick('Best Matches')}
                 >
                   Best Matches
@@ -267,7 +312,11 @@ const FindJobs = () => {
               <li className="me-2">
                 <a
                   href="#"
-                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${activeTab === 'Most Recent Searches' ? 'text-green-600 border-green-600' : 'border-transparent'}`}
+                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${
+                    activeTab === 'Most Recent Searches'
+                      ? 'text-green-600 border-green-600'
+                      : 'border-transparent'
+                  }`}
                   onClick={() => handleTabClick('Most Recent Searches')}
                 >
                   Most Recent Searches
@@ -276,7 +325,11 @@ const FindJobs = () => {
               <li className="me-2">
                 <a
                   href="#"
-                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${activeTab === 'Saved Jobs' ? 'text-green-600 border-green-600' : 'border-transparent'}`}
+                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${
+                    activeTab === 'Saved Jobs'
+                      ? 'text-green-600 border-green-600'
+                      : 'border-transparent'
+                  }`}
                   onClick={() => handleTabClick('Saved Jobs')}
                 >
                   Saved Jobs
@@ -286,14 +339,19 @@ const FindJobs = () => {
           </div>
 
           <div className="mt-6 w-full flex flex-wrap gap-4">
-            {data?.map((job, index) => {
-              const newJob = {
-                name: job?.company?.name,
-                logo: job?.company?.profileUrl,
-                ...job,
-              };
-              return <JobCard job={newJob} key={index} />;
-            })}
+            {activeTab === 'Best Matches' &&
+              data?.map((job, index) => {
+                const newJob = {
+                  name: job?.company?.name,
+                  logo: job?.company?.profileUrl,
+                  ...job,
+                }
+                return (
+                  <JobCard job={newJob} key={index} onSave={handleSaveJob} />
+                )
+              })}
+            {activeTab === 'Saved Jobs' &&
+              savedJobs.map((job, index) => <JobCard job={job} key={index} />)}
           </div>
           {isFetching && (
             <div className="py-10">
@@ -312,7 +370,7 @@ const FindJobs = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FindJobs;
+export default FindJobs
