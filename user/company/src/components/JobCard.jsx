@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { Skeleton } from '@nextui-org/react'
 
 const JobCard = ({ job, onSave }) => {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovegreen, setIsHovegreen] = useState(false)
   const [showSkeleton, setShowSkeleton] = useState(true)
   const [isSaved, setIsSaved] = useState(false)
 
@@ -29,11 +29,11 @@ const JobCard = ({ job, onSave }) => {
           className="w-full md:w-[20rem] 2xl:w-[18rem] min-h-[16rem] md:min-h-[18rem] bg-white flex flex-col justify-between shadow-lg 
                rounded-md px-3 py-5 overflow-hidden"
           style={{
-            outline: isHovered ? '2px solid green' : 'none',
+            outline: isHovegreen ? '2px solid green' : 'none',
             transition: 'outline 0.1s ease',
           }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          onMouseEnter={() => setIsHovegreen(true)}
+          onMouseLeave={() => setIsHovegreen(false)}
         >
           <div className="flex gap-3">
             {showSkeleton ? (
@@ -107,48 +107,54 @@ const JobCard = ({ job, onSave }) => {
           </div>
         </div>
       </Link>
-      {/* Heart icon */}
+
       <button onClick={handleSaveJob} className="absolute top-2 right-2">
-        {isSaved ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-            />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-gray-400 hover:text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-            />
-          </svg>
-        )}
-      </button>
-    </div>
-  )
-}
+  {showSkeleton ? (
+    <Skeleton className="h-6 w-6" />
+  ) : (
+    <>
+      {isSaved ? (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`h-6 w-6 ${isSaved ? 'text-green-500' : 'text-gray-400 hover:text-green-500'}`}
+          fill={isSaved ? 'currentColor' : 'none'}
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
+          />
+        </svg>
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`h-6 w-6 ${isSaved ? 'text-green-500' : 'text-gray-400 hover:text-green-500'}`}
+          fill={isSaved ? 'currentColor' : 'none'}
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
+          />
+        </svg>
+      )}
+    </>
+  )}
+</button>
+        </div>
+      )
+    }
 
 // const HeartIcon = () => (
 //   <svg
 //     xmlns="http://www.w3.org/2000/svg"
-//     className="h-6 w-6 text-gray-400 hover:text-red-500"
+//     className="h-6 w-6 text-gray-400 hover:text-green-500"
 //     fill="none"
 //     viewBox="0 0 24 24"
 //     stroke="currentColor"
@@ -165,7 +171,7 @@ const JobCard = ({ job, onSave }) => {
 // const HeartFilledIcon = () => (
 //   <svg
 //     xmlns="http://www.w3.org/2000/svg"
-//     className="h-6 w-6 text-red-500"
+//     className="h-6 w-6 text-green-500"
 //     fill="none"
 //     viewBox="0 0 24 24"
 //     stroke="currentColor"
