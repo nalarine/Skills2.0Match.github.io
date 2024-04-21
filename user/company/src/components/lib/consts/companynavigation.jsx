@@ -24,14 +24,6 @@ export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
     ),
   },
   {
-    key: 'messages',
-    label: 'Messages',
-    path: '/cmessages',
-    icon: (
-      <img src={message} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
-    ),
-  },
-  {
     key: 'profile',
     label: 'Profile',
     path: '/company-profile',
@@ -67,13 +59,22 @@ export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
       <img src={report} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
     ),
   },
+
+  {
+    key: 'messages',
+    label: 'Messages',
+    path: '/cmessages',
+    icon: (
+      <img src={message} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
+    ),
+  },
 ]
 
 export const COMPANY_DASHBOARD_SIDEBAR_BOTTOM_LINKS = [
   {
     key: 'settings',
     label: 'Settings',
-    path: '',
+    path: '/CSettings',
     icon: (
       <img src={settings} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
     ),
@@ -81,7 +82,7 @@ export const COMPANY_DASHBOARD_SIDEBAR_BOTTOM_LINKS = [
   {
     key: 'helpCenter',
     label: 'Help Center',
-    path: '',
+    path: '/CHelpCenter',
     icon: <img src={help} alt="Dashboard Icon" className="w-[28px] h-[28px]" />,
   },
 ]

@@ -17,14 +17,6 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     ),
   },
   {
-    key: 'messages',
-    label: 'Messages',
-    path: '/messages',
-    icon: (
-      <img src={message} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
-    ),
-  },
-  {
     key: 'profile',
     label: 'Profile',
     path: '/user-profile',
@@ -56,6 +48,14 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     path: '/my-schedule',
     icon: (
       <img src={calendar} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
+    ),
+  },
+  {
+    key: 'messages',
+    label: 'Messages',
+    path: '/messages',
+    icon: (
+      <img src={message} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
     ),
   },
 ]

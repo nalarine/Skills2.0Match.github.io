@@ -1,5 +1,14 @@
 import { Outlet, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { AboutUs, Footer, LayoutDash, Navbar, NewestDeals, VerificationSuccess, PrivacyPolicy, TermsOfService } from './components'
+import {
+  AboutUs,
+  Footer,
+  LayoutDash,
+  Navbar,
+  NewestDeals,
+  VerificationSuccess,
+  PrivacyPolicy,
+  TermsOfService,
+} from './components'
 import {
   About,
   AuthPage,
@@ -34,6 +43,8 @@ import AllApplicants from './pages/COMPANY/AllApplicants'
 import CSchedule from './pages/COMPANY/Schedule'
 import CJobListing from './pages/COMPANY/JobListing'
 import GenerateReports from './pages/COMPANY/GenerateReports'
+import CHelpCenter from './pages/COMPANY/CompanyHelpCenter'
+import CSettings from './pages/COMPANY/CompanySettings'
 
 //ADMIN
 import AdminDashboard from './pages/admin/AdminDashboard'
@@ -43,7 +54,6 @@ import DashCreateJob from './pages/admin/DashCreateJob'
 import DashJobs from './pages/admin/DashJobs'
 import DashUsers from './pages/admin/DashUsers'
 import DashCompanies from './pages/admin/DashCompanies'
-
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
@@ -70,18 +80,18 @@ function App() {
     return <Navigate to="/user-auth" replace />
   }
 
-    // Check session expiration
-    const lastActivityTime = localStorage.getItem('lastActivityTime');
-    const maxInactiveTime = 3600000; // 1 hour in milliseconds
-  
-    if (lastActivityTime && Date.now() - lastActivityTime > maxInactiveTime) {
-      // Clear user data and redirect to logout page if session expired
-      localStorage.removeItem('lastActivityTime');
-      return <Navigate to="/logout" replace />;
-    }
-  
-    // Update last activity time
-    localStorage.setItem('lastActivityTime', Date.now());
+  // Check session expiration
+  const lastActivityTime = localStorage.getItem('lastActivityTime')
+  const maxInactiveTime = 3600000 // 1 hour in milliseconds
+
+  if (lastActivityTime && Date.now() - lastActivityTime > maxInactiveTime) {
+    // Clear user data and redirect to logout page if session expired
+    localStorage.removeItem('lastActivityTime')
+    return <Navigate to="/logout" replace />
+  }
+
+  // Update last activity time
+  localStorage.setItem('lastActivityTime', Date.now())
 
   const hideNavbar =
     location.pathname === '/' ||
@@ -108,38 +118,42 @@ function App() {
     location.pathname.startsWith('/admin/companies') ||
     location.pathname.startsWith('/verification-success') ||
     location.pathname.startsWith('/generate-reports') ||
+    location.pathname.startsWith('/CHelpCenter') ||
+    location.pathname.startsWith('/CSettings') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
     user &&
     (location.pathname === '/' ||
-    location.pathname.startsWith('/Dashboard') ||
-    location.pathname.startsWith('/CompanyDash') ||
-    location.pathname.startsWith('/messages') ||
-    location.pathname.startsWith('/all-application') ||
-    location.pathname.startsWith('/my-schedule') ||
-    location.pathname.startsWith('/skills-assessment') ||
-    location.pathname.startsWith('/user-profile') ||
-    location.pathname.startsWith('/settings') ||
-    location.pathname.startsWith('/help-center') ||
-    location.pathname.startsWith('/job-available') ||
-    location.pathname.startsWith('/AboutPage') ||
-    location.pathname.startsWith('/About') ||
-    location.pathname.startsWith('/ContactPage') ||
-    location.pathname.startsWith('/find-jobs') ||
-    location.pathname.startsWith('/company-profile') ||
-    location.pathname.startsWith('/job-detail/') ||
-    location.pathname.startsWith('/upload-job') ||
-    location.pathname.startsWith('/companies') ||
-    location.pathname.startsWith('/admin/category') ||
-    location.pathname.startsWith('/admin/users') ||
-    location.pathname.startsWith('/admin/jobs') ||
-    location.pathname.startsWith('/admin/companies') ||
-    location.pathname.startsWith('/verification-success') ||
-    location.pathname.startsWith('/privacy-policy') ||
-    location.pathname.startsWith('/terms-of-service') ||
-    location.pathname.startsWith('/generate-reports') ||
-    location.pathname.startsWith('/AdminDashboard'))
+      location.pathname.startsWith('/Dashboard') ||
+      location.pathname.startsWith('/CompanyDash') ||
+      location.pathname.startsWith('/messages') ||
+      location.pathname.startsWith('/all-application') ||
+      location.pathname.startsWith('/my-schedule') ||
+      location.pathname.startsWith('/skills-assessment') ||
+      location.pathname.startsWith('/user-profile') ||
+      location.pathname.startsWith('/settings') ||
+      location.pathname.startsWith('/help-center') ||
+      location.pathname.startsWith('/job-available') ||
+      location.pathname.startsWith('/AboutPage') ||
+      location.pathname.startsWith('/About') ||
+      location.pathname.startsWith('/ContactPage') ||
+      location.pathname.startsWith('/find-jobs') ||
+      location.pathname.startsWith('/company-profile') ||
+      location.pathname.startsWith('/job-detail/') ||
+      location.pathname.startsWith('/upload-job') ||
+      location.pathname.startsWith('/companies') ||
+      location.pathname.startsWith('/admin/category') ||
+      location.pathname.startsWith('/admin/users') ||
+      location.pathname.startsWith('/admin/jobs') ||
+      location.pathname.startsWith('/admin/companies') ||
+      location.pathname.startsWith('/verification-success') ||
+      location.pathname.startsWith('/privacy-policy') ||
+      location.pathname.startsWith('/terms-of-service') ||
+      location.pathname.startsWith('/generate-reports') ||
+      location.pathname.startsWith('/CHelpCenter') ||
+      location.pathname.startsWith('/CSettings') ||
+      location.pathname.startsWith('/AdminDashboard'))
 
   return (
     <main className="bg-[#f7fdfd]">
@@ -153,13 +167,16 @@ function App() {
       )}
       <Routes>
         <Route path="/user-auth" element={<AuthPage />} />
-        <Route path="/verification-success/:verificationToken" element={<VerificationSuccess />} />
+        <Route
+          path="/verification-success/:verificationToken"
+          element={<VerificationSuccess />}
+        />
         <Route path="/find-jobs" element={<FindJobs />} />
         <Route path="/companies" element={<Companies />} />
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-           <Route
+            <Route
               path="/"
               element={
                 user ? (
@@ -198,6 +215,8 @@ function App() {
             <Route path="/company-profile" element={<CompanyProfile />} />
             <Route path="cjoblisting" element={<CJobListing />} />
             <Route path="/generate-reports" element={<GenerateReports />} />
+            <Route path="CSettings" element={<CSettings />} />
+            <Route path="CHelpCenter" element={<CHelpCenter />} />
           </Route>
 
           <Route
