@@ -3,10 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { BiBriefcaseAlt2 } from 'react-icons/bi'
 import { BsStars } from 'react-icons/bs'
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
-import { updateURL } from '../utils'
-import { apiRequest } from '../utils'
+import { updateURL, apiRequest } from '../utils'
 import Loading from '../components/Loading'
-
 import Header from '../components/Header'
 import { experience, jobTypes, jobCategories } from '../utils/data'
 import { CustomButton, JobCard, ListBox } from '../components'
@@ -41,6 +39,19 @@ const FindJobs = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
+
+  // Load saved jobs from local storage on initial load
+  useEffect(() => {
+    const savedJobsFromStorage = localStorage.getItem('savedJobs')
+    if (savedJobsFromStorage) {
+      setSavedJobs(JSON.parse(savedJobsFromStorage))
+    }
+  }, [])
+
+  // Update local storage whenever savedJobs changes
+  useEffect(() => {
+    localStorage.setItem('savedJobs', JSON.stringify(savedJobs))
+  }, [savedJobs])
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
@@ -347,11 +358,25 @@ const FindJobs = () => {
                   ...job,
                 }
                 return (
-                  <JobCard job={newJob} key={index} onSave={handleSaveJob} />
+                  <JobCard
+                    job={newJob}
+                    key={index}
+                    onSave={handleSaveJob}
+                    isSaved={savedJobs.some(
+                      (savedJob) => savedJob._id === job._id,
+                    )}
+                  />
                 )
               })}
             {activeTab === 'Saved Jobs' &&
-              savedJobs.map((job, index) => <JobCard job={job} key={index} />)}
+              savedJobs.map((job, index) => (
+                <JobCard
+                  job={job}
+                  key={index}
+                  onSave={handleSaveJob}
+                  isSaved={true}
+                />
+              ))}
           </div>
           {isFetching && (
             <div className="py-10">
