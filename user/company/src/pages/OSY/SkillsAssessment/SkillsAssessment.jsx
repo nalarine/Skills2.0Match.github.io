@@ -93,20 +93,23 @@ const SkillsAssessment = () => {
 
   return (
     <Container maxWidth="md" style={{ marginTop: '20px' }}>
-      <Paper elevation={3} style={{ padding: '20px', borderRadius: '10px', background: '#fff' }}>
+      <Paper elevation={3} style={{ padding: '90px', borderRadius: '10px', background: '#fff' }}>
         {/* Show landing page if showQuestions is false */}
         {!showQuestions && (
-          <div style={{ textAlign: 'center' }}>
-            <Typography variant="h3" gutterBottom style={{ color: '#333', marginBottom: '20px', fontFamily: 'Poppins' }}>
-              Welcome to Skills Assessment
-            </Typography>
-            <Typography variant="body1" gutterBottom style={{ color: '#666', marginBottom: '20px', fontFamily: 'Poppins' }}>
-              Discover your strengths and find the perfect job match!
-            </Typography>
-            <Button variant="contained" color="primary" onClick={handleStartAssessment}>
-              {loading ? <CircularProgress size={24} /> : 'Start Assessment'}
-            </Button>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', position: 'relative' }}>
+        <Typography variant="h3" gutterBottom style={{ color: '#333', marginBottom: '20px', fontFamily: 'Poppins', flex: '0', fontWeight:'600' }}>
+          Welcome to Skills Assessment
+        </Typography>
+        <div style={{ paddingLeft: '20px', paddingRight: '20px', marginLeft: '50px' }}>
+          <Typography variant="body1" gutterBottom style={{ color: '#666', marginBottom: '20px', fontFamily: 'Poppins', paddingLeft: '60px' }}>
+            Discover your strengths and find the perfect job match!
+          </Typography>
+          <Button variant="contained" onClick={handleStartAssessment} style={{ fontFamily: 'Poppins', marginLeft: '60px', backgroundColor: '#14532d' }}>
+            {loading ? <CircularProgress size={24} /> : 'Start Assessment'}
+          </Button>
+        </div>
+        <div style={{ position: 'absolute', top: '-30%', bottom: '3%', left: '55%', transform: 'translateX(-50%)', borderLeft: '1px solid #ccc', height: '300px' }}></div>
+      </div>
         )}
 
         {/* Show questions if showQuestions is true */}
