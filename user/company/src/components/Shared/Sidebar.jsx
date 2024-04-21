@@ -61,7 +61,7 @@ const Sidebar = () => {
           </ul>
         </SidebarContext.Provider>
 
-        <div className="border-t flex p-3">
+        <div className="border-t flex p-3 ml-2">
           <img
             src={profileUrl}
             alt="Profile"
@@ -75,10 +75,15 @@ const Sidebar = () => {
               }
             `}
           >
+<<<<<<< Updated upstream
             <div className="leading-4">
               <h4 className="font-semibold">
                 {user?.firstName || 'No First Name'}
               </h4>
+=======
+            <div className="leading-4 ml-4">
+              <h4 className="font-semibold">{user?.firstName || 'No First Name'}</h4>
+>>>>>>> Stashed changes
               <span className="text-xs text-gray-600">{user?.email}</span>
             </div>
           </div>

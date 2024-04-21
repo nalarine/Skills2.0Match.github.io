@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema(
     application: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
     emailVerified: { type: Boolean, default: false }, // New field for email verification
     verificationToken: { type: String }, // New field for verification token
+    savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Jobs' }],
   },
   { timestamps: true }
 );

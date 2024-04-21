@@ -9,7 +9,10 @@ import {
   updateJob,
   applyJob,
   allJobs,
-  editJob
+  editJob,
+  saveJob,
+  removeJob,
+  getSavedJobs
 } from "../controllers/jobController.js";
 
 const router = express.Router();
@@ -39,5 +42,14 @@ router.post("/create-job", userAuth, createJob);
 
 // DELETE JOB POST
 router.delete("/delete-job/:id", deleteJobPost);
+
+// Route to save a job
+router.post("/save-job", saveJob);
+
+// Route to remove a saved job
+router.delete("/remove-job", removeJob);
+
+// Route to get all saved jobs
+router.get("/saved-jobs/:userId", getSavedJobs);
 
 export default router;

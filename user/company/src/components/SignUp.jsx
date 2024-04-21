@@ -26,7 +26,8 @@ const SignUp = ({ open, setOpen }) => {
   const [value, setValue] = useState('');
   const [isEmailExisting, setIsEmailExisting] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false); // State for checkbox
-  const [loading, setLoading] = useState(false); // State for loading modal
+  const [loading, setLoading] = useState(false); // State for loading button
+  const [loadingText, setLoadingText] = useState('');
   const {
     register,
     handleSubmit,
@@ -55,24 +56,25 @@ const SignUp = ({ open, setOpen }) => {
     setValue(localStorage.getItem('email'));
   }, []);
 
-  const onSubmit = async (data) => {
-    // Set loading to true before making the API request
-    setLoading(true);
 
+  const onSubmit = async (data) => {
     let URL = null;
     if (isRegister) {
       URL = accountType === 'seeker' ? 'auth/register' : 'companies/register';
     } else {
       URL = accountType === 'seeker' ? 'auth/login' : 'companies/login';
     }
-
+  
     try {
+      setLoading(true); // Set loading state to true before making the API request
+      setLoadingText(isRegister ? 'Creating Account...' : 'Logging in...');
+  
       const res = await apiRequest({
         url: URL,
         data: data,
         method: 'POST',
       });
-
+  
       console.log(res);
       if (res?.status === 'failed') {
         if (res?.message === 'Email address already exists') {
@@ -80,7 +82,7 @@ const SignUp = ({ open, setOpen }) => {
         } else {
           setErrMsg('Incorrect email or password.');
         }
-        setLoading(false);
+        setLoading(false); // Set loading state to false after handling the error
       } else {
         // Registration successful
         setErrMsg('');
@@ -88,14 +90,16 @@ const SignUp = ({ open, setOpen }) => {
         dispatch(Login(userData));
         localStorage.setItem('userInfo', JSON.stringify(userData));
         setOpen(false);
-
-        // Redirect after 3 seconds
+  
+        // Change loading button to spinner with verification text
+        setLoadingText('Verifying...');
+        // Simulate verification for 3 seconds
         setTimeout(() => {
           setLoading(false); // Set loading to false after successful registration
         }, 3000);
       }
     } catch (error) {
-      setLoading(false);
+      setLoading(false); // Set loading state to false if an error occurs
       if (error.response && error.response.status === 400) {
         if (
           error.response.data &&
@@ -121,44 +125,6 @@ const SignUp = ({ open, setOpen }) => {
 
   return (
     <>
-    <Transition appear show={loading}>
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-50 overflow-y-auto"
-          onClose={() => setLoading(false)}
-        >
-          <div className="flex items-center justify-center min-h-screen">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-            </Transition.Child>
-
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4"
-              enterTo="opacity-100 translate-y-0"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-4"
-            >
-              <div className="bg-white rounded-lg p-6 w-full max-w-md mx-auto">
-                <p className="text-center text-lg">Account created successfully. Please verify your email to log in.</p>
-                <div className="flex justify-center mb-4">
-                  <Spinner size="medium" color="success"/>
-                </div>
-              </div>
-            </Transition.Child>
-          </div>
-        </Dialog>
-      </Transition>
       <Transition appear show={open || false}>
         <Dialog
           as="div"
@@ -387,14 +353,20 @@ const SignUp = ({ open, setOpen }) => {
                         </Checkbox>
                       </div>
                     )}
-                    <div className="mt-2 flex items-center justify-center">
-                      <CustomButton
-                        type="submit"
-                        containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
-                        title={isRegister ? 'Create Account' : 'Login Account'}
-                      />
+                 <div className="mt-2 flex items-center justify-center">
+                  {loading ? (
+                    <div className="flex flex-col items-center">
+                      <Spinner color="success" />
+                      <p className="mt-2">{loadingText}</p>
                     </div>
-
+                  ) : (
+                    <CustomButton
+                      type="submit"
+                      containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
+                      title={isRegister ? 'Create Account' : 'Login Account'}
+                    />
+                  )}
+                </div>
                     <div className="flex items-center justify-center mt-2">
                       <hr className="w-24 border-gray-500" />
                       <p className="text-base text-gray-700 mx-3">

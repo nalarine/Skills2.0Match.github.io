@@ -1,72 +1,114 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { BiBriefcaseAlt2 } from 'react-icons/bi'
-import { BsStars } from 'react-icons/bs'
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
-import { updateURL, apiRequest } from '../utils'
-import Loading from '../components/Loading'
-import Header from '../components/Header'
-import { experience, jobTypes, jobCategories } from '../utils/data'
-import { CustomButton, JobCard, ListBox } from '../components'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { BiBriefcaseAlt2 } from 'react-icons/bi';
+import { BsStars } from 'react-icons/bs';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { updateURL, apiRequest } from '../utils';
+import Loading from '../components/Loading';
+import Header from '../components/Header';
+import { experience, jobTypes, jobCategories } from '../utils/data';
+import { CustomButton, JobCard, ListBox } from '../components';
+import { useSelector } from 'react-redux';
 
 const FindJobs = () => {
-  const { user } = useSelector((state) => state.user)
-  const [sort, setSort] = useState('Newest')
-  const [page, setPage] = useState(1)
-  const [numPage, setNumPage] = useState(1)
-  const [recordCount, setRecordCount] = useState(0)
-  const [data, setData] = useState([])
-  const [savedJobs, setSavedJobs] = useState([])
+  const { user } = useSelector((state) => state.user);
+  const [sort, setSort] = useState('Newest');
+  const [page, setPage] = useState(1);
+  const [numPage, setNumPage] = useState(1);
+  const [recordCount, setRecordCount] = useState(0);
+  const [data, setData] = useState([]);
+  const [savedJobs, setSavedJobs] = useState([]);
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const [jobLocation, setJobLocation] = useState('')
-  const [filterJobTypes, setFilterJobTypes] = useState([])
-  const [filterExp, setFilterExp] = useState('')
-  const [expVal, setExpVal] = useState([])
-  const [isFetching, setIsFetching] = useState(false)
+  
+  useEffect(() => {
+    const fetchSavedJobs = async () => {
+      try {
+        const res = await apiRequest({
+          url: `/jobs/saved-jobs/${user._id}`,
+          method: 'GET',
+        });
+        setSavedJobs(res.data.savedJobs);
+      } catch (error) {
+        console.error('Error fetching saved jobs:', error);
+      }
+    };
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false)
-  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] =
-    useState(false)
+    fetchSavedJobs();
+  }, [user._id]);
 
-  const [activeTab, setActiveTab] = useState('Best Matches')
+  const handleSaveJob = async (job) => {
+    const jobIndex = savedJobs.findIndex((savedJob) => savedJob._id === job._id);
+    
+    try {
+      if (jobIndex === -1) {
+        // Job is not already saved, so add it to the savedJobs array
+        const res = await apiRequest({
+          url: '/jobs/save-job',
+          method: 'POST',
+          data: { id: job._id, userId: user._id },
+        });
+  
+        console.log('Save job response:', res);
+  
+        if (res.success) {
+          // Update savedJobs state by adding the new job
+          setSavedJobs(prevSavedJobs => [...prevSavedJobs, job]);
+        }
+      } else {
+        // Job is already saved, so remove it from the savedJobs array
+        const res = await apiRequest({
+          url: '/jobs/remove-job',
+          method: 'DELETE',
+          data: { id: job._id, userId: user._id },
+        });
+  
+        console.log('Remove job response:', res);
+  
+        if (res.success) {
+          // Update savedJobs state by removing the job
+          setSavedJobs(prevSavedJobs => prevSavedJobs.filter((savedJob) => savedJob._id !== job._id));
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [jobLocation, setJobLocation] = useState('');
+  const [filterJobTypes, setFilterJobTypes] = useState([]);
+  const [filterExp, setFilterExp] = useState('');
+  const [expVal, setExpVal] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false);
+  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] = useState(false);
+
+  const [activeTab, setActiveTab] = useState('Best Matches');
 
   const handleTabClick = (tabName) => {
-    setActiveTab(tabName)
-  }
-
-  const location = useLocation()
-  const navigate = useNavigate()
-
-  // Load saved jobs from local storage on initial load
-  useEffect(() => {
-    const savedJobsFromStorage = localStorage.getItem('savedJobs')
-    if (savedJobsFromStorage) {
-      setSavedJobs(JSON.parse(savedJobsFromStorage))
-    }
-  }, [])
-
-  // Update local storage whenever savedJobs changes
-  useEffect(() => {
-    localStorage.setItem('savedJobs', JSON.stringify(savedJobs))
-  }, [savedJobs])
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
+    setActiveTab(tabName);
+  };
 
   const toggleJobTypesDropdown = () => {
-    setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen)
-  }
+  setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen);
+}
 
-  const toggleExperienceDropdown = () => {
-    setIsExperienceDropdownOpen(!isExperienceDropdownOpen)
-  }
+const toggleExperienceDropdown = () => {
+  setIsExperienceDropdownOpen(!isExperienceDropdownOpen);
+}
+
+const toggleDropdown = () => {
+  setIsDropdownOpen(!isDropdownOpen);
+}
+
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const fetchJobs = async () => {
-    setIsFetching(true)
+    setIsFetching(true);
 
     const newURL = updateURL({
       pageNum: page,
@@ -77,83 +119,69 @@ const FindJobs = () => {
       location: location,
       jType: filterJobTypes,
       exp: filterExp,
-    })
+    });
 
     try {
       const res = await apiRequest({
         url: '/jobs' + newURL + '&user_id=' + user._id,
         method: 'GET',
-      })
+      });
 
-      setNumPage(res?.numOfPage)
-      setRecordCount(res?.totalJobs)
-      setData(res?.data)
+      setNumPage(res?.numOfPage);
+      setRecordCount(res?.totalJobs);
+      setData(res?.data);
 
-      setIsFetching(false)
+      setIsFetching(false);
     } catch (error) {
-      setIsFetching(false)
-      console.log(error)
+      setIsFetching(false);
+      console.error(error);
     }
-  }
+  };
 
   const filterJobs = (val) => {
     if (filterJobTypes?.includes(val)) {
-      setFilterJobTypes(filterJobTypes.filter((el) => el !== val))
+      setFilterJobTypes(filterJobTypes.filter((el) => el !== val));
     } else {
-      setFilterJobTypes([...filterJobTypes, val])
+      setFilterJobTypes([...filterJobTypes, val]);
     }
-  }
+  };
 
   const filterExperience = async (e) => {
     if (expVal?.includes(e)) {
-      setExpVal(expVal?.filter((el) => el !== e))
+      setExpVal(expVal?.filter((el) => el !== e));
     } else {
-      setExpVal([...expVal, e])
+      setExpVal([...expVal, e]);
     }
-  }
+  };
 
   const handleSearchSubmit = async (e) => {
-    e.preventDefault()
-    await fetchJobs()
-  }
+    e.preventDefault();
+    await fetchJobs();
+  };
 
   const handleShowMore = async (e) => {
-    e.preventDefault()
-    setPage((prev) => prev + 1)
-  }
-
-  const handleSaveJob = (job) => {
-    const jobIndex = savedJobs.findIndex((savedJob) => savedJob._id === job._id)
-
-    if (jobIndex === -1) {
-      // Job is not already saved, so add it to the savedJobs array
-      setSavedJobs((prevSavedJobs) => [...prevSavedJobs, job])
-    } else {
-      // Job is already saved, so remove it from the savedJobs array
-      setSavedJobs((prevSavedJobs) =>
-        prevSavedJobs.filter((savedJob) => savedJob._id !== job._id),
-      )
-    }
-  }
+    e.preventDefault();
+    setPage((prev) => prev + 1);
+  };
 
   useEffect(() => {
     if (expVal.length > 0) {
-      let newExpVal = []
-
+      let newExpVal = [];
+  
       expVal?.map((el) => {
-        const newEl = el?.split('-')
-        newExpVal.push(Number(newEl[0]), Number(newEl[1]))
-      })
-
-      newExpVal?.sort((a, b) => a - b)
-
-      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal?.length - 1]}`)
+        const newEl = el?.split('-');
+        newExpVal.push(Number(newEl[0]), Number(newEl[1]));
+      });
+  
+      newExpVal?.sort((a, b) => a - b);
+  
+      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal.length - 1]}`);
     }
-  }, [expVal])
+  }, [expVal]);
 
   useEffect(() => {
-    fetchJobs()
-  }, [sort, filterJobTypes, filterExp, page])
+    fetchJobs();
+  }, [sort, filterJobTypes, filterExp, page]);
 
   return (
     <div>
@@ -334,50 +362,48 @@ const FindJobs = () => {
                 </a>
               </li>
               <li className="me-2">
-                <a
-                  href="#"
-                  className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${
-                    activeTab === 'Saved Jobs'
-                      ? 'text-green-600 border-green-600'
-                      : 'border-transparent'
-                  }`}
-                  onClick={() => handleTabClick('Saved Jobs')}
-                >
-                  Saved Jobs
-                </a>
-              </li>
+                  <a
+                    href="#"
+                    className={`inline-block p-4 border-b-2 rounded-t-lg hover:text-green-600 dark:hover:text-gray-300 ${
+                      activeTab === 'Saved Jobs'
+                        ? 'text-green-600 border-green-600'
+                        : 'border-transparent'
+                    }`}
+                    onClick={() => handleTabClick('Saved Jobs')}
+                  >
+                    {`Saved Jobs (${savedJobs.length})`}
+                  </a>
+                </li>
             </ul>
           </div>
 
           <div className="mt-6 w-full flex flex-wrap gap-4">
-            {activeTab === 'Best Matches' &&
-              data?.map((job, index) => {
-                const newJob = {
-                  name: job?.company?.name,
-                  logo: job?.company?.profileUrl,
-                  ...job,
-                }
-                return (
-                  <JobCard
-                    job={newJob}
-                    key={index}
-                    onSave={handleSaveJob}
-                    isSaved={savedJobs.some(
-                      (savedJob) => savedJob._id === job._id,
-                    )}
-                  />
-                )
-              })}
-            {activeTab === 'Saved Jobs' &&
-              savedJobs.map((job, index) => (
-                <JobCard
-                  job={job}
-                  key={index}
-                  onSave={handleSaveJob}
-                  isSaved={true}
-                />
-              ))}
-          </div>
+          {activeTab === 'Best Matches' &&
+          data?.map((job, index) => {
+            const newJob = {
+              name: job?.company?.name,
+              logo: job?.company?.profileUrl,
+              ...job,
+            };
+            return (
+              <JobCard
+                job={newJob}
+                key={index}
+                onSave={handleSaveJob}
+                isSaved={savedJobs.some((savedJob) => savedJob._id === job._id)}
+              />
+            );
+          })}
+       {activeTab === 'Saved Jobs' &&
+        savedJobs.map((job, index) => (
+      <JobCard
+        job={job}
+        key={index}
+        onSave={handleSaveJob}
+        isSaved={true} // Ensure this is set to true for saved jobs
+      />
+    ))}
+      </div>
           {isFetching && (
             <div className="py-10">
               <Loading />
@@ -395,7 +421,7 @@ const FindJobs = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FindJobs
+export default FindJobs;
