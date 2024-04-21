@@ -22,6 +22,8 @@ import HelpCenter from '../pages/OSY/HelpCenter'
 import VerificationSuccess from './VerificationSuccessPage'
 import PrivacyPolicy from './PrivacyPolicy'
 import TermsOfService from './TermsOfService'
+import StrongPasswordInput from './StrongPasswordInput'
+
 
 export {
   Navbar,
@@ -48,4 +50,5 @@ export {
   VerificationSuccess,
   PrivacyPolicy,
   TermsOfService,
+  StrongPasswordInput,
 }

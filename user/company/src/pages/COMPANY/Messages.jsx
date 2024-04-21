@@ -196,12 +196,17 @@ export default function Messages() {
               style={{ marginBottom: '50px' }} // Adjust margin bottom
             >
               <div className="flex items-center">
-                <ReactQuill
+              <ReactQuill
                   theme="snow"
                   value={message}
                   onChange={handleMessageChange}
-                  placeholder="Insert text here..." // Placeholder for the message input
+                  placeholder="Insert text here..."
                   className="w-full mr-3 rounded-full"
+                  style={{
+                    float: 'left', 
+                    marginRight: '3px',
+                    textAlign: 'left' // Aligns text within the editor to the left
+                  }}
                   modules={{
                     toolbar: [
                       [{ 'header': [1, 2, false] }],

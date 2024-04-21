@@ -33,6 +33,7 @@ import AdLayout from '../pages/global/AdLayout'
 import Admin2 from './admin2/Admin2'
 import UserPage from './admin2/pages/user'
 import ProductsPage from './admin2/pages/products'
+import GenerateReports from '../pages/COMPANY/GenerateReports'
 
 
 export {
@@ -71,4 +72,5 @@ export {
   Admin2,
   UserPage,
   ProductsPage,
+  GenerateReports,
 }

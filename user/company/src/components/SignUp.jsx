@@ -11,19 +11,22 @@ import Logo from '../assets/header.png';
 import GoogleIcon from '../assets/google-icon.svg';
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
+import { Checkbox, DatePicker } from '@nextui-org/react'; 
+import StrongPasswordInput from './StrongPasswordInput';
+import { Spinner } from '@nextui-org/react';
 import '../App.css';
 
 const SignUp = ({ open, setOpen }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-
   const [isRegister, setIsRegister] = useState(true);
   const [accountType, setAccountType] = useState('seeker');
   const [errMsg, setErrMsg] = useState('');
   const [value, setValue] = useState('');
   const [isEmailExisting, setIsEmailExisting] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false); // State for checkbox
+  const [loading, setLoading] = useState(false); // State for loading modal
   const {
     register,
     handleSubmit,
@@ -53,10 +56,8 @@ const SignUp = ({ open, setOpen }) => {
   }, []);
 
   const onSubmit = async (data) => {
-    // if (!agreedToTerms) { // Check if terms are agreed to before submitting
-    //   setErrMsg('Please agree to the Privacy Policy and Terms of Service.');
-    //   return;
-    // }
+    // Set loading to true before making the API request
+    setLoading(true);
 
     let URL = null;
     if (isRegister) {
@@ -64,29 +65,37 @@ const SignUp = ({ open, setOpen }) => {
     } else {
       URL = accountType === 'seeker' ? 'auth/login' : 'companies/login';
     }
-  
+
     try {
       const res = await apiRequest({
         url: URL,
         data: data,
         method: 'POST',
       });
-  
+
       console.log(res);
       if (res?.status === 'failed') {
         if (res?.message === 'Email address already exists') {
-          setIsEmailExisting(true);
+          setIsEmailExisting(true); // Set state to true to show the modal
         } else {
           setErrMsg('Incorrect email or password.');
         }
+        setLoading(false);
       } else {
+        // Registration successful
         setErrMsg('');
         const userData = { token: res?.token, ...res?.user };
         dispatch(Login(userData));
         localStorage.setItem('userInfo', JSON.stringify(userData));
         setOpen(false);
+
+        // Redirect after 3 seconds
+        setTimeout(() => {
+          setLoading(false); // Set loading to false after successful registration
+        }, 3000);
       }
     } catch (error) {
+      setLoading(false);
       if (error.response && error.response.status === 400) {
         if (
           error.response.data &&
@@ -100,14 +109,56 @@ const SignUp = ({ open, setOpen }) => {
       } else {
         if (error.response?.data?.message !== 'Email address already exists') {
           setErrMsg('An error occurred.');
-          alert('An error occurred.');
         }
       }
     }
   };
+  
+
+  const handleCheckboxChange = (event) => {
+    setAgreedToTerms(event.target.checked);
+  };
 
   return (
     <>
+    <Transition appear show={loading}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-50 overflow-y-auto"
+          onClose={() => setLoading(false)}
+        >
+          <div className="flex items-center justify-center min-h-screen">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4"
+              enterTo="opacity-100 translate-y-0"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 translate-y-4"
+            >
+              <div className="bg-white rounded-lg p-6 w-full max-w-md mx-auto">
+                <p className="text-center text-lg">Account created successfully. Please verify your email to log in.</p>
+                <div className="flex justify-center mb-4">
+                  <Spinner size="medium" color="success"/>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
       <Transition appear show={open || false}>
         <Dialog
           as="div"
@@ -187,8 +238,7 @@ const SignUp = ({ open, setOpen }) => {
                       })}
                       error={errors.email ? errors.email.message : ''}
                     />
-
-                  {isRegister && (
+                   {isRegister && accountType === 'seeker' && (
                       <>
                         <TextInput
                           name="birthdate"
@@ -204,9 +254,8 @@ const SignUp = ({ open, setOpen }) => {
                               const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
                           
                               if (birthdate < minDate || birthdate > maxDate) {
-                                return 'You must be between 18 and 24 years old to register or login.';
+                                return 'You must be between 18 to 24 years old to register.';
                               }
-                          
                               return true;
                             },
                           })}
@@ -215,7 +264,7 @@ const SignUp = ({ open, setOpen }) => {
                         />
                       </>
                     )}
-
+                    
                     {isRegister && (
                       <div className="w-full flex gap-1 md:gap-2">
                         <div
@@ -278,32 +327,21 @@ const SignUp = ({ open, setOpen }) => {
                       </div>
                     )}
 
-                  <div className="w-full flex gap-1 md:gap-2">
+                    <div className="w-full flex gap-1 md:gap-2">
                       <div className={`${isRegister ? 'w-1/2' : 'w-full'}`}>
-                        <TextInput
-                          name="password"
-                          label="Password"
-                          placeholder="Password"
-                          type="password"
-                          register={register('password', {
-                            required: 'Password is required!',
-                            pattern: {
-                              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                              message: isRegister
-                                ? 'Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character'
-                                : '',
-                            },
-                          })}
-                          error={errors.password ? errors.password.message : ''}
+                        <StrongPasswordInput
+                          isRegister={isRegister}
+                          register={register}
+                          errors={errors}
                         />
                       </div>
 
                       {isRegister && (
                         <div className="w-1/2">
                           <TextInput
-                            label="Confirm Password"
-                            placeholder="Password"
-                            type="password"
+                            label='Confirm Password'
+                            placeholder='Password'
+                            type='password'
                             register={register('cPassword', {
                               validate: (value) => {
                                 const { password } = getValues();
@@ -325,23 +363,31 @@ const SignUp = ({ open, setOpen }) => {
                     </div>
 
                     {isRegister && (
-                 <div className="flex items-center mt-4">
-                    <input
-                      type="checkbox"
-                      id="agreeTerms"
-                      className="form-checkbox h-8 w-8 text-green-500 rounded focus:ring-green-400"
-                      checked={agreedToTerms}
-                      onChange={(e) => setAgreedToTerms(e.target.checked)}
-                      style={{ backgroundColor: agreedToTerms ? '#d1fae5' : 'inherit', transition: 'background-color 0.3s ease' }}
-                    />
-                    <label htmlFor="agreeTerms" className="ml-2 text-sm text-gray-700">
-                      By creating an account, you are agreeing to the{' '}
-                      <a href="/privacy-policy" className="text-green-500 hover:underline">Privacy Policy</a> and{' '}
-                      <a href="/terms-of-service" className="text-green-500 hover:underline">Terms of Service</a>.
-                    </label>
-                  </div>
-                )}
-                        <div className="mt-2 flex items-center justify-center">
+                      <div className="flex items-center mt-4">
+                        <Checkbox
+                          defaultChecked={agreedToTerms}
+                          onChange={handleCheckboxChange}
+                          color="success"
+                        >
+                          By creating an account, you are agreeing to the{' '}
+                          <a
+                            href="/privacy-policy"
+                            className="text-green-500 hover:underline"
+                          >
+                            Privacy Policy
+                          </a>{' '}
+                          and{' '}
+                          <a
+                            href="/terms-of-service"
+                            className="text-green-500 hover:underline"
+                          >
+                            Terms of Service
+                          </a>
+                          .
+                        </Checkbox>
+                      </div>
+                    )}
+                    <div className="mt-2 flex items-center justify-center">
                       <CustomButton
                         type="submit"
                         containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
@@ -392,53 +438,87 @@ const SignUp = ({ open, setOpen }) => {
         </Dialog>
       </Transition>
 
-      {/* Email Existing Dialog */}
-      <Transition appear show={isEmailExisting}>
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-50 overflow-y-aut0"
-          onClose={() => setIsEmailExisting(false)}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+      {errMsg && (
+        <Transition appear show={errMsg !== ''}>
+          <Dialog
+            as="div"
+            className="fixed inset-0 z-50 overflow-y-aut0"
+            onClose={() => {
+              setOpen(false);
+              setErrMsg('');
+            }}
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+            {/* Error modal content */}
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
 
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            <div className="fixed inset-0 flex items-center justify-center">
-              <div className="bg-white p-8 rounded-lg shadow-xl">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">
-                  Email Already Exists
-                </h2>
-                <p className="text-gray-700">
-                  The email you entered is already registered. Please use a different email or login with your existing account.
-                </p>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600 focus:outline-none"
-                  onClick={() => setIsEmailExisting(false)}
+            <div className="fixed inset-0 overflow-y-auto ">
+              <div className="flex min-h-full items-center justify-center p-4 content-center ">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
                 >
-                  Close
-                </button>
+                  <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all ">
+                  <Dialog.Title
+                        as="h3"
+                        className="flex items-center justify-center text-xl font-semibold leading-6 text-red-600"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 mr-2"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M10 4v6M10 14h.01"
+                          />
+                        </svg>
+                        Email Address already exists
+                      </Dialog.Title>
+
+
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-700">
+                        The provided email address already exists. Please use a
+                        different email address or try logging in.
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-center">
+                      <CustomButton
+                        onClick={() => {
+                          setOpen(false);
+                          setErrMsg('');
+                        }}
+                        containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1] hover:text-[#14532d]`}
+                        title="OK"
+                      />
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
               </div>
             </div>
-          </Transition.Child>
-        </Dialog>
-      </Transition>
+          </Dialog>
+        </Transition>
+      )}
     </>
   );
 };
