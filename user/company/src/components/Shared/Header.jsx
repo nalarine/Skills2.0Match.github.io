@@ -55,7 +55,7 @@ const Header = ({ newJobDetails }) => {
           </div>
         </div>
         <div
-          className="flex items-center gap-3 p-3 relative"
+          className="flex items-center gap-3  relative"
           onClick={toggleNotifications}
         >
           <NotificationsPopover
