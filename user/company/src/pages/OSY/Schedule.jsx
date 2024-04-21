@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import React, { useState, useEffect } from 'react'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
 import {
   Modal,
   Typography,
@@ -14,20 +14,25 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@mui/material';
+} from '@mui/material'
 
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
-import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded'
+import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined'
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
 export default function Schedule() {
   const calendarStyles = `
+  .fc-toolbar {
+    padding: 1rem;
+  }
     .fc-theme-standard .fc-toolbar-chunk button {
       background-color: #22C55E !important; 
       color: #ffffff !important; 
       border-color: #008000 !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;
     }
 
     .fc-theme-standard .fc-toolbar-chunk button:hover,
@@ -41,32 +46,33 @@ export default function Schedule() {
     }
 
     .fc-theme-standard .fc-toolbar-chunk button:active {
+      
       background-color: #006400 !important;
       border-color: #008000 !important; 
     }
-  `;
+  `
 
   const [events, setEvents] = useState(() => {
     // Get events from local storage if available, otherwise default to an empty array
-    const storedEvents = localStorage.getItem('events');
-    return storedEvents ? JSON.parse(storedEvents) : [];
-  });
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [title, setTitle] = useState('');
-  const [location, setLocation] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [description, setDescription] = useState('');
-  const [openAddEventModal, setOpenAddEventModal] = useState(false);
-  const [openEventDetailsModal, setOpenEventDetailsModal] = useState(false);
-  const [openEditEventModal, setOpenEditEventModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+    const storedEvents = localStorage.getItem('events')
+    return storedEvents ? JSON.parse(storedEvents) : []
+  })
+  const [selectedDate, setSelectedDate] = useState(null)
+  const [title, setTitle] = useState('')
+  const [location, setLocation] = useState('')
+  const [startTime, setStartTime] = useState('')
+  const [endTime, setEndTime] = useState('')
+  const [description, setDescription] = useState('')
+  const [openAddEventModal, setOpenAddEventModal] = useState(false)
+  const [openEventDetailsModal, setOpenEventDetailsModal] = useState(false)
+  const [openEditEventModal, setOpenEditEventModal] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false)
 
   useEffect(() => {
     // Save events to local storage whenever it changes
-    localStorage.setItem('events', JSON.stringify(events));
-  }, [events]);
+    localStorage.setItem('events', JSON.stringify(events))
+  }, [events])
 
   const handleDateClick = (arg) => {
     setSelectedDate(arg.date)
@@ -84,25 +90,27 @@ export default function Schedule() {
   }
 
   const handleEditEventClick = () => {
-    // Populate the state with the details of the selected event
-    setTitle(selectedEvent.title || '')
-    setLocation(selectedEvent.extendedProps.location || '')
-    setDescription(selectedEvent.extendedProps.description || '')
+    if (selectedEvent) {
+      // Populate the state with the details of the selected event
+      setTitle(selectedEvent.title || '')
+      setLocation(selectedEvent.extendedProps.location || '')
+      setDescription(selectedEvent.extendedProps.description || '')
 
-    // Convert start and end time to string in format "HH:MM"
-    const startTimeString = selectedEvent.start
-      ? selectedEvent.start.toTimeString().slice(0, 5)
-      : ''
-    const endTimeString = selectedEvent.end
-      ? selectedEvent.end.toTimeString().slice(0, 5)
-      : ''
+      // Convert start and end time to string in format "HH:MM"
+      const startTimeString = selectedEvent.start
+        ? selectedEvent.start.toTimeString().slice(0, 5)
+        : ''
+      const endTimeString = selectedEvent.end
+        ? selectedEvent.end.toTimeString().slice(0, 5)
+        : ''
 
-    // Set the start and end time in the state
-    setStartTime(startTimeString)
-    setEndTime(endTimeString)
+      // Set the start and end time in the state
+      setStartTime(startTimeString)
+      setEndTime(endTimeString)
 
-    // Open the edit event modal
-    setOpenEditEventModal(true)
+      // Open the edit event modal
+      setOpenEditEventModal(true)
+    }
   }
 
   const handleEventSave = () => {
@@ -110,23 +118,23 @@ export default function Schedule() {
       title: title,
       location: location,
       start: new Date(
-        selectedDate.setHours(startTime.split(':')[0], startTime.split(':')[1])
+        selectedDate.setHours(startTime.split(':')[0], startTime.split(':')[1]),
       ),
       end: new Date(
-        selectedDate.setHours(endTime.split(':')[0], endTime.split(':')[1])
+        selectedDate.setHours(endTime.split(':')[0], endTime.split(':')[1]),
       ),
       description: description,
       allDay: false,
-    };
-  
-    setEvents((prevEvents) => [...prevEvents, newEvent]); // Update state with new event
-  
+    }
+
+    setEvents((prevEvents) => [...prevEvents, newEvent]) // Update state with new event
+
     // Save updated events to local storage
-    localStorage.setItem('events', JSON.stringify([...events, newEvent]));
-  
-    setOpenAddEventModal(false);
-  };
-  
+    localStorage.setItem('events', JSON.stringify([...events, newEvent]))
+
+    setOpenAddEventModal(false)
+  }
+
   const handleEventEditSave = () => {
     const updatedSelectedEvent = {
       ...selectedEvent,
@@ -137,17 +145,17 @@ export default function Schedule() {
         description: description,
       },
       start: new Date(
-        selectedDate.setHours(startTime.split(':')[0], startTime.split(':')[1])
+        selectedDate.setHours(startTime.split(':')[0], startTime.split(':')[1]),
       ),
       end: new Date(
-        selectedDate.setHours(endTime.split(':')[0], endTime.split(':')[1])
+        selectedDate.setHours(endTime.split(':')[0], endTime.split(':')[1]),
       ),
       allDay: false,
-    };
-  
+    }
+
     // Update the selectedEvent state
-    setSelectedEvent(updatedSelectedEvent);
-  
+    setSelectedEvent(updatedSelectedEvent)
+
     // Update the events array in the state
     const updatedEvents = events.map((event) => {
       if (
@@ -155,23 +163,22 @@ export default function Schedule() {
         event.start.getTime() === selectedEvent.start.getTime() &&
         event.end.getTime() === selectedEvent.end.getTime()
       ) {
-        return updatedSelectedEvent;
+        return updatedSelectedEvent
       }
-      return event;
-    });
-  
+      return event
+    })
+
     // Update the state with the updated events array
-    setEvents(updatedEvents);
-  
+    setEvents(updatedEvents)
+
     // Save updated events to local storage
-    localStorage.setItem('events', JSON.stringify(updatedEvents));
-  
+    localStorage.setItem('events', JSON.stringify(updatedEvents))
+
     // Close the edit event modal
-    setOpenEditEventModal(false);
-    setOpenAddEventModal(false);
-    setOpenEventDetailsModal(false);
-  };
-  
+    setOpenEditEventModal(false)
+    setOpenAddEventModal(false)
+    setOpenEventDetailsModal(false)
+  }
 
   const handleDeleteConfirmed = () => {
     const updatedEvents = events.filter(

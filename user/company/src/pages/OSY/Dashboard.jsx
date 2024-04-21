@@ -20,17 +20,20 @@ const Dashboard = () => {
       <div className="p-3">
         <div className="md:flex md:flex-col md:h-28">
           <div className="md:flex md:flex-row md:items-center">
-          <div className="md:flex-1 md:flex md:flex-col md:gap-3">
-            <div className="flex items-center pl-[30%]"> {/* Added div with flex to align items */}
-              <img src={hello} alt="image" className="w-18 h-18 mr-2" /> {/* Added image tag */}
-              <span className="font-black text-4xl">
-                Hello, {user?.firstName}
+            <div className="md:flex-1 md:flex md:flex-col md:gap-3">
+              <div className="flex items-center pl-[30%]">
+                {' '}
+                {/* Added div with flex to align items */}
+                <img src={hello} alt="image" className="w-18 h-18 mr-2" />{' '}
+                {/* Added image tag */}
+                <span className="font-black text-4xl">
+                  Hello, {user?.firstName}
+                </span>
+              </div>
+              <span className="text-base -pl-[50%] pr-[5%]">
+                Here is your job listing statistic report
               </span>
             </div>
-            <span className="text-base -pl-[50%] pr-[5%]">
-              Here is your job listing statistic report
-            </span>
-          </div>
           </div>
         </div>
         {/* <DashboardStatsGrid /> */}
