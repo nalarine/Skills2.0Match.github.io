@@ -92,7 +92,7 @@ const AboutPage = () => {
           <h1 className="mb-5 text-3xl font-extrabold text-gray-900 dark:text-white md:text-4xl lg:text-5xl mt-20">
             Welcome to
             <br />
-            <span className="pt-3 text-transparent bg-clip-text bg-gradient-to-r to-green-500 from-yellow-500 block">
+            <span className="pt-3 text-transparent bg-clip-text bg-gradient-to-r to-green-500 from-yellow-500 block text-7xl">
               Skills 2.0 Match
             </span>
           </h1>
@@ -192,7 +192,7 @@ const AboutPage = () => {
                   {/* <h1 class=" pt-3 text-transparent bg-clip-text bg-gradient-to-r to-green-500 from-yellow-500 block text-3xl font-bold">
                     Mission Statement
                   </h1> */}
-                  <p class="text-black-700 -ml-[385px] mr-[50px] pt-12">
+                  <p class="text-black-700 -ml-[385px] mr-[50px] pt-12 text-left">
                     Empowering Out-of-School Youth (OSY) by connecting them with
                     meaningful employment opportunities, Skills 2.0 Match is
                     dedicated to fostering a platform where skills meet
@@ -217,7 +217,7 @@ const AboutPage = () => {
                   {/* <h1 class=" pt-3 text-transparent bg-clip-text bg-gradient-to-r to-green-500 from-yellow-500 block text-3xl font-bold">
                     Mission Statement
                   </h1> */}
-                  <p class="text-black-700 -mr-[350px] ml-[100px] pt-12">
+                  <p class="text-black-700 -mr-[350px] ml-[100px] pt-12 text-right">
                     Our vision at Skills 2.0 Match is to create a world where
                     every Out-of-School Youth has equal access to opportunities
                     that align with their talents and aspirations. We envision a
