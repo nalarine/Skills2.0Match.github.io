@@ -75,15 +75,10 @@ const Sidebar = () => {
               }
             `}
           >
-<<<<<<< Updated upstream
-            <div className="leading-4">
+            <div className="leading-4 ml-4">
               <h4 className="font-semibold">
                 {user?.firstName || 'No First Name'}
               </h4>
-=======
-            <div className="leading-4 ml-4">
-              <h4 className="font-semibold">{user?.firstName || 'No First Name'}</h4>
->>>>>>> Stashed changes
               <span className="text-xs text-gray-600">{user?.email}</span>
             </div>
           </div>

@@ -241,11 +241,10 @@ const JobDetail = () => {
                 />
                 <button
                   onClick={handleSaveJob}
-                  className={`w-full flex items-center justify-center text-green-700 ${
-                    isSaved
+                  className={`w-full flex items-center justify-center text-green-700 ${isSaved
                       ? 'bg-lime-400 text-white'
                       : 'border border-green-700 hover:bg-green-700 hover:text-white'
-                  } py-3 px-5 mt-4 outline-none rounded-full text-lg`}
+                    } py-3 px-5 mt-4 outline-none rounded-full text-lg`}
                 >
                   {isSaved ? (
                     <BsBalloonHeartFill className="mr-2 w-8 h-8" />
@@ -301,32 +300,58 @@ const JobDetail = () => {
         isOpen={isShowModal}
         onRequestClose={toggleModal}
         className="fixed inset-0 z-50 overflow-y-auto"
-        overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        overlayClassName="fixed inset-0 custom-overlay"
       >
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="bg-white p-8 rounded-lg shadow-xl">
-            <h2 className="text-2xl font-bold mb-4">Apply for Job</h2>
-            <div>
-              <label className="block text-lg font-medium">
-                Attach Resume:
-              </label>
-              <input
-                type="file"
-                onChange={handleResume}
-                className="mt-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-100"
-              />
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <div className="bg-white p-10 rounded-lg shadow-md w-[50%] relative items-center">
+            <h1 className="text-3xl font-bold mb-4">Application Details</h1>
+            <hr className="mb-4" />
+            <div className="flex">
+              <p className="text-lg font-bold mr-4 mt-2">Name: </p>
+              <p className="mb-4 text-xl bg-slate-200 p-2 rounded-lg ml-1">
+                {userInfo.firstName + ' ' + userInfo.lastName}
+              </p>
             </div>
-            <div className="mt-4">
+
+            <div className="flex">
+              <p className="text-lg font-bold mr-4 mt-2">E-mail: </p>
+              <p className="mb-4 text-xl bg-slate-200 p-2 rounded-lg">
+                {userInfo.email}
+              </p>
+            </div>
+
+            {/* <p className="block text-lg font-medium">Location: </p>
+                    <p className="mb-4">{userInfo.location}</p> */}
+
+            {/* <p className="block text-lg font-medium">Job Title: </p>
+                    <p className="mb-4">{userInfo.jobTitle}</p> */}
+
+            <p className="text-lg font-bold mr-4 mt-2 mb-2">Attach Resume</p>
+            <input
+              id="resumeUpload"
+              type="file"
+              class="block mb-4 w-full text-sm text-slate-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              hover:file:bg-violet-100"
+              accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+              onChange={handleResume}
+            />
+            <p class="mb-8 text-sm text-gray-600">Please ensure your resume is in DOC, DOCX, or PDF format.</p>
+            <div className="flex justify-between">
               <button
+                type="submit"
                 onClick={handleSubmit}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-green-700 hover:bg-lime-600 text-white px-4 py-2 rounded-lg"
               >
-                Submit Application
+                Submit
               </button>
             </div>
           </div>
         </div>
       </Modal>
+
     </div>
   )
 }
