@@ -247,6 +247,7 @@ const handlePreview = async (file) => {
                           onPreview={handlePreview}
                           onChange={handleProfileImageChange}
                           beforeUpload={() => false}
+                          accept="image/jpeg, image/png" // Restrict files to JPEG and PNG formats
                         >
                           {fileList.length >= 1 ? null : (
                             <button
