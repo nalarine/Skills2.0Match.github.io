@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 export const questions = [
   {
     category: 'communication',
@@ -95,5 +97,32 @@ export const questions = [
       ' B. Missed a deadline but communicated proactively and worked to resolve it.',
       ' C. Missed a deadline without communication or attempting to resolve the issue.',
     ],
+  },
+]
+
+export const skillAssessmentModules = [
+  {
+    id: faker.string.uuid(),
+    title: 'Technical Skills Assessment',
+    description: '',
+    questions,
+  },
+  {
+    id: faker.string.uuid(),
+    title: 'Soft Skills Assessment',
+    description: '',
+    questions,
+  },
+  {
+    id: faker.string.uuid(),
+    title: 'Behavioral Assessment',
+    description: '',
+    questions,
+  },
+  {
+    id: faker.string.uuid(),
+    title: 'Scenario-Based Questions / Job Readiness',
+    description: '',
+    questions,
   },
 ]
