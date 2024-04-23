@@ -54,6 +54,7 @@ import DashCreateJob from './pages/admin/DashCreateJob'
 import DashJobs from './pages/admin/DashJobs'
 import DashUsers from './pages/admin/DashUsers'
 import DashCompanies from './pages/admin/DashCompanies'
+import AssessmentCategorySelect from './pages/OSY/SkillsAssessment/AssessmentCategorySelect'
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
@@ -68,12 +69,11 @@ function Layout() {
   const { user } = useSelector((state) => state.user)
   const location = useLocation()
 
-
   return user?.token ? (
     <Outlet />
   ) : (
-    <Navigate to='/user-auth' state={{ from: location }} replace />
-  );
+    <Navigate to="/user-auth" state={{ from: location }} replace />
+  )
 }
 
 function App() {
@@ -204,7 +204,11 @@ function App() {
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
             <Route path="my-schedule" element={<Schedule />} />
-            <Route path="skills-assessment" element={<SkillsAssessment />} />
+            <Route path="/skills-assessment" element={<SkillsAssessment />} />
+            <Route
+              path="/skills-assessment/select-category"
+              element={<AssessmentCategorySelect />}
+            />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="settings" element={<Settings />} />
             <Route path="help-center" element={<HelpCenter />} />

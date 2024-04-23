@@ -11,7 +11,7 @@ import Logo from '../assets/header.png';
 import GoogleIcon from '../assets/google-icon.svg';
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
-import { Checkbox, DatePicker } from '@nextui-org/react'; 
+import { Checkbox } from '@nextui-org/react'; 
 import StrongPasswordInput from './StrongPasswordInput';
 import { Spinner } from '@nextui-org/react';
 import '../App.css';
