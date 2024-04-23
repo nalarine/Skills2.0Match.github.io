@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Paper, Box, Grid, Typography } from '@mui/material'
 import { skillAssessmentModules } from './constants'
 import { isEmpty } from 'lodash'
@@ -21,6 +21,12 @@ const Item = (props) => {
         borderRadius: 2,
         fontSize: '1.2rem',
         fontWeight: '700',
+        transition: 'background-color 0.3s',
+        '&:hover': {
+          cursor: 'pointer',
+          color: 'white',
+          bgcolor: 'green',
+        },
         ...sx,
       }}
       {...other}
@@ -29,6 +35,7 @@ const Item = (props) => {
 }
 
 const AssessmentCategorySelect = () => {
+  const [showQuestions, setShowQuestions] = useState(false)
   return (
     <Container maxWidth="md" style={{ marginTop: '20px' }}>
       <Paper
@@ -58,23 +65,6 @@ const AssessmentCategorySelect = () => {
               ))}
           </Grid>
         </Box>
-        {/* <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignContent: 'stretch',
-            p: 1,
-            m: 1,
-            bgcolor: 'background.paper',
-            height: 200,
-            borderRadius: 1,
-          }}
-        >
-          {!isEmpty(skillAssessmentModules) &&
-            skillAssessmentModules?.map((module, index) => (
-              <Item key={module?.id + index}>{module?.title}</Item>
-            ))}
-        </Box> */}
       </Paper>
     </Container>
   )
