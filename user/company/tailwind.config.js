@@ -1,4 +1,4 @@
-const { nextui } = require('@nextui-org/react');
+const { nextui } = require('@nextui-org/react')
 
 const tailwindConfig = {
   content: [
@@ -9,9 +9,9 @@ const tailwindConfig = {
   theme: {
     extend: {
       colors: {
-        'primary': "#1476ff",
-        'secondary': "#f3f5ff",
-        'light': "#f9faff",
+        primary: '#1476ff',
+        secondary: '#f3f5ff',
+        light: '#f9faff',
       },
       backgroundColor: {
         'nav-bg': '#E7E8EA',
@@ -26,7 +26,7 @@ const tailwindConfig = {
   },
   darkMode: 'class',
   plugins: [nextui()],
-};
+  plugins: [require('daisyui')],
+}
 
-module.exports = tailwindConfig;
- 
+module.exports = tailwindConfig

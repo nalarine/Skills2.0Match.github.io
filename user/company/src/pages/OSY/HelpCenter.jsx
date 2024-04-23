@@ -95,99 +95,140 @@ const FAQs = () => {
   ]
 
   return (
-    <section className="bg-green-100 dark:bg-gray-900">
-      <div className="container px-6 py-12 mx-auto">
-        <div className="flex items-center justify-center text-center">
-          {/* Flex container for the image and header */}
-          <img src={question} alt="Question Icon" className=" w-20 h-20" />
-          {/* Image element with margin-right */}
-          <h1 className="text-2xl font-semibold text-center text-gray-800 lg:text-3xl dark:text-white">
-            Have any Questions?
-          </h1>
-        </div>
-
-        <div className="xl:mt-16 lg:flex lg:-mx-12">
-          <div className="lg:mx-12">
-            <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
-              Table of Contents
+    <div>
+      <section className="bg-green-100 dark:bg-gray-900">
+        <div className="container px-6 py-12 mx-auto">
+          <div className="flex items-center justify-center text-center">
+            <img src={question} alt="Question Icon" className="w-20 h-20" />
+            <h1 className="text-2xl font-semibold text-center text-gray-800 lg:text-3xl dark:text-white">
+              Have any Questions?
             </h1>
-            <div className="mt-4 space-y-4 lg:mt-8">
-              {faqData.map((category, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleClickCategory(category.category)}
-                  className={`block hover:underline ${
-                    activeCategory === category.category
-                      ? 'text-green-700 font-bold'
-                      : 'text-slate-500 dark:text-gray-400'
-                  }`}
-                >
-                  {category.category}
-                </button>
-              ))}
+          </div>
+          <div className="xl:mt-16 lg:flex lg:-mx-12">
+            <div className="lg:mx-12">
+              <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
+                Table of Contents
+              </h1>
+              <div className="mt-4 space-y-4 lg:mt-8">
+                {faqData.map((category, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleClickCategory(category.category)}
+                    className={`block hover:underline ${
+                      activeCategory === category.category
+                        ? 'text-green-700 font-bold'
+                        : 'text-slate-500 dark:text-gray-400'
+                    }`}
+                  >
+                    {category.category}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex-1 mt-8 lg:mx-12 lg:mt-0">
+              {faqData.map(
+                (category, catIndex) =>
+                  activeCategory === category.category && (
+                    <div key={catIndex}>
+                      {category.content.map((faq, index) => (
+                        <div key={index}>
+                          <button
+                            onClick={() => toggleFAQ(catIndex + '-' + index)}
+                            className="flex items-center focus:outline-none"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="flex-shrink-0 w-6 h-6 text-green-700"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              {expanded === catIndex + '-' + index ? (
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M20 12H4"
+                                />
+                              ) : (
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M12 4v16m8-8H4"
+                                />
+                              )}
+                            </svg>
+                            <h1 className="mx-4 text-lg text-gray-700 dark:text-white ">
+                              {faq.question}
+                            </h1>
+                          </button>
+                          <div
+                            className={
+                              expanded === catIndex + '-' + index
+                                ? 'flex mt-8 md:mx-10'
+                                : 'hidden'
+                            }
+                          >
+                            <p className="max-w-3xl px-4 text-gray-500 dark:text-gray-300 text-left">
+                              {faq.answer}
+                            </p>
+                          </div>
+                          <hr className="my-8 border-gray-200 dark:border-gray-700" />
+                        </div>
+                      ))}
+                    </div>
+                  ),
+              )}
             </div>
           </div>
-
-          <div className="flex-1 mt-8 lg:mx-12 lg:mt-0">
-            {faqData.map(
-              (category, catIndex) =>
-                activeCategory === category.category && (
-                  <div key={catIndex}>
-                    {category.content.map((faq, index) => (
-                      <div key={index}>
-                        <button
-                          onClick={() => toggleFAQ(catIndex + '-' + index)}
-                          className="flex items-center focus:outline-none"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="flex-shrink-0 w-6 h-6 text-green-700"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            {/* Toggle between plus and minus */}
-                            {expanded === catIndex + '-' + index ? (
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M20 12H4"
-                              />
-                            ) : (
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 4v16m8-8H4"
-                              />
-                            )}
-                          </svg>
-                          <h1 className="mx-4 text-lg text-gray-700 dark:text-white ">
-                            {faq.question}
-                          </h1>
-                        </button>
-                        <div
-                          className={
-                            expanded === catIndex + '-' + index
-                              ? 'flex mt-8 md:mx-10'
-                              : 'hidden'
-                          }
-                        >
-                          <span className="border border-green-700"></span>
-                          <p className="max-w-3xl px-4 text-gray-500 dark:text-gray-300 text-left">
-                            {faq.answer}
-                          </p>
-                        </div>
-                        <hr className="my-8 border-gray-200 dark:border-gray-700" />
-                      </div>
-                    ))}
-                  </div>
-                ),
-            )}
+        </div>
+      </section>
+      {/* Insert Rating Section Here */}
+      <div className="flex justify-center my-8">
+        <div className="border border-green-700 rounded-[15px] w-[90%] p-4 flex">
+          <div className=" mt-16">
+            <h1 className="text-xl font-bold">How was your experience?</h1>
+            <p>Share your feedback. Let us know about your experience!</p>
+          </div>
+          <div className="w-[1px] bg-green-700 mx-4"></div>
+          <div className="flex-1">
+            <div className="rating gap-1 flex justify-center mb-4">
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-red-400"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-orange-400"
+                checked
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-yellow-400"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-lime-400"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-green-400"
+              />
+            </div>
+            <textarea
+              className="textarea textarea-success w-full"
+              placeholder="Add your comment or suggestions here!"
+              rows="4"
+            ></textarea>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
 

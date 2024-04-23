@@ -1,332 +1,235 @@
-import * as React from 'react'
-import { Accordion, AccordionItem } from '@nextui-org/accordion'
+import React, { useState } from 'react'
+import question from '../../assets/question.svg'
 
-import Rating from '@mui/material/Rating'
-import Box from '@mui/material/Box'
-import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
+const FAQs = () => {
+  const [expanded, setExpanded] = useState(null)
+  const [activeCategory, setActiveCategory] = useState(null) // State to track the active category
 
-import { styled } from '@mui/material/styles'
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp'
-import MuiAccordion from '@mui/material/Accordion'
-import MuiAccordionSummary from '@mui/material/AccordionSummary'
-import MuiAccordionDetails from '@mui/material/AccordionDetails'
-import Typography from '@mui/material/Typography'
-
-const labels = {
-  0.5: 'Useless',
-  1: 'Useless+',
-  1.5: 'Poor',
-  2: 'Poor+',
-  2.5: 'Ok',
-  3: 'Ok+',
-  3.5: 'Good',
-  4: 'Good+',
-  4.5: 'Excellent',
-  5: 'Excellent+',
-}
-
-function getLabelText(value) {
-  return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`
-}
-
-export default function JobPortalFAQs() {
-  const [activeIndex, setActiveIndex] = React.useState(null)
-
-  const handleClick = (index) => {
-    setActiveIndex(activeIndex === index ? null : index)
+  const toggleFAQ = (index) => {
+    setExpanded(expanded === index ? null : index)
   }
 
-  const [value, setValue] = React.useState(2)
-  const [hover, setHover] = React.useState(-1)
-  const [comment, setComment] = React.useState('')
-  const [feedbackSubmitted, setFeedbackSubmitted] = React.useState(false)
-
-  const handleRatingChange = (event, newValue) => {
-    setValue(newValue)
-    setFeedbackSubmitted(false) // Reset the feedback submission status
+  const handleClickCategory = (category) => {
+    setActiveCategory(category) // Set the active category when a TOC link is clicked
   }
 
-  const handleCommentChange = (event) => {
-    setComment(event.target.value)
-  }
-
-  const handleSubmitFeedback = () => {
-    alert(`Feedback submitted!\nRating: ${value}\nComment: ${comment}`)
-    setFeedbackSubmitted(true)
-
-    // Reset the input fields
-    setValue(2) // Set it to the initial value or any default value
-    setComment('')
-  }
-
-  const Accordion = styled((props) => (
-    <MuiAccordion disableGutters elevation={0} square {...props} />
-  ))(({ theme }) => ({
-    border: `1px solid ${theme.palette.divider}`,
-    '&:not(:last-child)': {
-      borderBottom: 0,
+  const faqData = [
+    {
+      category: 'General',
+      content: [
+        {
+          question: ' What is the goal of Skills2.0Match?',
+          answer:
+            ' We prioritize data security and comply with all relevant data protection regulations. Your personal and professional information is encrypted and securely stored.',
+        },
+        {
+          question: 'How secure is my data on this portal?',
+          answer:
+            'During your first consultation, we will assess your needs and discuss any concerns you have. This session will help us tailor our services to fit your specific requirements.',
+        },
+        {
+          question: 'Can I access the job portal on my mobile device?',
+          answer:
+            'Yes, our job portal is mobile-friendly. You can access it from any device, allowing you to search and apply for jobs on the go.',
+        },
+        {
+          question: 'Who can I contact if I have problems using the portal?',
+          answer:
+            ' If you encounter any issues or have questions, you can contact our support team via the contact information provided on the site. We offer support through email and phone.',
+        },
+      ],
     },
-    '&::before': {
-      display: 'none',
+    {
+      category: 'For OSY',
+      content: [
+        {
+          question:
+            'What job opportunities are available for OSYs on Skills2.0Match?',
+          answer:
+            'OSYs can explore various entry-level positions tailored to their skill levels and interests.  We partner with companies offering opportunities suitable for OSYs to kickstart their careers.',
+        },
+        {
+          question: 'How does Skills2.0Match work?',
+          answer:
+            'Skills2.0Match utilizes automated algorithms to analyze the skills and qualifications of OSY users and match them with job opportunities listed on our platform. Users can create a profile, input their skills and preferences, and receive personalized job recommendations.',
+        },
+        {
+          question:
+            'What kind of job opportunities can I find on Skills2.0Match?',
+          answer:
+            'Skills2.0Match features a wide range of job opportunities across various industries, and categories.',
+        },
+        {
+          question: 'How can I update my profile on Skills2.0Match?',
+          answer:
+            'You can update your profile information, including your skills, qualifications, and preferences, at any time by logging into your Skills2.0Match account and accessing the profile settings. Make sure to keep your profile up to date to receive the best job matches!',
+        },
+      ],
     },
-  }))
-
-  const AccordionSummary = styled((props) => (
-    <MuiAccordionSummary
-      expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
-      {...props}
-    />
-  ))(({ theme }) => ({
-    backgroundColor:
-      theme.palette.mode === 'dark' ? '#14532d' : 'rgba(0, 0, 0, .03)',
-    flexDirection: 'row-reverse',
-    '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-      transform: 'rotate(90deg)',
+    {
+      category: 'For Companies',
+      content: [
+        {
+          question: 'How can our company post job openings on this portal?',
+          answer:
+            'Companies can register on the portal through a simple sign-up process. Once registered, you can post job openings, describe the roles, set requirements, and manage applications through your dashboard.',
+        },
+        {
+          question: 'What type of candidates can we expect from this portal?',
+          answer:
+            ' Our job portal specifically supports out-of-school youth, which includes a diverse group of candidates with various skills and potential. These individuals may range from having informal job experiences to possessing specific technical skills.',
+        },
+        {
+          question: 'Is there a fee for posting jobs on the portal?',
+          answer:
+            'Currently, posting jobs on our portal is free. We aim to support companies in finding the right talent while providing job opportunities to out-of-school youth.',
+        },
+        {
+          question:
+            'How can we ensure our job listings reach the right candidates?',
+          answer:
+            'We offer tools to help target your job postings effectively. You can use filters and keywords to specify the skills and qualifications required, ensuring that your job listing reaches suitable candidates',
+        },
+      ],
     },
-    '& .MuiAccordionSummary-content': {
-      marginLeft: theme.spacing(1),
-    },
-  }))
-
-  const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-    padding: theme.spacing(2),
-    borderTop: '1px solid rgba(0, 0, 0, .125)',
-  }))
-
-  const [expanded, setExpanded] = React.useState('panel1')
-
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false)
-  }
+  ]
 
   return (
-    <div className="accordion-container m-12">
-      <style>
-        {`
-        .accordion-container1 {
-          display: flex;
-          justify-content: space-between;
-          margin: 15px;
-          border-radius: 50px; 
-        }`}
-      </style>
-
-      <div className="title-container">
-        <p className="font-bold text-xl">Frequently Asked Questions</p>
-        <h2 className="italic text-lg">You May Ask</h2>
-      </div>
-
-      <div class="accordion-container1">
-        <div className="mr-4">
-          <Accordion
-            expanded={expanded === 'panel1'}
-            onChange={handleChange('panel1')}
-          >
-            <AccordionSummary
-              aria-controls="panel1d-content"
-              id="panel1d-header"
-              className=""
-            >
-              <div className="text-left">
-                What opportunities are available for OSYs on our job portal?
+    <div>
+      <section className="bg-green-100 dark:bg-gray-900">
+        <div className="container px-6 py-12 mx-auto">
+          <div className="flex items-center justify-center text-center">
+            <img src={question} alt="Question Icon" className="w-20 h-20" />
+            <h1 className="text-2xl font-semibold text-center text-gray-800 lg:text-3xl dark:text-white">
+              Have any Questions?
+            </h1>
+          </div>
+          <div className="xl:mt-16 lg:flex lg:-mx-12">
+            <div className="lg:mx-12">
+              <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
+                Table of Contents
+              </h1>
+              <div className="mt-4 space-y-4 lg:mt-8">
+                {faqData.map((category, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleClickCategory(category.category)}
+                    className={`block hover:underline ${
+                      activeCategory === category.category
+                        ? 'text-green-700 font-bold'
+                        : 'text-slate-500 dark:text-gray-400'
+                    }`}
+                  >
+                    {category.category}
+                  </button>
+                ))}
               </div>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div>
-                OSYs can explore various entry-level positions, internships, and
-                apprenticeships tailored to their skill levels and interests. We
-                partner with companies offering opportunities suitable for OSYs
-                to kickstart their careers.
-              </div>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            expanded={expanded === 'panel2'}
-            onChange={handleChange('panel2')}
-          >
-            <AccordionSummary
-              aria-controls="panel2d-content"
-              id="panel2d-header"
-            >
-              <div>How does Skills2.0Match work?</div>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div>
-                Skills2.0Match utilizes automated algorithms to analyze the
-                skills and qualifications of OSY users and match them with job
-                opportunities listed on our platform. Users can create a
-                profile, input their skills and preferences, and receive
-                personalized job recommendations.
-              </div>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            expanded={expanded === 'panel3'}
-            onChange={handleChange('panel3')}
-          >
-            <AccordionSummary
-              aria-controls="panel3d-content"
-              id="panel3d-header"
-            >
-              <div className="text-left">
-                What kind of job opportunities can I find on Skills2.0Match?
-              </div>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div>
-                Skills2.0Match features a wide range of job opportunities across
-                various industries, and categories.
-              </div>
-            </AccordionDetails>
-          </Accordion>
+            </div>
+            <div className="flex-1 mt-8 lg:mx-12 lg:mt-0">
+              {faqData.map(
+                (category, catIndex) =>
+                  activeCategory === category.category && (
+                    <div key={catIndex}>
+                      {category.content.map((faq, index) => (
+                        <div key={index}>
+                          <button
+                            onClick={() => toggleFAQ(catIndex + '-' + index)}
+                            className="flex items-center focus:outline-none"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="flex-shrink-0 w-6 h-6 text-green-700"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              {expanded === catIndex + '-' + index ? (
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M20 12H4"
+                                />
+                              ) : (
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M12 4v16m8-8H4"
+                                />
+                              )}
+                            </svg>
+                            <h1 className="mx-4 text-lg text-gray-700 dark:text-white ">
+                              {faq.question}
+                            </h1>
+                          </button>
+                          <div
+                            className={
+                              expanded === catIndex + '-' + index
+                                ? 'flex mt-8 md:mx-10'
+                                : 'hidden'
+                            }
+                          >
+                            <p className="max-w-3xl px-4 text-gray-500 dark:text-gray-300 text-left">
+                              {faq.answer}
+                            </p>
+                          </div>
+                          <hr className="my-8 border-gray-200 dark:border-gray-700" />
+                        </div>
+                      ))}
+                    </div>
+                  ),
+              )}
+            </div>
+          </div>
         </div>
-        <div>
-          <Accordion
-            expanded={expanded === 'panel4'}
-            onChange={handleChange('panel4')}
-          >
-            <AccordionSummary
-              aria-controls="panel4d-content"
-              id="panel4d-header"
-            >
-              <div className="text-left">
-                Can employers post job opportunities on Skills2.0Match?
-              </div>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div>
-                Yes, employers can post job opportunities on Skills2.0Match to
-                reach a diverse pool of talented OSY users. If you're an
-                employer interested in posting a job listing, please contact us
-                for more information on our employer services.
-              </div>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            expanded={expanded === 'panel5'}
-            onChange={handleChange('panel5')}
-          >
-            <AccordionSummary
-              aria-controls="panel5d-content"
-              id="panel5d-header"
-            >
-              <div>How can I update my profile on Skills2.0Match?</div>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div>
-                You can update your profile information, including your skills,
-                qualifications, and preferences, at any time by logging into
-                your Skills2.0Match account and accessing the profile settings.
-                Make sure to keep your profile up to date to receive the best
-                job matches!
-              </div>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            expanded={expanded === 'panel6'}
-            onChange={handleChange('panel6')}
-          >
-            <AccordionSummary
-              aria-controls="panel6d-content"
-              id="panel6d-header"
-            >
-              <Typography>
-                How can I contact Skills2.0Match for support?
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                If you have any questions or need assistance, you can contact
-                our support team by emailing support@skills2match.com or filling
-                out the contact form on our website. We're here to help!
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-        </div>
-      </div>
-
-      {/* Rating Start ----------------------------------------------------------- */}
-
-      <Box
-        sx={{
-          border: '2px solid green',
-          borderRadius: '30px',
-          padding: '20px',
-          display: 'flex',
-          justifyContent: 'center', // Center the content horizontally
-          width: '99%',
-        }}
-      >
-        <div
-          style={{
-            width: '50%',
-            marginRight: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <h1 style={{ textAlign: 'center' }}>How was your experience?</h1>
-          <p style={{ textAlign: 'center' }}>
-            Share your feedback. Let us know about your experience!
-          </p>
-        </div>
-        <div style={{ width: '50%' }}>
-          <Box
-            sx={{
-              borderLeft: '1px solid green',
-              paddingLeft: '20px',
-            }}
-          >
-            <Rating
-              name="hover-feedback"
-              value={value}
-              precision={0.5}
-              getLabelText={getLabelText}
-              onChange={handleRatingChange}
-              onChangeActive={(event, newHover) => {
-                setHover(newHover)
-              }}
-              emptyIcon={
-                <StarOutlineRoundedIcon
-                  style={{ opacity: 0.55 }}
-                  fontSize="inherit"
-                />
-              }
-              size="large" // Increase the size
-            />
-            {value !== null && (
-              <Box sx={{ mt: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
-            )}
+      </section>
+      {/* Insert Rating Section Here */}
+      <div className="flex justify-center my-8">
+        <div className="border border-green-700 rounded-[15px] w-[90%] p-4 flex">
+          <div className=" mt-16">
+            <h1 className="text-xl font-bold">How was your experience?</h1>
+            <p>Share your feedback. Let us know about your experience!</p>
+          </div>
+          <div className="w-[1px] bg-green-700 mx-4"></div>
+          <div className="flex-1">
+            <div className="rating gap-1 flex justify-center mb-4">
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-red-400"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-orange-400"
+                checked
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-yellow-400"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-lime-400"
+              />
+              <input
+                type="radio"
+                name="rating-3"
+                className="mask mask-heart bg-green-400"
+              />
+            </div>
             <textarea
-              placeholder="Add your comment here..."
-              value={comment}
-              onChange={handleCommentChange}
-              rows={4}
-              style={{ marginTop: '10px', width: '100%' }}
-            />
-            <button
-              onClick={handleSubmitFeedback}
-              style={{
-                marginTop: '10px',
-                padding: '8px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              Submit Feedback
-            </button>
-            {feedbackSubmitted && (
-              <div style={{ marginTop: '10px', color: 'green' }}>
-                Feedback submitted successfully!
-              </div>
-            )}
-          </Box>
+              className="textarea textarea-success w-full"
+              placeholder="Add your comment or suggestions here!"
+              rows="4"
+            ></textarea>
+          </div>
         </div>
-      </Box>
+      </div>
     </div>
   )
 }
+
+export default FAQs

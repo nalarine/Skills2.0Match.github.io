@@ -6,6 +6,8 @@ import { HiLocationMarker } from 'react-icons/hi'
 import { AiOutlineMail } from 'react-icons/ai'
 import { FiPhoneCall, FiEdit, FiUpload } from 'react-icons/fi'
 import { Link, useParams } from 'react-router-dom'
+import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
+import { Modal, Upload } from 'antd'
 import { companies, jobs } from '../utils/data'
 import { CustomButton, JobCard, Loading, TextInput } from '../components'
 import { handleFileUpload } from '../utils'
@@ -25,11 +27,17 @@ const CompnayForm = ({ open, setOpen }) => {
     defaultValues: { ...user },
   })
 
+  const [fileList, setFileList] = useState([])
+  const [previewImage, setPreviewImage] = useState('')
   const dispatch = useDispatch()
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewTitle, setPreviewTitle] = useState('')
   const [profileImage, setProfileImage] = useState('')
   const [uploadCv, setUploadCv] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [errMsg, setErrMsg] = useState({ status: false, message: '' })
+
+  const handleCancel = () => setPreviewOpen(false)
 
   const onSubmit = async (data) => {
     setIsLoading(true)
@@ -65,6 +73,41 @@ const CompnayForm = ({ open, setOpen }) => {
   }
 
   const closeModal = () => setOpen(false)
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
+    )
+  }
+
+  const handleProfileImageChange = async (info) => {
+    const { file, fileList } = info
+    setFileList(fileList)
+
+    // if (file.status === 'done' && file.originFileObj) {
+    //   const imageFile = file.originFileObj;
+    //   const imageUrl = URL.createObjectURL(imageFile);
+    //   console.log('Image URL:', imageUrl);
+
+    //   setProfileImage(imageFile);
+    //   handlePreview(imageFile);
+    // }
+
+    setProfileImage(file)
+  }
 
   return (
     <>
@@ -140,14 +183,38 @@ const CompnayForm = ({ open, setOpen }) => {
                         />
                       </div>
 
-                      <div className="w-1/2 mt-2">
+                      <div className="w-1/2">
                         <label className="text-gray-600 text-sm mb-1">
-                          Company Logo
+                          Profile Picture
                         </label>
-                        <input
-                          type="file"
-                          onChange={(e) => setProfileImage(e.target.files[0])}
-                        />
+                        <Upload
+                          action=""
+                          listType="picture-card"
+                          fileList={fileList}
+                          onPreview={handlePreview}
+                          onChange={handleProfileImageChange}
+                          beforeUpload={() => false}
+                          accept="image/jpeg, image/png" // Restrict files to JPEG and PNG formats
+                        >
+                          {fileList.length >= 1 ? null : (
+                            <button
+                              style={{
+                                border: 0,
+                                background: 'none',
+                              }}
+                              type="button"
+                            >
+                              <PlusOutlined />
+                              <div
+                                style={{
+                                  marginTop: 8,
+                                }}
+                              >
+                                Upload
+                              </div>
+                            </button>
+                          )}
+                        </Upload>
                       </div>
                     </div>
 
@@ -192,6 +259,21 @@ const CompnayForm = ({ open, setOpen }) => {
           </div>
         </Dialog>
       </Transition>
+      {/* Preview Modal */}
+      <Modal
+        visible={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <img
+          alt="example"
+          style={{
+            width: '100%',
+          }}
+          src={previewImage}
+        />
+      </Modal>
     </>
   )
 }
