@@ -18,7 +18,7 @@ function MenuList({ user, onClick }) {
     dispatch(Logout())
   }
 
-  const userType = user?.accountType === 'seeker' ? 'Applicant' : 'Company'; // Determine user type
+  const userType = user?.accountType === 'seeker' ? 'Applicant' : 'Company' // Determine user type
 
   return (
     <Menu as="div" className="inline-block text-left">
@@ -28,7 +28,8 @@ function MenuList({ user, onClick }) {
             <p className="text-sm font-semibold">
               {user?.firstName ?? user?.name}
             </p>
-            <span className="text-sm text-blue-600">{userType}</span> {/* Render user type */}
+            <span className="text-sm text-blue-600">{userType}</span>{' '}
+            {/* Render user type */}
           </div>
           <img
             src={user.profileUrl}
@@ -122,7 +123,9 @@ const Navbar = () => {
         <div className="flex items-center">
           <img src={logohead} alt="Logo" className="w-15 h-12 mr-2" />
         </div>
-        <div className="flex items-center space-x-9">
+        <div className="flex items-center space-x-9 hidden lg:block">
+          {' '}
+          {/* Hide this block on mobile */}
           <Link to="/user-auth" className="hover:hover:text-green-500">
             Home
           </Link>
@@ -135,30 +138,24 @@ const Navbar = () => {
           <Link to="/ContactPage" className="hover:hover:text-green-500">
             Contact
           </Link>
-          <div className="hidden lg:block">
-            {!user?.token ? (
+          {!user?.token ? (
+            <>
               <button onClick={handleSignInRegister}>
                 <CustomButton
                   title="Sign-in"
                   containerStyles="border border-green-500 text-green-500 px-4 py-2 rounded-full hover:bg-green-500 hover:text-white"
                 />
               </button>
-            ) : (
-              <div>
-                <MenuList user={user} />
-              </div>
-            )}
-          </div>
-          <div className="hidden lg:block">
-            {!user?.token ? (
               <button onClick={handleSignInRegister}>
                 <CustomButton
                   title="Register"
                   containerStyles="border border-green-500 px-4 py-2 rounded-full bg-green-500 text-white"
                 />
               </button>
-            ) : null}
-          </div>
+            </>
+          ) : (
+            <MenuList user={user} />
+          )}
         </div>
         <button
           className="block lg:hidden text-slate-900"
@@ -169,22 +166,20 @@ const Navbar = () => {
       </div>
       {/* MOBILE MENU */}
       <div
-        className={`fixed top-0 left-0 right-0 bg-[#f7fdfd] lg:hidden flex flex-col pl-8 gap-3 py-5 ${isOpen ? 'visible' : 'hidden'}`}
+        className={`fixed top-0 left-0 right-0 bg-[#f7fdfd] lg:hidden flex flex-col pl-8 gap-3 py-5 z-50 mr-12 ${isOpen ? 'visible' : 'hidden'}`}
       >
-        <Link to="/" onClick={handleCloseNavbar}>
-          Find Job
+        <AiOutlineClose onClick={handleCloseNavbar} />
+        <Link to="/user-auth" className="hover:hover:text-green-500">
+          Home
         </Link>
-        <Link to="/companies" onClick={handleCloseNavbar}>
+        <Link to="/companies" className="hover:hover:text-green-500">
           Companies
         </Link>
-        <Link
-          onClick={handleCloseNavbar}
-          to={user?.accountType === 'seeker' ? 'applly-gistory' : 'upload-job'}
-        >
-          {user?.accountType === 'seeker' ? 'Applications' : 'Upload Job'}
-        </Link>
-        <Link to="/about-us" onClick={handleCloseNavbar}>
+        <Link to="/AboutPage" className="hover:hover:text-green-500">
           About
+        </Link>
+        <Link to="/ContactPage" className="hover:hover:text-green-500">
+          Contact
         </Link>
         <div className="w-full py-10">
           {!user?.token ? (
@@ -195,9 +190,7 @@ const Navbar = () => {
               />
             </button>
           ) : (
-            <div>
-              <MenuList user={user} onClick={handleCloseNavbar} />
-            </div>
+            <MenuList user={user} onClick={handleCloseNavbar} />
           )}
         </div>
       </div>
