@@ -9,7 +9,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material'
-import { questions } from './constants'
+import { technicalSkillsQuestionnaires } from './constants'
 
 const Questions = ({ handleSubmit, onSubmit }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0)

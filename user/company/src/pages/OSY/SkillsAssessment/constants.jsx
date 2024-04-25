@@ -1,104 +1,104 @@
 import { faker } from '@faker-js/faker'
 
-export const questions = [
-  {
-    category: 'communication',
-    question:
-      'How would you handle a situation where there is a miscommunication with a team member?',
-    choices: [
-      ' A. Schedule a meeting to discuss and clarify the communication.',
-      ' B. Send a detailed email to all involved parties explaining the situation.',
-      ' C. Pick up the phone and directly communicate to resolve the issue.',
-    ],
-  },
-  {
-    category: 'communication',
-    question:
-      'In a professional setting, how do you tailor your communication style when interacting with different stakeholders (e.g., team members, managers, clients)?',
-    choices: [
-      ' A. Use the same communication style with everyone.',
-      ' B. Adapt communication style based on the audience to ensure understanding.',
-      ' C. Only communicate through written channels.',
-    ],
-  },
-  {
-    category: 'problem-solving',
-    question:
-      'Describe a challenging problem you faced at a previous job and how you approached solving it.',
-    choices: [
-      ' A. Ignored the problem, hoping it would resolve itself.',
-      ' B. Collaborated with colleagues to brainstorm and implement a solution',
-      ' C. Took immediate action without consulting others.',
-    ],
-  },
-  {
-    category: 'problem-solving',
-    question: 'How do you prioritize tasks when faced with multiple deadlines?',
-    choices: [
-      ' A. Tackle tasks randomly as they come in.',
-      ' B. Prioritize based on urgency and importance.',
-      ' C. Focus only on tasks that are personally interesting.',
-    ],
-  },
-  {
-    category: 'technical-proficiency',
-    question: 'What programming languages or tools are you proficient in?',
-    choices: [
-      ' A. None.',
-      ' B. Proficient in one or two specific languages/tools.',
-      ' C. Proficient in multiple languages/tools with examples of projects.',
-    ],
-  },
-  {
-    category: 'technical-proficiency',
-    question:
-      'How do you stay updated on industry trends and new technologies relevant to your field?',
-    choices: [
-      " A. I don't follow industry trends.",
-      ' B. Occasionally read articles or blogs.',
-      ' C. Regularly attend conferences, webinars, and actively engage in the community.',
-    ],
-  },
-  {
-    category: 'teamwork',
-    question:
-      "Describe a successful team project you were part of. What was your role, and how did you contribute to the team's success?",
-    choices: [
-      ' A. Never worked in a team project.',
-      " B. Had a minor role and didn't contribute significantly.",
-      " C. Played a key role, collaborating and contributing to the team's success.",
-    ],
-  },
-  {
-    category: 'teamwork',
-    question: 'How do you handle conflicts within a team?',
-    choices: [
-      ' A. Avoid conflicts and hope they resolve on their own.',
-      ' B. Confront conflicts directly and seek resolution.',
-      ' C. Escalate conflicts to higher management immediately.',
-    ],
-  },
-  {
-    category: 'timeManagement',
-    question:
-      'How do you organize your tasks and manage your time to meet deadlines?',
-    choices: [
-      ' A. Work on tasks as they come in without a plan.',
-      ' B. Use a to-do list or project management tool to prioritize tasks.',
-      ' C. Rely solely on memory to keep track of tasks.',
-    ],
-  },
-  {
-    category: 'timeManagement',
-    question:
-      'Have you ever missed a deadline, and if so, how did you handle the situation.',
-    choices: [
-      ' A. Never missed a deadline.',
-      ' B. Missed a deadline but communicated proactively and worked to resolve it.',
-      ' C. Missed a deadline without communication or attempting to resolve the issue.',
-    ],
-  },
-]
+// export const questions = [
+//   {
+//     category: 'communication',
+//     question:
+//       'How would you handle a situation where there is a miscommunication with a team member?',
+//     choices: [
+//       ' A. Schedule a meeting to discuss and clarify the communication.',
+//       ' B. Send a detailed email to all involved parties explaining the situation.',
+//       ' C. Pick up the phone and directly communicate to resolve the issue.',
+//     ],
+//   },
+//   {
+//     category: 'communication',
+//     question:
+//       'In a professional setting, how do you tailor your communication style when interacting with different stakeholders (e.g., team members, managers, clients)?',
+//     choices: [
+//       ' A. Use the same communication style with everyone.',
+//       ' B. Adapt communication style based on the audience to ensure understanding.',
+//       ' C. Only communicate through written channels.',
+//     ],
+//   },
+//   {
+//     category: 'problem-solving',
+//     question:
+//       'Describe a challenging problem you faced at a previous job and how you approached solving it.',
+//     choices: [
+//       ' A. Ignored the problem, hoping it would resolve itself.',
+//       ' B. Collaborated with colleagues to brainstorm and implement a solution',
+//       ' C. Took immediate action without consulting others.',
+//     ],
+//   },
+//   {
+//     category: 'problem-solving',
+//     question: 'How do you prioritize tasks when faced with multiple deadlines?',
+//     choices: [
+//       ' A. Tackle tasks randomly as they come in.',
+//       ' B. Prioritize based on urgency and importance.',
+//       ' C. Focus only on tasks that are personally interesting.',
+//     ],
+//   },
+//   {
+//     category: 'technical-proficiency',
+//     question: 'What programming languages or tools are you proficient in?',
+//     choices: [
+//       ' A. None.',
+//       ' B. Proficient in one or two specific languages/tools.',
+//       ' C. Proficient in multiple languages/tools with examples of projects.',
+//     ],
+//   },
+//   {
+//     category: 'technical-proficiency',
+//     question:
+//       'How do you stay updated on industry trends and new technologies relevant to your field?',
+//     choices: [
+//       " A. I don't follow industry trends.",
+//       ' B. Occasionally read articles or blogs.',
+//       ' C. Regularly attend conferences, webinars, and actively engage in the community.',
+//     ],
+//   },
+//   {
+//     category: 'teamwork',
+//     question:
+//       "Describe a successful team project you were part of. What was your role, and how did you contribute to the team's success?",
+//     choices: [
+//       ' A. Never worked in a team project.',
+//       " B. Had a minor role and didn't contribute significantly.",
+//       " C. Played a key role, collaborating and contributing to the team's success.",
+//     ],
+//   },
+//   {
+//     category: 'teamwork',
+//     question: 'How do you handle conflicts within a team?',
+//     choices: [
+//       ' A. Avoid conflicts and hope they resolve on their own.',
+//       ' B. Confront conflicts directly and seek resolution.',
+//       ' C. Escalate conflicts to higher management immediately.',
+//     ],
+//   },
+//   {
+//     category: 'timeManagement',
+//     question:
+//       'How do you organize your tasks and manage your time to meet deadlines?',
+//     choices: [
+//       ' A. Work on tasks as they come in without a plan.',
+//       ' B. Use a to-do list or project management tool to prioritize tasks.',
+//       ' C. Rely solely on memory to keep track of tasks.',
+//     ],
+//   },
+//   {
+//     category: 'timeManagement',
+//     question:
+//       'Have you ever missed a deadline, and if so, how did you handle the situation.',
+//     choices: [
+//       ' A. Never missed a deadline.',
+//       ' B. Missed a deadline but communicated proactively and worked to resolve it.',
+//       ' C. Missed a deadline without communication or attempting to resolve the issue.',
+//     ],
+//   },
+// ]
 
 //Start
 export const technicalSkillsQuestionnaires = [
@@ -491,13 +491,13 @@ export const technicalSkillsQuestionnaires = [
     category: 'Literacy:',
     image: ' ',
     question: 'Have you ______ the painting yet? ',
-    choices: [' A. hanged ', ' B. hang ', ' C. hanging', ' D. hung  '],
+    choices: [' A. hanged ', ' B. hang ', ' C. hanging', ' D. hung '],
   },
   {
     category: 'Literacy:',
     image: ' ',
     question: 'Kay ______ typing at school.',
-    choices: [' study ', ' B. studies ', ' C. studying  ', ' D. be studying  '],
+    choices: [' study ', ' B. studies ', ' C. studying ', ' D. be studying '],
   },
   {
     category: 'Literacy:',
@@ -515,12 +515,6 @@ export const technicalSkillsQuestionnaires = [
     category: 'Literacy',
     image: ' ',
     question: 'Hysterical means:',
-    choices: [' A. 2819 ', ' B. 3024 ', ' C. 3059 ', ' D. 2804 '],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question: '280 ÷ 8 = ',
     choices: [
       ' A. out of control ',
       ' B. in trouble ',
@@ -532,13 +526,6 @@ export const technicalSkillsQuestionnaires = [
     category: 'Literacy',
     image: ' ',
     question: 'To ignite is to:',
-    choices: [' A. 64 ', ' B. 74 ', ' C. 2 ', ' D. 68 '],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question:
-      'An electronics store had 182 customers on Thursday, 443 on Friday, and 509 on Saturday. How many customers did the store have in those three days? ',
     choices: [
       ' A. pay no attention ',
       ' B. make fun of',
@@ -549,7 +536,7 @@ export const technicalSkillsQuestionnaires = [
   {
     category: 'Literacy',
     image: ' ',
-    question: ' An inaccuracy is a: ',
+    question: 'An inaccuracy is a: ',
     choices: [
       ' A. mistake',
       ' B. type of medicine ',
@@ -626,150 +613,12 @@ export const technicalSkillsQuestionnaires = [
     category: 'Literacy',
     image: ' ',
     question:
-      'We waited downstairs for ten  minutes. At last, the ______ arrived, and we rode it up to the tenth floor. ',
-    choices: [' A. bus', ' B. package', ' C. elevator', ' D. neighbors'],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question:
-      'Although we would like a bigger and better apartment someday, this one is _______, and we’re satisfied.',
-    choices: [' A. terrific', ' B. passable', ' C. dreadful', ' D. gigantic'],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question:
-      ' We heard strange music coming from the empty house. We also saw blue lights there. It was quite ',
-    choices: [' A. unwise', ' B. expensive', ' C. familiar', ' D. mysterious'],
-  },
-  {
-    category: 'Literacy',
-    image: 'https://ibb.co/Wf3ZbRK ',
-    question: 'The stores in the directory are listed by ______.',
+      'For questions 15, choose the sentence that is most correctly written.',
     choices: [
-      ' A. alphabetical order',
-      ' B. size',
-      ' C. location',
-      ' D. store type',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: 'https://ibb.co/Wf3ZbRK ',
-    question: 'Where is the main drinking fountain located?',
-    choices: [
-      ' A. inside the restroom',
-      ' B. outside the children’s clothing store',
-      ' C. next to the movie theater',
-      ' D. above the public phone',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: 'https://ibb.co/Wf3ZbRK ',
-    question: 'Which two stores might you go to first to buy a birthday card?',
-    choices: [' A. A and C', ' B. H and K', ' C. B and D', ' D. F and M'],
-  },
-  {
-    category: 'Literacy',
-    image: 'https://ibb.co/Wf3ZbRK ',
-    question: 'At this mall, you could probably not buy ______.',
-    choices: [
-      ' A. a hamburger',
-      ' B. shampoo',
-      ' C. a man’s suit',
-      ' D. a bouquet of roses',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: ' https://ibb.co/J2tv8MN',
-    question: 'When using a roller to paint walls, you should:',
-    choices: [
-      ' A. Paint around windows and doors last.',
-      ' B. Paint in strips 3 feet wide.',
-      ' C. Roll up and down in a zigzag pattern.',
-      ' D. Use two coats of paint.',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: 'https://ibb.co/J2tv8MN ',
-    question: 'The directions suggest painting the ceiling first because:',
-    choices: [
-      ' A. Drips will matter less.',
-      ' B. The lap marks are more obvious.',
-      ' C. It is most difficult.',
-      ' D. A roller or a brush can be used.',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: 'https://ibb.co/J2tv8MN ',
-    question:
-      'When painting with a roller, work from a dry area to a wet area because:',
-    choices: [
-      ' A. It uses less paint.',
-      ' B. It cuts down on unnecessary movement.',
-      ' C. It helps to avoid lap marks.',
-      ' D. It makes the roller last longer.',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question: 'Where is the Batteau House located?',
-    choices: [
-      ' A. Middleton',
-      ' B. Dows Lake',
-      ' C. Sheldon Park',
-      ' D. Makepeace',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question: 'What does Harvey House feature?',
-    choices: [
-      ' A. a solar system to heat hot water',
-      ' B. an underground heat storage battery',
-      ' C. 12 solar energy collectors per unit',
-      ' D. original solar ceiling windows',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question: 'The main purpose for the tour is probably to _______.',
-    choices: [
-      ' A. popularize solar energy',
-      ' B. help owners of solar homes sell their property',
-      ' C. have an outing on a sunny day',
-      ' D. raise money to build a solar home',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question: 'Which of the following is the best title for this article?',
-    choices: [
-      ' A. Dr. Batteau Wins Solar Design Awards',
-      ' B. Day-Long Tour to Begin at 8:00 a.m.',
-      ' C. Tour to Feature Area Solar Homes',
-      ' D. Middleton Gets 100 Solar-Powered Apartments',
-    ],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question:
-      'Which of the following statements from the article is an opinion?',
-    choices: [
-      ' A. Twelve solar energy collectors per unit provide most of the hot water and space heating.',
-      ' B. Reservations can be made by calling 555-9809',
-      ' C. The group will also stop at the Batteau House in Sheldon Park and the Dows Lake Middle School. ',
-      ' D.  Kenwood has long been a leader in creative housing.',
+      ' A. No longer working here, the telephone number of James is 412-555-0924.',
+      ' B. The number 412-555-0924 is James no longer working here’s telephone.',
+      ' C. James is no longer working here, the telephone number is 412-555-0924.',
+      ' D. No longer working here’s James telephone number is 412-555-0924.',
     ],
   },
 ]
@@ -785,7 +634,7 @@ export const skillAssessmentModules = [
       'Writing Proficiency (grammar, spelling, punctuation)',
       'Digital Literacy',
     ],
-    questions,
+    technicalSkillsQuestionnaires,
   },
   {
     id: faker.string.uuid(),
@@ -797,7 +646,7 @@ export const skillAssessmentModules = [
       'Adaptability Test',
       'Time Management',
     ],
-    questions,
+    technicalSkillsQuestionnaires,
   },
   {
     id: faker.string.uuid(),
@@ -808,12 +657,12 @@ export const skillAssessmentModules = [
       'Attitude',
       'Leadership Potential',
     ],
-    questions,
+    technicalSkillsQuestionnaires,
   },
   {
     id: faker.string.uuid(),
     title: 'Scenario-Based Questions',
     description: ['Situational', 'Decision-making ability', 'Job Readiness'],
-    questions,
+    technicalSkillsQuestionnaires,
   },
 ]

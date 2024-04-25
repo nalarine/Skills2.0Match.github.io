@@ -1,12 +1,20 @@
-import React, { useState } from 'react'
-import { Container, Paper, Box, Grid, Typography } from '@mui/material'
+import React from 'react'
+import {
+  Container,
+  Paper,
+  Box,
+  Grid,
+  Typography,
+  Button,
+  CircularProgress,
+} from '@mui/material'
 import { skillAssessmentModules } from './constants'
 import { isEmpty } from 'lodash'
 
-const Item = (props) => {
-  const { sx, ...other } = props
+const Item = ({ title, description, sx, onClick, ...other }) => {
   return (
     <Box
+      onClick={onClick}
       sx={{
         p: 3,
         m: 1,
@@ -30,12 +38,34 @@ const Item = (props) => {
         ...sx,
       }}
       {...other}
-    />
+    >
+      <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold' }}>
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        component="ul"
+        style={{ pointerEvents: 'none', fontSize: '0.9rem' }}
+      >
+        {description.map((desc, index) => (
+          <li key={index}>{desc}</li>
+        ))}
+      </Typography>
+    </Box>
   )
 }
 
 const AssessmentCategorySelect = () => {
-  const [showQuestions, setShowQuestions] = useState(false)
+  // const history = useHistory() // Use useHistory hook from react-router-dom
+
+  const handleCategoryClick = (category) => {
+    if (category === 'Technical Skills') {
+      history.push('/technicalSkillsQuestionnaires') // Redirect to technicalSkillsQuestionnaires
+    } else {
+      // Handle other categories as needed
+    }
+  }
+
   return (
     <Container maxWidth="md" style={{ marginTop: '20px' }}>
       <Paper
@@ -59,8 +89,16 @@ const AssessmentCategorySelect = () => {
           <Grid container>
             {!isEmpty(skillAssessmentModules) &&
               skillAssessmentModules?.map((module, index) => (
-                <Grid item xs={6}>
-                  <Item key={module?.id + index}>{module?.title}</Item>
+                <Grid item xs={6} key={module?.id + index}>
+                  <Button
+                    fullWidth
+                    onClick={() => handleCategoryClick(module.title)}
+                  >
+                    <Item
+                      title={module?.title}
+                      description={module.description}
+                    />
+                  </Button>
                 </Grid>
               ))}
           </Grid>

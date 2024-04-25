@@ -199,16 +199,16 @@ function App() {
                 )
               }
             />
-
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
             <Route path="my-schedule" element={<Schedule />} />
             <Route path="/skills-assessment" element={<SkillsAssessment />} />
             <Route
-              path="/skills-assessment/select-category"
+              path="skills-assessment/select-category"
               element={<AssessmentCategorySelect />}
-            />
+            />{' '}
+            {/* Route for selecting assessment category */}
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="settings" element={<Settings />} />
             <Route path="help-center" element={<HelpCenter />} />
