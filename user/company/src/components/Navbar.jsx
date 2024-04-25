@@ -1,16 +1,16 @@
-import React, { useEffect, Fragment, useState } from 'react'
-import { Menu, Transition } from '@headlessui/react'
+import React, { useState, Fragment, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { Menu } from '@headlessui/react'
 import { BiChevronDown } from 'react-icons/bi'
 import { CgProfile } from 'react-icons/cg'
 import { HiMenuAlt3 } from 'react-icons/hi'
 import { AiOutlineClose, AiOutlineLogout } from 'react-icons/ai'
-import { Link } from 'react-router-dom'
 import CustomButton from './CustomButton'
-import { useSelector, useDispatch } from 'react-redux'
 import { Logout } from '../redux/userSlice'
-import { RiAdminLine } from 'react-icons/ri'
-import logohead from '../assets/header.png' // Adjust the path to your logo image
+import logohead from '../assets/header.png'
 import SignUp from './SignUp'
+import { Transition } from '@headlessui/react'
 
 function MenuList({ user, onClick }) {
   const dispatch = useDispatch()
@@ -18,7 +18,7 @@ function MenuList({ user, onClick }) {
     dispatch(Logout())
   }
 
-  const userType = user?.accountType === 'seeker' ? 'Applicant' : 'Company' // Determine user type
+  const userType = user?.accountType === 'seeker' ? 'Applicant' : 'Company'
 
   return (
     <Menu as="div" className="inline-block text-left">
@@ -89,23 +89,22 @@ function MenuList({ user, onClick }) {
   )
 }
 
-const Navbar = () => {
+function Navbar() {
   const { user } = useSelector((state) => state.user)
   const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
-  const handleSignInRegister = () => {
-    setOpen(true)
-  }
-
-  const handleCloseNavbar = () => {
-    setIsOpen((prev) => !prev)
-  }
+  const toggleNavbar = () => setIsOpen((prev) => !prev)
+  const handleSignInRegister = () => setOpen(true)
 
   const handleScroll = () => {
     const offset = window.scrollY
     setScrolled(offset > 0)
+  }
+
+  const handleCloseNavbar = () => {
+    setIsOpen((prev) => !prev)
   }
 
   useEffect(() => {
@@ -123,77 +122,87 @@ const Navbar = () => {
         <div className="flex items-center">
           <img src={logohead} alt="Logo" className="w-15 h-12 mr-2" />
         </div>
-        <div className="flex items-center space-x-9 hidden lg:block">
-          {' '}
-          {/* Hide this block on mobile */}
-          <Link to="/user-auth" className="hover:hover:text-green-500">
+        <div className="hidden lg:flex items-center space-x-9">
+          <Link to="/home" className="hover:text-green-500">
             Home
           </Link>
-          <Link to="/companies" className="hover:hover:text-green-500">
-            Companies
+          <Link
+            // onClick={handleCloseNavbar}
+            to={
+              user?.accountType === 'seeker' ? 'applly-gistory' : 'upload-job'
+            }
+          >
+            {user?.accountType === 'seeker' ? 'Applications' : 'Upload Job'}
           </Link>
-          <Link to="/AboutPage" className="hover:hover:text-green-500">
+          <Link to="/about" className="hover:text-green-500">
             About
           </Link>
-          <Link to="/ContactPage" className="hover:hover:text-green-500">
+          <Link to="/contact" className="hover:text-green-500">
             Contact
           </Link>
           {!user?.token ? (
             <>
-              <button onClick={handleSignInRegister}>
-                <CustomButton
-                  title="Sign-in"
-                  containerStyles="border border-green-500 text-green-500 px-4 py-2 rounded-full hover:bg-green-500 hover:text-white"
-                />
-              </button>
-              <button onClick={handleSignInRegister}>
-                <CustomButton
-                  title="Register"
-                  containerStyles="border border-green-500 px-4 py-2 rounded-full bg-green-500 text-white"
-                />
-              </button>
+              <CustomButton
+                title="Sign-in"
+                onClick={handleSignInRegister}
+                containerStyles="border border-green-500 text-green-500 px-4 py-2 rounded-full hover:bg-green-500 hover:text-white"
+              />
+              <CustomButton
+                title="Register"
+                onClick={handleSignInRegister}
+                containerStyles="border border-green-500 px-4 py-2 rounded-full bg-green-500 text-white"
+              />
             </>
           ) : (
             <MenuList user={user} />
           )}
         </div>
-        <button
-          className="block lg:hidden text-slate-900"
-          onClick={handleCloseNavbar}
-        >
+        <button className="lg:hidden text-slate-900" onClick={toggleNavbar}>
           {isOpen ? <AiOutlineClose size={26} /> : <HiMenuAlt3 size={26} />}
         </button>
       </div>
-      {/* MOBILE MENU */}
+
+      {/* Mobile Menu */}
       <div
-        className={`fixed top-0 left-0 right-0 bg-[#f7fdfd] lg:hidden flex flex-col pl-8 gap-3 py-5 z-50 mr-12 ${isOpen ? 'visible' : 'hidden'}`}
+        className={`fixed top-0 right-0 h-full w-[300px] bg-nav-bg lg:hidden flex flex-col items-center p-5 gap-3 z-50 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out`}
       >
-        <AiOutlineClose onClick={handleCloseNavbar} />
-        <Link to="/user-auth" className="hover:hover:text-green-500">
+        <AiOutlineClose
+          onClick={handleCloseNavbar}
+          className="self-end cursor-pointer"
+        />
+        <Link to="/home" onClick={toggleNavbar}>
           Home
         </Link>
-        <Link to="/companies" className="hover:hover:text-green-500">
-          Companies
+        <Link
+          to={user?.accountType === 'seeker' ? '/apply-history' : '/upload-job'}
+          onClick={toggleNavbar}
+        >
+          {user?.accountType === 'seeker' ? 'Applications' : 'Upload Job'}
         </Link>
-        <Link to="/AboutPage" className="hover:hover:text-green-500">
+        <Link to="/about" onClick={toggleNavbar}>
           About
         </Link>
-        <Link to="/ContactPage" className="hover:hover:text-green-500">
+        <Link to="/contact" onClick={toggleNavbar}>
           Contact
         </Link>
-        <div className="w-full py-10">
-          {!user?.token ? (
-            <button onClick={handleSignInRegister}>
-              <CustomButton
-                title="Sign In"
-                containerStyles="text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600"
-              />
-            </button>
-          ) : (
-            <MenuList user={user} onClick={handleCloseNavbar} />
-          )}
-        </div>
+        {!user?.token ? (
+          <>
+            <CustomButton
+              title="Sign In"
+              onClick={handleSignInRegister}
+              containerStyles="text-green-700 py-1.5 px-5 hover:bg-green-700 hover:text-white rounded-full border border-green-700 w-full justify-center"
+            />
+            <CustomButton
+              title="Register"
+              onClick={handleSignInRegister}
+              containerStyles="text-white py-1.5 px-5 hover:bg-green-600 rounded-full border border-green-700 bg-green-700 w-full justify-center"
+            />
+          </>
+        ) : (
+          <MenuList user={user} onClick={toggleNavbar} />
+        )}
       </div>
+
       {open && <SignUp open={open} setOpen={setOpen} />}
     </>
   )
