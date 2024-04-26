@@ -84,6 +84,8 @@ const JobMatchedDashboard = () => {
               Job Matches
             </Typography>
             <Grid container spacing={2}>
+              <JobAvailable />
+
               {!isEmpty(matchedJobs) &&
                 matchedJobs?.map((job) => (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={job.job_id}>
