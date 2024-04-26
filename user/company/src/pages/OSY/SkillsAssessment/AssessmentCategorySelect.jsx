@@ -20,15 +20,13 @@ const Item = ({ title, description, sx, onClick, ...other }) => {
       sx={{
         p: 3,
         m: 1,
-        bgcolor: (theme) =>
-          theme.palette.mode === 'dark' ? '#101010' : 'grey.100',
-        color: (theme) =>
-          theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
-        border: '1px solid',
-        height: '250px',
+        bgcolor: 'white',
+        color: '#333',
+        border: '0px solid',
+        height: '400px',
         borderColor: (theme) =>
           theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-        borderRadius: 2,
+        borderRadius: 10,
         fontSize: '1.2rem',
         fontWeight: '700',
         transition: 'background-color 0.3s',
@@ -41,16 +39,27 @@ const Item = ({ title, description, sx, onClick, ...other }) => {
       }}
       {...other}
     >
-      <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold' }}>
+      <Typography
+        variant="h4"
+        gutterBottom
+        style={{ fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}
+      >
         {title}
       </Typography>
       <Typography
         variant="body2"
         component="ul"
-        style={{ pointerEvents: 'none', fontSize: '0.9rem' }}
+        style={{
+          pointerEvents: 'none',
+          fontSize: '0.9rem',
+          marginTop: '40px',
+          textAlign: 'center',
+        }}
       >
         {description.map((desc, index) => (
-          <li key={index}>{desc}</li>
+          <li key={index} style={{ marginTop: '5px', textAlign: 'center' }}>
+            {desc}
+          </li>
         ))}
       </Typography>
     </Box>
@@ -63,44 +72,40 @@ const AssessmentCategorySelect = () => {
 
   const handleCategoryClick = (module) => {
     if (module.title === 'Technical Skills') {
-      // Redirect to technicalSkillsQuestionnaires
+      // history.push('/technicalSkillsQuestionnaires') // Redirect to technicalSkillsQuestionnaires
       // navigate('/technicalSkillsQuestionnaires')
-      console.log('Navigating to Technical Skills Questionnaires:', module)
-    } else if (module.title === 'Soft Skills') {
-      // Redirect to softSkillsQuestionnaires
-      // navigate('/softSkillsQuestionnaires')
-      console.log('Navigating to Soft Skills Questionnaires:', module)
+      console.log('module', module)
     } else {
       // Handle other categories as needed
     }
   }
 
   return (
-    <Container maxWidth="md" style={{ marginTop: '20px' }}>
+    <Container maxWidth="lg" style={{ marginTop: '50px' }}>
       <Paper
-        elevation={3}
-        style={{ padding: '20px', borderRadius: '10px', background: '#fff' }}
+        elevation={0}
+        style={{ padding: '20px', borderRadius: '10px', background: 'none' }}
       >
         {isEmpty(selectedModule) ? (
           <div>
             <Typography
-              variant="h4"
+              variant="h3"
               gutterBottom
               style={{
                 color: '#333',
-                marginBottom: '20px',
+                marginBottom: '50px',
                 fontFamily: 'Poppins',
-                flex: '0',
                 fontWeight: '600',
+                textAlign: 'center',
               }}
             >
               Select Assessment Category
             </Typography>
             <Box sx={{ flexGrow: 1 }}>
-              <Grid container>
+              <Grid container spacing={3}>
                 {!isEmpty(skillAssessmentModules) &&
                   skillAssessmentModules.map((module, index) => (
-                    <Grid item xs={6} key={module?.id + index}>
+                    <Grid item xs={4} key={module?.id + index}>
                       <Item
                         title={module?.title}
                         description={module?.description}

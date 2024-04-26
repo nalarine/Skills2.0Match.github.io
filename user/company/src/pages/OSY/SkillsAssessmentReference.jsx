@@ -266,36 +266,51 @@ const SkillsAssessmentReference = () => {
   }
 
   return (
-    <Card variant="outlined" className="m-10">
+    <Card
+      variant="outlined"
+      sx={{ borderRadius: 20, maxWidth: 600 }}
+      className="m-10"
+    >
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography variant="h6" component="div" mb={2}>
           Skill Assessment
         </Typography>
         <div>
-          <h3>{questions[currentQuestion].question}</h3>
+          <Typography variant="h6" gutterBottom>
+            {questions[currentQuestion].question}
+          </Typography>
           {questions[currentQuestion].choices.map((choice, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              style={{ marginBottom: '8px', marginLeft: '20px' }}
+            >
               <label>
                 <input
                   type="radio"
                   name={questions[currentQuestion].category}
                   value={index}
-                  checked={
-                    answers[questions[currentQuestion].category] === index
-                  }
+                  checked={questions[currentQuestion].selectedChoice === index}
                   onChange={() => handleAnswer(index)}
                 />
-                {choice}
+                <span style={{ marginLeft: '5px' }}>{choice}</span>
               </label>
             </div>
           ))}
         </div>
-        <div className="button-container">
+        <div className="button-container" style={{ marginTop: '16px' }}>
+          <Button
+            variant="contained"
+            onClick={() => history.push('/assessment-category')}
+            startIcon={<ArrowBackIcon />}
+            sx={{ mr: 2 }}
+          >
+            Back to Category
+          </Button>
           {currentQuestion > 0 && (
             <Button
               variant="contained"
               onClick={handlePreviousQuestion}
-              style={{ marginRight: '8px' }}
+              sx={{ mr: 2 }}
             >
               Previous
             </Button>

@@ -84,6 +84,7 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
                     color: '#666',
                     marginBottom: '10px',
                     fontFamily: 'Poppins',
+                    marginLeft: '30px',
                   }}
                 />
               ))}
@@ -97,11 +98,16 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
             background: '#fff',
           }}
         >
+          <Typography
+            variant="body2"
+            style={{ color: '#666', marginLeft: 'auto' }}
+          >{`${currentQuestion + 1} / ${questions.length}`}</Typography>
           <div>
             <Button
               variant="contained"
               onClick={handlePreviousQuestion}
               disabled={currentQuestion === 0}
+              style={{ marginLeft: 'auto' }}
             >
               Previous
             </Button>
@@ -109,15 +115,12 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
               variant="contained"
               onClick={handleNextQuestion}
               disabled={currentQuestion === questions.length - 1}
-              style={{ marginLeft: '8px' }}
+              style={{ marginLeft: '10px', marginRight: '30px' }}
             >
               Next
             </Button>
           </div>
-          <Typography
-            variant="body2"
-            style={{ color: '#666', marginRight: 'auto' }}
-          >{`${currentQuestion + 1} / ${questions.length}`}</Typography>
+
           {currentQuestion === questions.length - 1 && (
             <Button variant="contained" type="submit" color="primary">
               Submit

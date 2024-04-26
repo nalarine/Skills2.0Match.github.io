@@ -1274,58 +1274,245 @@ export const softSkillsQuestionnaires = [
     category: 'ProblemSolving',
     image: ' ',
     question:
-      'Great team players understand the authority of supervisors and managers and can follow their directions. How easy is it for you to follow instructions?',
+      'Is it financially wise to apply a high deductible for dental treatment? Argument No, due to the financial threshold, many people with mild complaints will postpone a visit to the dentist until more severe complaints occur. Argument: This causes unnecessary suffering.',
+    choices: ['a) Weak argument', 'b) Strong argument'],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'Pablo participates in a chess tournament. Together with 4 friends who also participate in the tournament, he has practiced for more than 5 hours every day in recent months. It has been a very busy period, because Pablo also had his normal obligations for his French studies and his side job at a restaurant. The preparations paid off, because in the end Pablo wins the chess tournament while he had not thought this possible a few months before. Inference: Without the preparations, Pablo would not have won the tournament.',
     choices: [
-      'a) Not at all easy because I don’t like being told what to do.',
-      'b) Not easy, but I would like to be better. When the boss speaks to me, I get so nervous that I find it hard to listen.',
-      'c) Meh. Depends on what sort of head space I’m in.',
-      'd) Easy enough. I’m fine with them being the boss, and I’m fine with getting instructions.',
-      'e) Easy! I am relaxed and respectful about the boss being the boss. I am good at following instructions. I like to do things right and this helps.',
-      'f) Other.',
+      'a) Definitely False',
+      'b) Probably False',
+      'c) Insufficient Data',
+      'd) Probably True',
+      'e) Definitely True',
+    ],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'Football players and hockey players are both athletes, the difference is that football players often sprint, while hockey players almost never do this. Hockey players always wear a helmet, while football players never do. Another difference is that hockey players are often late, while football players are never late. Conclusion: If an athlete is sprinting, chances are it is a footballer.',
+    choices: [
+      'a) Definitely False',
+      'b) Probably False',
+      'c) Insufficient Data',
+      'd) Probably True',
+      'e) Definitely True',
+    ],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'The universities of Oxford and Yale asked several hundred scientists in the field of artificial intelligence (AI) to put dates on the various breakthroughs. Not only in the field of art, but also in matters such as writing an essay, translating, operating, driving a car or assembling Lego. Art remains one of the toughest things, but the AI ​​experts expect that by 2060 the machine will rule man in all domains. Statement: Art is one of the hardest fields for computers to beat humans.',
+    choices: ['a) Conclusion does not follow', 'b) Conclusion follows'],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question: 'There are tools that make the assessment easier.',
+    choices: ['a) Assumption not made', 'b) Assumption made'],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'Using a calculator makes the assessment a lot easier. Assumption: There are tools that make the assessment easier',
+    choices: ['a) The conclusion does not follow', 'b) The conclusion follows'],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'The number of registered speeding offenses on the highway has risen sharply in recent years. However, the amount of cameras used to track down offenders has also grown significantly and the quality of the cameras has improved, with each camera registering a higher percentage of speeding offenses. Peter has been fined a lot lately and is wondering if he really started to drive faster. He knows nothing about the growth in the number of cameras and the improved quality. Conclusion: It is certain that Peter did not drive faster, but that he received more fines because the chance of getting caught has increased.',
+    choices: [
+      'a) The conclusion does not follow ',
+      'b) The conclusion follows',
+    ],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'Should primary schools offer young children the opportunity to learn to code? Argument: Yes, programming is becoming increasingly important in society and it is good if children come into contact with software and its development at an early stage because there is a good chance that they will have a lot to do with it later in life.',
+    choices: ['a) Weak argument', 'b) Strong argument'],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'Could traditional companies make more profit if they free up more budget to digitize and have a prominent presence on social media? Argument: Yes, a better online and social presence makes it easier for customers to get in touch with traditional companies directly and they feel more involved with the brands.',
+    choices: ['a) Weak argument', 'b) Strong argument'],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'Free delivery of online purchases makes more people buy online. The delivery costs that companies have to pay for their customers are much lower than the extra turnover that is made by companies that do not pass the costs on to customers. Yet more and more companies are charging delivery costs to ensure that fewer parcels are returned unused, because this entails a lot of costs. Conclusion: The extra turnover generated by offering free delivery does not outweigh the extra costs of the many returned parcels.',
+    choices: ['a) The conclusion does not follow', 'b) The conclusion follows'],
+  },
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      "In a survey of 750 young adults, job security and work environment were found to be the most important factors in choosing the first job. In a survey of 100 employers, it appeared that employers assume that salary and career opportunities are the most important factors for people who apply for a first job with the employer. Inference: Salary and career advancement are not really important factors in young adults' first job selection.",
+    choices: [
+      'a) Definitely False',
+      'b) Probably False',
+      'c) Insufficient Data',
+      'd) Probably True',
+      'e) Definitely True',
     ],
   },
 ]
-
-export const skillAssessmentModules = [
+// start of behavioral assessment
+export const BehavioralAssessment = [
   {
-    id: faker.string.uuid(),
-    title: 'Technical Skills Assessment',
-    description: [
-      'Basic Math',
-      'Math Problem-solving',
-      'Reading Comprehension',
-      'Writing Proficiency',
-      'Digital Literacy',
+    category: 'Hogan Personality Inventory (HPI)',
+    image: ' ',
+    question: 'I am a calm and unstressed individual',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
     ],
-    technicalSkillsQuestionnaires,
   },
   {
-    id: faker.string.uuid(),
-    title: 'Soft Skills Assessment',
-    description: [
-      'Written and Verbal Communication',
-      'Teamwork',
-      'Problem-solving',
-      'Adaptability Test',
-      'Time Management',
+    category: 'Hogan Personality Inventory (HPI)',
+    image: ' ',
+    question: 'I regularly stay until the end when at parties',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
     ],
-    technicalSkillsQuestionnaires,
   },
   {
-    id: faker.string.uuid(),
-    title: 'Behavioral Assessment',
-    description: [
-      'Motivation and Initiative',
-      'Work Ethic',
-      'Attitude',
-      'Leadership Potential',
+    category: 'Hogan Personality Inventory (HPI)',
+    image: ' ',
+    question: 'I am more comfortable working with data than with people',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
     ],
-    technicalSkillsQuestionnaires,
   },
   {
-    id: faker.string.uuid(),
-    title: 'Scenario-Based Questions',
-    description: ['Situational', 'Decision-making ability', 'Job Readiness'],
-    technicalSkillsQuestionnaires,
+    category: 'Hogan Personality Inventory (HPI)',
+    image: ' ',
+    question: 'I am constantly in heated discussions with others',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
+    ],
+  },
+  {
+    category: 'Hogan Personality Inventory (HPI)',
+    image: ' ',
+    question: 'Solving riddles gives me pleasure',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
+    ],
+  },
+  //start of HDS
+  {
+    category: 'Hogan Development Survey (HDS)',
+    image: ' ',
+    question:
+      'Most of the time, I do what my manager tells me to, despite my own opinions',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
+    ],
+  },
+  {
+    category: 'Hogan Development Survey (HDS)',
+    image: ' ',
+    question:
+      'If I weren’t disrupted so much during my work, I would be more successful at it',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
+    ],
+  },
+  {
+    category: 'Hogan Development Survey (HDS)',
+    image: ' ',
+    question: 'The problems of others usually bother me',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
+    ],
+  },
+  {
+    category: 'Hogan Development Survey (HDS)',
+    image: ' ',
+    question:
+      'There is almost always a self-serving reason behind a person doing a service for you',
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
+    ],
+  },
+  {
+    category: 'Hogan Development Survey (HDS)',
+    image: ' ',
+    question: "I enjoy having everyone's attention on me",
+    choices: [
+      'a) Strongly Disagree',
+      'b) Disagree',
+      'c) Agree',
+      'd) Strongly Agree',
+    ],
+  },
+  //start of MVPI
+  {
+    category: 'Hogan MVPI',
+    image: ' ',
+    question: 'The humanities are the principle of all culture',
+    choices: ['a) Disagree', 'b) Agree', 'c) Uncertain'],
+  },
+  {
+    category: 'Hogan MVPI',
+    image: ' ',
+    question: 'The universe’s unknowns are concrete and learnable',
+    choices: ['a) Disagree', 'b) Agree', 'c) Uncertain'],
+  },
+  {
+    category: 'Hogan MVPI',
+    image: ' ',
+    question: 'I would like it more if I were to work independently',
+    choices: ['a) Disagree', 'b) Agree', 'c) Uncertain'],
+  },
+  {
+    category: 'Hogan MVPI',
+    image: ' ',
+    question: 'People who prefer to focus on labor over fun are uninteresting',
+    choices: ['a) Disagree', 'b) Agree', 'c) Uncertain'],
+  },
+  {
+    category: 'Hogan MVPI',
+    image: ' ',
+    question: 'It is preferable to be in charge than to be a subordinate',
+    choices: ['a) Disagree', 'b) Agree', 'c) Uncertain'],
   },
 ]
