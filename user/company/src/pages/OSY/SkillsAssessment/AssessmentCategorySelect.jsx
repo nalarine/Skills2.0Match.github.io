@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Container,
   Paper,
@@ -11,6 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { skillAssessmentModules } from './constants'
 import { isEmpty } from 'lodash'
+import Questions from './Questions'
 
 const Item = ({ title, description, sx, onClick, ...other }) => {
   return (
@@ -57,12 +58,14 @@ const Item = ({ title, description, sx, onClick, ...other }) => {
 }
 
 const AssessmentCategorySelect = () => {
+  const [selectedModule, setSelectedModule] = useState()
   const navigate = useNavigate() // Use useHistory hook to access history object
 
   const handleCategoryClick = (module) => {
     if (module.title === 'Technical Skills') {
       // history.push('/technicalSkillsQuestionnaires') // Redirect to technicalSkillsQuestionnaires
-      navigate('/technicalSkillsQuestionnaires')
+      // navigate('/technicalSkillsQuestionnaires')
+      console.log('module', module)
     } else {
       // Handle other categories as needed
     }
@@ -74,34 +77,39 @@ const AssessmentCategorySelect = () => {
         elevation={3}
         style={{ padding: '20px', borderRadius: '10px', background: '#fff' }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          style={{
-            color: '#333',
-            marginBottom: '20px',
-            fontFamily: 'Poppins',
-            flex: '0',
-            fontWeight: '600',
-          }}
-        >
-          Select Assessment Category
-        </Typography>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid container>
-            {!isEmpty(skillAssessmentModules) &&
-              skillAssessmentModules.map((module, index) => (
-                <Grid item xs={6} key={module.id + index}>
-                  <Button fullWidth onClick={() => handleCategoryClick(module)}>
-                    <Item
-                      title={module.title}
-                      description={module.description}
-                    />
-                  </Button>
-                </Grid>
-              ))}
-          </Grid>
-        </Box>
+        {isEmpty(selectedModule) ? (
+          <div>
+            <Typography
+              variant="h4"
+              gutterBottom
+              style={{
+                color: '#333',
+                marginBottom: '20px',
+                fontFamily: 'Poppins',
+                flex: '0',
+                fontWeight: '600',
+              }}
+            >
+              Select Assessment Category
+            </Typography>
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container>
+                {!isEmpty(skillAssessmentModules) &&
+                  skillAssessmentModules.map((module, index) => (
+                    <Grid item xs={6} key={module?.id + index}>
+                      <Item
+                        title={module?.title}
+                        description={module?.description}
+                        onClick={() => setSelectedModule(module)}
+                      />
+                    </Grid>
+                  ))}
+              </Grid>
+            </Box>
+          </div>
+        ) : (
+          <Questions questions={selectedModule?.questions} />
+        )}
       </Paper>
     </Container>
   )

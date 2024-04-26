@@ -9,9 +9,15 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material'
+import { useForm } from 'react-hook-form'
 import { technicalSkillsQuestionnaires } from './constants'
 
-const Questions = ({ handleSubmit, onSubmit }) => {
+const Questions = ({ onSubmit, questions = technicalSkillsQuestionnaires }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
   const handleNextQuestion = () => {
