@@ -1369,7 +1369,7 @@ export const softSkillsQuestionnaires = [
   },
 ]
 // start of behavioral assessment
-export const BehavioralAssessment = [
+export const behavioralAssessment = [
   {
     category: 'Hogan Personality Inventory (HPI)',
     image: ' ',
@@ -1514,5 +1514,43 @@ export const BehavioralAssessment = [
     image: ' ',
     question: 'It is preferable to be in charge than to be a subordinate',
     choices: ['a) Disagree', 'b) Agree', 'c) Uncertain'],
+  },
+]
+
+export const skillAssessmentModules = [
+  {
+    id: faker.string.uuid(),
+    title: 'Technical Skills Assessment',
+    description: [
+      'Basic Math',
+      'Math Problem-solving',
+      'Reading Comprehension',
+      'Writing Proficiency',
+      'Digital Literacy',
+    ],
+    technicalSkillsQuestionnaires,
+  },
+  {
+    id: faker.string.uuid(),
+    title: 'Soft Skills Assessment',
+    description: [
+      'Written and Verbal Communication',
+      'Teamwork',
+      'Problem-solving',
+      'Adaptability Test',
+      'Time Management',
+    ],
+    softSkillsQuestionnaires,
+  },
+  {
+    id: faker.string.uuid(),
+    title: 'Behavioral Assessment',
+    description: [
+      'Motivation and Initiative',
+      'Work Ethic',
+      'Attitude',
+      'Leadership Potential',
+    ],
+    behavioralAssessment,
   },
 ]
