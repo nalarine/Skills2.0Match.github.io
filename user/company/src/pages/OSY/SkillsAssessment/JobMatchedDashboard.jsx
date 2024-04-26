@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { Container, Paper, Typography, Grid, Box } from '@mui/material'
+import { Container, Paper, Typography, Grid } from '@mui/material'
 import JobCard2 from '@/components/JobCard'
 import ProgressBar from './ProgressBar'
 import { isEmpty } from 'lodash'
@@ -25,7 +24,7 @@ const JobMatchedDashboard = () => {
       setMatchedJobs(dummyMatchedJobs)
       setIsFetching(false)
     }, 1500)
-  }, [searchJob, setIsFetching])
+  }, [setIsFetching])
 
   // Define categories
   const categories = [
@@ -47,54 +46,59 @@ const JobMatchedDashboard = () => {
     // { name: 'Scenario-Based', currentQuestion: 5, totalQuestions: 10 },
   ]
 
+  const handleButtonClick = () => {
+    // Define functionality for the button click event here
+  }
+
   return (
-    <Container maxWidth="md" style={{ marginTop: '20px' }}>
-      <Paper
-        elevation={3}
-        style={{
-          padding: '20px',
-          borderRadius: '10px',
-          background: '#fff',
-          display: 'flex',
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <Typography
-            variant="h4"
-            gutterBottom
+    <Container
+      maxWidth="lg"
+      style={{
+        marginTop: '20px',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        maxWidth: 'screen',
+      }} // Adjust justifyContent to 'flex-start'
+    >
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={10}>
+          <Paper
+            elevation={0}
             style={{
-              color: '#333',
-              marginBottom: '20px',
-              fontFamily: 'Poppins',
-              flex: '0',
-              fontWeight: '600',
+              padding: '20px',
+              borderRadius: '10px',
+              background: '#fff',
             }}
           >
-            Job Matches
-          </Typography>
-          <Grid container spacing={2}>
-            <div
+            <Typography
+              variant="h4"
+              gutterBottom
               style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                color: '#333',
+                marginBottom: '20px',
+                fontFamily: 'Poppins',
+                fontWeight: '600',
               }}
             >
-              {/* Pass categories as props */}
-              <ProgressBar categories={categories} />
-            </div>
-
-            {!isEmpty(matchedJobs) &&
-              matchedJobs?.map((job) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={job.job_id}>
-                  <JobCard2 job={job} />
-                </Grid>
-              ))}
-          </Grid>
-        </div>
-        {/* No need to render additional components like New Job Suited, Schedule Interview, and Messages Received */}
-      </Paper>
+              Job Matches
+            </Typography>
+            <Grid container spacing={2}>
+              {!isEmpty(matchedJobs) &&
+                matchedJobs?.map((job) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={job.job_id}>
+                    <JobCard2 job={job} />
+                  </Grid>
+                ))}
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} lg={2}>
+          <div style={{ position: 'sticky', top: '20px' }}>
+            <ProgressBar categories={categories} />
+            <button onClick={handleButtonClick}>Start New Assessment</button>
+          </div>
+        </Grid>
+      </Grid>
     </Container>
   )
 }

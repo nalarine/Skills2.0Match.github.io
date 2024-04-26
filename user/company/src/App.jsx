@@ -206,10 +206,7 @@ function App() {
             <Route path="all-application" element={<AllApplication />} />
             <Route path="my-schedule" element={<Schedule />} />
             <Route path="/skills-assessment" element={<SkillsAssessment />} />
-            <Route
-              path="job-matched-dashboard"
-              element={<JobMatchedDashboard />}
-            />
+
             <Route
               path="skills-assessment"
               element={(props) => <ProgressBar {...props} />}
@@ -218,6 +215,12 @@ function App() {
               path="skills-assessment/select-category"
               element={<AssessmentCategorySelect />}
             />
+
+            <Route
+              path="skills-assessment/job-matched-dashboard"
+              element={<JobMatchedDashboard />}
+            />
+
             {/* Route for selecting assessment category */}
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="settings" element={<Settings />} />
