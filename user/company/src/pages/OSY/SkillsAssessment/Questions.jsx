@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -34,14 +34,15 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   const handleAnswerChange = (value) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [questions[currentQuestion].category]: value,
+      [questions[currentQuestion].question]: value,
     }))
   }
 
-  const onSubmit = () => {
+  const onSubmit = useCallback(() => {
     // Redirect to JobMatchedDashboard after submitting questionnaire
+    console.log('answers', answers)
     navigate('/job-matched-dashboard')
-  }
+  }, [answers])
 
   return (
     <div>
@@ -75,10 +76,10 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
                   key={index}
                   control={<Radio />}
                   label={choice}
-                  value={index}
+                  value={choice}
                   onChange={() => handleAnswerChange(index)}
                   checked={
-                    answers[questions[currentQuestion].category] === index
+                    answers[questions[currentQuestion].question] === index
                   }
                   style={{
                     color: '#666',
@@ -126,7 +127,7 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
               variant="contained"
               type="submit"
               color="primary"
-              onClick={() => navigate('/job-matched-dashboard')}
+              onClick={handleSubmit(onSubmit)}
             >
               Submit
             </Button>
