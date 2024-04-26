@@ -631,7 +631,7 @@ export const skillAssessmentModules = [
       'Basic Math',
       'Math Problem-solving',
       'Reading Comprehension',
-      'Writing Proficiency (grammar, spelling, punctuation)',
+      'Writing Proficiency',
       'Digital Literacy',
     ],
     technicalSkillsQuestionnaires,
