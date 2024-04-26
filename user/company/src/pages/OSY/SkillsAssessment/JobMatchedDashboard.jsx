@@ -1,51 +1,37 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import {
-  Container,
-  Paper,
-  Typography,
-  CircularProgress,
-  Grid,
-  Box, // Add Box component for layout
-} from '@mui/material'
-import JobCard from '../components/JobCard' // Import your JobCard component
-import DashboardStatsGrid from '../components/DashboardStatsGrid'
-import ProgressBar from './ProgressBar' // Import your ProgressBar component
+import axios from 'axios'
+import { Container, Paper, Typography, Grid, Box } from '@mui/material'
+import JobCard2 from '@/components/JobCard'
+import ProgressBar from './ProgressBar'
 
 const JobMatchedDashboard = () => {
-  const { user } = useSelector((state) => state.user)
   const [matchedJobs, setMatchedJobs] = useState([])
   const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
-    // Simulate fetching matched jobs (replace with actual API call)
     setIsFetching(true)
-    // Replace this with your actual API call to fetch matched jobs
     setTimeout(() => {
-      const dummyMatchedJobs = [
-        {
-          id: 1,
-          title: 'Software Engineer',
-          company: 'ABC Tech',
-          location: 'San Francisco, CA',
-        },
-        {
-          id: 2,
-          title: 'Data Analyst',
-          company: 'XYZ Corp',
-          location: 'New York, NY',
-        },
-        {
-          id: 3,
-          title: 'Product Manager',
-          company: '123 Inc',
-          location: 'Seattle, WA',
-        },
-      ]
+      const dummyMatchedJobs = searchJob({
+        query: ['public speaking', 'communication'],
+        k: 5,
+      })
       setMatchedJobs(dummyMatchedJobs)
       setIsFetching(false)
-    }, 1500) // Simulate loading delay
+    }, 1500)
   }, [])
+
+  // Define categories
+  const categories = [
+    {
+      name: 'Technical Skills Assessment',
+      currentQuestion: 3,
+      totalQuestions: 10,
+    },
+    { name: 'Soft Skills Assessment', currentQuestion: 7, totalQuestions: 10 },
+    { name: 'Behavioral Assessment', currentQuestion: 5, totalQuestions: 10 },
+    { name: 'Scenario-Based', currentQuestion: 5, totalQuestions: 10 },
+  ]
 
   return (
     <Container maxWidth="md" style={{ marginTop: '20px' }}>
@@ -56,12 +42,9 @@ const JobMatchedDashboard = () => {
           borderRadius: '10px',
           background: '#fff',
           display: 'flex',
-        }} // Use flex to arrange content horizontally
+        }}
       >
         <div style={{ flex: 1 }}>
-          {' '}
-          {/* Left side content */}
-          <DashboardStatsGrid jobMatches={matchedJobs.length} />
           <Typography
             variant="h4"
             gutterBottom
@@ -85,30 +68,42 @@ const JobMatchedDashboard = () => {
                   alignItems: 'center',
                 }}
               >
-                <CircularProgress />
+                {/* Pass categories as props */}
+                <ProgressBar categories={categories} />
               </div>
             ) : (
+              Array.isArray(matchedJobs) &&
               matchedJobs.map((job) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={job.id}>
-                  <JobCard job={job} />
+                <Grid item xs={12} sm={6} md={4} lg={3} key={job.job_id}>
+                  <JobCard2 job={job} />
                 </Grid>
               ))
             )}
           </Grid>
         </div>
-        <Box
-          style={{
-            marginLeft: '20px', // Add spacing between the main content and the progress bar
-            width: '100px', // Adjust width of the progress bar sidebar
-          }}
-        >
-          {/* Progress bar here */}
-          <ProgressBar currentQuestion={0} totalQuestions={10} />{' '}
-          {/* Example usage */}
-        </Box>
+        {/* No need to render additional components like New Job Suited, Schedule Interview, and Messages Received */}
       </Paper>
     </Container>
   )
+}
+
+async function searchJob(payload) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Credentials': true,
+  }
+  try {
+    const response = await axios.post(
+      'http://127.0.0.1:5000/match',
+      payload,
+      headers,
+    )
+    console.log(response.data)
+    return JSON.parse(response.data)
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
 
 export default JobMatchedDashboard

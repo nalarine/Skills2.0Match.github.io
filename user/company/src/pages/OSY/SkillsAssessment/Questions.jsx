@@ -11,8 +11,10 @@ import {
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { technicalSkillsQuestionnaires } from './constants'
+import { useNavigate } from 'react-router-dom' // Import useNavigate hook
 
-const Questions = ({ onSubmit, questions = technicalSkillsQuestionnaires }) => {
+const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
+  const navigate = useNavigate() // Initialize useNavigate
   const {
     register,
     handleSubmit,
@@ -20,6 +22,7 @@ const Questions = ({ onSubmit, questions = technicalSkillsQuestionnaires }) => {
   } = useForm()
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
+
   const handleNextQuestion = () => {
     setCurrentQuestion((prevQuestion) => prevQuestion + 1)
   }
@@ -34,6 +37,12 @@ const Questions = ({ onSubmit, questions = technicalSkillsQuestionnaires }) => {
       [questions[currentQuestion].category]: value,
     }))
   }
+
+  const onSubmit = () => {
+    // Redirect to JobMatchedDashboard after submitting questionnaire
+    navigate('/job-matched-dashboard')
+  }
+
   return (
     <div>
       <Typography
@@ -110,7 +119,7 @@ const Questions = ({ onSubmit, questions = technicalSkillsQuestionnaires }) => {
             style={{ color: '#666', marginRight: 'auto' }}
           >{`${currentQuestion + 1} / ${questions.length}`}</Typography>
           {currentQuestion === questions.length - 1 && (
-            <Button variant="contained" onClick={handleSubmit} color="primary">
+            <Button variant="contained" type="submit" color="primary">
               Submit
             </Button>
           )}

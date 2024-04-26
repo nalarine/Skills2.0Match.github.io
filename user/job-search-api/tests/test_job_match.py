@@ -9,13 +9,17 @@ params = {
     "k": 5,
 }
 
+def test_match_api_list():
+    url = "http://127.0.0.1:5000/match"
+    payload = json.dumps({"query": ["public speaking", "communication"], "k": 5})
+    headers = {'Content-Type': 'application/json'}
 
-# def test_user_query():
-#     results = user_query(**params)
-#     assert len(results) == params["k"], "Length does not match."
+    response = requests.post(url, data=payload, headers=headers)
 
+    assert response.status_code == 200
+    # print(response)
 
-def test_match_api():
+def test_match_api_string():
     url = "http://127.0.0.1:5000/match"
     payload = json.dumps({"query": "public speaking, communication", "k": 5})
     headers = {'Content-Type': 'application/json'}
@@ -23,3 +27,4 @@ def test_match_api():
     response = requests.post(url, data=payload, headers=headers)
 
     assert response.status_code == 200
+    # print(response)

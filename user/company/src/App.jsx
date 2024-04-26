@@ -55,6 +55,8 @@ import DashJobs from './pages/admin/DashJobs'
 import DashUsers from './pages/admin/DashUsers'
 import DashCompanies from './pages/admin/DashCompanies'
 import AssessmentCategorySelect from './pages/OSY/SkillsAssessment/AssessmentCategorySelect'
+import JobMatchedDashboard from './pages/OSY/SkillsAssessment/JobMatchedDashboard'
+import ProgressBar from './pages/OSY/SkillsAssessment/ProgressBar'
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
@@ -204,6 +206,14 @@ function App() {
             <Route path="all-application" element={<AllApplication />} />
             <Route path="my-schedule" element={<Schedule />} />
             <Route path="/skills-assessment" element={<SkillsAssessment />} />
+            <Route
+              path="job-matched-dashboard"
+              element={<JobMatchedDashboard />}
+            />
+            <Route
+              path="skills-assessment"
+              element={(props) => <ProgressBar {...props} />}
+            />
             <Route
               path="skills-assessment/select-category"
               element={<AssessmentCategorySelect />}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { apiRequest } from '../utils' // Import your API request utility
+import { apiRequest } from '../utils'
 import { useSelector } from 'react-redux'
 import {
   Container,
@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Grid,
 } from '@mui/material'
-import JobCard from '../components/JobCard' // Import your JobCard component
+import JobCard from '../components/JobCard'
 import DashboardStatsGrid from '../components/DashboardStatsGrid'
 
 const JobAvailable = () => {
@@ -35,7 +35,10 @@ const JobAvailable = () => {
   }, [user._id])
 
   return (
-    <Container maxWidth="md" style={{ marginTop: '20px' }}>
+    <Container
+      maxWidth={false} // Set to false for fixed container, or use 'lg' or 'xl' for larger container
+      style={{ marginTop: '20px' }}
+    >
       <Paper
         elevation={3}
         style={{ padding: '20px', borderRadius: '10px', background: '#fff' }}
