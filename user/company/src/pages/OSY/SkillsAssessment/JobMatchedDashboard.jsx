@@ -10,6 +10,7 @@ import {
   softSkillsQuestionnaires,
   technicalSkillsQuestionnaires,
 } from './constants'
+import { JobAvailable } from './../../../../src/components'
 
 const JobMatchedDashboard = () => {
   const [matchedJobs, setMatchedJobs] = useState([])
@@ -85,6 +86,8 @@ const JobMatchedDashboard = () => {
               <ProgressBar categories={categories} />
             </div>
 
+            <JobAvailable />
+
             {!isEmpty(matchedJobs) &&
               matchedJobs?.map((job) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={job.job_id}>
@@ -93,7 +96,6 @@ const JobMatchedDashboard = () => {
               ))}
           </Grid>
         </div>
-        {/* No need to render additional components like New Job Suited, Schedule Interview, and Messages Received */}
       </Paper>
     </Container>
   )
