@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Container, Paper, Typography, Grid, Box } from '@mui/material'
 import JobCard2 from '@/components/JobCard'
 import ProgressBar from './ProgressBar'
+import { isEmpty } from 'lodash'
 
 const JobMatchedDashboard = () => {
   const [matchedJobs, setMatchedJobs] = useState([])
@@ -19,7 +20,7 @@ const JobMatchedDashboard = () => {
       setMatchedJobs(dummyMatchedJobs)
       setIsFetching(false)
     }, 1500)
-  }, [])
+  }, [searchJob, setIsFetching])
 
   // Define categories
   const categories = [
@@ -59,26 +60,24 @@ const JobMatchedDashboard = () => {
             Job Matches
           </Typography>
           <Grid container spacing={2}>
-            {isFetching ? (
-              <div
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                {/* Pass categories as props */}
-                <ProgressBar categories={categories} />
-              </div>
-            ) : (
-              Array.isArray(matchedJobs) &&
-              matchedJobs.map((job) => (
+            <div
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {/* Pass categories as props */}
+              <ProgressBar categories={categories} />
+            </div>
+
+            {!isEmpty(matchedJobs) &&
+              matchedJobs?.map((job) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={job.job_id}>
                   <JobCard2 job={job} />
                 </Grid>
-              ))
-            )}
+              ))}
           </Grid>
         </div>
         {/* No need to render additional components like New Job Suited, Schedule Interview, and Messages Received */}
