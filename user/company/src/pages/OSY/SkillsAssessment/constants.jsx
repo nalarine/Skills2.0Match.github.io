@@ -1528,7 +1528,7 @@ export const skillAssessmentModules = [
       'Writing Proficiency',
       'Digital Literacy',
     ],
-    technicalSkillsQuestionnaires,
+    questions: technicalSkillsQuestionnaires,
   },
   {
     id: faker.string.uuid(),
@@ -1540,7 +1540,7 @@ export const skillAssessmentModules = [
       'Adaptability Test',
       'Time Management',
     ],
-    softSkillsQuestionnaires,
+    questions: softSkillsQuestionnaires,
   },
   {
     id: faker.string.uuid(),
@@ -1551,6 +1551,6 @@ export const skillAssessmentModules = [
       'Attitude',
       'Leadership Potential',
     ],
-    behavioralAssessment,
+    questions: behavioralAssessment,
   },
 ]
