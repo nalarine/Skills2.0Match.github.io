@@ -122,7 +122,12 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
           </div>
 
           {currentQuestion === questions.length - 1 && (
-            <Button variant="contained" type="submit" color="primary">
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              onClick={() => navigate('/job-matched-dashboard')}
+            >
               Submit
             </Button>
           )}
