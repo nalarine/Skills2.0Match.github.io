@@ -98,7 +98,6 @@ const JobMatchedDashboard = () => {
         <Grid item xs={12} lg={2}>
           <div style={{ position: 'sticky', top: '20px' }}>
             <ProgressBar categories={categories} />
-            <button onClick={handleButtonClick}>Start New Assessment</button>
           </div>
         </Grid>
       </Grid>

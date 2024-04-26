@@ -7,23 +7,27 @@ import {
   LinearProgress,
 } from '@mui/material'
 
-const ProgressBar = ({ categories }) => {
+const ProgressBar = ({ categories, navigate }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {categories.map((category, index) => (
-        <CategoryProgress key={index} category={category} />
+        <CategoryProgress key={index} category={category} navigate={navigate} />
       ))}
     </div>
   )
 }
 
-const CategoryProgress = ({ category }) => {
+const CategoryProgress = ({ category, navigate }) => {
   // Calculate progress percentage
   const progress = useMemo(() => {
     return Math.round(
       (category.currentQuestion / category.totalQuestions) * 100,
     )
   }, [category.currentQuestion, category.totalQuestions])
+
+  const handleButtonClick = () => {
+    navigate('/skills-assessment/select-category')
+  }
 
   return (
     <Card
@@ -69,7 +73,8 @@ const CategoryProgress = ({ category }) => {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            flexDirection: 'column',
+            alignItems: 'center', // Align button to the center
             marginTop: '10px',
           }}
         >
@@ -79,6 +84,20 @@ const CategoryProgress = ({ category }) => {
           <Typography variant="body2">
             {category.totalQuestions - category.currentQuestion} Remaining
           </Typography>
+          <button
+            style={{
+              marginTop: '10px',
+              backgroundColor: '#007bff', // Change color here
+              color: '#fff', // Text color
+              border: 'none', // Remove border
+              padding: '10px 20px', // Padding
+              borderRadius: '5px', // Rounded corners
+              cursor: 'pointer', // Cursor style
+            }}
+            onClick={handleButtonClick}
+          >
+            Start Assessment
+          </button>
         </div>
       </CardContent>
     </Card>

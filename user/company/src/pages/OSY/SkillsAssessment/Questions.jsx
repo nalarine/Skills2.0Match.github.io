@@ -41,7 +41,7 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   const onSubmit = useCallback(() => {
     // Redirect to JobMatchedDashboard after submitting questionnaire
     console.log('answers', answers)
-    navigate('/job-matched-dashboard')
+    navigate('/skills-assessment/job-matched-dashboard')
   }, [answers])
 
   return (
