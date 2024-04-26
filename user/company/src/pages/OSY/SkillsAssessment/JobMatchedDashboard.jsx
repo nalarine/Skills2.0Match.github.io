@@ -5,6 +5,11 @@ import { Container, Paper, Typography, Grid, Box } from '@mui/material'
 import JobCard2 from '@/components/JobCard'
 import ProgressBar from './ProgressBar'
 import { isEmpty } from 'lodash'
+import {
+  behavioralAssessment,
+  softSkillsQuestionnaires,
+  technicalSkillsQuestionnaires,
+} from './constants'
 
 const JobMatchedDashboard = () => {
   const [matchedJobs, setMatchedJobs] = useState([])
@@ -27,11 +32,19 @@ const JobMatchedDashboard = () => {
     {
       name: 'Technical Skills Assessment',
       currentQuestion: 3,
-      totalQuestions: 10,
+      totalQuestions: technicalSkillsQuestionnaires?.length,
     },
-    { name: 'Soft Skills Assessment', currentQuestion: 7, totalQuestions: 10 },
-    { name: 'Behavioral Assessment', currentQuestion: 5, totalQuestions: 10 },
-    { name: 'Scenario-Based', currentQuestion: 5, totalQuestions: 10 },
+    {
+      name: 'Soft Skills Assessment',
+      currentQuestion: 7,
+      totalQuestions: softSkillsQuestionnaires?.length,
+    },
+    {
+      name: 'Behavioral Assessment',
+      currentQuestion: 5,
+      totalQuestions: behavioralAssessment?.length,
+    },
+    // { name: 'Scenario-Based', currentQuestion: 5, totalQuestions: 10 },
   ]
 
   return (
