@@ -100,7 +100,7 @@ import { faker } from '@faker-js/faker'
 //   },
 // ]
 
-//Start
+//Start technical skills questionnaires
 export const technicalSkillsQuestionnaires = [
   {
     category: 'Numeracy:',
@@ -619,6 +619,669 @@ export const technicalSkillsQuestionnaires = [
       ' B. The number 412-555-0924 is James no longer working here’s telephone.',
       ' C. James is no longer working here, the telephone number is 412-555-0924.',
       ' D. No longer working here’s James telephone number is 412-555-0924.',
+    ],
+  },
+  //digital literacy start
+  {
+    category: 'DigitalLiteracy',
+    image: '', // You can include an image URL here if needed
+    question:
+      'Tom notices that when he runs several programs simultaneously on his computer, the performance of the programs slows down considerably. What is the reason for this?',
+    choices: [
+      'A. Nonfunctional keyboard',
+      'B. Nonfunctional mouse',
+      'C. Insufficient random access memory (RAM)',
+      'D. Low monitor speed',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Arno’s uncle owns a small business with 20 office employees. The computers in his office are connected to a network. Arno often helps his uncle to install new computers on the network, add and remove individuals from the list of authorized users, and archive files on a computer. He likes to perform these activities and wants to make them the focus of his profession. Which of the following job opportunities can Arno consider?',
+    choices: [
+      'A. Graphics designer',
+      'B. Software developer',
+      'C. Network administrator',
+      'D. Database administrator',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Your sister travels to another country for an on-site business project. You want to tell her about your new job by sending her an e-mail message from your computer. Which of the following devices will you use to connect your computer to the Internet?',
+    choices: ['A. Printer', 'B. Scanner', 'C. Modem', 'D. Sound card'],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Morten wants to play a game online. He hears modem tones every time his computer sends a request to the Internet service provider (ISP) to establish an Internet connection. What type of Internet connection does Morten use?',
+    choices: ['A. Dial-up', 'B. Broadband', 'C. WiFi', 'D. Dedicated'],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      "You want to know more about active volcanoes in the world. You connect your computer to the Internet to find information based on the keyword 'active volcanoes.' Which of the following features of the World Wide Web (WWW) will you use?",
+    choices: [
+      'A. Search engine',
+      'B. Plug-in',
+      'C. Uniform Resource Locator (URL)',
+      'D. World Wide Web (www)',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      "Eric teaches his daughter Tina how to work with productivity programs. Tina notices a small blinking bar that stays in place until Eric clicks the mouse in a new location in the document. Tina wants to know the name of this blinking bar. Which of the following terms will Eric use to answer Tina's question?",
+    choices: [
+      'A. Mouse pointer',
+      'B. Insertion point',
+      'C. Scroll bar',
+      'D. Status bar',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Markus creates a document by using Microsoft® Office Word 2010 and saves it with the name Office.docx. Which of the following components of Word 2010 will display the document name?',
+    choices: ['A. Menu bar', 'B. Toolbar', 'C. Title bar', 'D. Status bar'],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Stephan creates a business presentation by using Microsoft Office PowerPoint® 2010. He saves it with the name Presentation.ppt. Stephan opens the file to make some changes, and he wants to save it with a different name. Which of the following commands on the File menu will Stephan use to save the file with a different name?',
+    choices: ['A. Save', 'B. Save As', 'C. Send To', 'D. Page Setup'],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Nina uses Office Excel 2010 to create a work plan for her team. She wants to print the plan and discuss it with the team members in a meeting. Which of the following menus will Nina use to print the plan?',
+    choices: ['A. File', 'B. View', 'C. Format', 'D. Tools'],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Barbara wants to create a newsletter. She needs a program that provides several newsletter templates. Which of the following programs will meet her needs?',
+    choices: [
+      'A. Desktop publishing program',
+      'B. Presentation program',
+      'C. E-mail program',
+      'D. Spreadsheet program',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Paula manages the recruitments for A. Datum Corporation. The company hires 500 employees. Paula needs to store on her computer the personal details, compensation structure, and insurance details for each employee. Which of the following programs will Paula use?',
+    choices: [
+      'A. Microsoft® Notepad',
+      'B. Photo editing program',
+      'C. Presentation program',
+      'D. Database program',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question: 'The _____________ shows what files and applications are open.',
+    choices: [
+      'A. Shortcut Menu',
+      'B. Documents Library',
+      'C. Taskbar',
+      'D. Start Button',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question: "When you're connected to the Internet, you are:",
+    choices: ['A. Outline', 'B. Offline', 'C. Online', 'D. Out of line'],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Elisabeth reads an article on common computer terminology. She does not understand the meaning of the operating system. She comes to you for help. How will you explain the operating system to Elisabeth?',
+    choices: [
+      'A. An electronic device connected to your computer.',
+      'B. An electronic device connected to your computer.',
+      'C. A program that controls and manages the computer.',
+      'D. A circuit board that connects the input, output, and processing devices.',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'You create a presentation by using newer versions of PowerPoint. Which of the following toolbars will you use to add geometric shapes to the presentation?',
+    choices: [
+      'A. Drawing',
+      'B. Formatting',
+      'C. Reviewing',
+      'D. Illustrations',
+    ],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question:
+      'Any computer parts that you can actually touch are considered to be:',
+    choices: ['A. Software', 'B. Systems', 'C. Platforms', 'D. Hardware'],
+  },
+  {
+    category: 'DigitalLiteracy',
+    image: '',
+    question: '"Desktop" is a computer term that refers to:',
+    choices: [
+      'A. The initial screen showing icons for folders, files, and applications.',
+      'B. The part of your work area where the computer monitor sits.',
+      'C. Something that can and should be ignored by most users.',
+      'D. The list of all of the contents on a particular computer.',
+    ],
+  },
+]
+export const softSkillsQuestionnaires = [
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'What is the process of exchanging information and meaning between individuals or groups called?',
+    choices: [
+      ' A. Communication',
+      ' B. Negotiation',
+      ' C. Persuasion',
+      ' D. Presentation',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which of the following is an example of nonverbal communication?',
+    choices: [
+      ' A. Speaking',
+      ' B. Writing',
+      ' C. Using hand gestures',
+      ' D. Sending an email',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What does active listening involve?',
+    choices: [
+      ' A. Interrupting the speaker',
+      ' B. Focusing on your response',
+      ' C. Avoiding eye contact',
+      ' D. Paying attention and understanding the speaker',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'Which of the following is an example of written communication?',
+    choices: [
+      ' A. Having a conversation',
+      ' B. Sending a text message',
+      ' C. Making a phone call',
+      ' D. Attending a meeting',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What is empathy?',
+    choices: [
+      ' A. Understanding and sharing the feelings of others',
+      ' B. Convincing others to agree with your viewpoint',
+      ' C. Interrupting others while they are speaking',
+      ' D. Ignoring the emotions of others',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What are interpersonal skills?',
+    choices: [
+      ' A. Skills used in written communication',
+      ' B. Skills used in nonverbal communication',
+      ' C. Skills used in one-on-one interactions',
+      ' D. Skills used in public speaking',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What is an essential element of effective public speaking?',
+    choices: [
+      ' A. Speaking as fast as possible',
+      ' B. Using complex vocabulary',
+      ' C. Maintaining eye contact with the audience',
+      ' D. Avoiding visual aids',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What does emotional intelligence involve?',
+    choices: [
+      ' A. Ignoring the emotions of others',
+      " B. Recognizing and managing one's own emotions",
+      ' C. Focusing solely on logical reasoning',
+      ' D. Avoiding personal connections with others',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What is the purpose of feedback in communication?',
+    choices: [
+      ' A. To criticize and belittle others',
+      ' B. To express personal opinions',
+      ' C. To evaluate and improve communication',
+      ' D. To dominate the conversation',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'Why is cultural awareness important in communication?',
+    choices: [
+      " A. To impose one's cultural values on others",
+      ' B. To avoid any communication with people from different cultures',
+      ' C. To understand and respect cultural differences',
+      ' D. To promote misunderstandings and conflicts',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which communication skill involves using appropriate vocabulary and tone?',
+    choices: [
+      ' A. Verbal communication',
+      ' B. Nonverbal communication',
+      ' C. Listening skills',
+      ' D. Written communication',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'What is the ability to understand and share the perspective of others called?',
+    choices: [
+      ' A. Empathy',
+      ' B. Assertiveness',
+      ' C. Negotiation',
+      ' D. Emotional intelligence',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which of the following is an example of a nonverbal communication cue?',
+    choices: [
+      ' A. Speaking clearly',
+      ' B. Using appropriate grammar',
+      ' C. Nodding your head in agreement',
+      ' D. Writing an email',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What does it mean to be an active listener?',
+    choices: [
+      ' A. Focusing on your response',
+      ' B. Interrupting the speaker frequently',
+      ' C. Asking questions and providing feedback',
+      ' D. Avoiding eye contact',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which communication skill involves expressing ideas effectively through writing?',
+    choices: [
+      ' A. Verbal communication',
+      ' B. Nonverbal communication',
+      ' C. Listening skills',
+      ' D. Written communication',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'What is the ability to deliver information or ideas to an audience in a clear and engaging manner called?',
+    choices: [
+      ' A. Negotiation',
+      ' B. Presentation skills',
+      ' C. Interpersonal skills',
+      ' D. Empathy',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What does emotional intelligence help in establishing?',
+    choices: [
+      ' A. Rapport and trust',
+      ' B. Conflict and misunderstandings',
+      ' C. Authoritative dominance',
+      ' D. Personal biases and opinions',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What is the purpose of providing constructive feedback?',
+    choices: [
+      ' A. To criticize and blame others',
+      ' B. To control and dominate the conversation',
+      ' C. To improve performance and communication',
+      ' D. To avoid any form of feedback',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which communication skill involves understanding and respecting cultural differences?',
+    choices: [
+      ' A. Verbal communication',
+      ' B. Nonverbal communication',
+      ' C. Cultural awareness',
+      ' D. Written communication',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which communication skill involves using body language and facial expressions?',
+    choices: [
+      ' A. Verbal communication',
+      ' B. Nonverbal communication',
+      ' C. Listening skills',
+      ' D. Written communication',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'What is the ability to interact effectively with others in various settings called?',
+    choices: [
+      ' A. Verbal communication',
+      ' B. Nonverbal communication',
+      ' C. Interpersonal skills',
+      ' D. Presentation skills',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which communication skill involves delivering information to a large audience?',
+    choices: [
+      ' A. Negotiation',
+      ' B. Public speaking',
+      ' C. Emotional intelligence',
+      ' D. Empathy',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      "What is the skill of recognizing and managing one's own emotions and the emotions of others called?",
+    choices: [
+      ' A. Empathy',
+      ' B. Emotional intelligence',
+      ' C. Active listening',
+      ' D. Written communication',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What is an effective way to provide feedback?',
+    choices: [
+      ' A. Be vague and general',
+      ' B. Focus on personal attacks',
+      ' C. Be specific and constructive',
+      ' D. Avoid giving any feedback',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'Which of the following is an example of written communication?',
+    choices: [
+      ' A. Engaging in a conversation',
+      ' B. Making a phone call',
+      ' C. Writing an email',
+      ' D. Using hand gestures',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What does it mean to be an active listener?',
+    choices: [
+      ' A. Multitasking while listening',
+      ' B. Interrupting the speaker frequently',
+      ' C. Paying full attention and understanding the speaker',
+      " D. Ignoring the speaker's message",
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question:
+      'Which communication skill involves understanding and respecting cultural differences?',
+    choices: [
+      ' A. Verbal communication',
+      ' B. Nonverbal communication',
+      ' C. Cultural awareness',
+      ' D. Listening skills',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What is the purpose of feedback in communication?',
+    choices: [
+      ' A. To criticize and blame others',
+      ' B. To provide personal opinions',
+      ' C. To evaluate and improve communication',
+      ' D. To dominate the conversation',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'What does emotional intelligence involve?',
+    choices: [
+      ' A. Ignoring the emotions of others',
+      " B. Recognizing and managing one's own emotions",
+      ' C. Focusing solely on logical reasoning',
+      ' D. Avoiding personal connections with others',
+    ],
+  },
+  {
+    category: 'CommunicationSkills',
+    image: ' ',
+    question: 'Why is cultural awareness important in communication?',
+    choices: [
+      " A. To impose one's cultural values on others",
+      ' B. To avoid communication with people from different cultures',
+      ' C. To understand and respect cultural differences',
+      ' D. To promote misunderstandings and conflicts',
+    ], //teamwork/self assessment
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question: 'What experiences have you had in a team?',
+    choices: [
+      'a) None. I’m more of a lone wolf.',
+      'b) Some. I’ve played a bit of team sport and have done a few group activities at school.',
+      'c) A reasonable amount – e.g. I’ve played some team sport.',
+      'd) A good amount. I’ve played a decent amount of team sport and/or have worked with others at the marae, at church or with friends in the community.',
+      'e) Lots. I have played team sport; I’ve worked with others to help on the marae or at church; I am also in a kapa haka or other performance group/band; and I’ve had experience working in a team at work.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question: 'How actively involved are you when working in a team?',
+    choices: [
+      'a) Not applicable – I don’t do teams.',
+      'b) I’m pretty shy / whakamā, so I tend to be quiet.',
+      'c) I’m the sort of person who is fine to go along with whatever is decided. I don’t need to be involved in making decisions; I’m happy just to cruise.',
+      'd) I like to have a say in what’s going on. I also like it when teams work together and share the decision making – so I would push this.',
+      'e) I like taking on a leadership role.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question:
+      'Being a good team player means pitching in and helping, even if the job that needs finishing first is not your regular job. How good are you at pitching in?',
+    choices: [
+      'a) I don’t do other people’s work for them. I just focus on doing my own job.',
+      'b) I would help if necessary but would worry that I would be told off for being slow at getting my regular work done.',
+      'c) I would help a bit to get them started and then go back to my own job.',
+      'd) I would give them a hand but would expect they come help me afterwards.',
+      'e) I would help them get it done and then start on my job. I would feel confident the boss would appreciate me doing this.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question: 'How flexible are you?',
+    choices: [
+      'a) I would not be happy about it.',
+      'b) I would be nervous about it. I would worry I wouldn’t do it right.',
+      'c) I would do it if I had to, but I would mention to the boss that it’s not fair that, when I finally get a cruisy day, I get moved because others are being slack.',
+      'd) I would go help but probably wouldn’t be too happy about it.',
+      'e) I would be fine about being moved to a different job to help the others catch up with work.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question:
+      'Team commitment is important if your team is to trust and respect you. Would you put the team’s needs ahead of your own?',
+    choices: [
+      'a) I would ring in sick. No regrets.',
+      'b) I might ring in sick but would make up a good excuse and hope my workmates would be OK with it.',
+      'c) It would depend on how bad I was feeling. No point going to work if you feel disgusting.',
+      'd) I would go to work, but I’d let my mates know I’m not feeling the greatest.',
+      'e) I would go to work, dig in and get through it.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question:
+      'What do you think are the biggest differences between being part of a sport or performance team and being part of a team at work?',
+    choices: [
+      'a) I don’t know.',
+      'b) With sport or performance, you are with your mates and having fun. At work, it’s more stressful.',
+      'c) With one, you get to choose who you are with and what you do; with the other, you are told who you will work with and what to do.',
+      'd) Teams at work can be made up of different age groups, different cultures, different belief systems. You need to work out how to get on with them and how to work together to get the job done.',
+      'e) The biggest difference is working with people you may have little or nothing in common with, building friendly and respectful relationships with them and learning how to work together to do the best job.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question:
+      'Team players have positive and friendly attitudes. How would you describe your attitude?',
+    choices: [
+      'a) I’m told my attitude is bad. I don’t see much that inspires me.',
+      'b) My attitude could be better. I lose my motivation easily.',
+      'c) My attitude is a bit up and down, depending on my mood.',
+      'd) My attitude is pretty good. Mostly I am a happy and friendly sort of person.',
+      'e) I have a positive attitude. I bounce back from bad days easily, and I see opportunities everywhere I look.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question:
+      'One challenge of teamwork is working through conflict. How confident are you at working through conflict in a positive way?',
+    choices: [
+      'a) Terrible. I have a bit of a temper.',
+      'b) Not confident. I am shy / whakamā and this makes it difficult for me to put my opinion forward.',
+      'c) I’m OK at it. Depends on my mood.',
+      'd) I am usually OK at it. Depends on my relationship with the other person.',
+      'e) I am good at working through conflict. I don’t let other people make me angry, I don’t have a need to always win arguments and I am a good problem solver.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question:
+      'Great team players have empathy and courage. If you saw some people on your team bullying another team member, how would you respond?',
+    choices: [
+      'a) It’s not my business.',
+      'b) I would feel sorry for the person being bullied but would not have the courage to say anything.',
+      'c) I would feel bad for the person but would have to weight up the risk before deciding to say anything or not.',
+      'd) I would feel bad for the person and perhaps mention to the others that they were upsetting the other person.',
+      'e) I would absolutely challenge them. I don’t like bullying. I would tell them that if they kept doing it, I would report them.',
+      'f) Other.',
+    ],
+  },
+  {
+    category: 'Teamwork:',
+    image: ' ',
+    question:
+      'Great team players understand the authority of supervisors and managers and can follow their directions. How easy is it for you to follow instructions?',
+    choices: [
+      'a) Not at all easy because I don’t like being told what to do.',
+      'b) Not easy, but I would like to be better. When the boss speaks to me, I get so nervous that I find it hard to listen.',
+      'c) Meh. Depends on what sort of head space I’m in.',
+      'd) Easy enough. I’m fine with them being the boss, and I’m fine with getting instructions.',
+      'e) Easy! I am relaxed and respectful about the boss being the boss. I am good at following instructions. I like to do things right and this helps.',
+      'f) Other.',
+    ],
+  }, //start of problem solving
+  {
+    category: 'ProblemSolving',
+    image: ' ',
+    question:
+      'Great team players understand the authority of supervisors and managers and can follow their directions. How easy is it for you to follow instructions?',
+    choices: [
+      'a) Not at all easy because I don’t like being told what to do.',
+      'b) Not easy, but I would like to be better. When the boss speaks to me, I get so nervous that I find it hard to listen.',
+      'c) Meh. Depends on what sort of head space I’m in.',
+      'd) Easy enough. I’m fine with them being the boss, and I’m fine with getting instructions.',
+      'e) Easy! I am relaxed and respectful about the boss being the boss. I am good at following instructions. I like to do things right and this helps.',
+      'f) Other.',
     ],
   },
 ]

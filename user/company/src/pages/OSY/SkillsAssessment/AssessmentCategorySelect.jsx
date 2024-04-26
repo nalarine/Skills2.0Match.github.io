@@ -63,9 +63,13 @@ const AssessmentCategorySelect = () => {
 
   const handleCategoryClick = (module) => {
     if (module.title === 'Technical Skills') {
-      // history.push('/technicalSkillsQuestionnaires') // Redirect to technicalSkillsQuestionnaires
+      // Redirect to technicalSkillsQuestionnaires
       // navigate('/technicalSkillsQuestionnaires')
-      console.log('module', module)
+      console.log('Navigating to Technical Skills Questionnaires:', module)
+    } else if (module.title === 'Soft Skills') {
+      // Redirect to softSkillsQuestionnaires
+      // navigate('/softSkillsQuestionnaires')
+      console.log('Navigating to Soft Skills Questionnaires:', module)
     } else {
       // Handle other categories as needed
     }
