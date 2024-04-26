@@ -207,7 +207,7 @@ function App() {
             <Route
               path="skills-assessment/select-category"
               element={<AssessmentCategorySelect />}
-            />{' '}
+            />
             {/* Route for selecting assessment category */}
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="settings" element={<Settings />} />

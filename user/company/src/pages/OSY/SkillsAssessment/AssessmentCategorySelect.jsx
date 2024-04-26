@@ -8,6 +8,7 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import { skillAssessmentModules } from './constants'
 import { isEmpty } from 'lodash'
 
@@ -56,11 +57,12 @@ const Item = ({ title, description, sx, onClick, ...other }) => {
 }
 
 const AssessmentCategorySelect = () => {
-  // const history = useHistory() // Use useHistory hook from react-router-dom
+  const navigate = useNavigate() // Use useHistory hook to access history object
 
-  const handleCategoryClick = (category) => {
-    if (category === 'Technical Skills') {
-      history.push('/technicalSkillsQuestionnaires') // Redirect to technicalSkillsQuestionnaires
+  const handleCategoryClick = (module) => {
+    if (module.title === 'Technical Skills') {
+      // history.push('/technicalSkillsQuestionnaires') // Redirect to technicalSkillsQuestionnaires
+      navigate('/technicalSkillsQuestionnaires')
     } else {
       // Handle other categories as needed
     }
@@ -83,19 +85,16 @@ const AssessmentCategorySelect = () => {
             fontWeight: '600',
           }}
         >
-          Select Category
+          Select Assessment Category
         </Typography>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container>
             {!isEmpty(skillAssessmentModules) &&
-              skillAssessmentModules?.map((module, index) => (
-                <Grid item xs={6} key={module?.id + index}>
-                  <Button
-                    fullWidth
-                    onClick={() => handleCategoryClick(module.title)}
-                  >
+              skillAssessmentModules.map((module, index) => (
+                <Grid item xs={6} key={module.id + index}>
+                  <Button fullWidth onClick={() => handleCategoryClick(module)}>
                     <Item
-                      title={module?.title}
+                      title={module.title}
                       description={module.description}
                     />
                   </Button>

@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { CircularProgress } from '@mui/material'
 
-const ProgressBar = () => {
-  // Dummy progress value, replace with actual progress state
-  const progress = 50 // Example progress value
+const ProgressBar = ({ currentQuestion, totalQuestions }) => {
+  // Calculate progress percentage
+  const progress = useMemo(() => {
+    return Math.round((currentQuestion / totalQuestions) * 100)
+  }, [currentQuestion, totalQuestions])
 
   return (
     <div
