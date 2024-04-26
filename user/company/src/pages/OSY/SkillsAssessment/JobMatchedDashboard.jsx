@@ -9,6 +9,7 @@ import {
   softSkillsQuestionnaires,
   technicalSkillsQuestionnaires,
 } from './constants'
+import { JobAvailable } from './../../../../src/components'
 
 const JobMatchedDashboard = () => {
   const [matchedJobs, setMatchedJobs] = useState([])
