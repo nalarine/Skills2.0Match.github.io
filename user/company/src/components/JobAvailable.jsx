@@ -15,8 +15,6 @@ const JobAvailable = () => {
       setIsFetching(true)
       try {
         const response = await apiRequest({
-          // url: "/jobs/job-available",
-          // url: "/jobs/job-available",
           url: '/jobs/job-available?user_id=' + user._id,
           method: 'GET',
         })
@@ -38,7 +36,6 @@ const JobAvailable = () => {
       <DashboardStatsGrid jobMatches={postedJobs.length} />
       <div className="flex flex-row justify-between items-center">
         <strong className="font-bold text-3xl mb-4">Job Matches</strong>
-        {/* <strong className="font-bold text-xl">View All</strong> */}
       </div>
       <div className="w-full flex flex-wrap gap-4">
         {postedJobs &&
