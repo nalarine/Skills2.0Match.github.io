@@ -1,5 +1,5 @@
-import React from 'react';
-import job from '../../../company/src/assets/job.png';
+import React from 'react'
+import job from '../../../company/src/assets/job.png'
 import interview from '../../../company/src/assets/interview.png'
 import messages from '../../../company/src/assets/messages.png'
 
@@ -13,18 +13,19 @@ export default function DashboardStatsGrid({ jobMatches }) {
         <div className="pl-8">
           <span className="text-sm font-semibold">Job Matches</span>
           <div className="flex items-center">
-            <strong className="text-xl font-bold">{jobMatches} New Job Suited</strong>
+            <strong className="text-xl font-bold">
+              {jobMatches} New Job Suited
+            </strong>
           </div>
         </div>
       </BoxWrapper>
       <BoxWrapper>
         <div className="rounded-full h-12 w-16 bg-dark-yellow flex items-center justify-center">
-          <img src={interview} alt="image" className="w-24 h-18 mr-2" /> {/* Added image tag */}
+          <img src={interview} alt="image" className="w-24 h-18 mr-2" />{' '}
+          {/* Added image tag */}
         </div>
-        <div >
-          <span className="text-sm font-semibold">
-            Schedule for Interview
-          </span>
+        <div>
+          <span className="text-sm font-semibold">Schedule for Interview</span>
           <div className="flex items-center">
             <strong className="text-xl font-bold">
               {/* {item.toInterview} Candidates for Interview */}
@@ -34,7 +35,7 @@ export default function DashboardStatsGrid({ jobMatches }) {
       </BoxWrapper>
       <BoxWrapper>
         <div className="rounded-full h-12 w-16 bg-green flex items-center justify-center">
-          <img src={messages} alt="image" className="w-24 h-18 mr-2" /> {/* Added image tag */}
+          <img src={messages} alt="image" className="w-24 h-18 mr-2" />
         </div>
         <div className="pl-4">
           <span className="text-sm font-semibold">Messages Received</span>
@@ -46,7 +47,7 @@ export default function DashboardStatsGrid({ jobMatches }) {
         </div>
       </BoxWrapper>
     </div>
-  );
+  )
 }
 
 function BoxWrapper({ children }) {
@@ -54,5 +55,5 @@ function BoxWrapper({ children }) {
     <div className="bg-white rounded-md border border-gray rounded p-4 flex-1 flex items-center h-24">
       {children}
     </div>
-  );
+  )
 }

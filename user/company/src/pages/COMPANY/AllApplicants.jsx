@@ -1,107 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import { renderStatus } from '../../components/lib/consts/renderers/renderStatus'
-import ViewApplicantCard from '../../components/ViewApplicantCard'
 import { apiRequest } from '../../utils'
 import { useSelector } from 'react-redux'
-import { MenuItem, Select } from '@mui/material'
-
-const columns = [
-  { field: 'fullName', headerName: 'Full Name', minWidth: 200, flex: 1 },
-  {
-    field: 'hiringStage',
-    headerName: 'Hiring Stage',
-    type: 'singleSelect',
-    // renderCell: renderStatus,
-    // editable: true,
-    minWidth: 150,
-    flex: 1,
-    valueOptions: ({ row }) => {
-      if (row === 'Interview') {
-        return (
-          <div className="border p-3 border-dark-yellow">
-            <span className="text-dark-yellow">{row}</span>
-          </div>
-        )
-      }
-    },
-    renderCell: (params) => {
-      const [status, setStatus] = useState(params.value);
-      const { user } = useSelector((state) => state.user)
-
-      const handleChange = async (event) => {
-
-        const res = await apiRequest({
-          url: '/companies/update-company-applicant/' + user._id,
-          token: user.token,
-          data: {
-            id: params.id,
-            hiringStage: event.target.value
-          },
-          method: 'PUT',
-        })
-
-        setStatus(event.target.value);
-      };
-
-      return (
-        <Select
-          value={status}
-          onChange={handleChange}
-          inputProps={{ 'aria-label': 'Status' }}
-          disableUnderline={true}
-          sx={{
-            outline: 'none',
-            minWidth: '100%',
-            padding: '8px',
-            fontSize: 'inherit',
-            fontWeight: 'inherit',
-            lineHeight: 'inherit',
-            fontFamily: 'inherit',
-            backgroundColor: 'inherit',
-            border: 'none',
-            borderWidth: 0,
-            borderRadius: 0,
-            '&:focus': {
-              backgroundColor: 'transparent',
-            },
-            boxShadow: 'none',
-            '.MuiOutlinedInput-notchedOutline': { border: 0 },
-            "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": { border: 0 },
-            "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": { border: 0 },
-          }}
-        >
-          <MenuItem value="Pending">Pending</MenuItem>
-          <MenuItem value="Hired">Hired</MenuItem>
-          <MenuItem value="Declined">Declined</MenuItem>
-          <MenuItem value="Shortlisted">Shortlisted</MenuItem>
-        </Select>
-      );
-    },
-  },
-  { field: 'appliedDate', headerName: 'Applied Date', minWidth: 200, flex: 1 },
-  { field: 'jobRole', headerName: 'Job Role', minWidth: 200, flex: 1 },
-  {
-    field: 'action',
-    headerName: 'Action',
-    minWidth: 200,
-    flex: 1,
-    renderCell: (params) => (
-      <button
-        className="bg-green-500 py-1 px-2 rounded-md"
-        onClick={() => {
-          const row = params.row;
-          // TODO: fetch user profile by id
-          row.user['resume'] = row.resume;
-          setUserInfo(row.user);
-          setShowModal(true);
-        }}
-      >
-        See Profile
-      </button>
-    ),
-  },
-]
+import ViewApplicantCard from '../../components/ViewApplicantCard'
 
 export default function AllApplicants() {
   const { user } = useSelector((state) => state.user)
@@ -109,46 +9,28 @@ export default function AllApplicants() {
   const [userInfo, setUserInfo] = useState(null)
   const [showModal, setShowModal] = useState(false)
 
-  const getCompany = async () => {
-    try {
-      const res = await apiRequest({
-        url: '/companies/get-company/' + user._id,
-        method: 'GET',
-      })
-      setTableData(res.data.applicants)
-    } catch (error) {
-      console.log(error)
-    } finally {
-    }
-  }
-
   useEffect(() => {
-    getCompany()
-    // fetch("src/components/lib/consts/dummy/dummy_table.json") // Verify the path to your JSON file
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error(
-    //         `Network response was not ok: ${response.statusText}`
-    //       );
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setTableData(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error loading data:", error);
-    //   });
-  }, [])
-
-  // console.log(tableData);
-
-  const onCellClick = ({ field, row }) => {
-    if (field == 'action') {
-      row.user['resume'] = row.resume
-      setUserInfo(row.user)
-      setShowModal(true)
+    const getCompany = async () => {
+      try {
+        const res = await apiRequest({
+          url: '/companies/get-company/' + user._id,
+          method: 'GET',
+        })
+        setTableData(res.data.applicants)
+      } catch (error) {
+        console.error('Error loading data:', error)
+      }
     }
+    getCompany()
+  }, [user._id])
+
+  const handleSeeProfile = (applicant) => {
+    const detailedUser = {
+      ...applicant.user,
+      resume: applicant.resume, // Ensuring resume data is carried over correctly
+    }
+    setUserInfo(detailedUser)
+    setShowModal(true)
   }
 
   return (
@@ -159,29 +41,55 @@ export default function AllApplicants() {
             Total Applicants: {tableData.length}
           </span>
         </div>
-        <div className="w-full max-h-[8rem]">
-          <DataGrid
-            rows={tableData}
-            columns={columns}
-            pagination
-            initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{
-              toolbar: {
-                showQuickFilter: true,
-              },
-            }}
-            onCellClick={onCellClick}
-          />
+        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Full Name
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Hiring Stage
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Applied Date
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Job Role
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.map((row) => (
+                <tr key={row.id}>
+                  <td className="py-4 px-6 text-base">{row.fullName}</td>
+                  <td className="py-4 px-6 text-base">{row.hiringStage}</td>
+                  <td className="py-4 px-6 text-base">{row.appliedDate}</td>
+                  <td className="py-4 px-6 text-base">{row.jobRole}</td>
+                  <td className="py-4 px-6 text-base">
+                    <button
+                      className="font-medium text-blue-600 text-white bg-green-700 hover:bg-green-500 hover:text-white px-4 pt-2 pb-2 border rounded-md"
+                      onClick={() => handleSeeProfile(row)}
+                    >
+                      See Profile
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-      <div onClick={() => setShowModal(false)}>
+      {showModal && (
         <ViewApplicantCard
           userInfo={userInfo}
           showModal={showModal}
           setShowModal={setShowModal}
         />
-      </div>
+      )}
     </>
   )
 }
