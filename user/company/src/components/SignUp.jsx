@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import TextInput from './TextInput';
 import CustomButton from './CustomButton';
@@ -365,21 +365,41 @@ const SignUp = ({ open, setOpen }) => {
                         </Checkbox>
                       </div>
                     )}
-                    <div className="mt-2 flex items-center justify-center">
-                      {loading ? (
-                        <div className="flex flex-col items-center">
-                          <div className="loading loading-infinity loading-md text-green-700" />
-                          <p className="mt-2">{loadingText}</p>
-                        </div>
-                      ) : (
-                        <CustomButton
-                          type="submit"
-                          containerStyles="rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1] hover:text-[#14532d]"
-                          title={isRegister ? 'Create Account' : 'Login Account'}
-                        />
-                      )}
-                    </div>
 
+                    {!isRegister && (
+                      <div className="flex items-center">
+                        <>
+                          <Checkbox
+                            defaultChecked={false}
+                            onChange={(event) => console.log(event.target.checked)}
+                            color="success"
+                          >
+                            Remember me
+                          </Checkbox>
+
+                          <Link to="/forgot-password" className="ml-auto text-sm text-green-600 hover:text-green-500">
+                            Forgot your password?
+                          </Link>
+                        </>
+                      </div>
+                    )}
+
+                   <form onSubmit={handleSubmit}>
+                      <div className="mt-2 flex items-center justify-center">
+                        {loading ? (
+                          <div className="flex flex-col items-center">
+                            <div className="loading loading-infinity loading-md text-green-700" />
+                            <p className="mt-2">{loadingText}</p>
+                          </div>
+                        ) : (
+                          <CustomButton
+                            type="submit"
+                            containerStyles="rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1] hover:text-[#14532d]"
+                            title={isRegister ? 'Create Account' : 'Login Account'}
+                          />
+                        )}
+                      </div>
+                    </form>
                     <div className="flex items-center justify-center mt-2">
                       <hr className="w-24 border-gray-500" />
                       <p className="text-base text-gray-700 mx-3">

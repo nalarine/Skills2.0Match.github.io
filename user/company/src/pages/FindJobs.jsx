@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation, useNavigate, Link } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { BiBriefcaseAlt2 } from 'react-icons/bi'
 import { BsStars } from 'react-icons/bs'
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
@@ -43,90 +43,110 @@ const FindJobs = () => {
   }
 
   const location = useLocation()
+
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchSavedJobs = async () => {
-      try {
-        const res = await apiRequest({
-          url: `/jobs/saved-jobs/${user._id}`,
-          method: 'GET',
-        })
-        setSavedJobs(res.data.savedJobs)
-      } catch (error) {
-        console.error('Error fetching saved jobs:', error)
-      }
+    if (user) {
+      fetchSavedJobs(); 
     }
+  }, [user]);
 
-    fetchSavedJobs()
-  }, [user._id])
+  const fetchSavedJobs = async () => {
+    try {
+      const res = await apiRequest({
+        url: `/jobs/saved-jobs/${user._id}`,
+        method: 'GET',
+      });
+      console.log('Saved Jobs:', res.data.savedJobs); // Log savedJobs data
+      setSavedJobs(res.data.savedJobs);
+    } catch (error) {
+      console.error('Error fetching saved jobs:', error);
+    }
+  };
 
   const handleSaveJob = async (job) => {
-    const jobIndex = savedJobs.findIndex((savedJob) => savedJob._id === job._id)
-
     try {
+      // Check if the job is already saved
+      const jobIndex = savedJobs.findIndex((savedJob) => savedJob._id === job._id);
+      console.log('Job Index:', jobIndex);
+  
       if (jobIndex === -1) {
+        // Save the job if it's not already saved
         const res = await apiRequest({
           url: '/jobs/save-job',
           method: 'POST',
           data: { id: job._id, userId: user._id },
-        })
-
-        console.log('Save job response:', res)
-
-        if (res.success) {
-          setSavedJobs((prevSavedJobs) => [...prevSavedJobs, job])
+        });
+        console.log('Save Job Response:', res);
+  
+        // Log the status or handle undefined status
+        const responseStatus = res.status !== undefined ? res.status : 'Status undefined';
+        console.log('Response Status:', responseStatus);
+  
+        if (res && res.success) {
+          setSavedJobs([...savedJobs, job]); // Update savedJobs state
         }
       } else {
+        // Remove the job if it's already saved
         const res = await apiRequest({
           url: '/jobs/remove-job',
           method: 'DELETE',
           data: { id: job._id, userId: user._id },
-        })
-
-        console.log('Remove job response:', res)
-
-        if (res.success) {
-          setSavedJobs((prevSavedJobs) =>
-            prevSavedJobs.filter((savedJob) => savedJob._id !== job._id),
-          )
+        });
+        console.log('Remove Job Response:', res);
+  
+        // Log the status or handle undefined status
+        const responseStatus = res.status !== undefined ? res.status : 'Status undefined';
+        console.log('Response Status:', responseStatus);
+  
+        if (res && res.success) {
+          const updatedSavedJobs = savedJobs.filter((savedJob) => savedJob._id !== job._id);
+          setSavedJobs(updatedSavedJobs); // Update savedJobs state
         }
       }
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error:', error);
     }
-  }
+  };
 
-  const fetchJobs = async () => {
-    setIsFetching(true)
+const fetchJobs = async () => {
+  setIsFetching(true);
 
-    const newURL = updateURL({
-      pageNum: page,
-      query: searchQuery,
-      cmpLoc: jobLocation,
-      sort: sort,
-      navigate: navigate,
-      location: location,
-      jType: filterJobTypes,
-      exp: filterExp,
-    })
+  const newURL = updateURL({
+    pageNum: page,
+    query: searchQuery,
+    cmpLoc: jobLocation,
+    sort: sort,
+    navigate: navigate,
+    location: location,
+    jType: filterJobTypes,
+    exp: filterExp,
+  });
 
-    try {
-      const res = await apiRequest({
-        url: '/jobs' + newURL + '&user_id=' + user._id,
-        method: 'GET',
-      })
+  try {
+    const res = await apiRequest({
+      url: '/jobs' + newURL + '&user_id=' + user._id,
+      method: 'GET',
+    });
 
-      setNumPage(res?.numOfPage)
-      setRecordCount(res?.totalJobs)
-      setData(res?.data)
+    console.log('Response from fetchJobs:', res); // Log the response object
 
-      setIsFetching(false)
-    } catch (error) {
-      setIsFetching(false)
-      console.error(error)
+    if (res && res.data) {
+      setNumPage(res.numOfPage);
+      setRecordCount(res.totalJobs);
+      setData(res.data);
+    } else {
+      console.error('Response data is undefined:', res);
     }
+
+    setIsFetching(false);
+  } catch (error) {
+    setIsFetching(false);
+    console.error('Error fetching jobs:', error);
   }
+};
+
 
   const filterJobs = (val) => {
     if (filterJobTypes?.includes(val)) {
@@ -176,7 +196,7 @@ const FindJobs = () => {
   return (
     <div>
 <div className="relative" style={{height: '870px'}}>
-  <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('../../src/assets/find-jobs-header.png')`, filter: 'blur(4px)'}}></div>
+  <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('../../src/assets/find-jobs-header.png')`, filter: 'blur(2px)'}}></div>
   <div className="relative px-4 py-12 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-24 lg:py-28">
     <div className="flex flex-wrap items-center mx-auto max-w-7xl">
       <div className="w-full lg:max-w-lg lg:w-1/2 rounded-xl">
@@ -407,33 +427,32 @@ const FindJobs = () => {
           </div>
 
           <div className="mt-6 w-full flex flex-wrap gap-4">
-            {activeTab === 'Best Matches' &&
-              data?.map((job, index) => {
-                const newJob = {
-                  name: job?.company?.name,
-                  logo: job?.company?.profileUrl,
-                  ...job,
-                }
-                return (
-                  <JobCard
-                    job={newJob}
-                    key={index}
-                    onSave={handleSaveJob}
-                    isSaved={savedJobs.some(
-                      (savedJob) => savedJob._id === job._id,
-                    )}
-                  />
-                )
-              })}
-            {activeTab === 'Saved Jobs' &&
-              savedJobs.map((job, index) => (
+          {activeTab === 'Best Matches' &&
+            data?.map((job, index) => {
+              const newJob = {
+                name: job?.company?.name,
+                logo: job?.company?.profileUrl,
+                ...job,
+              };
+              return (          
                 <JobCard
-                  job={job}
+                  job={newJob}
                   key={index}
-                  onSave={handleSaveJob}
-                  isSaved={true}
+                  onSave={handleSaveJob} // Pass handleSaveJob function
+                  isSaved={savedJobs.some((savedJob) => savedJob._id === job._id)}
                 />
-              ))}
+              );
+            })}
+{activeTab === 'Saved Jobs' &&
+  savedJobs?.map((job, index) => (
+    <JobCard
+      job={job}
+      key={index}
+      onSave={handleSaveJob}
+      isSaved={true}
+    />
+  ))
+}
           </div>
 
           {isFetching && (

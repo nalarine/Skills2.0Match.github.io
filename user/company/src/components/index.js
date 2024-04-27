@@ -23,6 +23,7 @@ import VerificationSuccess from './VerificationSuccessPage'
 import PrivacyPolicy from './PrivacyPolicy'
 import TermsOfService from './TermsOfService'
 import StrongPasswordInput from './StrongPasswordInput'
+import ForgotPassword from './ForgotPassword'
 
 
 export {
@@ -51,4 +52,5 @@ export {
   PrivacyPolicy,
   TermsOfService,
   StrongPasswordInput,
+  ForgotPassword,
 }

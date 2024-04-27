@@ -49,7 +49,7 @@ const JobAvailable = () => {
               ...job,
             }
 
-            return job.vacancies >= 1 && <JobCard job={newJob} key={index} />
+            return job.vacancies >= 0 && <JobCard job={newJob} key={index} />
           })}
       </div>
       {isFetching && (

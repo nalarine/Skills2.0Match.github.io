@@ -528,7 +528,6 @@ export const deleteJobPost = async (req, res, next) => {
   }
 };
 
-// Controller to handle saving a job
 export const saveJob = async (req, res) => {
   const { userId, id } = req.body;
   try {
@@ -538,16 +537,16 @@ export const saveJob = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if the job is already saved
+    // Check if the job ID is already saved
     if (user.savedJobs.includes(id)) {
-      return res.status(400).json({ message: 'Job already saved' });
+      return res.status(200).json({ success: true, message: 'Job already saved', status: 'success' });
     }
 
     // Save the job ID to the savedJobs array
     user.savedJobs.push(id);
     await user.save();
 
-    res.status(200).send('Job saved successfully');
+    res.status(200).json({ success: true, message: 'Job saved successfully', status: 'success' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -559,12 +558,24 @@ export const removeJob = async (req, res) => {
   const { userId, id } = req.body;
   try {
     // Remove the job ID from the savedJobs array
-    await User.findByIdAndUpdate(userId, { $pull: { savedJobs: id } });
-    res.status(200).send('Job removed successfully');
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    const index = user.savedJobs.indexOf(id);
+    if (index !== -1) {
+      user.savedJobs.splice(index, 1);
+      await user.save();
+      return res.status(200).json({ success: true, message: 'Job removed successfully', status: 'success' });
+    } else {
+      return res.status(404).json({ message: 'Job not found in saved jobs', status: 'failed' });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Controller to fetch saved jobs for a user
 export const getSavedJobs = async (req, res) => {

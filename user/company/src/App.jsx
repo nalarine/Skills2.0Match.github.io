@@ -8,6 +8,7 @@ import {
   VerificationSuccess,
   PrivacyPolicy,
   TermsOfService,
+  ForgotPassword,
 } from './components'
 import {
   About,
@@ -126,6 +127,7 @@ function App() {
     location.pathname.startsWith('/generate-reports') ||
     location.pathname.startsWith('/CHelpCenter') ||
     location.pathname.startsWith('/CSettings') ||
+    location.pathname.startsWith('/forgot-password') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -159,6 +161,7 @@ function App() {
       location.pathname.startsWith('/generate-reports') ||
       location.pathname.startsWith('/CHelpCenter') ||
       location.pathname.startsWith('/CSettings') ||
+      location.pathname.startsWith('/forgot-password') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -277,6 +280,7 @@ function App() {
         <Route path="/ContactPage" element={<ContactPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/about-us" element={<About />} />
       </Routes>
     </main>
