@@ -384,7 +384,6 @@ const SignUp = ({ open, setOpen }) => {
                       </div>
                     )}
 
-                   <form onSubmit={handleSubmit}>
                       <div className="mt-2 flex items-center justify-center">
                         {loading ? (
                           <div className="flex flex-col items-center">
@@ -399,7 +398,6 @@ const SignUp = ({ open, setOpen }) => {
                           />
                         )}
                       </div>
-                    </form>
                     <div className="flex items-center justify-center mt-2">
                       <hr className="w-24 border-gray-500" />
                       <p className="text-base text-gray-700 mx-3">

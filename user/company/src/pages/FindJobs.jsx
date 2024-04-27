@@ -1,54 +1,53 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { BiBriefcaseAlt2 } from 'react-icons/bi'
-import { BsStars } from 'react-icons/bs'
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
-import { updateURL, apiRequest } from '../utils'
-import Loading from '../components/Loading'
-import Header from '../components/Header'
-import { experience, jobTypes, jobCategories } from '../utils/data'
-import { CustomButton, JobCard, ListBox } from '../components'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { BiBriefcaseAlt2 } from 'react-icons/bi';
+import { BsStars } from 'react-icons/bs';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { updateURL, apiRequest } from '../utils';
+import Loading from '../components/Loading';
+import Header from '../components/Header';
+import { experience, jobTypes, jobCategories } from '../utils/data';
+import { CustomButton, JobCard, ListBox } from '../components';
+import { useSelector } from 'react-redux';
 
 const FindJobs = () => {
-  const { user } = useSelector((state) => state.user)
-  const [sort, setSort] = useState('Newest')
-  const [page, setPage] = useState(1)
-  const [numPage, setNumPage] = useState(1)
-  const [recordCount, setRecordCount] = useState(0)
-  const [data, setData] = useState([])
-  const [savedJobs, setSavedJobs] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [jobLocation, setJobLocation] = useState('')
-  const [filterJobTypes, setFilterJobTypes] = useState([])
-  const [filterExp, setFilterExp] = useState('')
-  const [expVal, setExpVal] = useState([])
-  const [isFetching, setIsFetching] = useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false)
-  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] =
-    useState(false)
-  const [activeTab, setActiveTab] = useState('Best Matches')
+  const { user } = useSelector((state) => state.user);
+  const [sort, setSort] = useState('Newest');
+  const [page, setPage] = useState(1);
+  const [numPage, setNumPage] = useState(1);
+  const [recordCount, setRecordCount] = useState(0);
+  const [data, setData] = useState([]);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [jobLocation, setJobLocation] = useState('');
+  const [filterJobTypes, setFilterJobTypes] = useState([]);
+  const [filterExp, setFilterExp] = useState('');
+  const [expVal, setExpVal] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false);
+  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('Best Matches');
 
   const toggleJobTypesDropdown = () => {
-    setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen)
-  }
+    setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen);
+  };
 
   const toggleExperienceDropdown = () => {
-    setIsExperienceDropdownOpen(!isExperienceDropdownOpen)
-  }
+    setIsExperienceDropdownOpen(!isExperienceDropdownOpen);
+  };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
-  const location = useLocation()
+  const location = useLocation();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      fetchSavedJobs(); 
+      fetchSavedJobs();
     }
   }, [user]);
 
@@ -58,7 +57,6 @@ const FindJobs = () => {
         url: `/jobs/saved-jobs/${user._id}`,
         method: 'GET',
       });
-      console.log('Saved Jobs:', res.data.savedJobs); // Log savedJobs data
       setSavedJobs(res.data.savedJobs);
     } catch (error) {
       console.error('Error fetching saved jobs:', error);
@@ -67,42 +65,28 @@ const FindJobs = () => {
 
   const handleSaveJob = async (job) => {
     try {
-      // Check if the job is already saved
       const jobIndex = savedJobs.findIndex((savedJob) => savedJob._id === job._id);
-      console.log('Job Index:', jobIndex);
   
       if (jobIndex === -1) {
-        // Save the job if it's not already saved
         const res = await apiRequest({
           url: '/jobs/save-job',
           method: 'POST',
           data: { id: job._id, userId: user._id },
         });
-        console.log('Save Job Response:', res);
-  
-        // Log the status or handle undefined status
-        const responseStatus = res.status !== undefined ? res.status : 'Status undefined';
-        console.log('Response Status:', responseStatus);
   
         if (res && res.success) {
-          setSavedJobs([...savedJobs, job]); // Update savedJobs state
+          setSavedJobs([...savedJobs, job]);
         }
       } else {
-        // Remove the job if it's already saved
         const res = await apiRequest({
           url: '/jobs/remove-job',
           method: 'DELETE',
           data: { id: job._id, userId: user._id },
         });
-        console.log('Remove Job Response:', res);
-  
-        // Log the status or handle undefined status
-        const responseStatus = res.status !== undefined ? res.status : 'Status undefined';
-        console.log('Response Status:', responseStatus);
   
         if (res && res.success) {
           const updatedSavedJobs = savedJobs.filter((savedJob) => savedJob._id !== job._id);
-          setSavedJobs(updatedSavedJobs); // Update savedJobs state
+          setSavedJobs(updatedSavedJobs);
         }
       }
     } catch (error) {
@@ -110,88 +94,85 @@ const FindJobs = () => {
     }
   };
 
-const fetchJobs = async () => {
-  setIsFetching(true);
+  const fetchJobs = async () => {
+    setIsFetching(true);
 
-  const newURL = updateURL({
-    pageNum: page,
-    query: searchQuery,
-    cmpLoc: jobLocation,
-    sort: sort,
-    navigate: navigate,
-    location: location,
-    jType: filterJobTypes,
-    exp: filterExp,
-  });
-
-  try {
-    const res = await apiRequest({
-      url: '/jobs' + newURL + '&user_id=' + user._id,
-      method: 'GET',
+    const newURL = updateURL({
+      pageNum: page,
+      query: searchQuery,
+      cmpLoc: jobLocation,
+      sort: sort,
+      navigate: navigate,
+      location: location,
+      jType: filterJobTypes,
+      exp: filterExp,
     });
 
-    console.log('Response from fetchJobs:', res); // Log the response object
+    try {
+      const res = await apiRequest({
+        url: '/jobs' + newURL + '&user_id=' + user._id,
+        method: 'GET',
+      });
 
-    if (res && res.data) {
-      setNumPage(res.numOfPage);
-      setRecordCount(res.totalJobs);
-      setData(res.data);
-    } else {
-      console.error('Response data is undefined:', res);
+      if (res && res.data) {
+        setNumPage(res.numOfPage);
+        setRecordCount(res.totalJobs);
+        setData(res.data);
+      } else {
+        console.error('Response data is undefined:', res);
+      }
+
+      setIsFetching(false);
+    } catch (error) {
+      setIsFetching(false);
+      console.error('Error fetching jobs:', error);
     }
-
-    setIsFetching(false);
-  } catch (error) {
-    setIsFetching(false);
-    console.error('Error fetching jobs:', error);
-  }
-};
-
+  };
 
   const filterJobs = (val) => {
     if (filterJobTypes?.includes(val)) {
-      setFilterJobTypes(filterJobTypes.filter((el) => el !== val))
+      setFilterJobTypes(filterJobTypes.filter((el) => el !== val));
     } else {
-      setFilterJobTypes([...filterJobTypes, val])
+      setFilterJobTypes([...filterJobTypes, val]);
     }
-  }
+  };
 
   const filterExperience = async (e) => {
     if (expVal?.includes(e)) {
-      setExpVal(expVal?.filter((el) => el !== e))
+      setExpVal(expVal?.filter((el) => el !== e));
     } else {
-      setExpVal([...expVal, e])
+      setExpVal([...expVal, e]);
     }
-  }
+  };
 
   const handleSearchSubmit = async (e) => {
-    e.preventDefault()
-    await fetchJobs()
-  }
+    e.preventDefault();
+    await fetchJobs();
+  };
 
   const handleShowMore = async (e) => {
-    e.preventDefault()
-    setPage((prev) => prev + 1)
-  }
+    e.preventDefault();
+    setPage((prev) => prev + 1);
+  };
 
   useEffect(() => {
     if (expVal.length > 0) {
-      let newExpVal = []
+      let newExpVal = [];
 
       expVal?.map((el) => {
-        const newEl = el?.split('-')
-        newExpVal.push(Number(newEl[0]), Number(newEl[1]))
-      })
+        const newEl = el?.split('-');
+        newExpVal.push(Number(newEl[0]), Number(newEl[1]));
+      });
 
-      newExpVal?.sort((a, b) => a - b)
+      newExpVal?.sort((a, b) => a - b);
 
-      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal.length - 1]}`)
+      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal.length - 1]}`);
     }
-  }, [expVal])
+  }, [expVal]);
 
   useEffect(() => {
-    fetchJobs()
-  }, [sort, filterJobTypes, filterExp, page])
+    fetchJobs();
+  }, [sort, filterJobTypes, filterExp, page]);
 
   return (
     <div>
