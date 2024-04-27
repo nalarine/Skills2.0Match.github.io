@@ -36,7 +36,6 @@ export default function DashboardStatsGrid({ jobMatches }) {
       <BoxWrapper>
         <div className="rounded-full h-12 w-16 bg-green flex items-center justify-center">
           <img src={messages} alt="image" className="w-24 h-18 mr-2" />
-          <img src={messages} alt="image" className="w-24 h-18 mr-2" /> 
         </div>
         <div className="pl-4">
           <span className="text-sm font-semibold">Messages Received</span>
