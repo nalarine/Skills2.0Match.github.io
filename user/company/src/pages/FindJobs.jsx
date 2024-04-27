@@ -1,101 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { BiBriefcaseAlt2 } from 'react-icons/bi';
-import { BsStars } from 'react-icons/bs';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import { updateURL, apiRequest } from '../utils';
-import Loading from '../components/Loading';
-import Header from '../components/Header';
-import { experience, jobTypes, jobCategories } from '../utils/data';
-import { CustomButton, JobCard, ListBox } from '../components';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { BiBriefcaseAlt2 } from 'react-icons/bi'
+import { BsStars } from 'react-icons/bs'
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
+import { updateURL, apiRequest } from '../utils'
+import Loading from '../components/Loading'
+import Header from '../components/Header'
+import { experience, jobTypes, jobCategories } from '../utils/data'
+import { CustomButton, JobCard, ListBox } from '../components'
+import { useSelector } from 'react-redux'
 
 const FindJobs = () => {
-  const { user } = useSelector((state) => state.user);
-  const [sort, setSort] = useState('Newest');
-  const [page, setPage] = useState(1);
-  const [numPage, setNumPage] = useState(1);
-  const [recordCount, setRecordCount] = useState(0);
-  const [data, setData] = useState([]);
-  const [savedJobs, setSavedJobs] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [jobLocation, setJobLocation] = useState('');
-  const [filterJobTypes, setFilterJobTypes] = useState([]);
-  const [filterExp, setFilterExp] = useState('');
-  const [expVal, setExpVal] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false);
-  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('Best Matches');
+  const { user } = useSelector((state) => state.user)
+  const [sort, setSort] = useState('Newest')
+  const [page, setPage] = useState(1)
+  const [numPage, setNumPage] = useState(1)
+  const [recordCount, setRecordCount] = useState(0)
+  const [data, setData] = useState([])
+  const [savedJobs, setSavedJobs] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [jobLocation, setJobLocation] = useState('')
+  const [filterJobTypes, setFilterJobTypes] = useState([])
+  const [filterExp, setFilterExp] = useState('')
+  const [expVal, setExpVal] = useState([])
+  const [isFetching, setIsFetching] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isJobTypesDropdownOpen, setIsJobTypesDropdownOpen] = useState(false)
+  const [isExperienceDropdownOpen, setIsExperienceDropdownOpen] =
+    useState(false)
+  const [activeTab, setActiveTab] = useState('Best Matches')
 
   const toggleJobTypesDropdown = () => {
-    setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen);
-  };
+    setIsJobTypesDropdownOpen(!isJobTypesDropdownOpen)
+  }
 
   const toggleExperienceDropdown = () => {
-    setIsExperienceDropdownOpen(!isExperienceDropdownOpen);
-  };
+    setIsExperienceDropdownOpen(!isExperienceDropdownOpen)
+  }
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+    setIsDropdownOpen(!isDropdownOpen)
+  }
 
-  const location = useLocation();
+  const location = useLocation()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (user) {
-      fetchSavedJobs();
+      fetchSavedJobs()
     }
-  }, [user]);
+  }, [user])
 
   const fetchSavedJobs = async () => {
     try {
       const res = await apiRequest({
         url: `/jobs/saved-jobs/${user._id}`,
         method: 'GET',
-      });
-      setSavedJobs(res.data.savedJobs);
+      })
+      setSavedJobs(res.data.savedJobs)
     } catch (error) {
-      console.error('Error fetching saved jobs:', error);
+      console.error('Error fetching saved jobs:', error)
     }
-  };
+  }
 
   const handleSaveJob = async (job) => {
     try {
-      const jobIndex = savedJobs.findIndex((savedJob) => savedJob._id === job._id);
-  
+      const jobIndex = savedJobs.findIndex(
+        (savedJob) => savedJob._id === job._id,
+      )
+
       if (jobIndex === -1) {
         const res = await apiRequest({
           url: '/jobs/save-job',
           method: 'POST',
           data: { id: job._id, userId: user._id },
-        });
-  
+        })
+
         if (res && res.success) {
-          setSavedJobs([...savedJobs, job]);
+          setSavedJobs([...savedJobs, job])
         }
       } else {
         const res = await apiRequest({
           url: '/jobs/remove-job',
           method: 'DELETE',
           data: { id: job._id, userId: user._id },
-        });
-  
+        })
+
         if (res && res.success) {
-          const updatedSavedJobs = savedJobs.filter((savedJob) => savedJob._id !== job._id);
-          setSavedJobs(updatedSavedJobs);
+          const updatedSavedJobs = savedJobs.filter(
+            (savedJob) => savedJob._id !== job._id,
+          )
+          setSavedJobs(updatedSavedJobs)
         }
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error)
     }
-  };
+  }
 
   const fetchJobs = async () => {
-    setIsFetching(true);
+    setIsFetching(true)
 
     const newURL = updateURL({
       pageNum: page,
@@ -106,131 +111,160 @@ const FindJobs = () => {
       location: location,
       jType: filterJobTypes,
       exp: filterExp,
-    });
+    })
 
     try {
       const res = await apiRequest({
         url: '/jobs' + newURL + '&user_id=' + user._id,
         method: 'GET',
-      });
+      })
 
       if (res && res.data) {
-        setNumPage(res.numOfPage);
-        setRecordCount(res.totalJobs);
-        setData(res.data);
+        setNumPage(res.numOfPage)
+        setRecordCount(res.totalJobs)
+        setData(res.data)
       } else {
-        console.error('Response data is undefined:', res);
+        console.error('Response data is undefined:', res)
       }
 
-      setIsFetching(false);
+      setIsFetching(false)
     } catch (error) {
-      setIsFetching(false);
-      console.error('Error fetching jobs:', error);
+      setIsFetching(false)
+      console.error('Error fetching jobs:', error)
     }
-  };
+  }
 
   const filterJobs = (val) => {
     if (filterJobTypes?.includes(val)) {
-      setFilterJobTypes(filterJobTypes.filter((el) => el !== val));
+      setFilterJobTypes(filterJobTypes.filter((el) => el !== val))
     } else {
-      setFilterJobTypes([...filterJobTypes, val]);
+      setFilterJobTypes([...filterJobTypes, val])
     }
-  };
+  }
 
   const filterExperience = async (e) => {
     if (expVal?.includes(e)) {
-      setExpVal(expVal?.filter((el) => el !== e));
+      setExpVal(expVal?.filter((el) => el !== e))
     } else {
-      setExpVal([...expVal, e]);
+      setExpVal([...expVal, e])
     }
-  };
+  }
 
   const handleSearchSubmit = async (e) => {
-    e.preventDefault();
-    await fetchJobs();
-  };
+    e.preventDefault()
+    await fetchJobs()
+  }
 
   const handleShowMore = async (e) => {
-    e.preventDefault();
-    setPage((prev) => prev + 1);
-  };
+    e.preventDefault()
+    setPage((prev) => prev + 1)
+  }
 
   useEffect(() => {
     if (expVal.length > 0) {
-      let newExpVal = [];
+      let newExpVal = []
 
       expVal?.map((el) => {
-        const newEl = el?.split('-');
-        newExpVal.push(Number(newEl[0]), Number(newEl[1]));
-      });
+        const newEl = el?.split('-')
+        newExpVal.push(Number(newEl[0]), Number(newEl[1]))
+      })
 
-      newExpVal?.sort((a, b) => a - b);
+      newExpVal?.sort((a, b) => a - b)
 
-      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal.length - 1]}`);
+      setFilterExp(`${newExpVal[0]}-${newExpVal[newExpVal.length - 1]}`)
     }
-  }, [expVal]);
+  }, [expVal])
 
   useEffect(() => {
-    fetchJobs();
-  }, [sort, filterJobTypes, filterExp, page]);
+    fetchJobs()
+  }, [sort, filterJobTypes, filterExp, page])
 
   return (
     <div>
-<div className="relative" style={{height: '870px'}}>
-  <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('../../src/assets/find-jobs-header.png')`, filter: 'blur(2px)'}}></div>
-  <div className="relative px-4 py-12 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-24 lg:py-28">
-    <div className="flex flex-wrap items-center mx-auto max-w-7xl">
-      <div className="w-full lg:max-w-lg lg:w-1/2 rounded-xl">
-      <div class="relative">
-              <img class="object-cover object-center mx-auto rounded-lg shadow-2xl" alt="hero" src="/../../src/assets/find-jobs-header-2.png"/>
+      <div className="relative" style={{ height: '870px' }}>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('../../src/assets/find-jobs-header.png')`,
+            filter: 'blur(2px)',
+          }}
+        ></div>
+        <div className="relative px-4 py-12 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-24 lg:py-28">
+          <div className="flex flex-wrap items-center mx-auto max-w-7xl">
+            <div className="w-full lg:max-w-lg lg:w-1/2 rounded-xl">
+              <div class="relative">
+                <img
+                  class="object-cover object-center mx-auto rounded-lg shadow-2xl h-[470px]"
+                  alt="hero"
+                  src="/../../src/assets/findjobs header.svg"
+                />
+              </div>
             </div>
-      </div>
-      <div className="flex flex-col items-start mt-6 mb-16 text-left lg:flex-grow lg:w-1/2 lg:pl-6 xl:pl-24 md:mb-0 xl:mt-0">
-        <span className="mb-8 text-xs font-bold tracking-widest text-green-900 uppercase"> Where Skills Meet Opportunity </span>
-        <h1 className="mb-8 text-4xl font-bold leading-none tracking-tighter text-neutral-600 md:text-7xl lg:text-5xl">Discover Career Destiny:<br /> Journey Begins Here</h1>
-        <p className="mb-8 text-base leading-relaxed text-left text-gray-500">Find your next career move with Skills 2.0 Match – designed to connect you with opportunities that match your skills.</p>
-        <div className="flex-col mt-0 lg:mt-6 max-w-7xl sm:flex">
-          <form action="" method="post" id="revue-form" name="revue-form" target="_blank" className="p-2 mt-4 transition duration-500 ease-in-out transform border2 bg-gray-50 rounded-xl sm:max-w-lg sm:flex">
-            <div className="relative mt-4 sm:mt-0 revue-form-group">
-              <input
-                className="block w-full px-5 py-3 text-base placeholder-gray-400 transition duration-500 ease-in-out transform bg-gray-50 border border-transparent rounded-md text-neutral-600 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                placeholder="&#x1F50D; Job Title"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+            <div className="flex flex-col items-start mt-6 mb-16 text-left lg:flex-grow lg:w-1/2 lg:pl-6 xl:pl-24 md:mb-0 xl:mt-0">
+              <span className="mb-8 text-xs font-bold tracking-widest text-green-900 uppercase">
+                {' '}
+                Where Skills Meet Opportunity{' '}
+              </span>
+              <h1 className="mb-8 text-4xl font-bold leading-none tracking-tighter text-neutral-600 md:text-7xl lg:text-5xl">
+                Discover Career Destiny:
+                <br /> Journey Begins Here
+              </h1>
+              <p className="mb-8 text-base leading-relaxed text-left text-gray-500">
+                Find your next career move with Skills 2.0 Match – designed to
+                connect you with opportunities that match your skills.
+              </p>
+              <div className="flex-col mt-0 lg:mt-6 max-w-7xl sm:flex">
+                <form
+                  action=""
+                  method="post"
+                  id="revue-form"
+                  name="revue-form"
+                  target="_blank"
+                  className="p-2 mt-4 transition duration-500 ease-in-out transform border2 bg-gray-50 rounded-xl sm:max-w-lg sm:flex"
+                >
+                  <div className="relative mt-4 sm:mt-0 revue-form-group">
+                    <input
+                      className="block w-full px-5 py-3 text-base placeholder-gray-400 transition duration-500 ease-in-out transform bg-gray-50 border border-transparent rounded-md text-neutral-600 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="&#x1F50D; Job Title"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <div className="relative mt-4 sm:mt-0 sm:ml-3 revue-form-group">
+                    <input
+                      className="block w-full px-5 py-3 text-base placeholder-gray-400 transition duration-500 ease-in-out transform bg-gray-50 border border-transparent rounded-md text-neutral-600 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                      placeholder="&#x1F4CD; Location"
+                      value={jobLocation}
+                      onChange={(e) => setJobLocation(e.target.value)}
+                    />
+                  </div>
+                  <div className="relative mt-4 sm:mt-0 sm:ml-3 revue-form-actions">
+                    <button
+                      onClick={handleSearchSubmit}
+                      className="block w-full px-5 py-3 text-base font-medium text-white bg-green-600 border border-transparent rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300 sm:px-10"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </form>
+                <div className="sm:max-w-lg sm:flex">
+                  <p className="mt-3 text-xs text-gray-500">
+                    By using our services, you agree with Skills 2.0 Match's{' '}
+                    <a href="/terms-of-service" target="_blank">
+                      Terms of Service
+                    </a>{' '}
+                    and{' '}
+                    <a href="/privacy-policy" target="_blank">
+                      Privacy Policy
+                    </a>
+                    .
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="relative mt-4 sm:mt-0 sm:ml-3 revue-form-group">
-              <input
-                className="block w-full px-5 py-3 text-base placeholder-gray-400 transition duration-500 ease-in-out transform bg-gray-50 border border-transparent rounded-md text-neutral-600 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
-                placeholder="&#x1F4CD; Location"
-                value={jobLocation}
-                onChange={(e) => setJobLocation(e.target.value)}
-              />
-            </div>
-            <div className="relative mt-4 sm:mt-0 sm:ml-3 revue-form-actions">
-              <button
-                onClick={handleSearchSubmit}
-                className="block w-full px-5 py-3 text-base font-medium text-white bg-green-600 border border-transparent rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300 sm:px-10"
-              >
-                Search
-              </button>
-            </div>
-          </form>
-          <div className="sm:max-w-lg sm:flex">
-            <p className="mt-3 text-xs text-gray-500">
-              By using our services, you agree with Skills 2.0 Match's{' '}
-              <a href="/terms-of-service" target="_blank">Terms of Service</a>{' '}
-              and{' '}
-              <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
-            </p>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-
 
       <div className="container mx-auto flex flex-col md:flex-row gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 bg-[#f7fdfd]">
         <div className="md:w-1/6 bg-white shadow-sm">
@@ -408,32 +442,33 @@ const FindJobs = () => {
           </div>
 
           <div className="mt-6 w-full flex flex-wrap gap-4">
-          {activeTab === 'Best Matches' &&
-            data?.map((job, index) => {
-              const newJob = {
-                name: job?.company?.name,
-                logo: job?.company?.profileUrl,
-                ...job,
-              };
-              return (          
+            {activeTab === 'Best Matches' &&
+              data?.map((job, index) => {
+                const newJob = {
+                  name: job?.company?.name,
+                  logo: job?.company?.profileUrl,
+                  ...job,
+                }
+                return (
+                  <JobCard
+                    job={newJob}
+                    key={index}
+                    onSave={handleSaveJob} // Pass handleSaveJob function
+                    isSaved={savedJobs.some(
+                      (savedJob) => savedJob._id === job._id,
+                    )}
+                  />
+                )
+              })}
+            {activeTab === 'Saved Jobs' &&
+              savedJobs?.map((job, index) => (
                 <JobCard
-                  job={newJob}
+                  job={job}
                   key={index}
-                  onSave={handleSaveJob} // Pass handleSaveJob function
-                  isSaved={savedJobs.some((savedJob) => savedJob._id === job._id)}
+                  onSave={handleSaveJob}
+                  isSaved={true}
                 />
-              );
-            })}
-{activeTab === 'Saved Jobs' &&
-  savedJobs?.map((job, index) => (
-    <JobCard
-      job={job}
-      key={index}
-      onSave={handleSaveJob}
-      isSaved={true}
-    />
-  ))
-}
+              ))}
           </div>
 
           {isFetching && (

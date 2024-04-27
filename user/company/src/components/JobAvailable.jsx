@@ -12,21 +12,31 @@ const JobAvailable = () => {
 
   useEffect(() => {
     const fetchJobs = async () => {
+      if (!user?._id) {
+        // No user id available, cannot fetch jobs
+        console.error('No user ID available, skipping jobs fetch.')
+        return
+      }
+
       setIsFetching(true)
       try {
         const response = await apiRequest({
-          url: '/jobs/job-available?user_id=' + user._id,
+          url: `/jobs/job-available?user_id=${user._id}`,
           method: 'GET',
         })
-        setPostedJobs(response.data)
-        setIsFetching(false)
+        setPostedJobs(response.data || []) // Ensure always an array
       } catch (error) {
         console.error('Error fetching jobs:', error)
-        setIsFetching(false)
       }
+      setIsFetching(false)
     }
+
     fetchJobs()
   }, [user._id])
+
+  if (!user?._id) {
+    return <div>No user data available.</div>
+  }
 
   return (
     <div
@@ -38,22 +48,17 @@ const JobAvailable = () => {
         <strong className="font-bold text-3xl mb-4">Job Matches</strong>
       </div>
       <div className="w-full flex flex-wrap gap-4">
-        {postedJobs &&
-          postedJobs.map((job, index) => {
-            const newJob = {
-              name: job?.company?.name,
-              logo: job?.company?.profileUrl,
-              ...job,
-            }
+        {postedJobs.map((job, index) => {
+          const newJob = {
+            name: job?.company?.name,
+            logo: job?.company?.profileUrl,
+            ...job,
+          }
 
-            return job.vacancies >= 0 && <JobCard job={newJob} key={index} />
-          })}
+          return job.vacancies >= 0 && <JobCard job={newJob} key={index} />
+        })}
       </div>
-      {isFetching && (
-        <div className="py-10">
-          <Loading />
-        </div>
-      )}
+      {isFetching && <Loading />}
     </div>
   )
 }
