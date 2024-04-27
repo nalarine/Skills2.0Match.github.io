@@ -1,15 +1,40 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom'; // Import useParams hook to access URL parameters
 import loadingGif from '../assets/loading.gif';
 
 const VerificationSuccess = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
+  const { verificationToken } = useParams(); // Extract verification token from URL
 
   // Function to handle login button click
   const handleLoginClick = () => {
     // Navigate to the login page
     navigate('/user-auth');
   };
+
+  // Effect to verify email on component mount
+  useEffect(() => {
+    // Send verification token to backend API
+    fetch(`http://localhost:8800/api-v1/auth/verification-success/${verificationToken}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+          // Handle successful verification
+          console.log('Email verified successfully!');
+        } else {
+          // Handle verification failure
+          console.error('Failed to verify email:', response.statusText);
+        }
+      })
+      .catch(error => {
+        console.error('Error verifying email:', error);
+      });
+  }, [verificationToken]);
 
   return (
     <div

@@ -16,6 +16,7 @@ const JobAvailable = () => {
       try {
         const response = await apiRequest({
           // url: "/jobs/job-available",
+          // url: "/jobs/job-available",
           url: '/jobs/job-available?user_id=' + user._id,
           method: 'GET',
         })

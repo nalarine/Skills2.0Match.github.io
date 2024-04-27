@@ -26,7 +26,6 @@ const tailwindConfig = {
   },
   darkMode: 'class',
   plugins: [nextui()],
-  plugins: [require('daisyui')],
 }
 
 module.exports = tailwindConfig

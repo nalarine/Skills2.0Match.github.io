@@ -28,13 +28,14 @@ export const register = async (req, res, next) => {
       email,
       password,
       role,
-      verificationToken,
-      isEmailVerified: false // Set email verification status to false by default
+      verificationToken, // Save the verification token
+      emailVerified: false // Set email verification status to false by default
     });
-    // Send verification email
-    await sendVerificationEmail(user, verificationToken);
 
-    const token = user.createJWT();
+    // Send verification email
+    await sendVerificationEmail(user);
+
+    const token = await user.createJWT();
 
     // Send success response with both tokens
     res.status(201).json({
@@ -56,7 +57,6 @@ export const register = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 export async function verifyEmail(verificationToken) {
   try {
     // Check if the verification token is provided
@@ -72,18 +72,27 @@ export async function verifyEmail(verificationToken) {
       throw new Error("User not found or verification token is invalid");
     }
 
-    // Update the user's email verification status (example: setting emailVerified to true)
+    // Log the user object found based on the verification token
+    console.log("User found for verification:", user);
+
+    // Update the user's email verification status to true and clear the verification token
     user.emailVerified = true;
+    user.verificationToken = null;
     await user.save();
 
-    // Return the user object or a success message
+    // Log the updated user object
+    console.log("User email verification updated successfully:", user);
+
+    // Return success and the updated user object
     return { success: true, user };
   } catch (error) {
-    // Handle errors
+    // Log any errors that occurred during the verification process
     console.error("Error verifying email:", error);
     throw error; // Rethrow the error to be caught by the caller
   }
 }
+
+import jwt from 'jsonwebtoken'; // Import jsonwebtoken module
 
 export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
@@ -101,10 +110,10 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // // Check if email is verified
-    // if (!user.emailVerified) {
-    //   return res.status(401).json({ message: "Email not verified" });
-    // }
+    // Check if email is verified
+    if (!user.emailVerified) {
+      return res.status(401).json({ message: "Email not verified" });
+    }
 
     // Compare password
     const isMatch = await user.comparePassword(password);
@@ -113,8 +122,12 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
+    user.password = undefined;
+
     // Generate JWT token
     const token = user.createJWT();
+
+    const verificationToken = jwt.sign({ userId: user._id }, 'USAIDPROJECT', { expiresIn: '1h' });
 
     // Send success response with JWT token
     res.status(200).json({
@@ -128,8 +141,8 @@ export const signIn = async (req, res, next) => {
         role: user.role,
         accountType: user.accountType,
       },
-      // verificationToken,
-      token
+      verificationToken,
+      token,
     });
   } catch (error) {
     console.error(error);

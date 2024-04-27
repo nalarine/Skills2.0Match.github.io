@@ -394,6 +394,7 @@ const UserProfile = () => {
   const [open, setOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [resumeUrl, setResumeUrl] = useState(null); // Define resumeUrl state
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const getUser = async () => {
     const res = await apiRequest({
@@ -402,6 +403,8 @@ const UserProfile = () => {
       method: 'GET',
     });
     const updatedUserInfo = { token: user?.token, ...res?.user };
+    setUserInfo(updatedUserInfo);
+    setIsEmailVerified(updatedUserInfo?.emailVerified); // Set email verification status
     dispatch(Login(updatedUserInfo));
   };
 
@@ -426,8 +429,16 @@ const UserProfile = () => {
               alt={userInfo?.firstName}
               className="w-full h-48 object-contain rounded-lg mb-4"
             />
-            <h1 className="text-2xl font-semibold text-slate-600">
+            <h1 className="text-2xl font-semibold text-slate-600 flex items-center">
               {userInfo?.firstName + ' ' + userInfo?.lastName}
+              {isEmailVerified && ( // Render verified icon if email is verified
+                <span className="ml-2">
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAADGElEQVR4nO2W3U9ScRzG2dwaL5mCYAio2NaW11w0t7TxYmb4iqCCJghsttTavOOmNVTESpQIEeUgpFM84tra7GWzf6GXtS66aqs711ZNGFfwbb+jkA6OHA7rzucePnu+5znPcxiMM1GQeMcqqYkYxyWbQ2PitQEJ439Jgo+Ia3CrrC4yrKrdMs1WR0yJ6k0jVG8MgXh9MCFaG3CKwgZVVcggk4R04uKJuK6kbscakm5bUlLcDLVbw1ATMUEaKlm/DeK1QRA9HwBR2ABVq3oQYv0pYaAviH5Lm1sXtdikUQtQhgb7QYj1wcVALwj8Whst6KXoyGVp1BKjA61c1gF/qSfG92kuF3beqMUm3TbH6UIFfi0IlnqgYlET53m7bJTOTjxTmuc9DuX7NFDh7Qbesy7gejqxvOktKEi5oD4N8Bf/QXmeTuA+bU/yXd1VpOBa3NxQFNSrAetLJ5heOIDn7jyCdkD5Qjtw59saSMHSiLmpGOjEWw+kIAXJVAp0+APgug+h5fNtUO5SN5I73jLN5oSGqUORfiUO4GrgTgZa5lJD6ZNWJ2kNHm+kNFSM6WFizwv12DBl6PXV8UOXR9ALc7eg9HFrgjWnzm411L1ZToMGwD7uEn/4Zf8bXFkx0YVC6aObwHHeGMtO9IZxPOuZYvoMOANfHqIFPT/bkhuMVgYVflaQlnoh/OlNBv7153eo9xvh/ms3ESKk34kDkIfu5YMmWFOK3ANCrEyO9Ap9Wtj8vJeB//izX6hTYDmaZ0hTLQwZmsjSW+nRQOjDqwy8AKfAdjQDc1pB/jqJwvqG02pQ4O6C1fe7BUPZ0ypgOpTkBYJGnNjTU7qXv9ABD99hcC14lzKUNaVIsqcaySuTOHegL3ha4RM16EbF0E4RqgTmpHyFkVe4rgSNON+vjeeEHnUvRadxpl1ObRbTQiNesdgdow2dVMTO2VUFfAgcExpxek6VQDilLVxXgkYc7WkB500y7fJAUR97aaERL3OrZWUutQqtDCr8E4003ezkTCpVbLtclje9xQitDGemZZQz0zxKWoNnYpzUXzW9KCUUY2u8AAAAAElFTkSuQmCC"
+                    alt="Verified Icon"
+                  />
+                </span>
+              )}
             </h1>
             <h5 className="text-green-900 text-lg font-bold mb-4 mt-4">
               Applicant

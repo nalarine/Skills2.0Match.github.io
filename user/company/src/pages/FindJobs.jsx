@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { BiBriefcaseAlt2 } from 'react-icons/bi'
 import { BsStars } from 'react-icons/bs'
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
@@ -175,16 +175,61 @@ const FindJobs = () => {
 
   return (
     <div>
-      <Header
-        title="Find Your Dream Job with Ease"
-        className="text-blue-500"
-        type="home"
-        handleClick={handleSearchSubmit}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        location={jobLocation}
-        setLocation={setJobLocation}
-      />
+<div className="relative" style={{height: '870px'}}>
+  <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('../../src/assets/find-jobs-header.png')`, filter: 'blur(4px)'}}></div>
+  <div className="relative px-4 py-12 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-24 lg:py-28">
+    <div className="flex flex-wrap items-center mx-auto max-w-7xl">
+      <div className="w-full lg:max-w-lg lg:w-1/2 rounded-xl">
+      <div class="relative">
+              <img class="object-cover object-center mx-auto rounded-lg shadow-2xl" alt="hero" src="/../../src/assets/find-jobs-header-2.png"/>
+            </div>
+      </div>
+      <div className="flex flex-col items-start mt-6 mb-16 text-left lg:flex-grow lg:w-1/2 lg:pl-6 xl:pl-24 md:mb-0 xl:mt-0">
+        <span className="mb-8 text-xs font-bold tracking-widest text-green-900 uppercase"> Where Skills Meet Opportunity </span>
+        <h1 className="mb-8 text-4xl font-bold leading-none tracking-tighter text-neutral-600 md:text-7xl lg:text-5xl">Discover Career Destiny:<br /> Journey Begins Here</h1>
+        <p className="mb-8 text-base leading-relaxed text-left text-gray-500">Find your next career move with Skills 2.0 Match – designed to connect you with opportunities that match your skills.</p>
+        <div className="flex-col mt-0 lg:mt-6 max-w-7xl sm:flex">
+          <form action="" method="post" id="revue-form" name="revue-form" target="_blank" className="p-2 mt-4 transition duration-500 ease-in-out transform border2 bg-gray-50 rounded-xl sm:max-w-lg sm:flex">
+            <div className="relative mt-4 sm:mt-0 revue-form-group">
+              <input
+                className="block w-full px-5 py-3 text-base placeholder-gray-400 transition duration-500 ease-in-out transform bg-gray-50 border border-transparent rounded-md text-neutral-600 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                placeholder="&#x1F50D; Job Title"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="relative mt-4 sm:mt-0 sm:ml-3 revue-form-group">
+              <input
+                className="block w-full px-5 py-3 text-base placeholder-gray-400 transition duration-500 ease-in-out transform bg-gray-50 border border-transparent rounded-md text-neutral-600 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300"
+                placeholder="&#x1F4CD; Location"
+                value={jobLocation}
+                onChange={(e) => setJobLocation(e.target.value)}
+              />
+            </div>
+            <div className="relative mt-4 sm:mt-0 sm:ml-3 revue-form-actions">
+              <button
+                onClick={handleSearchSubmit}
+                className="block w-full px-5 py-3 text-base font-medium text-white bg-green-600 border border-transparent rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300 sm:px-10"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+          <div className="sm:max-w-lg sm:flex">
+            <p className="mt-3 text-xs text-gray-500">
+              By using our services, you agree with Skills 2.0 Match's{' '}
+              <a href="/terms-of-service" target="_blank">Terms of Service</a>{' '}
+              and{' '}
+              <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
       <div className="container mx-auto flex flex-col md:flex-row gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 bg-[#f7fdfd]">
         <div className="md:w-1/6 bg-white shadow-sm">

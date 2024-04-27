@@ -41,6 +41,7 @@ router.post("/register", limiter, async (req, res, next) => {
   }
 });
 
+
 // Verify email route with verification token
 router.get("/verify-email/:verificationToken", async (req, res) => {
   try {
@@ -49,10 +50,15 @@ router.get("/verify-email/:verificationToken", async (req, res) => {
       throw new Error("Verification token is missing");
     }
     
-    const result = await verifyEmail(verificationToken);
+    // Verify the email using the token
+    const { success } = await verifyEmail(verificationToken);
 
     // Optionally, you can redirect the user to a confirmation page
-    res.redirect("/verification-success/" + verificationToken);
+    if (success) {
+      res.redirect("/verification-success/" + verificationToken); // Redirect to the success route
+    } else {
+      res.send("Email verification failed.");
+    }
   } catch (error) {
     console.error("Error verifying email:", error);
     res.status(500).send("Internal Server Error");
@@ -68,23 +74,23 @@ router.get("/verification-success/:verificationToken", async (req, res) => {
       throw new Error("Verification token is missing");
     }
 
-    // Verify the email using the token (pseudocode)
-    const user = await verifyEmailWithToken(verificationToken);
+    // Verify the email using the token
+    const { success, user } = await verifyEmail(verificationToken);
 
-    // Check if the user was successfully verified
-    if (user) {
-      // Render a page indicating successful verification
+    // Render a page indicating successful or failed verification
+    if (success) {
+      // Here, you can perform additional actions like updating UI, logging in the user, etc.
+      // For simplicity, let's just send a success message
       res.send("Email verified successfully!");
     } else {
-      // Render a page indicating failed verification
       res.send("Email verification failed.");
     }
   } catch (error) {
     console.error("Error verifying email:", error);
-    // Render a page indicating an error occurred
     res.status(500).send("An error occurred while verifying email.");
   }
 });
+
 
 router.post("/login", loginLimiter, async (req, res) => {
   try {

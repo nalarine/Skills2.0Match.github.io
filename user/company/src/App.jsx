@@ -77,7 +77,6 @@ function Layout() {
     <Navigate to="/user-auth" state={{ from: location }} replace />
   )
 }
-
 function App() {
   const { user } = useSelector((state) => state.user)
   const location = useLocation()

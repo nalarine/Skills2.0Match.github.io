@@ -13,7 +13,8 @@ import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
 import { Checkbox } from '@nextui-org/react'; 
 import StrongPasswordInput from './StrongPasswordInput';
-import { Spinner } from '@nextui-org/react';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import 'daisyui/dist/full.css';
 import '../App.css';
 
 const SignUp = ({ open, setOpen }) => {
@@ -22,12 +23,13 @@ const SignUp = ({ open, setOpen }) => {
   const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(true);
   const [accountType, setAccountType] = useState('seeker');
-  const [errMsg, setErrMsg] = useState('');
   const [value, setValue] = useState('');
-  const [isEmailExisting, setIsEmailExisting] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false); // State for checkbox
-  const [loading, setLoading] = useState(false); // State for loading button
+  const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [errMsg, setErrMsg] = useState(''); // Define errMsg state
+  const [successMessage, setSuccessMessage] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -36,7 +38,6 @@ const SignUp = ({ open, setOpen }) => {
   } = useForm({
     mode: 'onChange',
   });
-  let from = location.state?.from?.pathname || '/';
 
   const closeModal = () => setOpen(false);
 
@@ -56,7 +57,6 @@ const SignUp = ({ open, setOpen }) => {
     setValue(localStorage.getItem('email'));
   }, []);
 
-
   const onSubmit = async (data) => {
     let URL = null;
     if (isRegister) {
@@ -66,7 +66,7 @@ const SignUp = ({ open, setOpen }) => {
     }
   
     try {
-      setLoading(true); // Set loading state to true before making the API request
+      setLoading(true);
       setLoadingText(isRegister ? 'Creating Account...' : 'Logging in...');
   
       const res = await apiRequest({
@@ -78,28 +78,26 @@ const SignUp = ({ open, setOpen }) => {
       console.log(res);
       if (res?.status === 'failed') {
         if (res?.message === 'Email address already exists') {
-          setIsEmailExisting(true); // Set state to true to show the modal
+          setIsEmailExisting(true);
         } else {
           setErrMsg('Incorrect email or password.');
         }
-        setLoading(false); // Set loading state to false after handling the error
+        setLoading(false);
       } else {
-        // Registration successful
         setErrMsg('');
-        const userData = { token: res?.token, ...res?.user };
-        dispatch(Login(userData));
-        localStorage.setItem('userInfo', JSON.stringify(userData));
-        setOpen(false);
-  
-        // Change loading button to spinner with verification text
-        setLoadingText('Verifying...');
-        // Simulate verification for 3 seconds
-        setTimeout(() => {
-          setLoading(false); // Set loading to false after successful registration
-        }, 3000);
+        if (isRegister) {
+          // Registration successful, show success message
+          setSuccessMessage('Registration successful! Please verify your email before logging in.');
+        } else {
+          // Login successful
+          const userData = { token: res?.token, ...res?.user };
+          dispatch(Login(userData));
+          localStorage.setItem('userInfo', JSON.stringify(userData));
+          setOpen(false);
+        }
       }
     } catch (error) {
-      setLoading(false); // Set loading state to false if an error occurs
+      setLoading(false);
       if (error.response && error.response.status === 400) {
         if (
           error.response.data &&
@@ -118,7 +116,7 @@ const SignUp = ({ open, setOpen }) => {
     }
   };
   
-
+  
   const handleCheckboxChange = (event) => {
     setAgreedToTerms(event.target.checked);
   };
@@ -204,7 +202,7 @@ const SignUp = ({ open, setOpen }) => {
                       })}
                       error={errors.email ? errors.email.message : ''}
                     />
-                   {isRegister && accountType === 'seeker' && (
+                    {isRegister && accountType === 'seeker' && (
                       <>
                         <TextInput
                           name="birthdate"
@@ -216,21 +214,33 @@ const SignUp = ({ open, setOpen }) => {
                             validate: (value) => {
                               const birthdate = new Date(value);
                               const today = new Date();
-                              const minDate = new Date(today.getFullYear() - 24, today.getMonth(), today.getDate());
-                              const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-                          
-                              if (birthdate < minDate || birthdate > maxDate) {
+                              const minDate = new Date(
+                                today.getFullYear() - 24,
+                                today.getMonth(),
+                                today.getDate()
+                              );
+                              const maxDate = new Date(
+                                today.getFullYear() - 18,
+                                today.getMonth(),
+                                today.getDate()
+                              );
+
+                              if (
+                                birthdate < minDate ||
+                                birthdate > maxDate
+                              ) {
                                 return 'You must be between 18 to 24 years old to register.';
                               }
                               return true;
                             },
                           })}
-                          
-                          error={errors.birthdate ? errors.birthdate.message : ''}
+                          error={
+                            errors.birthdate ? errors.birthdate.message : ''
+                          }
                         />
                       </>
                     )}
-                    
+
                     {isRegister && (
                       <div className="w-full flex gap-1 md:gap-2">
                         <div
@@ -260,15 +270,15 @@ const SignUp = ({ open, setOpen }) => {
                                   accountType === 'seeker'
                                     ? 'First Name is required'
                                     : 'Company Name is required',
-                              },
+                              }
                             )}
                             error={
                               accountType === 'seeker'
                                 ? errors.firstName
-                                  ? errors.firstName?.message
+                                  ? errors.firstName.message
                                   : ''
                                 : errors.name
-                                ? errors.name?.message
+                                ? errors.name.message
                                 : ''
                             }
                           />
@@ -285,7 +295,7 @@ const SignUp = ({ open, setOpen }) => {
                                 required: 'Last Name is required',
                               })}
                               error={
-                                errors.lastName ? errors.lastName?.message : ''
+                                errors.lastName ? errors.lastName.message : ''
                               }
                             />
                           </div>
@@ -305,9 +315,9 @@ const SignUp = ({ open, setOpen }) => {
                       {isRegister && (
                         <div className="w-1/2">
                           <TextInput
-                            label='Confirm Password'
-                            placeholder='Password'
-                            type='password'
+                            label="Confirm Password"
+                            placeholder="Password"
+                            type="password"
                             register={register('cPassword', {
                               validate: (value) => {
                                 const { password } = getValues();
@@ -320,7 +330,7 @@ const SignUp = ({ open, setOpen }) => {
                             error={
                               errors.cPassword &&
                               errors.cPassword.type === 'validate'
-                                ? errors.cPassword?.message
+                                ? errors.cPassword.message
                                 : ''
                             }
                           />
@@ -349,24 +359,27 @@ const SignUp = ({ open, setOpen }) => {
                           >
                             Terms of Service
                           </a>
-                          .
+                          {!agreedToTerms && (
+                              <p className="text-red-500 text-sm ml-1">You must agree to the terms and conditions.</p>
+                            )}
                         </Checkbox>
                       </div>
                     )}
-                 <div className="mt-2 flex items-center justify-center">
-                  {loading ? (
-                    <div className="flex flex-col items-center">
-                      <Spinner color="success" />
-                      <p className="mt-2">{loadingText}</p>
+                    <div className="mt-2 flex items-center justify-center">
+                      {loading ? (
+                        <div className="flex flex-col items-center">
+                          <div className="loading loading-infinity loading-md text-green-700" />
+                          <p className="mt-2">{loadingText}</p>
+                        </div>
+                      ) : (
+                        <CustomButton
+                          type="submit"
+                          containerStyles="rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1] hover:text-[#14532d]"
+                          title={isRegister ? 'Create Account' : 'Login Account'}
+                        />
+                      )}
                     </div>
-                  ) : (
-                    <CustomButton
-                      type="submit"
-                      containerStyles={`rounded-md bg-[#14532d] px-8 py-2 text-sm font-medium text-white outline-none hover:bg-[#C1E1C1]`}
-                      title={isRegister ? 'Create Account' : 'Login Account'}
-                    />
-                  )}
-                </div>
+
                     <div className="flex items-center justify-center mt-2">
                       <hr className="w-24 border-gray-500" />
                       <p className="text-base text-gray-700 mx-3">
@@ -396,7 +409,7 @@ const SignUp = ({ open, setOpen }) => {
                         : 'Do not have an account?'}
 
                       <span
-                        className="text-sm text-border-[#14532d] ml-2 hover:text-[#C1E1C1] hover:font-semibold cursor-pointer"
+                        className="text-sm font-bold text-[#14532d] ml-2 hover:text-[#C1E1C1] hover:font-semibold cursor-pointer"
                         onClick={() => setIsRegister((prev) => !prev)}
                       >
                         {isRegister ? 'Login' : 'Create Account'}
@@ -445,27 +458,26 @@ const SignUp = ({ open, setOpen }) => {
                   leaveTo="opacity-0 scale-95"
                 >
                   <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all ">
-                  <Dialog.Title
-                        as="h3"
-                        className="flex items-center justify-center text-xl font-semibold leading-6 text-red-600"
+                    <Dialog.Title
+                      as="h3"
+                      className="flex items-center justify-center text-xl font-semibold leading-6 text-red-600"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 mr-2"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 mr-2"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M10 4v6M10 14h.01"
-                          />
-                        </svg>
-                        Email Address already exists
-                      </Dialog.Title>
-
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M10 4v6M10 14h.01"
+                        />
+                      </svg>
+                      Email Address already exists
+                    </Dialog.Title>
 
                     <div className="mt-4">
                       <p className="text-sm text-gray-700">
@@ -491,7 +503,84 @@ const SignUp = ({ open, setOpen }) => {
           </Dialog>
         </Transition>
       )}
-    </>
+      {successMessage && (
+  <Transition appear show={successMessage !== ''}>
+    <Dialog
+      as="div"
+      className="fixed inset-0 z-50 overflow-y-auto"
+      onClose={() => setSuccessMessage('')}
+    >
+      <div className="flex items-end justify-end min-h-full p-2">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0" />
+        </Transition.Child>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+        >
+          <Dialog.Panel className="max-w-sm p-4 mr-4 pr-4 bg-green-50 border-l-4 border-green-500 rounded-r-xl shadow-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <svg
+                    className="w-5 h-5 text-green-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <div className="text-sm text-green-600">
+                    <p>{successMessage}</p>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                onClick={() => setSuccessMessage('')}
+              >
+                <svg
+                  className="w-4 h-4 fill-current hover:opacity-50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M14.364 14.364a1 1 0 11-1.414 1.414L10 11.414l-2.95 2.95a1 1 0 11-1.414-1.414L8.586 10 5.636 7.05a1 1 0 111.414-1.414L10 8.586l2.95-2.95a1 1 0 111.414 1.414L11.414 10l2.95 2.95z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </Dialog.Panel>
+        </Transition.Child>
+      </div>
+    </Dialog>
+  </Transition>
+)}
+
+      </>
   );
 };
 

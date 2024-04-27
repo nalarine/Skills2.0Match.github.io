@@ -120,20 +120,20 @@ const JobDetail = () => {
 
   return (
     <div className="container mx-auto">
-      <Link
-        to="/CompanyDash"
-        className="absolute top-0 left-0 mt-4 ml-4 flex items-center"
-      >
-        <button className="text-black text-sm bg-transparent px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
-          <BsArrowLeft className="mr-2" />
-        </button>
-      </Link>
       {isFetching ? (
         <Loading />
       ) : job ? (
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="w-full lg:w-2/3 px-5 py-10">
             <div className="mb-5">
+            <Link
+        to={user?.accountType === 'seeker' ? '/Dashboard' : '/CompanyDash'}
+        className="absolute top-0 left-0 mt-4 ml-4 flex items-center"
+      >
+        <button className="text-black text-sm bg-transparent px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
+          <BsArrowLeft className="mr-2" />
+        </button>
+    </Link>
               <div className="flex items-center justify-between">
                 <div className="flex gap-2">
                   <div>
