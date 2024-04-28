@@ -16,7 +16,8 @@ function MenuList({ user, onClick }) {
   const dispatch = useDispatch()
   const handleLogout = () => {
     dispatch(Logout())
-  }
+      window.location.href = '/user-auth';
+};
 
   const userType = user?.accountType === 'seeker' ? 'Applicant' : 'Company'
 
@@ -123,7 +124,7 @@ function Navbar() {
           <img src={logohead} alt="Logo" className="w-15 h-12 mr-2" />
         </div>
         <div className="hidden lg:flex items-center space-x-9">
-          <Link to="/home" className="hover:text-green-500">
+          <Link to="/user-auth" className="hover:text-green-500">
             Home
           </Link>
           <Link
@@ -134,10 +135,10 @@ function Navbar() {
           >
             {user?.accountType === 'seeker' ? 'Applications' : 'Upload Job'}
           </Link>
-          <Link to="/about" className="hover:text-green-500">
+          <Link to="/AboutPage" className="hover:text-green-500">
             About
           </Link>
-          <Link to="/contact" className="hover:text-green-500">
+          <Link to="/ContactPage" className="hover:text-green-500">
             Contact
           </Link>
           {!user?.token ? (
@@ -179,10 +180,10 @@ function Navbar() {
         >
           {user?.accountType === 'seeker' ? 'Applications' : 'Upload Job'}
         </Link>
-        <Link to="/about" onClick={toggleNavbar}>
+        <Link to="/AboutPage" onClick={toggleNavbar}>
           About
         </Link>
-        <Link to="/contact" onClick={toggleNavbar}>
+        <Link to="/ContactPage" onClick={toggleNavbar}>
           Contact
         </Link>
         {!user?.token ? (

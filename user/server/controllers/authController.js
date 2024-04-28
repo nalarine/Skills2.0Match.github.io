@@ -173,3 +173,69 @@ export const resetPassword = async (req, res, next) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const deleteAccount = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find user by email
+    const user = await Users.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Check if provided password matches user's password
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ success: false, message: 'Invalid password' });
+    }
+
+    // Remove user document
+    await user.deleteOne();
+
+    res.status(200).json({ success: true, message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  const { currentEmail, newPassword } = req.body;
+
+  try {
+    // Check if email exists
+    const user = await Users.findOne({ email: currentEmail });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's password
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
+
+export const changeEmail = async (req, res) => {
+  const { currentEmail, newEmail } = req.body;
+
+  try {
+    // Find user by current email and update email
+    const user = await Users.findOneAndUpdate({ email: currentEmail }, { email: newEmail });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.status(200).json({ success: true, message: 'Email changed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};

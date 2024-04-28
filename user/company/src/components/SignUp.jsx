@@ -27,9 +27,8 @@ const SignUp = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [errMsg, setErrMsg] = useState('');
+  const [errMsg, setErrMsg] = useState(''); // Define errMsg state
   const [successMessage, setSuccessMessage] = useState('');
-  const [rememberMe, setRememberMe] = useState(false); // State to track "Remember me" checkbox
 
   const {
     register,
@@ -56,17 +55,6 @@ const SignUp = ({ open, setOpen }) => {
 
   useEffect(() => {
     setValue(localStorage.getItem('email'));
-    // Check if user wants to be remembered
-    const rememberMeState = localStorage.getItem('rememberMe');
-    if (rememberMeState === 'true') {
-      setRememberMe(true);
-      // Automatically log in if authentication state is stored
-      const userInfo = localStorage.getItem('userInfo');
-      if (userInfo) {
-        dispatch(Login(JSON.parse(userInfo)));
-        setOpen(false);
-      }
-    }
   }, []);
 
   const onSubmit = async (data) => {
@@ -106,10 +94,6 @@ const SignUp = ({ open, setOpen }) => {
           dispatch(Login(userData));
           localStorage.setItem('userInfo', JSON.stringify(userData));
           setOpen(false);
-          // Store authentication state if "Remember me" is checked
-          if (rememberMe) {
-            localStorage.setItem('rememberMe', 'true');
-          }
         }
       }
     } catch (error) {
@@ -131,18 +115,10 @@ const SignUp = ({ open, setOpen }) => {
       }
     }
   };
-
+  
+  
   const handleCheckboxChange = (event) => {
     setAgreedToTerms(event.target.checked);
-  };
-
-  const handleRememberMeChange = (event) => {
-    setRememberMe(event.target.checked);
-    // Clear stored authentication state if "Remember me" is unchecked
-    if (!event.target.checked) {
-      localStorage.removeItem('rememberMe');
-      localStorage.removeItem('userInfo');
-    }
   };
 
   return (
@@ -395,7 +371,7 @@ const SignUp = ({ open, setOpen }) => {
                         <>
                           <Checkbox
                             defaultChecked={false}
-                            onChange={handleRememberMeChange}
+                            onChange={(event) => console.log(event.target.checked)}
                             color="success"
                           >
                             Remember me

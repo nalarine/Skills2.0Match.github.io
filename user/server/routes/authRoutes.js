@@ -1,6 +1,6 @@
 import express from "express";
 import { rateLimit } from "express-rate-limit";
-import { register, verifyEmail, signIn, resetPassword } from "../controllers/authController.js";
+import { register, verifyEmail, signIn, resetPassword, deleteAccount, changeEmail, changePassword } from "../controllers/authController.js";
 
 // Import your email verification function from your email service file
 import { sendVerificationEmail } from "../emailService.js";
@@ -107,5 +107,14 @@ router.post("/login", loginLimiter, async (req, res) => {
 });
 
 router.post('/reset-password', resetPassword);
+
+// Delete Account
+router.delete('/delete-account', deleteAccount);
+
+// Change Password
+router.put('/change-password', changePassword);
+
+// Change Email
+router.put('/change-email', changeEmail);
 
 export default router;
