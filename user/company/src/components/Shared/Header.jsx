@@ -2,47 +2,45 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { IoIosNotificationsOutline } from 'react-icons/io'
 import { Link } from 'react-router-dom'
+import { apiRequest } from '../../utils'
 import NotificationsPopover from './usernotifications-popover'
 import AccountPopover from './useraccount-popover'
 
-const Header = ({ newJobDetails }) => {
+const Header = () => {
   const { user } = useSelector((state) => state.user)
-  const [showNotifications, setShowNotifications] = useState(false)
-  const [unreadNotifications, setUnreadNotifications] = useState(0)
-  const [isClicked, setIsClicked] = useState(false)
+  const [newJobDetails, setNewJobDetails] = useState([])
 
-  const profileUrl = user?.profileUrl || '' // Initialize profileUrl to empty string if not available
-
-  const handleButtonClick = () => {
-    setIsClicked(true)
-    setTimeout(() => {
-      setIsClicked(false)
-    }, 200)
-    // Add any other functionality you want to perform on button click
-  }
+  const profileUrl = user?.profileUrl || ''
 
   useEffect(() => {
-    if (newJobDetails) {
-      // Calculate the number of unread notifications
-      const newUnreadNotifications = newJobDetails.filter(
-        (job) => job.isUnread,
-      ).length
-      setUnreadNotifications(newUnreadNotifications)
-    }
-  }, [newJobDetails])
+    const interval = setInterval(() => {
+      fetchJobDetails()
+    }, 10000)
 
-  // Function to toggle visibility of notifications popup
-  const toggleNotifications = () => {
-    setShowNotifications(!showNotifications)
-    if (showNotifications) {
-      setUnreadNotifications(0) // Reset unread notifications count when closing
-    }
-  }
+    // Cleanup function to clear the interval when component unmounts
+    return () => clearInterval(interval)
+  }, [])
 
-  // Function to close notifications popup
-  const closeNotifications = () => {
-    setShowNotifications(false)
-    setUnreadNotifications(0) // Reset unread notifications count when closing
+  const fetchJobDetails = async () => {
+    try {
+      const res = await apiRequest({
+        url: '/jobs/job-applications/' + user._id,
+        method: 'GET',
+        token: user?.token,
+      })
+      let tableData = []
+      for (let data of res.data) {
+        for (let applicant of data.applicants) {
+          tableData.push({
+            companyName: data.companyName,
+            ...applicant,
+          })
+        }
+      }
+      setNewJobDetails(tableData)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -54,29 +52,19 @@ const Header = ({ newJobDetails }) => {
             <span className="font-normal text-gray">Applicant</span>
           </div>
         </div>
-        <div
-          className="flex items-center gap-3  relative"
-          onClick={toggleNotifications}
-        >
-          <NotificationsPopover
-            newJobDetails={newJobDetails}
-            showNotifications={showNotifications}
-          />
+        <div className="flex items-center gap-3  relative">
+          <NotificationsPopover newJobDetails={newJobDetails} />
         </div>
         <div className="flex items-center gap-3 p-3 relative">
           <AccountPopover />
         </div>
         <Link to="/find-jobs">
           <button
-            className={`bg-green-700 hover:bg-green-500 border border-dark-yellow text-white font-bold py-2 px-4 rounded transition-transform ${isClicked ? 'scale-95' : ''}`}
+            className="bg-green-700 hover:bg-green-500 border border-dark-yellow text-white font-bold py-2 px-4 rounded transition-transform"
             style={{
               borderRadius: '20px / 50%',
               transitionProperty: 'border-radius',
             }}
-            onClick={handleButtonClick}
-            onMouseDown={() => setIsClicked(true)}
-            onMouseUp={() => setIsClicked(false)}
-            onMouseLeave={() => setIsClicked(false)}
           >
             Apply Now
           </button>
