@@ -150,7 +150,7 @@ const NotificationsPopover = ({ newJobDetails }) => {
         PaperProps={{
           sx: {
             mt: 1.5,
-            ml: 0.75,
+            ml: -6,
             width: 360,
           },
         }}
