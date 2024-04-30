@@ -1,31 +1,80 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import List from '@mui/material/List'
-import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
-import ListItemText from '@mui/material/ListItemText'
-import ListSubheader from '@mui/material/ListSubheader'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import ListItemButton from '@mui/material/ListItemButton'
-import Popover from '@mui/material/Popover' // Import Popover
-import Scrollbar from '../../pages/admin2/components/scrollbar/scrollbar'
-import Typography from '@mui/material/Typography' // Import Typography
-import Divider from '@mui/material/Divider' // Import Divider
-import Avatar from '@mui/material/Avatar' // Import Avatar
-import Button from '@mui/material/Button' // Import Button
-import Tooltip from '@mui/material/Tooltip' // Import Tooltip
-import Iconify from '../../pages/admin2/components/iconify/iconify'
-import { fToNow } from '../../pages/admin2/utils/format-time'
+import Popover from '@mui/material/Popover'
 import Box from '@mui/material/Box'
+import Badge from '@mui/material/Badge'
+import Iconify from '../../pages/admin2/components/iconify/iconify'
+import Typography from '@mui/material/Typography'
+import Divider from '@mui/material/Divider'
+import Button from '@mui/material/Button'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import Avatar from '@mui/material/Avatar'
+import ListItemText from '@mui/material/ListItemText'
+import Tooltip from '@mui/material/Tooltip'
+import List from '@mui/material/List'
+import Scrollbar from '../../pages/admin2/components/scrollbar/scrollbar'
+import { useSelector } from 'react-redux'
 
 const NotificationsPopover = ({ newJobDetails }) => {
   if (!newJobDetails) {
     return null // Render nothing if newJobDetails is undefined
   }
 
-  const totalUnRead = newJobDetails.filter(
-    (item) => item.isUnread === true,
-  ).length
+  const { user } = useSelector((state) => state.user)
+
+  const [notifications, setNotifications] = useState(() => {
+    const storedNotifications = localStorage.getItem('notifications')
+    return storedNotifications ? JSON.parse(storedNotifications) : []
+  })
+
+  const [mostRecentUnreadIndex, setMostRecentUnreadIndex] = useState(-1)
+
+  const previousJobDetails = useRef([])
+
+  useEffect(() => {
+    const generateNotifications = () => {
+      const newNotifications = []
+
+      newJobDetails.forEach((newJob) => {
+        const previousJob = previousJobDetails.current.find(
+          (job) => job.id === newJob.id,
+        )
+        if (!previousJob || previousJob.hiringStage !== newJob.hiringStage) {
+          const notification = {
+            id: `${newJob.id}-${Date.now()}`,
+            companyName: newJob.companyName,
+            job: newJob,
+            isUnread: true, // Initialize notification as unread
+          }
+          newNotifications.unshift(notification) // Prepend new notification
+        }
+      })
+
+      setNotifications((prevNotifications) => [
+        ...newNotifications,
+        ...prevNotifications, // Add previous notifications
+      ])
+      previousJobDetails.current = newJobDetails
+
+      // Update most recent unread index if new unread notification added
+      const newUnreadIndex = newNotifications.findIndex(
+        (notification) => notification.isUnread,
+      )
+      if (newUnreadIndex !== -1) {
+        setMostRecentUnreadIndex(newUnreadIndex)
+      }
+    }
+
+    generateNotifications()
+  }, [newJobDetails])
+
+  useEffect(() => {
+    localStorage.setItem('notifications', JSON.stringify(notifications))
+  }, [notifications])
+
+  const hasNewNotifications = newJobDetails.length > 0
 
   const [open, setOpen] = useState(null)
 
@@ -37,13 +86,38 @@ const NotificationsPopover = ({ newJobDetails }) => {
     setOpen(null)
   }
 
-  const handleMarkAllAsRead = () => {
-    // Your logic to mark all as read
+  const handleMarkAsRead = (index) => {
+    // Mark the notification at the specified index as read
+    const updatedNotifications = [...notifications]
+    updatedNotifications[index] = {
+      ...updatedNotifications[index],
+      isUnread: false,
+    }
+    setNotifications(updatedNotifications)
+
+    // Update the most recent unread index if needed
+    if (index === mostRecentUnreadIndex) {
+      const nextUnreadIndex = updatedNotifications.findIndex(
+        (notification) => notification.isUnread,
+      )
+      setMostRecentUnreadIndex(nextUnreadIndex)
+    }
   }
 
-  // Function to generate notification message based on hiring stage
+  const handleMarkAllAsRead = () => {
+    // Mark all notifications as read
+    const updatedNotifications = notifications.map((notification) => ({
+      ...notification,
+      isUnread: false,
+    }))
+    setNotifications(updatedNotifications)
+    setMostRecentUnreadIndex(-1) // Reset most recent unread index
+  }
+
   const getNotificationMessage = (job) => {
     switch (job.hiringStage) {
+      case 'Pending':
+        return `Your application for the job ${job.jobRole} at ${job.companyName} is Pending`
       case 'Hired':
         return `Congratulations! You are Hired on the job ${job.jobRole} at ${job.companyName}`
       case 'Shortlisted':
@@ -57,8 +131,12 @@ const NotificationsPopover = ({ newJobDetails }) => {
 
   return (
     <>
-      <IconButton onClick={handleOpen}>
-        <Badge badgeContent={totalUnRead} color="secondary">
+      <IconButton onClick={handleOpen} className="relative">
+        {hasNewNotifications && <div></div>}
+        <Badge
+          badgeContent={notifications.filter((n) => n.isUnread).length}
+          color="secondary"
+        >
           <Iconify width={24} icon="solar:bell-bing-bold-duotone" />
         </Badge>
       </IconButton>
@@ -82,11 +160,12 @@ const NotificationsPopover = ({ newJobDetails }) => {
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle1">Notifications</Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                You have {totalUnRead} unread notifications
+                You have {notifications.filter((n) => n.isUnread).length} unread
+                notifications
               </Typography>
             </Box>
 
-            {totalUnRead > 0 && (
+            {notifications.filter((n) => n.isUnread).length > 0 && (
               <Tooltip title="Mark all as read">
                 <IconButton color="primary" onClick={handleMarkAllAsRead}>
                   <Iconify icon="eva:done-all-fill" />
@@ -99,18 +178,37 @@ const NotificationsPopover = ({ newJobDetails }) => {
 
           <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
             <List disablePadding>
-              {newJobDetails.map((job) => (
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <img
-                      src={job.profileUrl}
-                      className="w-20 h-20 rounded mb-2"
+              {notifications.map((notification, index) => (
+                <ListItemButton
+                  key={notification.id}
+                  className={notification.isUnread ? 'bg-green-100' : ''}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      backgroundColor: notification.isUnread
+                        ? '#C1E1C1'
+                        : 'transparent',
+                      padding: '8px', // Adjust padding as needed
+                      borderRadius: '4px', // Add some rounded corners
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar
+                        src={user.profileUrl}
+                        className="w-20 h-20 rounded mb-2"
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={notification.companyName}
+                      secondary={getNotificationMessage(notification.job)}
+                      style={{
+                        fontWeight: 'bold',
+                        marginLeft: '8px', // Adjust spacing between avatar and text
+                      }}
                     />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={job.companyName}
-                    secondary={getNotificationMessage(job)}
-                  />
+                  </div>
                 </ListItemButton>
               ))}
             </List>
