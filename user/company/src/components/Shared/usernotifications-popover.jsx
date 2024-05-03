@@ -196,7 +196,7 @@ const NotificationsPopover = ({ newJobDetails }) => {
                   >
                     <ListItemAvatar>
                       <Avatar
-                        src={user.profileUrl}
+                        // src={user.profileUrl}
                         className="w-20 h-20 rounded mb-2"
                       />
                     </ListItemAvatar>

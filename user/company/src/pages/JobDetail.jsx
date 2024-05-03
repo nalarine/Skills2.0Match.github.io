@@ -126,20 +126,36 @@ const JobDetail = () => {
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="w-full lg:w-2/3 px-5 py-10">
             <div className="mb-5">
-            <Link
-        to={user?.accountType === 'seeker' ? '/Dashboard' : '/CompanyDash'}
-        className="absolute top-0 left-0 mt-4 ml-4 flex items-center"
-      >
-        <button className="text-black text-sm bg-transparent px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
-          <BsArrowLeft className="mr-2" />
-        </button>
-    </Link>
+              <Link
+                to={
+                  user?.accountType === 'seeker' ? '/Dashboard' : '/CompanyDash'
+                }
+                className="absolute top-0 left-0 mt-4 ml-4 flex items-center"
+              >
+                <button className="text-black text-sm bg-transparent px-3 py-1 rounded-md transition-colors duration-300 hover:text-white hover:bg-green-500 hover:border-transparent flex items-center">
+                  <BsArrowLeft className="mr-2" />
+                </button>
+              </Link>
               <div className="flex items-center justify-between">
                 <div className="flex gap-2">
                   <div>
                     <p className="text-left text-slate-400">Position</p>
                     <p className="text-3xl font-bold text-green-700">
                       {job?.jobTitle}
+                    </p>
+                  </div>
+                  <div className="ml-[220px] mt-4">
+                    <p className="text-left text-slate-400">
+                      <span className="text-green-700 font-bold">
+                        Start Hiring Date:{' '}
+                      </span>{' '}
+                      {job?.startHiringDate}
+                    </p>
+                    <p className="text-left text-slate-400">
+                      <span className="text-green-700 font-bold">
+                        End Hiring Date:{' '}
+                      </span>{' '}
+                      {job?.endHiringDate}
                     </p>
                   </div>
                 </div>
@@ -241,10 +257,11 @@ const JobDetail = () => {
                 />
                 <button
                   onClick={handleSaveJob}
-                  className={`w-full flex items-center justify-center text-green-700 ${isSaved
+                  className={`w-full flex items-center justify-center text-green-700 ${
+                    isSaved
                       ? 'bg-lime-400 text-white'
                       : 'border border-green-700 hover:bg-green-700 hover:text-white'
-                    } py-3 px-5 mt-4 outline-none rounded-full text-lg`}
+                  } py-3 px-5 mt-4 outline-none rounded-full text-lg`}
                 >
                   {isSaved ? (
                     <BsBalloonHeartFill className="mr-2 w-8 h-8" />
@@ -338,7 +355,9 @@ const JobDetail = () => {
               accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
               onChange={handleResume}
             />
-            <p class="mb-8 text-sm text-gray-600">Please ensure your resume is in DOC, DOCX, or PDF format.</p>
+            <p class="mb-8 text-sm text-gray-600">
+              Please ensure your resume is in DOC, DOCX, or PDF format.
+            </p>
             <div className="flex justify-between">
               <button
                 type="submit"
@@ -351,7 +370,6 @@ const JobDetail = () => {
           </div>
         </div>
       </Modal>
-
     </div>
   )
 }

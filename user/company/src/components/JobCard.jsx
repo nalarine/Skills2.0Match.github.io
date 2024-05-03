@@ -74,8 +74,22 @@ const JobCard = ({ job, onSave, isSaved }) => {
                 {job?.detail[0]?.desc?.slice(0, 150) + '...'}
               </Skeleton>
             ) : (
-              <div className="text-sm">
+              <div className="text-sm text-left">
                 {job?.detail[0]?.desc?.slice(0, 150) + '...'}
+              </div>
+            )}
+          </div>
+
+          <div className="py-3">
+            {showSkeleton ? (
+              <Skeleton className="text-xs text-slate-500">
+                <p>Start Hiring Date: {job?.startHiringDate}</p>
+                <p>End Hiring Date: {job?.endHiringDate}</p>
+              </Skeleton>
+            ) : (
+              <div className="text-xs text-slate-500 text-left">
+                <p>Start Hiring Date: {job?.startHiringDate}</p>
+                <p>End Hiring Date: {job?.endHiringDate}</p>
               </div>
             )}
           </div>
