@@ -43,8 +43,29 @@ const JobDetail = () => {
         url: `/jobs/get-job-detail/${id}`,
         method: 'GET',
       })
-      setJob(res.data)
-      setSimilarJobs(res.similarJobs)
+      if (res.data) {
+        // Formatting startHiringDate and endHiringDate
+        const formattedJob = {
+          ...res.data,
+          startHiringDate: new Date(
+            res.data.startHiringDate,
+          ).toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          }),
+          endHiringDate: new Date(res.data.endHiringDate).toLocaleDateString(
+            'en-US',
+            {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            },
+          ),
+        }
+        setJob(formattedJob)
+        setSimilarJobs(res.similarJobs)
+      }
       setIsFetching(false)
     } catch (error) {
       console.log(error)

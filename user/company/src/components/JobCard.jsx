@@ -19,6 +19,15 @@ const JobCard = ({ job, onSave, isSaved }) => {
     onSave(job)
   }
 
+  // Function to format date
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  }
+
   return (
     <div className="relative">
       <Link to={`/job-detail/${job?._id}`}>
@@ -83,13 +92,13 @@ const JobCard = ({ job, onSave, isSaved }) => {
           <div className="py-3">
             {showSkeleton ? (
               <Skeleton className="text-xs text-slate-500">
-                <p>Start Hiring Date: {job?.startHiringDate}</p>
-                <p>End Hiring Date: {job?.endHiringDate}</p>
+                <p>Start Hiring Date: {formatDate(job?.startHiringDate)}</p>
+                <p>End Hiring Date: {formatDate(job?.endHiringDate)}</p>
               </Skeleton>
             ) : (
               <div className="text-xs text-slate-500 text-left">
-                <p>Start Hiring Date: {job?.startHiringDate}</p>
-                <p>End Hiring Date: {job?.endHiringDate}</p>
+                <p>Start Hiring Date: {formatDate(job?.startHiringDate)}</p>
+                <p>End Hiring Date: {formatDate(job?.endHiringDate)}</p>
               </div>
             )}
           </div>
