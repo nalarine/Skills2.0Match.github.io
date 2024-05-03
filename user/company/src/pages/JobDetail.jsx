@@ -17,6 +17,8 @@ import { BsBalloonHeartFill } from 'react-icons/bs'
 import { PiMoney } from 'react-icons/pi'
 import { CgWorkAlt } from 'react-icons/cg'
 import { BsPerson } from 'react-icons/bs'
+import { FiEdit } from 'react-icons/fi'
+import { RiDeleteBin5Line } from 'react-icons/ri'
 import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 
 const JobDetail = () => {
@@ -259,13 +261,15 @@ const JobDetail = () => {
               <>
                 <a
                   href={`/upload-job/${job._id}`}
-                  className="w-full flex items-center justify-center text-white bg-black py-3 px-5 mb-4 outline-none rounded-full text-base"
+                  className="w-full flex items-center justify-center text-white bg-green-700 hover:bg-lime-500 py-3 px-5 mb-4 outline-none rounded-full text-base"
                 >
+                  <FiEdit className="mr-2" />
                   Edit Post
                 </a>
                 <CustomButton
                   title="Delete Post"
                   onClick={handleDeletePost}
+                  iconLeft={<RiDeleteBin5Line />}
                   containerStyles="w-full flex items-center justify-center text-white bg-[#B91C1C] py-3 px-5 outline-none rounded-full text-base"
                 />
               </>

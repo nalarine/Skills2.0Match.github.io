@@ -23,7 +23,7 @@ const NotificationsPopover = ({ newJobDetails }) => {
     return null // Render nothing if newJobDetails is undefined
   }
 
-  const { user } = useSelector((state) => state.user)
+  // const { user } = useSelector((state) => state.user)
 
   const [notifications, setNotifications] = useState(() => {
     const storedNotifications = localStorage.getItem('notifications')
@@ -221,11 +221,23 @@ const NotificationsPopover = ({ newJobDetails }) => {
               {newJobDetails.map((job) => (
                 <ListItemButton key={job.id}>
                   <ListItemAvatar>
-                    <Avatar
-                      alt={job.companyName}
-                      src={job?.company?.profileUrl}
-                      className="w-20 h-20 rounded mb-2"
-                    />
+                    <List disablePadding>
+                      {newJobDetails.map((job) => (
+                        <ListItemButton key={job.id}>
+                          <ListItemAvatar>
+                            <Avatar
+                              alt={job.companyName}
+                              src={job?.company?.profileUrl}
+                              className="w-20 h-20 rounded mb-2"
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={job.companyName}
+                            secondary={getNotificationMessage(job)}
+                          />
+                        </ListItemButton>
+                      ))}
+                    </List>
                   </ListItemAvatar>
                   <ListItemText
                     primary={job.companyName}

@@ -4,7 +4,7 @@ const CustomButton = ({
   title,
   containerStyles,
   iconRight,
-  icon,
+  iconLeft,
   type,
   onClick,
 }) => {
@@ -14,8 +14,8 @@ const CustomButton = ({
       type={type || 'button'}
       className={`inline-flex items-center ${containerStyles}`}
     >
+      {iconLeft && <div className="mr-2">{iconLeft}</div>}
       {title}
-      {icon}
       {iconRight && <div className="ml-2">{iconRight}</div>}
     </button>
   )
