@@ -107,176 +107,221 @@ export const technicalSkillsQuestionnaires = [
     image: ' ',
     question: ' 58 + 79 = ',
     choices: [' A. 129 ', ' B. 139 ', ' C. 137 ', ' D. 127 '],
+    correctAnswer: 'C. 137',
+    points: 1, // Assigning 1 point for each correct answer
   },
   {
     category: 'Numeracy:',
     image: ' ',
     question: '6386 + 999 = ',
     choices: [' A. 7387', ' B. 6387 ', ' C. 6385  ', ' D. 7385 '],
+    correctAnswer: 'D. 7385',
+    points: 1, // Assigning 1 point for each correct answer
   },
   {
     category: 'Numeracy:',
     image: ' ',
     question: '76 - 34 = ',
     choices: [' A. 52 ', ' B. 38 ', ' C. 42 ', ' D. 28 '],
+    correctAnswer: 'C. 42',
+    points: 1, // Assigning 1 point for each correct answer
   },
   {
-    category: 'Numeracy',
+    category: 'Numeracy:',
     image: ' ',
-    question: '67 × 2 =',
-    choices: [' A. 134', ' B. 124 ', ' C. 129 ', ' D. 144 '],
+    question: '67 × 2 = ',
+    choices: ['A. 134', 'B. 124', 'C. 129', 'D. 144'],
+    correctAnswer: 'A. 134',
+    points: 1,
   },
   {
-    category: 'Numeracy',
+    category: 'Numeracy:',
     image: ' ',
     question: '437 × 7 = ',
-    choices: [' A. 2819 ', ' B. 3024 ', ' C. 3059 ', ' D. 2804 '],
+    choices: ['A. 2819', 'B. 3024', 'C. 3059', 'D. 2804'],
+    correctAnswer: 'C. 3059',
+    points: 1,
   },
   {
-    category: 'Numeracy',
+    category: 'Numeracy:',
     image: ' ',
     question: '280 ÷ 8 = ',
-    choices: [' A. 35 ', ' B. 32', ' C. 45 ', ' D. 38 '],
+    choices: ['A. 35', 'B. 32', 'C. 45', 'D. 38'],
+    correctAnswer: 'A. 35',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       'Elena worked 38 hours last week and 36 hours this week. How many hours did she work in the two weeks? ',
-    choices: [' A. 64 ', ' B. 74 ', ' C. 2 ', ' D. 68 '],
+    choices: ['A. 64', 'B. 74', 'C. 2', 'D. 68'],
+    correctAnswer: 'B. 74',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       'An electronics store had 182 customers on Thursday, 443 on Friday, and 509 on Saturday. How many customers did the store have in those three days? ',
-    choices: [' A. 1,135 ', ' B. 1,244 ', ' C. 1,144 ', ' D. 1,134  '],
+    choices: ['A. 1,135', 'B. 1,244', 'C. 1,144', 'D. 1,134'],
+    correctAnswer: 'D. 1,134',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
-      'Suzanna earned ₱65 in tips on Friday. She gave ₱18 of the tips to the busboy. How much did she have left?',
-    choices: [' A. ₱57 ', ' B. ₱47 ', ' C. ₱37 ', ' D. ₱83 '],
+      'Suzanna earned ₱65 in tips on Friday. She gave ₱18 of the tips to the busboy. How much did she have left? ',
+    choices: ['A. ₱57', 'B. ₱47', 'C. ₱37', 'D. ₱83'],
+    correctAnswer: 'B. ₱47',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       'The Wilsons’ food budget is ₱90 per week. They have already spent ₱41 this week. How much is left in their food budget for this week? ',
-    choices: [' A. ₱41 ', ' B. ₱59 ', ' C. ₱49 ', ' D. ₱51 '],
-  }, //
-  {
-    category: 'Numeracy:',
-    image: ' ',
-    question:
-      ' Each box below contains 14 hammers. In total, how many hammers are contained in the boxes? ',
-    choices: [' A. 50 ', ' B. 70 ', ' C. 19 ', ' D. 9 '],
+    choices: ['A. ₱41', 'B. ₱59', 'C. ₱49', 'D. ₱51'],
+    correctAnswer: 'A. ₱49',
+    points: 1,
   },
   {
-    category: 'Numeracy:',
+    category: 'Numeracy',
+    image: ' ',
+    question:
+      'Each box below contains 14 hammers. In total, how many hammers are contained in the boxes? ',
+    choices: ['A. 50', 'B. 70', 'C. 19', 'D. 9'],
+    correctAnswer: 'B. 70',
+    points: 1,
+  },
+  {
+    category: 'Numeracy',
     image: ' ',
     question:
       'Linda found 4 boxes of file folders in the closet. Each box contained 24 file folders. In all, how many file folders were in the boxes? ',
-    choices: [' A. 28 ', ' B. 20 ', ' C. 86  ', ' D. 96 '],
+    choices: ['A. 28', 'B. 20', 'C. 86', 'D. 96'],
+    correctAnswer: 'D. 96',
+    points: 1,
   },
   {
-    category: 'Numeracy:',
+    category: 'Numeracy',
     image: ' ',
     question: '683 ÷ 8 = ',
     choices: [
-      ' A. 84 Remainder 11 ',
-      ' B. 85 Remainder 3  ',
-      ' C. 76 Remainder 6  ',
-      ' D. 76 Remainder 7  ',
+      'A. 84 Remainder 11',
+      'B. 85 Remainder 3',
+      'C. 76 Remainder 6',
+      'D. 76 Remainder 7',
     ],
+    correctAnswer: 'B. 85 Remainder 3',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question: '304 ÷ 23 = ',
     choices: [
-      ' A. 12 Remainder 18 ',
-      ' B. 12 Remainder 6',
-      ' C. 13 Remainder 5  ',
-      ' D. 12 Remainder 28 ',
+      'A. 12 Remainder 18',
+      'B. 12 Remainder 6',
+      'C. 13 Remainder 5',
+      'D. 12 Remainder 28',
     ],
+    correctAnswer: 'C. 13 Remainder 5',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question: '272 ÷ 64 = ',
-    choices: [' A. 4.25 ', ' B. 3.75  ', ' C. 4.50  ', ' D. 4.75'],
+    choices: ['A. 4.25', 'B. 3.75', 'C. 4.50', 'D. 4.75'],
+    correctAnswer: 'A. 4.25',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question: '1/5 + 1/7 = ',
-    choices: [' A. 12/35 ', ' B. 2/12 ', ' C. 1/35  ', ' D. 1/6'],
+    choices: ['A. 12/35', 'B. 2/12', 'C. 1/35', 'D. 1/6'],
+    correctAnswer: 'A. 12/35',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
-    question: ' 1/6 + 1/8 = ',
-    choices: [' A. 1/7  ', ' B. 1/48  ', ' C. 7/24  ', ' D. 2/14 '],
+    question: '1/6 + 1/8 = ',
+    choices: ['A. 1/7', 'B. 1/48', 'C. 7/24', 'D. 2/14'],
+    correctAnswer: 'C. 7/24',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question: 'Reduce 15/21 to its lowest terms. ',
-    choices: [' A. 3/21 ', ' B. 5/7 ', ' C. 3/7 ', ' D. 6/21 '],
+    choices: ['A. 3/21', 'B. 5/7', 'C. 3/7', 'D. 6/21'],
+    correctAnswer: 'B. 5/7',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
-    question: '16/9 is equal to: ',
-    choices: [' A. 1 6/9 ', ' B. 7/9 ', ' C. 12/3  ', ' D. 1 7/9  '],
+    question: '16/9 is equal to:',
+    choices: ['A. 1 6/9', 'B. 7/9', 'C. 12/3', 'D. 1 7/9'],
+    correctAnswer: 'D. 1 7/9',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question: 'Which of the following numbers is the smallest? ',
-    choices: [' A. 3/7  ', ' B. 1/3  ', ' C. 5/6  ', ' D. 9/14 '],
-  }, //
-  {
-    category: 'Numeracy:',
-    image: ' ',
-    question:
-      ' Kate’s hat cost $23.40, her gloves cost $7.20, and her coat cost $74.95. How much did the three items cost? ',
-    choices: [' A.  $117.45', ' B.  $106.55  ', ' C. $105.45  ', ' D. $105.55'],
+    choices: ['A. 3/7', 'B. 1/3', 'C. 5/6', 'D. 9/14'],
+    correctAnswer: 'B. 1/3',
+    points: 1,
   },
   {
-    category: 'Numeracy:',
+    category: 'Numeracy',
+    image: ' ',
+    question:
+      'Kate’s hat cost $23.40, her gloves cost $7.20, and her coat cost $74.95. How much did the three items cost? ',
+    choices: ['A. $117.45', 'B. $106.55', 'C. $105.45', 'D. $105.55'],
+    correctAnswer: 'D. $105.55',
+    points: 1,
+  },
+  {
+    category: 'Numeracy',
     image: ' ',
     question:
       'Ben’s monthly commuting expenses are $109.32 for his train ticket, $16.45 for parking, and $68.00 for the bus. How much are his monthly commuting expenses? ',
-    choices: [' A. $125.77', ' B. $173.77 ', ' C. $193.77 ', ' D. $293.77 '],
+    choices: ['A. $125.77', 'B. $173.77', '$193.77', '$293.77'],
+    correctAnswer: 'C. $193.77',
+    points: 1,
   },
   {
-    category: 'Numeracy:',
+    category: 'Numeracy',
     image: ' ',
     question:
       'A company budgeted $3,050 to spend on advertising. So far, the company has spent $1,764.25 of the budget. How much money is left in the budget? ',
-    choices: [
-      ' A. $4,814.25 ',
-      ' B. $1,385.75 ',
-      ' C. $1,285.75  ',
-      ' D. $1,386.75 ',
-    ],
+    choices: ['A. $4,814.25', 'B. $1,385.75', 'C. $1,285.75', 'D. $1,386.75'],
+    correctAnswer: 'C. $1,285.75',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       'A nursery sells apple trees at $24.95 each. A landscaper bought 8 trees from the nursery. What was the total cost of the trees? ',
-    choices: [' A. $199.60 ', ' B. $169.24 ', ' C. $19.96 ', ' D. $16.92 '],
+    choices: ['A. $199.60', 'B. $169.24', 'C. $19.96', 'D. $16.92'],
+    correctAnswer: 'A. $199.60',
+    points: 1,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       'A repaving crew is putting a new surface on 79 kilometers of road. They have completed 28 kilometers. If they repave 3.4 kilometers per day in the next several days, how many more days will it take them to finish? ',
-    choices: [' A. 15  ', ' B. 32.5  ', ' C. 14.5 ', ' D. 23 '],
+    choices: ['A. 15', 'B. 32.5', 'C. 14.5', 'D. 23'],
+    correctAnswer: 'A. 15',
+    points: 1,
   }, //
   {
     category: 'Numeracy',
@@ -284,6 +329,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'A 6-foot tall man is standing near a tree on level ground as shown in the picture above. If the man’s shadow is 4 feet long, how many feet tall is the tree? ',
     choices: [' A. 27 ', ' B. 12 ', ' C. 45 ', ' D. 38 '],
+    correctAnswer: 'A. 27',
+    points: 1,
   },
   {
     category: 'Numeracy',
@@ -291,6 +338,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'About how many more jazz records were sold in April than in February? ',
     choices: [' A. 750 ', ' B. 1,850  ', ' C. 2,950  ', ' D. 950  '],
+    correctAnswer: 'A. 750',
+    points: 1,
   },
   {
     category: 'Numeracy',
@@ -298,6 +347,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Two percent of the jazz records sold in April were from a new label. About how many records were from the new label? ',
     choices: [' A. 80 ', ' B. 800 ', ' C. 40 ', ' D. 400 '],
+    correctAnswer: 'C. 40',
+    points: 1,
   },
   {
     category: 'Numeracy',
@@ -305,13 +356,17 @@ export const technicalSkillsQuestionnaires = [
     question:
       'March sales accounted for 1/7 of the total number of jazz records sold all year. About how many jazz records were sold all year? ',
     choices: [' A. 7,400 ', ' B. 10,500 ', ' C. 950 ', ' D. 220 '],
-  },
+    correctAnswer: 'B. 10,500',
+    points: 1,
+  }, // END OF 1 POINTS
   {
     category: 'Numeracy',
     image: ' ',
     question: 'y - 7 = 8 ',
     choices: [' A. 12 ', ' B. 15 ', ' C. 1', ' D. 10 '],
-  }, //
+    correctAnswer: 'B. 15',
+    points: 2,
+  },
   {
     category: 'Numeracy:',
     image: ' ',
