@@ -92,13 +92,35 @@ const JobCard = ({ job, onSave, isSaved }) => {
           <div className="py-3">
             {showSkeleton ? (
               <Skeleton className="text-xs text-slate-500">
-                <p>Start Hiring Date: {formatDate(job?.startHiringDate)}</p>
-                <p>End Hiring Date: {formatDate(job?.endHiringDate)}</p>
+                <p>
+                  {' '}
+                  <span className="text-green-600 font-semibold">
+                    Start Hiring Date:
+                  </span>{' '}
+                  {formatDate(job?.startHiringDate)}
+                </p>
+                <p>
+                  <span className="text-green-600 font-semibold">
+                    End Hiring Date:
+                  </span>{' '}
+                  {formatDate(job?.endHiringDate)}
+                </p>
               </Skeleton>
             ) : (
               <div className="text-xs text-slate-500 text-left">
-                <p>Start Hiring Date: {formatDate(job?.startHiringDate)}</p>
-                <p>End Hiring Date: {formatDate(job?.endHiringDate)}</p>
+                <p>
+                  {' '}
+                  <span className="text-green-600 font-semibold">
+                    Start Hiring Date:
+                  </span>{' '}
+                  {formatDate(job?.startHiringDate)}
+                </p>
+                <p>
+                  <span className="text-green-600 font-semibold">
+                    End Hiring Date:
+                  </span>{' '}
+                  {formatDate(job?.endHiringDate)}
+                </p>
               </div>
             )}
           </div>
@@ -115,7 +137,7 @@ const JobCard = ({ job, onSave, isSaved }) => {
               </>
             ) : (
               <>
-                <div className="bg-[#BEF264] text-[#86CA16] py-0.5 px-1.5 rounded font-semibold text-sm">
+                <div className="bg-[#BEF264] text-green-700 py-0.5 px-1.5 rounded font-semibold text-sm">
                   {job?.jobType}
                 </div>
                 <div className="text-gray-500 text-sm">
