@@ -37,8 +37,54 @@ export default function Dashboard() {
           </div>
         ))}
         <CompanyStatsGrid />
-        <div className="flex flex-row gap-4 w-full py-3">
-          <JobStatistics />
+        <div className="flex flex-col md:flex-row gap-4 w-full py-3">
+        <section className="">
+  <div className="flex flex-wrap mx-auto md:flex-nowrap p-12">
+
+    <a href="">
+      <div className="flex w-full">
+        <div className="relative flex flex-col items-start m-1 transition duration-300 ease-in-out delay-150 transform bg-white shadow-2xl rounded-xl md:w-80 md:-ml-16 md:hover:-translate-x-16 md:hover:-translate-y-8">
+          <img className="object-cover object-center w-full rounded-t-xl lg:h-48 md:h-36" src="../../assets/images/announce.png" alt="blog"/>
+          <div className="px-6 py-8">
+            <h4 className="mt-4 text-2xl font-semibold text-neutral-600">
+              <span classNae="">Entry</span>
+            </h4>
+            <p className="mt-4 text-base font-normal text-gray-500 leading-relax">Install Tailwind CSS without any Javascript Framewrok locally with purgeCSS, enable the dark mode option, prefferences or class is upt to you.</p>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="">
+      <div className="flex w-full">
+        <div className="relative flex flex-col items-start m-1 transition duration-300 ease-in-out delay-150 transform bg-white shadow-2xl rounded-xl md:w-80 md:-ml-16 md:hover:-translate-x-16 md:hover:-translate-y-8">
+          <img className="object-cover object-center w-full rounded-t-xl lg:h-48 md:h-36" src="/assets/images/placeholders/neon-4.jpg" alt="blog"/>
+          <div className="px-6 py-8">
+            <h4 className="mt-4 text-2xl font-semibold text-neutral-600">
+              <span className="">Entry</span>
+            </h4>
+            <p className="mt-4 text-base font-normal text-gray-500 leading-relax">Install Tailwind CSS without any Javascript Framewrok locally with purgeCSS, enable the dark mode option, prefferences or class is upt to you.</p>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="">
+      <div className="flex w-full">
+        <div className="relative flex flex-col items-start m-1 transition duration-300 ease-in-out delay-150 transform bg-white shadow-2xl rounded-xl md:w-80 md:-ml-16 md:hover:-translate-x-16 md:hover:-translate-y-8">
+          <img className="object-cover object-center w-full rounded-t-xl lg:h-48 md:h-36" src="../../assets/contact-card.png" alt="blog"/>
+          <div className="px-6 py-8">
+            <h4 className="mt-4 text-2xl font-semibold text-neutral-600">
+              <span className="">Entry</span>
+            </h4>
+            <p className="mt-4 text-base font-normal text-gray-500 leading-relax">Install Tailwind CSS without any Javascript Framewrok locally with purgeCSS, enable the dark mode option, prefferences or class is upt to you.</p>
+          </div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
           <ApplicantsSummary />
         </div>
         <div className="flex flex-row gap-4 w-full py-3"></div>

@@ -1,8 +1,17 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/": ["src/"]
-    }
+    "compilerOptions": {
+      "target": "es6", // Specifies the ECMAScript target version
+      "module": "commonjs", // Specifies the module system (e.g., "commonjs", "amd", "es6")
+      "strict": true, // Enables strict type-checking
+      "jsx": "react", // Specifies the JSX factory function (e.g., "react", "preact")
+      "allowSyntheticDefaultImports": true, // Allows default imports from modules with no default export
+      "esModuleInterop": true // Enables interoperability between CommonJS and ES Modules
+    },
+    "exclude": [
+      "node_modules" // Specifies files and directories to exclude from the project
+    ],
+    "include": [
+      "src/**/*.js" // Specifies files and directories to include in the project
+    ]
   }
-}
+  

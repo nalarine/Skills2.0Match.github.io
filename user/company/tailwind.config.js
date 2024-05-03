@@ -1,10 +1,11 @@
-const { nextui } = require('@nextui-org/react')
+const { nextui } = require('@nextui-org/react');
 
 const tailwindConfig = {
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    'node_modules/preline/dist/*.js',
   ],
   theme: {
     extend: {
@@ -25,7 +26,7 @@ const tailwindConfig = {
     },
   },
   darkMode: 'class',
-  plugins: [nextui()],
-}
+  plugins: [nextui(), require('preline/plugin')],
+};
 
-module.exports = tailwindConfig
+module.exports = tailwindConfig;
