@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
-import Box from '@mui/material/Box'
 import Badge from '@mui/material/Badge'
 import Iconify from '../../pages/admin2/components/iconify/iconify'
 import Typography from '@mui/material/Typography'
@@ -16,15 +15,8 @@ import Tooltip from '@mui/material/Tooltip'
 import List from '@mui/material/List'
 import Scrollbar from '../../pages/admin2/components/scrollbar/scrollbar'
 import { useSelector } from 'react-redux'
-import Typography from '@mui/material/Typography' // Import Typography
-import Divider from '@mui/material/Divider' // Import Divider
-import Avatar from '@mui/material/Avatar' // Import Avatar
-import Button from '@mui/material/Button' // Import Button
-import Tooltip from '@mui/material/Tooltip' // Import Tooltip
-import Iconify from '../../pages/admin2/components/iconify/iconify'
 import { fToNow } from '../../pages/admin2/utils/format-time'
 import Box from '@mui/material/Box'
-import { useSelector } from 'react-redux'
 
 const NotificationsPopover = ({ newJobDetails }) => {
   if (!newJobDetails) {
@@ -86,10 +78,10 @@ const NotificationsPopover = ({ newJobDetails }) => {
   const hasNewNotifications = newJobDetails.length > 0
 
   const [open, setOpen] = useState(null)
-  const [open, setOpen] = useState(null);
-  const { user } = useSelector((state) => state.user); // Move this line below variable initialization
-  const profileUrl = user?.profileUrl || ''; // Initialize profileUrl to empty string if not available
-  const totalUnRead = newJobDetails.filter((item) => item.isUnread === true).length;
+  const profileUrl = user?.profileUrl || '' // Initialize profileUrl to empty string if not available
+  const totalUnRead = newJobDetails.filter(
+    (item) => item.isUnread === true,
+  ).length
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget)
@@ -225,26 +217,23 @@ const NotificationsPopover = ({ newJobDetails }) => {
                 </ListItemButton>
               ))}
             </List>
-          <List disablePadding>
-            {newJobDetails.map((job) => (
-              <ListItemButton key={job.id}>
-                <ListItemAvatar>
-                
+            <List disablePadding>
+              {newJobDetails.map((job) => (
+                <ListItemButton key={job.id}>
+                  <ListItemAvatar>
                     <Avatar
                       alt={job.companyName}
                       src={job?.company?.profileUrl}
                       className="w-20 h-20 rounded mb-2"
                     />
-
-                </ListItemAvatar>
-                <ListItemText
-                  primary={job.companyName}
-                  secondary={getNotificationMessage(job)}
-                />
-              </ListItemButton>
-            ))}
-          </List>
-
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={job.companyName}
+                    secondary={getNotificationMessage(job)}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
           </Scrollbar>
 
           <Divider sx={{ borderStyle: 'dashed' }} />
