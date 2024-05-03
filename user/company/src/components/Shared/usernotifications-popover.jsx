@@ -23,7 +23,7 @@ const NotificationsPopover = ({ newJobDetails }) => {
     return null // Render nothing if newJobDetails is undefined
   }
 
-  // const { user } = useSelector((state) => state.user)
+  const { user } = useSelector((state) => state.user)
 
   const [notifications, setNotifications] = useState(() => {
     const storedNotifications = localStorage.getItem('notifications')
