@@ -7,10 +7,14 @@ const VerificationSuccess = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
   const { verificationToken } = useParams(); // Extract verification token from URL
 
-  // Function to handle login button click
-  const handleLoginClick = () => {
-    // Navigate to the login page
-    navigate('/user-auth');
+   // Function to handle login button click
+   const handleLoginClick = () => {
+    // Redirect user based on their account type
+    if (user && user.accountType === 'seeker') {
+      navigate('/user-profile');
+    } else {
+      navigate('/company-profile');
+    }
   };
 
   // Effect to verify email on component mount
@@ -26,6 +30,7 @@ const VerificationSuccess = () => {
         if (response.ok) {
           // Handle successful verification
           console.log('Email verified successfully!');
+          // You can redirect here if you want
         } else {
           // Handle verification failure
           console.error('Failed to verify email:', response.statusText);

@@ -41,21 +41,21 @@ const SignUp = ({ open, setOpen }) => {
 
   const closeModal = () => setOpen(false);
 
-  const handleClick = () => {
-    signInWithPopup(auth, provider)
-      .then((data) => {
-        setValue(data.user.email);
-        localStorage.setItem('email', data.user.email);
-        navigate(accountType === 'seeker' ? '/Dashboard' : '/CompanyDash');
-      })
-      .catch((error) => {
-        console.error('Google Sign-in Error:', error);
-      });
-  };
+  // const handleClick = () => {
+  //   signInWithPopup(auth, provider)
+  //     .then((data) => {
+  //       setValue(data.user.email);
+  //       localStorage.setItem('email', data.user.email);
+  //       navigate(accountType === 'seeker' ? '/Dashboard' : '/CompanyDash');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Google Sign-in Error:', error);
+  //     });
+  // };
 
-  useEffect(() => {
-    setValue(localStorage.getItem('email'));
-  }, []);
+  // useEffect(() => {
+  //   setValue(localStorage.getItem('email'));
+  // }, []);
 
   const onSubmit = async (data) => {
     let URL = null;
@@ -398,7 +398,7 @@ const SignUp = ({ open, setOpen }) => {
                           />
                         )}
                       </div>
-                    <div className="flex items-center justify-center mt-2">
+                    {/* <div className="flex items-center justify-center mt-2">
                       <hr className="w-24 border-gray-500" />
                       <p className="text-base text-gray-700 mx-3">
                         Sign up with Social
@@ -417,7 +417,7 @@ const SignUp = ({ open, setOpen }) => {
                         />
                         Continue with Google
                       </button>
-                    </div>
+                    </div> */}
                   </form>
 
                   <div className="mt-4">
