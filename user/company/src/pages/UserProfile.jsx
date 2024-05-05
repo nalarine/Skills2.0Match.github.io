@@ -15,35 +15,35 @@ import { apiRequest } from '../utils'
 import { Login } from '../redux/userSlice'
 
 const UserForm = ({ open, setOpen, user, profileUrl }) => {
-  const dispatch = useDispatch();
-  const [profileImage, setProfileImage] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
-  const [fileList, setFileList] = useState([]);
+  const dispatch = useDispatch()
+  const [profileImage, setProfileImage] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewTitle, setPreviewTitle] = useState('')
+  const [fileList, setFileList] = useState([])
 
-  const handleCancel = () => setPreviewOpen(false);
+  const handleCancel = () => setPreviewOpen(false)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm();
+  } = useForm()
 
-  const closeModal = () => setOpen(false);
+  const closeModal = () => setOpen(false)
 
   useEffect(() => {
     if (user) {
       Object.entries(user).forEach(([key, value]) => {
-        setValue(key, value);
-      });
+        setValue(key, value)
+      })
     }
-  }, [user, setValue]);
+  }, [user, setValue])
 
   const onSubmit = async (data) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
       if (profileImage) {
         // const profileImageData = new FormData()
@@ -51,14 +51,14 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
         // const response = await handleFileUpload(profileImageData)
         // profileUrl = response.data.url
         const response = await handleFileUpload(profileImage)
-        profileUrl = response;
+        profileUrl = response
       }
 
       // Construct data with updated profileUrl and resumeUrl
       const newData = {
         ...data,
         profileUrl,
-      };
+      }
       const res = await apiRequest({
         url: '/users/update-user',
         token: user.token,
@@ -76,65 +76,64 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
         dispatch(Login(updatedUserInfo)) // Update user state in Redux
       }
 
-
       if (res) {
         // If the request is successful, update user state in Redux store
         // dispatch(Login(res.user)) // Update user state in Redux
-        getUser();
+        getUser()
         setOpen(false)
       }
       setIsSubmitting(false)
     } catch (error) {
-      setIsSubmitting(false);
-      console.log(error);
+      setIsSubmitting(false)
+      console.log(error)
     }
-  };
+  }
 
   const handleProfileImageChange = async (info) => {
-    const { file, fileList } = info;
-    setFileList(fileList);
-  
+    const { file, fileList } = info
+    setFileList(fileList)
+
     // if (file.status === 'done' && file.originFileObj) {
     //   const imageFile = file.originFileObj;
     //   const imageUrl = URL.createObjectURL(imageFile);
     //   console.log('Image URL:', imageUrl);
-  
+
     //   setProfileImage(imageFile);
     //   handlePreview(imageFile);
     // }
 
-    setProfileImage(file);
-  };
-  
-  
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+    setProfileImage(file)
+  }
+
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList)
 
   const handleResumeChange = async (info) => {
-    const { status, response } = info.file;
+    const { status, response } = info.file
     if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
+      message.success(`${info.file.name} file uploaded successfully.`)
     } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      message.error(`${info.file.name} file upload failed.`)
     }
-  };
+  }
 
   const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
 
-const handlePreview = async (file) => {
-  if (!file.url && !file.preview) {
-    file.preview = await getBase64(file.originFileObj);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
+    )
   }
-  setPreviewImage(file.url || file.preview);
-  setPreviewOpen(true);
-  setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
-};
-
 
   return (
     <>
@@ -303,7 +302,7 @@ const handlePreview = async (file) => {
 
                     <div className="flex flex-col">
                       <label className="text-gray-600 text-sm mb-1">
-                        Skills
+                        Skill
                       </label>
                       <textarea
                         className="rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none"
@@ -387,36 +386,53 @@ const handlePreview = async (file) => {
   )
 }
 
-
 const UserProfile = () => {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
-  const [open, setOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
-  const [resumeUrl, setResumeUrl] = useState(null); // Define resumeUrl state
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.user)
+  const [open, setOpen] = useState(false)
+  const [userInfo, setUserInfo] = useState(null)
+  const [resumeUrl, setResumeUrl] = useState(null) // Define resumeUrl state
+  const [isEmailVerified, setIsEmailVerified] = useState(false)
 
   const getUser = async () => {
     const res = await apiRequest({
       url: '/users/get-user',
       token: user?.token,
       method: 'GET',
-    });
-    const updatedUserInfo = { token: user?.token, ...res?.user };
-    setUserInfo(updatedUserInfo);
-    setIsEmailVerified(updatedUserInfo?.emailVerified); // Set email verification status
-    dispatch(Login(updatedUserInfo));
-  };
+    })
+    const updatedUserInfo = { token: user?.token, ...res?.user }
+    setUserInfo(updatedUserInfo)
+    setIsEmailVerified(updatedUserInfo?.emailVerified) // Set email verification status
+    dispatch(Login(updatedUserInfo))
+  }
 
   useEffect(() => {
-    getUser();
-  }, []);
+    getUser()
+  }, [])
 
   useEffect(() => {
     if (user) {
-      setUserInfo(user);
+      setUserInfo(user)
     }
-  }, [user]);
+  }, [user])
+
+  useEffect(() => {
+    let resultSkillAssessment = localStorage.getItem('resultAssessment')
+    if (resultSkillAssessment) {
+      const parsedResult = JSON.stringify(resultSkillAssessment)
+
+      const updatedSkills = userInfo?.skills
+        ? `${userInfo?.skills}\n${parsedResult}`
+        : parsedResult
+
+      const updatedUserInfo = {
+        ...userInfo,
+        skills: updatedSkills,
+      }
+      // Update the userInfo state
+      setUserInfo(updatedUserInfo)
+    }
+  }, [])
 
   return (
     <div className="container mx-auto flex items-center justify-center pt-10 pb-24 bg-green-200">
@@ -504,7 +520,12 @@ const UserProfile = () => {
           )}
         </div>
       </div>
-       <UserForm open={open} setOpen={setOpen} user={user} profileUrl={userInfo?.profileUrl} />
+      <UserForm
+        open={open}
+        setOpen={setOpen}
+        user={user}
+        profileUrl={userInfo?.profileUrl}
+      />
     </div>
   )
 }
