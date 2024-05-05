@@ -14,6 +14,7 @@ import { signInWithPopup } from 'firebase/auth';
 import { Checkbox } from '@nextui-org/react'; 
 import StrongPasswordInput from './StrongPasswordInput';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ReCAPTCHA from 'react-google-recaptcha';
 import 'daisyui/dist/full.css';
 import '../App.css';
 
@@ -29,6 +30,7 @@ const SignUp = ({ open, setOpen }) => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [errMsg, setErrMsg] = useState(''); // Define errMsg state
   const [successMessage, setSuccessMessage] = useState('');
+   const [reCaptchaVerified, setReCaptchaVerified] = useState(false); 
 
   const {
     register,
@@ -58,6 +60,10 @@ const SignUp = ({ open, setOpen }) => {
   // }, []);
 
   const onSubmit = async (data) => {
+    if (!reCaptchaVerified) {
+      alert('Please verify that you are not a robot.');
+      return;
+    }
     let URL = null;
     if (isRegister) {
       URL = accountType === 'seeker' ? 'auth/register' : 'companies/register';
@@ -116,7 +122,10 @@ const SignUp = ({ open, setOpen }) => {
     }
   };
   
-  
+  const handleReCaptchaChange = (isChecked) => {
+    setReCaptchaVerified(isChecked);
+  };
+
   const handleCheckboxChange = (event) => {
     setAgreedToTerms(event.target.checked);
   };
@@ -365,7 +374,12 @@ const SignUp = ({ open, setOpen }) => {
                         </Checkbox>
                       </div>
                     )}
-
+                  <div className="mt-4" style={{ display: 'grid', placeItems: 'center' }}>
+                    <ReCAPTCHA
+                      sitekey="6LcPatApAAAAAA5kW1dbdydr7GTW46qOR-QpODh9"
+                      onChange={handleReCaptchaChange}
+                    />
+                  </div>
                     {!isRegister && (
                       <div className="flex items-center">
                         <>

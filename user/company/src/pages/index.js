@@ -34,6 +34,9 @@ import Admin2 from './admin2/Admin2'
 import UserPage from './admin2/pages/user'
 import ProductsPage from './admin2/pages/products'
 import GenerateReports from '../pages/COMPANY/GenerateReports'
+import Auth from '../pages/admin/layout/Auth'
+import Login from "../pages/admin/auth/Login";
+import Register from "../pages/admin/auth/Register";
 
 
 export {
@@ -73,4 +76,7 @@ export {
   UserPage,
   ProductsPage,
   GenerateReports,
+  Auth,
+  Login,
+  Register,
 }

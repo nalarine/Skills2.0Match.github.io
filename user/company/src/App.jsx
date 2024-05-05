@@ -58,6 +58,9 @@ import DashCompanies from './pages/admin/DashCompanies'
 import AssessmentCategorySelect from './pages/OSY/SkillsAssessment/AssessmentCategorySelect'
 import JobMatchedDashboard from './pages/OSY/SkillsAssessment/JobMatchedDashboard'
 import ProgressBar from './pages/OSY/SkillsAssessment/ProgressBar'
+import Auth from './pages/admin/layout/Auth'
+import Login from "./pages/admin/auth/Login";
+import Register from "./pages/admin/auth/Register";
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
@@ -128,6 +131,9 @@ function App() {
     location.pathname.startsWith('/CHelpCenter') ||
     location.pathname.startsWith('/CSettings') ||
     location.pathname.startsWith('/forgot-password') ||
+    location.pathname.startsWith('/auth') ||
+    location.pathname.startsWith('/auth/login') ||
+    location.pathname.startsWith('/auth/register') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -162,6 +168,9 @@ function App() {
       location.pathname.startsWith('/CHelpCenter') ||
       location.pathname.startsWith('/CSettings') ||
       location.pathname.startsWith('/forgot-password') ||
+      location.pathname.startsWith('/auth') ||
+      location.pathname.startsWith('/auth/login') ||
+      location.pathname.startsWith('/auth/register') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -175,6 +184,8 @@ function App() {
         </>
       )}
       <Routes>
+        <Route path="/auth/login" element={<Login/>} />
+        <Route path="/auth/register" element={<Register/>} />
         <Route path="/user-auth" element={<AuthPage />} />
         <Route
           path="/verification-success/:verificationToken"
@@ -185,24 +196,20 @@ function App() {
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-            <Route
-              path="/"
-              element={
-                user ? (
-                  user.accountType === 'seeker' ? (
-                    <Navigate to="/user-profile" replace={true} />
-                  ) : user.role === 1 ? (
-                    <Navigate to="/AdminDashboard" replace={true} />
-                  ) : (
-                    <>
-                      <Navigate to="/company-profile" replace={true} />
-                    </>
-                  )
-                ) : (
-                  <Navigate to="/user-auth" replace={true} />
-                )
-              }
-            />
+          <Route
+          path="/"
+          element={
+            user ? (
+              user.accountType === 'seeker' ? (
+                <Navigate to="/user-profile" replace={true} />
+              ) : (
+                <Navigate to="/company-profile" replace={true} />
+              )
+            ) : (
+              <Navigate to="/user-auth" replace={true} />
+            )
+          }
+        />
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />
@@ -256,6 +263,7 @@ function App() {
           <Route path="/admin/companies" element={<DashCompaniesHOC />} />
           <Route path="/admin/category" element={<DashCategoryHOC />} />
           <Route path="/admin/job/create" element={<DashCreateJobHOC />} />
+          <Route path="/auth/*" element={<Auth/>} />
           <Route
             path="/admin/category/create"
             element={<DashCreateCategoryHOC />}

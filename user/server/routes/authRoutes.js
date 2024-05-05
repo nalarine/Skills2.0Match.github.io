@@ -1,6 +1,6 @@
 import express from "express";
 import { rateLimit } from "express-rate-limit";
-import { register, verifyEmail, signIn, resetPassword, deleteAccount, changeEmail, changePassword } from "../controllers/authController.js";
+import { register, verifyEmail, signIn, resetPassword, deleteAccount, changeEmail, changePassword, registerAdmin, signInAdmin } from "../controllers/authController.js";
 
 // Import your email verification function from your email service file
 import { sendVerificationEmail } from "../emailService.js";
@@ -116,5 +116,11 @@ router.put('/change-password', changePassword);
 
 // Change Email
 router.put('/change-email', changeEmail);
+
+// Register admin route
+router.post('/admin/register', registerAdmin);
+
+// Sign in admin route
+router.post('/admin/login', signInAdmin);
 
 export default router;

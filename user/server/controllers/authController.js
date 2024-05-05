@@ -77,7 +77,7 @@ export async function verifyEmail(verificationToken) {
 
     // Update the user's email verification status to true and clear the verification token
     user.emailVerified = true;
-    user.verificationToken = null;
+    // user.verificationToken = null;
     await user.save();
 
     // Log the updated user object
@@ -223,7 +223,6 @@ export const changePassword = async (req, res) => {
 };
 
 
-
 export const changeEmail = async (req, res) => {
   const { currentEmail, newEmail } = req.body;
 
@@ -237,5 +236,104 @@ export const changeEmail = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+export const registerAdmin = async (req, res, next) => {
+  const { firstName, lastName, email, password } = req.body;
+
+  try {
+    // Validate fields
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if email already exists
+    const userExist = await Users.findOne({ email });
+
+    if (userExist) {
+      return res.status(400).json({ message: "Email address already exists" });
+    }
+
+    // Create new admin user
+    const user = await Users.create({
+      firstName,
+      lastName,
+      email,
+      password,
+      isAdmin: true, // Set isAdmin to true for admin users
+      emailVerified: true, // For simplicity, set emailVerified to true for admin users
+    });
+
+    const token = await user.createJWT();
+
+    // Send success response with token
+    res.status(201).json({
+      success: true,
+      message: "Admin account created successfully.",
+      user: {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const signInAdmin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json({ message: "Please provide user credentials" });
+    }
+
+    // Find admin user by email
+    const user = await Users.findOne({ email, isAdmin: true });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Check if email is verified (you can add this check if needed)
+    // if (!user.emailVerified) {
+    //   return res.status(401).json({ message: "Email not verified" });
+    // }
+
+    // Compare password
+    const isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    user.password = undefined;
+
+    // Generate JWT token
+    const token = user.createJWT();
+
+    // Send success response with JWT token
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
