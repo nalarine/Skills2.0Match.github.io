@@ -59,17 +59,17 @@ const JobCard = ({ job, onSave, isSaved }) => {
                     {job?.jobTitle}
                   </Skeleton>
                   <Skeleton className="flex gap-2 items-center">
-                    <GoLocation className="text-slate-900 text-sm" />
+                    <GoLocation className="text-slate-900 text-xs" />
                     {job?.location}
                   </Skeleton>
                 </>
               ) : (
                 <>
-                  <div className="w-full h-12 flex items-center text-lg font-semibold overflow-hidden leading-5">
+                  <div className="w-full h-12 flex items-center text-lg font-semibold overflow-hidden leading-5 text-left">
                     {job?.jobTitle}
                   </div>
-                  <div className="flex gap-2 items-center text-left">
-                    <GoLocation className="text-slate-900 text-sm" />
+                  <div className="flex gap-2 items-center text-left text-[15px]">
+                    <GoLocation className="text-slate-900 text-xs" />
                     {job?.location}
                   </div>
                 </>

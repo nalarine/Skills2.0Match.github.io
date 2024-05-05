@@ -18,10 +18,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "Email is Required!"],
       unique: true,
       validate: {
-        validator: function(value) {
+        validator: function (value) {
           return validator.isEmail(value) && /@gmail\.com$/.test(value);
         },
-        message: props => `${props.value} is not a valid Gmail address.`
+        message: (props) => `${props.value} is not a valid Gmail address.`,
       },
     },
     password: {
@@ -29,10 +29,11 @@ const userSchema = new mongoose.Schema(
       required: [true, "Password is Required!"],
       minlength: [6, "Password length should be greater than 6 characters"],
       validate: {
-        validator: function(value) {
+        validator: function (value) {
           return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{6,}$/.test(value);
         },
-        message: props => `${props.value} is not a valid password. It should contain at least one digit, one special character, and one uppercase letter.`
+        message: (props) =>
+          `${props.value} is not a valid password. It should contain at least one digit, one special character, and one uppercase letter.`,
       },
       select: true,
     },
@@ -45,10 +46,11 @@ const userSchema = new mongoose.Schema(
     jobTitle: { type: String },
     about: { type: String },
     skills: { type: String },
+    birthdate: { type: Date },
     application: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
     emailVerified: { type: Boolean, default: false }, // New field for email verification
     verificationToken: { type: String }, // New field for verification token
-    savedJobs: [{ type: Schema.Types.ObjectId, ref: 'Jobs' }],
+    savedJobs: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
   },
   { timestamps: true }
 );

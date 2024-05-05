@@ -40,9 +40,11 @@ const UploadJob = () => {
     philippines.provinces[0],
   )
   const [locationCity, setLocationCity] = useState(philippines.cities[5])
-  const [salaryPeriod, setSalaryPeriod] = useState('day') // State to hold selected salary period
+  const [salaryPeriod, setSalaryPeriod] = useState('hour') // State to hold selected salary period
   const [jobCategory, setJobCategory] = useState('') // State to hold selected job category
   const [jobSubcategory, setJobSubcategory] = useState('') // State to hold selected job subcategory
+
+  const minimumSalary = salaryPeriod === 'hour' ? 50 : 400
 
   const categories = jobCategories.map((category) => category.category)
   const subcategories =
@@ -255,11 +257,15 @@ const UploadJob = () => {
                 <TextInput
                   name="salary"
                   label="Salary (PHP)"
-                  placeholder="Enter not less than 400"
+                  placeholder={`Enter not less than ${minimumSalary}`}
                   type="number"
-                  min={400} // Minimum salary restriction
+                  min={minimumSalary} // Dynamic minimum salary
                   register={register('salary', {
                     required: 'Salary is required',
+                    min: {
+                      value: minimumSalary,
+                      message: `Salary must be at least ${minimumSalary}`,
+                    },
                   })}
                   error={errors.salary ? errors.salary?.message : ''}
                 />
@@ -274,6 +280,7 @@ const UploadJob = () => {
                   value={salaryPeriod}
                   onChange={(e) => setSalaryPeriod(e.target.value)}
                 >
+                  <option value="hour">Hour</option>
                   <option value="day">Day</option>
                   <option value="week">Week</option>
                   <option value="month">Month</option>
@@ -283,7 +290,7 @@ const UploadJob = () => {
             </div>
 
             <div className="w-full flex gap-4">
-              <div className="w-1/2">
+              <div className="w-1/2 z-9999">
                 <TextInput
                   name="vacancies"
                   label="No. of Vacancies"

@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { DataGrid } from '@mui/x-data-grid'
 import { apiRequest } from '../../utils/index'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
-import Modal from '@mui/material/Modal'
-import Box from '@mui/material/Box'
-import { Avatar } from '@material-tailwind/react'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Modal from '@mui/material/Modal'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
 
 const DashUsers = () => {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
-  const [buttonClicked, setButtonClicked] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false)
   const [editUser, setEditUser] = useState(null)
@@ -21,9 +17,21 @@ const DashUsers = () => {
     firstName: '',
     lastName: '',
     email: '',
+    birthdate: '',
     password: '',
     userType: 'user',
   })
+
+  function calculateAge(birthdate) {
+    const birthday = new Date(birthdate)
+    const today = new Date()
+    let age = today.getFullYear() - birthday.getFullYear()
+    const m = today.getMonth() - birthday.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+      age--
+    }
+    return age
+  }
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -35,6 +43,10 @@ const DashUsers = () => {
         const modifiedUsers = response.data.users.map((user) => ({
           ...user,
           id: user._id,
+          birthdate: user.birthdate
+            ? new Date(user.birthdate).toLocaleDateString()
+            : 'N/A',
+          age: user.birthdate ? calculateAge(user.birthdate) : 'N/A',
         }))
         setUsers(modifiedUsers)
         setLoading(false)
@@ -47,126 +59,16 @@ const DashUsers = () => {
     fetchUsers()
   }, [])
 
-  const columns = [
-    {
-      field: 'profileUrl',
-      headerName: 'Profile',
-      width: 100,
-      renderCell: (params) => (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingLeft: 20,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}
-        >
-          {params.row.profileUrl ? (
-            <Avatar
-              alt={`${params.row.firstName} ${params.row.lastName}`}
-              src={params.row.profileUrl}
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50px',
-                marginRight: 10,
-              }}
-            />
-          ) : (
-            <Avatar
-              alt={`${params.row.firstName} ${params.row.lastName}`}
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50px',
-                marginRight: 10,
-              }}
-            />
-          )}
-        </div>
-      ),
-      sortable: false, // Disable sorting on the avatar column
-      filterable: false, // Disable filtering on the avatar column
-      resizable: false, // Disable resizing on the avatar column
-      hide: false, // Ensure the column is not hidden
-      headerAlign: 'center', // Align the header text to the center
-      align: 'center', // Align the cell content to the center
-      disableColumnMenu: true, // Disable the column menu
-      disableColumnSelector: true, // Disable the column selector
-    },
-    { field: 'firstName', headerName: 'First Name', width: 150 },
-    { field: 'lastName', headerName: 'Last Name', width: 150 },
-    { field: 'email', headerName: 'Email', width: 250 },
-    { field: 'age', headerName: 'Age', width: 100 },
-    {
-      field: 'action',
-      headerName: 'Action',
-      width: 150,
-      renderCell: (params) => (
-        <div>
-          <button
-            onClick={() => handleEdit(params.row)}
-            style={{
-              backgroundColor: 'green',
-              color: 'white',
-              border: 'none',
-              borderRadius: 5,
-              padding: '5px 10px',
-              marginRight: '5px',
-              cursor: 'pointer',
-            }}
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => handleDelete(params.row)}
-            style={{
-              backgroundColor: 'red',
-              color: 'white',
-              border: 'none',
-              borderRadius: 5,
-              padding: '5px 10px',
-              cursor: 'pointer',
-            }}
-          >
-            Delete
-          </button>
-        </div>
-      ),
-    },
-  ]
-
-  const style = {
-    fontFamily: 'Poppins, sans-serif',
-    backgroundColor: 'white',
-    position: 'relative',
-    background:
-      'radial-gradient(circle, rgba(229,231,235,1) 0%, rgba(193,225,193,1) 100%)',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.6)',
-    borderRadius: '10px',
-    padding: '30px',
-  }
-
-  const createUserStyle = {
-    backgroundColor: buttonClicked ? 'green' : 'white',
-    color: buttonClicked ? 'white' : 'green',
-    border: 'none',
-    borderRadius: 20,
-    padding: '5px 10px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    position: 'absolute',
-    top: '10px',
-    right: '60px',
-    transition: 'background-color 0.3s',
-  }
-
   const handleButtonClick = () => {
-    setButtonClicked(!buttonClicked)
     setOpenModal(true)
+    setNewUser({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      userType: 'user',
+    })
+    setEditUser(null)
   }
 
   const handleCloseModal = () => {
@@ -191,57 +93,31 @@ const DashUsers = () => {
 
   const handleSubmit = async () => {
     try {
-      let response
-      if (editUser) {
-        response = await apiRequest({
-          url: `/users/edit-user/${editUser.id}`,
-          method: 'PUT',
-          data: newUser,
-        })
-      } else {
-        response = await apiRequest({
-          url: '/users/create',
-          method: 'POST',
-          data: newUser,
-        })
-      }
-
-      console.log('User created/updated:', response.data)
-      setOpenModal(false)
+      const endpoint = editUser
+        ? `/users/edit-user/${editUser.id}`
+        : '/users/create'
+      const method = editUser ? 'PUT' : 'POST'
+      const response = await apiRequest({
+        url: endpoint,
+        method,
+        data: newUser,
+      })
       toast.success(
         `${editUser ? 'User updated' : 'User created'} successfully`,
       )
-
-      if (editUser) {
-        const updatedUsers = users.map((user) => {
-          if (user.id === editUser.id) {
-            return {
-              ...user,
-              firstName: newUser.firstName,
-              lastName: newUser.lastName,
-              email: newUser.email,
-              password: newUser.password,
-            }
-          }
-          return user
-        })
-        setUsers(updatedUsers)
-      }
+      setOpenModal(false)
+      fetchUsers() // Refresh users list
     } catch (error) {
-      console.error(
-        `${editUser ? 'Error updating user:' : 'Error creating user:'}`,
-        error,
-      )
       toast.error(
-        `${editUser ? 'Error updating user. ' : 'Error creating user. '}Please try again.`,
+        `${editUser ? 'Error updating user' : 'Error creating user'}. Please try again.`,
       )
     }
   }
 
   const handleEdit = (user) => {
     setEditUser(user)
-    setOpenModal(true)
     setNewUser(user)
+    setOpenModal(true)
   }
 
   const handleDelete = (user) => {
@@ -251,18 +127,14 @@ const DashUsers = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await apiRequest({
-        url: `/users/delete/${editUser.id}`, // Assuming the delete endpoint is /users/delete/:id
+      await apiRequest({
+        url: `/users/delete/${editUser.id}`,
         method: 'DELETE',
       })
-      // Remove the deleted user from the local state
-      setUsers((prevUsers) =>
-        prevUsers.filter((user) => user.id !== editUser.id),
-      )
+      setUsers((prevUsers) => prevUsers.filter((u) => u.id !== editUser.id))
       setDeleteConfirmationOpen(false)
       toast.success('User deleted successfully')
     } catch (error) {
-      console.error('Error deleting user:', error)
       toast.error('Error deleting user. Please try again.')
     }
   }
@@ -272,48 +144,71 @@ const DashUsers = () => {
   }
 
   return (
-    <div style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '98%' }}>
-          <div style={{ marginTop: '80px' }}>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              <div style={{ paddingTop: 0, paddingBottom: 20 }}>
-                <DataGrid
-                  rows={users}
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  components={{
-                    header: {
-                      cell: () => null,
-                    },
-                    toolbar: () => (
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          marginBottom: '10px',
-                        }}
-                      >
-                        <button
-                          style={createUserStyle}
-                          onClick={handleButtonClick}
-                        >
-                          <AddCircleIcon style={{ marginRight: '5px' }} />
-                          Create Account
-                        </button>
-                      </div>
-                    ),
-                  }}
-                  style={{ ...style, height: 'calc(100% - 40px)' }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
+    <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md mt-[100px]">
+      <div className="px-4 py-2 flex justify-between items-center bg-gray-50">
+        <h1 className="text-xl text-gray-700 font-bold">Applicants</h1>
+        <button
+          onClick={handleButtonClick}
+          className="bg-green-700 hover:bg-lime-400 text-white font-bold py-2 px-4 rounded"
+        >
+          Create Account
+        </button>
       </div>
+      <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
+        <thead>
+          <tr>
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
+              Name
+            </th>
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
+              Email
+            </th>
+            {/* <th className="px-6 py-4 font-medium text-gray-900">State</th> */}
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
+              Birthdate
+            </th>
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
+              Age
+            </th>
+            {/* <th className="px-6 py-4 font-medium text-gray-900">Team</th> */}
+            <th className="px-6 py-4 font-medium text-green-900 fonr-semibold text-base">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100 border-t border-gray-100">
+          {users.map((user) => (
+            <tr className="hover:bg-gray-50" key={user.id}>
+              <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-3">
+                <img
+                  src={user.profileUrl || 'default-profile.png'}
+                  alt={`${user.firstName} ${user.lastName}`}
+                  style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+                />
+                {user.firstName} {user.lastName}
+              </td>
+              <td className="px-6 py-4">{user.email}</td>
+              <td className="px-6 py-4">{user.birthdate}</td>
+              <td className="px-6 py-4">{user.age}</td>
+              <td className="px-6 py-4 flex justify-start gap-4">
+                <button
+                  onClick={() => handleEdit(user)}
+                  className="bg-green-700 p-2 px-4 rounded-md text-slate-100 font-semibold text-md hover:text-slate-600 hover:bg-lime-300"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(user)}
+                  className="bg-red-700 p-2 px-4 rounded-md text-slate-100 font-semibold text-md hover:text-slate-600 hover:bg-red-300"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ToastContainer />
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -465,7 +360,6 @@ const DashUsers = () => {
           </Button>
         </Box>
       </Modal>
-      {/* Toast Container */}
       <ToastContainer />
     </div>
   )

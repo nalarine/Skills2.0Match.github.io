@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ViewApplicantCard from '../../components/ViewApplicantCard'
 import { apiRequest } from '../../utils'
+import moment from 'moment' // Import moment
 
 const HiringStageCell = ({ applicantId, value, onChange }) => (
   <select
@@ -26,11 +27,44 @@ const ActionCell = ({ applicant, onSeeProfile }) => (
   </button>
 )
 
-export default function AllApplicants() {
+export default function AllApplicants({ dateRange }) {
   const { user } = useSelector((state) => state.user)
   const [applicants, setApplicants] = useState([])
   const [userInfo, setUserInfo] = useState(null)
   const [showModal, setShowModal] = useState(false)
+  const [filteredApplicants, setFilteredApplicants] = useState([])
+
+  useEffect(() => {
+    const fetchApplicants = async () => {
+      try {
+        const res = await apiRequest({
+          url: `/companies/get-company/${user._id}`,
+          method: 'GET',
+        })
+        setApplicants(res.data.applicants)
+      } catch (error) {
+        console.error('Error loading company data:', error)
+      }
+    }
+    fetchApplicants()
+  }, [user._id])
+
+  useEffect(() => {
+    if (dateRange && dateRange.length === 2 && dateRange[0] && dateRange[1]) {
+      const filtered = applicants.filter((applicant) => {
+        const appliedDate = moment(applicant.appliedDate)
+        return appliedDate.isBetween(
+          dateRange[0],
+          dateRange[1],
+          undefined,
+          '[]',
+        )
+      })
+      setFilteredApplicants(filtered)
+    } else {
+      setFilteredApplicants(applicants)
+    }
+  }, [applicants, dateRange])
 
   useEffect(() => {
     const getCompany = async () => {
@@ -103,24 +137,26 @@ export default function AllApplicants() {
               </tr>
             </thead>
             <tbody>
-              {applicants.map((applicant) => (
+              {filteredApplicants.map((filteredApplicants) => (
                 <tr
-                  key={applicant.id}
+                  key={filteredApplicants.id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                  <td className="px-4 py-2">{applicant.fullName}</td>
+                  <td className="px-4 py-2">{filteredApplicants.fullName}</td>
                   <td className="px-4 py-2">
                     <HiringStageCell
-                      applicantId={applicant.id}
-                      value={applicant.hiringStage}
+                      applicantId={filteredApplicants.id}
+                      value={filteredApplicants.hiringStage}
                       onChange={handleStatusChange}
                     />
                   </td>
-                  <td className="px-4 py-2">{applicant.appliedDate}</td>
-                  <td className="px-4 py-2">{applicant.jobRole}</td>
+                  <td className="px-4 py-2">
+                    {filteredApplicants.appliedDate}
+                  </td>
+                  <td className="px-4 py-2">{filteredApplicants.jobRole}</td>
                   <td className="px-4 py-2">
                     <ActionCell
-                      applicant={applicant}
+                      applicant={filteredApplicants}
                       onSeeProfile={handleSeeProfile}
                     />
                   </td>

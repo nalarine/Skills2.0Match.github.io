@@ -163,11 +163,11 @@ const JobDetail = () => {
                 <div className="flex gap-2">
                   <div>
                     <p className="text-left text-slate-400">Position</p>
-                    <p className="text-3xl font-bold text-green-700">
+                    <p className="text-3xl font-bold text-green-700 text-left">
                       {job?.jobTitle}
                     </p>
                   </div>
-                  <div className="ml-[220px] mt-4">
+                  <div className="ml-[50px] mt-4">
                     <p className="text-left text-slate-400">
                       <span className="text-green-700 font-bold">
                         Start Hiring Date:{' '}

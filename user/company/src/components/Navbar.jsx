@@ -16,8 +16,8 @@ function MenuList({ user, onClick }) {
   const dispatch = useDispatch()
   const handleLogout = () => {
     dispatch(Logout())
-      window.location.href = '/user-auth';
-};
+    window.location.href = '/user-auth'
+  }
 
   const userType = user?.accountType === 'seeker' ? 'Applicant' : 'Company'
 
@@ -165,7 +165,7 @@ function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-[300px] bg-nav-bg lg:hidden flex flex-col items-center p-5 gap-3 z-50 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out`}
+        className={`fixed top-0 right-0 h-full w-[100vw] bg-nav-bg lg:hidden flex flex-col items-center p-5 gap-3 z-50 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out`}
       >
         <AiOutlineClose
           onClick={handleCloseNavbar}
