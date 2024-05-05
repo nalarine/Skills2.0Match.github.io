@@ -14,6 +14,7 @@ import { JobAvailable } from './../../../../src/components'
 const JobMatchedDashboard = () => {
   const [matchedJobs, setMatchedJobs] = useState([])
   const [isFetching, setIsFetching] = useState(false)
+  const [total, setTotal] = useState({})
 
   useEffect(() => {
     setIsFetching(true)
@@ -31,8 +32,10 @@ const JobMatchedDashboard = () => {
   const categories = [
     {
       name: 'Technical Skills Assessment',
-      currentQuestion: 3,
+      currentQuestion: localStorage.getItem('totalQuestionsAnswered'),
       totalQuestions: technicalSkillsQuestionnaires?.length,
+      score: localStorage.getItem('score'),
+      totalPoints: 95,
     },
     {
       name: 'Soft Skills Assessment',
@@ -46,6 +49,12 @@ const JobMatchedDashboard = () => {
     },
     // { name: 'Scenario-Based', currentQuestion: 5, totalQuestions: 10 },
   ]
+
+  // const calculateResult = (score) => {
+  //   if (score >= 0.8*95) {
+  //     ""
+  //   }
+  // }
 
   const handleButtonClick = () => {
     // Define functionality for the button click event here
@@ -66,12 +75,13 @@ const JobMatchedDashboard = () => {
           <Paper
             elevation={0}
             style={{
+              marginTop: '10px',
               padding: '20px',
               borderRadius: '10px',
               background: '#fff',
             }}
           >
-            <Typography
+            {/* <Typography
               variant="h4"
               gutterBottom
               style={{
@@ -92,7 +102,7 @@ const JobMatchedDashboard = () => {
                     <JobCard2 job={job} />
                   </Grid>
                 ))}
-            </Grid>
+            </Grid> */}
           </Paper>
         </Grid>
         <Grid item xs={12} lg={2}>

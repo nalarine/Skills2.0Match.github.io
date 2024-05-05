@@ -82,7 +82,8 @@ const CategoryProgress = ({ category, navigate }) => {
             {category.currentQuestion} of {category.totalQuestions} Questions
           </Typography>
           <Typography variant="body2">
-            {category.totalQuestions - category.currentQuestion} Remaining
+            {/* {category.totalQuestions - category.currentQuestion} Remaining */}
+            {category.score} out of {category.totalPoints}
           </Typography>
           <button
             style={{

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -12,6 +12,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { technicalSkillsQuestionnaires } from './constants'
 import { useNavigate } from 'react-router-dom' // Import useNavigate hook
+import { LegendToggleOutlined } from '@mui/icons-material'
 
 const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   const navigate = useNavigate() // Initialize useNavigate
@@ -22,6 +23,7 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   } = useForm()
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
+  const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(0)
 
   const handleNextQuestion = () => {
     setCurrentQuestion((prevQuestion) => prevQuestion + 1)
@@ -32,15 +34,40 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   }
 
   const handleAnswerChange = (value) => {
+    let isChecked =
+      questions[currentQuestion].correctAnswer.trim() ===
+      questions[currentQuestion].choices[value].trim()
+
+    // Check if the question has already been answered
+    if (!answers.hasOwnProperty(questions[currentQuestion].question)) {
+      // Increment total questions answered and store in localStorage
+      setTotalQuestionsAnswered((prevTotal) => prevTotal + 1)
+      localStorage.setItem('totalQuestionsAnswered', totalQuestionsAnswered + 1)
+    }
+
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [questions[currentQuestion].question]: value,
+      [questions[currentQuestion].question]: {
+        index: value,
+        correctAnswer: questions[currentQuestion].correctAnswer.trim(),
+        choice: questions[currentQuestion].choices[value].trim(),
+        point: isChecked ? questions[currentQuestion].points : 0,
+      },
     }))
   }
 
   const onSubmit = useCallback(() => {
     // Redirect to JobMatchedDashboard after submitting questionnaire
-    console.log('answers', answers)
+    // console.log(answers)
+    let score = 0
+
+    Object.values(answers).forEach((item) => {
+      score += item.point
+    })
+
+    // console.log('score', score)
+    localStorage.setItem('answers', answers)
+    localStorage.setItem('score', score)
     navigate('/skills-assessment/job-matched-dashboard')
   }, [answers])
 
@@ -79,7 +106,8 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
                   value={choice}
                   onChange={() => handleAnswerChange(index)}
                   checked={
-                    answers[questions[currentQuestion].question] === index
+                    answers[questions[currentQuestion].question]?.index ===
+                    index
                   }
                   style={{
                     color: '#666',

@@ -337,7 +337,7 @@ export const technicalSkillsQuestionnaires = [
     image: 'https://ibb.co/GFBvV84',
     question:
       'About how many more jazz records were sold in April than in February? ',
-    choices: [' A. 750 ', ' B. 1,850  ', ' C. 2,950  ', ' D. 950  '],
+    choices: ['A. 750', ' B. 1,850  ', ' C. 2,950  ', ' D. 950  '],
     correctAnswer: 'A. 750',
     points: 1,
   },
@@ -346,7 +346,7 @@ export const technicalSkillsQuestionnaires = [
     image: 'https://ibb.co/GFBvV84',
     question:
       'Two percent of the jazz records sold in April were from a new label. About how many records were from the new label? ',
-    choices: [' A. 80 ', ' B. 800 ', ' C. 40 ', ' D. 400 '],
+    choices: ['A. 80', 'B. 800', 'C. 40', 'D. 400'],
     correctAnswer: 'C. 40',
     points: 1,
   },
@@ -355,7 +355,7 @@ export const technicalSkillsQuestionnaires = [
     image: 'https://ibb.co/GFBvV84',
     question:
       'March sales accounted for 1/7 of the total number of jazz records sold all year. About how many jazz records were sold all year? ',
-    choices: [' A. 7,400 ', ' B. 10,500 ', ' C. 950 ', ' D. 220 '],
+    choices: ['A. 7,400', 'B. 10,500', 'C. 950', 'D. 220'],
     correctAnswer: 'B. 10,500',
     points: 1,
   }, // END OF 1 POINTS
@@ -364,60 +364,68 @@ export const technicalSkillsQuestionnaires = [
     image: ' ',
     question: 'y - 7 = 8 ',
     choices: [' A. 12 ', ' B. 15 ', ' C. 1', ' D. 10 '],
-    correctAnswer: 'B. 15',
+    correctAnswer: ' B. 15 ',
     points: 2,
   },
   {
     category: 'Numeracy:',
     image: ' ',
-    question: ' 2(x - y) = 8 where x = 6 ',
+    question: '2(x - y) = 8 where x = 6 ',
     choices: [' A. 2 ', ' B. 4 ', ' C. 8 ', ' D. 10 '],
+    correctAnswer: ' A. 2 ',
+    points: 2,
   },
   {
     category: 'Numeracy:',
     image: ' ',
-    question: ' 2y(4 - x) = x/2 where x = 2 ',
+    question: '2y(4 - x) = x/2 where x = 2 ',
     choices: [' A. 1/2 ', ' B. 1/4 ', ' C. 4 ', ' D. 1 '],
+    correctAnswer: ' B. 1/4 ',
+    points: 2,
   },
   {
     category: 'Numeracy:',
     image: ' ',
     question: '(1/3 )y2 + 12 = 5x where x = 3 ',
-    choices: [' A. 9 ', ' B. 9 1/9 ', ' C. 3 1/3 ', ' D. 3 '],
+    choices: [' A. 9 ', ' B. 9 1/9 ', ' C. 3 1/3 ', 'D. 3'],
+    correctAnswer: 'D. 3',
+    points: 2,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       '. A farmer has 7 3/4 rows of radishes in one field, 4 3/4 rows of radishes in another field, and 6 1/4 rows of radishes in a third field. How many rows of radishes does he have altogether? ',
-    choices: [' A. 18 3/4 ', ' B. 17 7/12 ', ' C. 17 1/2 ', ' D. 17 ¾'],
+    choices: ['A. 18 3/4', ' B. 17 7/12 ', ' C. 17 1/2 ', ' D. 17 ¾'],
+    correctAnswer: 'A. 18 3/4',
+    points: 2,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       'The main road in Belleville is 7 3/10 miles long. So far, 2 3/4 miles have been repaved. How many miles have not been repaved?  ',
-    choices: [' A.  4 11/20 ', ' B. 5 11/20 ', ' C. 4 1/6 ', ' D. 5 ⅙'],
+    choices: ['A. 4 11/20', ' B. 5 11/20 ', ' C. 4 1/6 ', ' D. 5 ⅙'],
+    correctAnswer: 'A. 4 11/20',
+    points: 2,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
       'Four friends went out for dinner. The bill, including tax, totaled $64.00. If they want to leave a 15% tip and want to share the bill and tip equally, what should each person pay? ',
-    choices: [' A. $16.00 ', ' B. $18.40 ', ' C. $18.00 ', ' D. $73.60 '],
+    choices: [' A. $16.00 ', ' B. $18.40 ', 'C. $18.00', ' D. $73.60 '],
+    correctAnswer: ' B. $18.40 ',
+    points: 2,
   },
   {
     category: 'Numeracy',
     image: ' ',
     question:
-      ' The Williams family wants to cover one wall in their living room with 1-foot square mirror tiles. The wall measures 8 feet by 10 feet. How many mirror tiles will they need to cover the wall? ',
+      'The Williams family wants to cover one wall in their living room with 1-foot square mirror tiles. The wall measures 8 feet by 10 feet. How many mirror tiles will they need to cover the wall? ',
     choices: [' A.  8 ', ' B. 10 ', ' C. 18 ', ' D. 80 '],
-  },
-  {
-    category: 'Numeracy',
-    image: ' ',
-    question: 'Reduce 15/21 to its lowest terms. ',
-    choices: [' A. 3/21 ', ' B. 5/7 ', ' C. 3/7 ', ' D. 6/21 '],
+    correctAnswer: ' D. 80 ',
+    points: 2,
   },
   {
     category: 'Numeracy',
@@ -425,6 +433,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Kenji has 8 apple trees that each produces about 20 bushels of apples, and 12 apple trees that each produces about 25 bushels. In total, about how many bushels of apples do his trees produce? ',
     choices: [' A. 45 ', ' B. 900 ', ' C. 460 ', ' D. 300'],
+    correctAnswer: ' C. 460 ',
+    points: 2,
   },
   {
     category: 'Numeracy',
@@ -432,86 +442,26 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Pete is designing a company logo by dividing a circle into five equal pieshaped sections as shown in the diagram above. How many degrees are in angle A?',
     choices: [' A.  36°  ', ' B. 72°  ', ' C. 50° ', ' D. 100°'],
+    correctAnswer: ' B. 72° ',
+    points: 2,
   },
-  {
-    category: 'Numeracy:',
-    image: ' ',
-    question: ' 2(x - y) = 8 where x = 6 ',
-    choices: [' A. 2 ', ' B. 4 ', ' C. 8 ', ' D. 10 '],
-  },
-  {
-    category: 'Numeracy:',
-    image: ' ',
-    question: ' 2y(4 - x) = x/2 where x = 2 ',
-    choices: [' A. 1/2 ', ' B. 1/4 ', ' C. 4 ', ' D. 1 '],
-  },
-  {
-    category: 'Numeracy:',
-    image: ' ',
-    question: '(1/3 )y2 + 12 = 5x where x = 3 ',
-    choices: [' A. 9 ', ' B. 9 1/9 ', ' C. 3 1/3 ', ' D. 3 '],
-  },
-  {
-    category: 'Numeracy',
-    image: ' ',
-    question:
-      '. A farmer has 7 3/4 rows of radishes in one field, 4 3/4 rows of radishes in another field, and 6 1/4 rows of radishes in a third field. How many rows of radishes does he have altogether? ',
-    choices: [' A. 18 3/4 ', ' B. 17 7/12 ', ' C. 17 1/2 ', ' D. 17 ¾'],
-  },
-  {
-    category: 'Numeracy',
-    image: ' ',
-    question:
-      'The main road in Belleville is 7 3/10 miles long. So far, 2 3/4 miles have been repaved. How many miles have not been repaved?  ',
-    choices: [' A.  4 11/20 ', ' B. 5 11/20 ', ' C. 4 1/6 ', ' D. 5 ⅙'],
-  },
-  {
-    category: 'Numeracy',
-    image: ' ',
-    question:
-      'Four friends went out for dinner. The bill, including tax, totaled $64.00. If they want to leave a 15% tip and want to share the bill and tip equally, what should each person pay? ',
-    choices: [' A. $16.00 ', ' B. $18.40 ', ' C. $18.00 ', ' D. $73.60 '],
-  },
-  {
-    category: 'Numeracy',
-    image: ' ',
-    question:
-      ' The Williams family wants to cover one wall in their living room with 1-foot square mirror tiles. The wall measures 8 feet by 10 feet. How many mirror tiles will they need to cover the wall? ',
-    choices: [' A.  8 ', ' B. 10 ', ' C. 18 ', ' D. 80 '],
-  },
-  {
-    category: 'Numeracy',
-    image: ' ',
-    question: 'Reduce 15/21 to its lowest terms. ',
-    choices: [' A. 3/21 ', ' B. 5/7 ', ' C. 3/7 ', ' D. 6/21 '],
-  },
-  {
-    category: 'Numeracy',
-    image: ' ',
-    question:
-      'Kenji has 8 apple trees that each produces about 20 bushels of apples, and 12 apple trees that each produces about 25 bushels. In total, about how many bushels of apples do his trees produce? ',
-    choices: [' A. 45 ', ' B. 900 ', ' C. 460 ', ' D. 300'],
-  },
-  {
-    category: 'Numeracy',
-    image: 'https://ibb.co/J3bJ0ZL',
-    question:
-      'Pete is designing a company logo by dividing a circle into five equal pieshaped sections as shown in the diagram above. How many degrees are in angle A?',
-    choices: [' A.  36°  ', ' B. 72°  ', ' C. 50° ', ' D. 100°'],
-  }, //
   {
     category: 'Numeracy:',
     image: 'https://ibb.co/J3bJ0ZL',
     question:
-      ' Pete plans to put silver colored ribbon around the circular logo. About how many inches of silver colored ribbon will he need? ',
+      'Pete plans to put silver colored ribbon around the circular logo. About how many inches of silver colored ribbon will he need? ',
     choices: [' A. . 360 ', ' B. 20.0 ', ' C. 31.4 ', ' D. 62.8 '],
+    correctAnswer: ' D. 62.8 ',
+    points: 2,
   },
   {
     category: 'Numeracy:',
     image: 'https://ibb.co/J3bJ0ZL',
     question:
-      ' If Pete wants to paint the entire circle of his logo blue, how many square inches will he need to cover? ',
+      'If Pete wants to paint the entire circle of his logo blue, how many square inches will he need to cover? ',
     choices: [' A.  31.4 ', ' B. 157 ', ' C. 314 ', ' D. 50 '],
+    correctAnswer: ' C. 314 ',
+    points: 2,
   },
   {
     category: 'Numeracy:',
@@ -519,6 +469,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'How many 1 2/3 yard lengths of wire can be cut from 25 yards of wire?  ',
     choices: [' A. 41 2/3 ', ' B. 10 ', ' C. 23 1/3 ', ' D. 15  '],
+    correctAnswer: ' D. 15  ',
+    points: 2,
   },
   {
     category: 'Numeracy',
@@ -526,6 +478,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Joan received a discount of $4.80 on a book that originally cost $60. What was the percentage of discount she received? ',
     choices: [' A. 55.2% ', ' B. 44.8% ', ' C. 8.0% ', ' D. 80.0%'],
+    correctAnswer: ' C. 8.0% ',
+    points: 2,
   },
   {
     category: 'Numeracy',
@@ -533,6 +487,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Dr. Warren purchased some medical supplies for $670. Sales tax rate was 6.5%. How much did Dr. Warren spent on these supplies? ',
     choices: [' A.  $43.55  ', ' B. $711.25 ', ' C. $4355.00 ', ' D. $713.55'],
+    correctAnswer: ' D. $713.55',
+    points: 2,
   },
   {
     category: 'Numeracy',
@@ -540,31 +496,42 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Last year, about 2,400 people participated in a local Fourth of July parade. This year, about 3,200 people participated. What was the approximate percent increase in participation?  ',
     choices: [' A. 25% ', ' B. 50% ', ' C. 75% ', ' D. 33% '],
+    correctAnswer: ' D. 33% ',
+    points: 2,
   }, //end of numeracy category
+
   {
     //start of literacy category
     category: 'Literacy:',
     image: ' ',
     question: 'Have you ______ the painting yet? ',
     choices: [' A. hanged ', ' B. hang ', ' C. hanging', ' D. hung '],
+    correctAnswer: ' D. hung ',
+    points: 1,
   },
   {
     category: 'Literacy:',
     image: ' ',
     question: 'Kay ______ typing at school.',
     choices: [' study ', ' B. studies ', ' C. studying ', ' D. be studying '],
+    correctAnswer: ' B. studies ',
+    points: 1,
   },
   {
     category: 'Literacy:',
     image: ' ',
     question: 'I ______ the laughter from the conference room.',
     choices: [' A. hear ', ' B. hears ', ' C. hearing ', ' D. is hearing '],
+    correctAnswer: ' A. hear ',
+    points: 1,
   },
   {
     category: 'Literacy',
     image: ' ',
     question: 'This set of books ______ on that shelf.',
     choices: [' A. goes', ' B. go ', ' C. going ', ' D. gone '],
+    correctAnswer: ' A. goes',
+    points: 1,
   },
   {
     category: 'Literacy',
@@ -576,6 +543,8 @@ export const technicalSkillsQuestionnaires = [
       ' C. very loud ',
       ' D. too difficult',
     ],
+    correctAnswer: ' B. in trouble ',
+    points: 2,
   },
   {
     category: 'Literacy',
@@ -587,6 +556,8 @@ export const technicalSkillsQuestionnaires = [
       ' C. set on fire ',
       ' D. run an engine ',
     ],
+    correctAnswer: ' C. set on fire ',
+    points: 2,
   },
   {
     category: 'Literacy',
@@ -598,18 +569,24 @@ export const technicalSkillsQuestionnaires = [
       ' C. prison ',
       ' D. chance happening ',
     ],
+    correctAnswer: ' A. mistake',
+    points: 2,
   },
   {
     category: 'Literacy',
     image: 'https://ibb.co/njgF8BV',
     question: 'The item number for men’s socks is ______.',
     choices: [' A. 541B', ' B. 412R', ' C. 271D', ' D. 768U'],
+    correctAnswer: ' C. 271D',
+    points: 1,
   },
   {
     category: 'Literacy',
     image: 'https://ibb.co/njgF8BV ',
     question: 'The cost of one boy’s shirt is ______.',
     choices: [' A. $45', ' B. $40', ' C. $120', ' D. $20'],
+    correctAnswer: ' D. $20',
+    points: 1,
   },
   {
     category: 'Literacy',
@@ -621,60 +598,58 @@ export const technicalSkillsQuestionnaires = [
       ' C. men’s socks',
       ' D. boys’ shirt',
     ],
+    correctAnswer: ' B. item 412R',
+    points: 1,
   },
   {
     category: 'Literacy',
     image: 'https://ibb.co/njgF8BV ',
     question: 'The color of the men’s sweater being ordered is ______.',
     choices: [' A. white', ' B. black', ' C. gray', ' D. blue'],
+    correctAnswer: ' D. blue',
+    points: 1,
   },
   {
     category: 'Literacy',
     image: ' ',
-    question:
-      'For questions 12, choose the sentence that is most correctly written.',
+    question: 'Which sentence is most correctly written?',
     choices: [
       ' A. The manager signed the register, before going to their rooms, the guests.',
       ' B. Before the register, the manager asked the rooms to sign the guests.',
       ' C. Sign the room to the manager, the guests before going to their register.',
       ' D. The manager asked the guests to sign the register before going to their rooms.',
     ],
+    correctAnswer:
+      ' D. The manager asked the guests to sign the register before going to their rooms.',
+    points: 1,
   },
   {
     category: 'Literacy',
     image: ' ',
-    question:
-      'For questions 13, choose the sentence that is most correctly written.',
+    question: 'Select the sentence that is most correctly written.',
     choices: [
       ' A. The car soon after the robbery speeding down Lark Street was seen.',
       ' B. Down Lark Street the car was seen after the robbery speeding soon.',
       ' C. The car was seen speeding down Lark Street soon after the robbery.',
       ' D. Speeding the car down Lark Street was seen soon after the robbery.',
     ],
+    correctAnswer:
+      ' A. The car soon after the robbery speeding down Lark Street was seen.',
+    points: 1,
   },
   {
     category: 'Literacy',
     image: ' ',
-    question:
-      'For questions 14, choose the sentence that is most correctly written.',
+    question: 'Identify the sentence that is most correctly written.',
     choices: [
       ' A. We impose a $10 charge for any check returned to us by the bank.',
       ' B. For any check, we impose the bank by a $10 charge returned to us.',
       ' C. For any bank, we impose by the check a $10 charge returned us.',
       ' D. We impose to us a $10 charge for any returned by the bank check.',
     ],
-  },
-  {
-    category: 'Literacy',
-    image: ' ',
-    question:
-      'For questions 15, choose the sentence that is most correctly written.',
-    choices: [
-      ' A. No longer working here, the telephone number of James is 412-555-0924.',
-      ' B. The number 412-555-0924 is James no longer working here’s telephone.',
-      ' C. James is no longer working here, the telephone number is 412-555-0924.',
-      ' D. No longer working here’s James telephone number is 412-555-0924.',
-    ],
+    correctAnswer:
+      ' A. We impose a $10 charge for any check returned to us by the bank.',
+    points: 1,
   },
   //digital literacy start
   {
@@ -688,6 +663,8 @@ export const technicalSkillsQuestionnaires = [
       'C. Insufficient random access memory (RAM)',
       'D. Low monitor speed',
     ],
+    correctAnswer: 'C. Insufficient random access memory (RAM)',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -700,6 +677,8 @@ export const technicalSkillsQuestionnaires = [
       'C. Network administrator',
       'D. Database administrator',
     ],
+    correctAnswer: 'C. Network administrator',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -707,6 +686,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Your sister travels to another country for an on-site business project. You want to tell her about your new job by sending her an e-mail message from your computer. Which of the following devices will you use to connect your computer to the Internet?',
     choices: ['A. Printer', 'B. Scanner', 'C. Modem', 'D. Sound card'],
+    correctAnswer: 'C. Modem',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -714,6 +695,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Morten wants to play a game online. He hears modem tones every time his computer sends a request to the Internet service provider (ISP) to establish an Internet connection. What type of Internet connection does Morten use?',
     choices: ['A. Dial-up', 'B. Broadband', 'C. WiFi', 'D. Dedicated'],
+    correctAnswer: 'A. Dial-up',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -726,6 +709,8 @@ export const technicalSkillsQuestionnaires = [
       'C. Uniform Resource Locator (URL)',
       'D. World Wide Web (www)',
     ],
+    correctAnswer: 'A. Search engine',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -738,6 +723,8 @@ export const technicalSkillsQuestionnaires = [
       'C. Scroll bar',
       'D. Status bar',
     ],
+    correctAnswer: 'B. Insertion point',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -745,6 +732,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Markus creates a document by using Microsoft® Office Word 2010 and saves it with the name Office.docx. Which of the following components of Word 2010 will display the document name?',
     choices: ['A. Menu bar', 'B. Toolbar', 'C. Title bar', 'D. Status bar'],
+    correctAnswer: 'C. Title bar',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -752,6 +741,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Stephan creates a business presentation by using Microsoft Office PowerPoint® 2010. He saves it with the name Presentation.ppt. Stephan opens the file to make some changes, and he wants to save it with a different name. Which of the following commands on the File menu will Stephan use to save the file with a different name?',
     choices: ['A. Save', 'B. Save As', 'C. Send To', 'D. Page Setup'],
+    correctAnswer: 'B. Save As',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -759,6 +750,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Nina uses Office Excel 2010 to create a work plan for her team. She wants to print the plan and discuss it with the team members in a meeting. Which of the following menus will Nina use to print the plan?',
     choices: ['A. File', 'B. View', 'C. Format', 'D. Tools'],
+    correctAnswer: 'A. File',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -771,6 +764,8 @@ export const technicalSkillsQuestionnaires = [
       'C. E-mail program',
       'D. Spreadsheet program',
     ],
+    correctAnswer: 'A. Desktop publishing program',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -783,6 +778,8 @@ export const technicalSkillsQuestionnaires = [
       'C. Presentation program',
       'D. Database program',
     ],
+    correctAnswer: 'D. Database program',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -794,12 +791,16 @@ export const technicalSkillsQuestionnaires = [
       'C. Taskbar',
       'D. Start Button',
     ],
+    correctAnswer: 'C. Taskbar',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
     image: '',
     question: "When you're connected to the Internet, you are:",
     choices: ['A. Outline', 'B. Offline', 'C. Online', 'D. Out of line'],
+    correctAnswer: 'C. Online',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -812,6 +813,8 @@ export const technicalSkillsQuestionnaires = [
       'C. A program that controls and manages the computer.',
       'D. A circuit board that connects the input, output, and processing devices.',
     ],
+    correctAnswer: 'C. A program that controls and manages the computer.',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -824,6 +827,8 @@ export const technicalSkillsQuestionnaires = [
       'C. Reviewing',
       'D. Illustrations',
     ],
+    correctAnswer: 'D. Illustrations',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -831,6 +836,8 @@ export const technicalSkillsQuestionnaires = [
     question:
       'Any computer parts that you can actually touch are considered to be:',
     choices: ['A. Software', 'B. Systems', 'C. Platforms', 'D. Hardware'],
+    correctAnswer: 'D. Hardware',
+    points: 1,
   },
   {
     category: 'DigitalLiteracy',
@@ -842,6 +849,9 @@ export const technicalSkillsQuestionnaires = [
       'C. Something that can and should be ignored by most users.',
       'D. The list of all of the contents on a particular computer.',
     ],
+    correctAnswer:
+      'A. The initial screen showing icons for folders, files, and applications.',
+    points: 1,
   },
 ]
 export const softSkillsQuestionnaires = [
