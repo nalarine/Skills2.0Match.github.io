@@ -97,7 +97,7 @@ function App() {
   if (lastActivityTime && Date.now() - lastActivityTime > maxInactiveTime) {
     // Clear user data and redirect to logout page if session expired
     localStorage.removeItem('lastActivityTime')
-    return <Navigate to="/logout" replace />
+    return <Navigate to="/user-auth" replace />
   }
 
   // Update last activity time
@@ -173,126 +173,119 @@ function App() {
       location.pathname.startsWith('/auth/register') ||
       location.pathname.startsWith('/AdminDashboard'))
 
-  return (
-    <main className="bg-[#f7fdfd]">
-      {!hideNavbar && <Navbar />}
-      {user && !hideExtraComponents && (
-        <>
-          <NewestDeals />
-          <AboutUs />
-          <Footer />
-        </>
-      )}
-      <Routes>
-        <Route path="/auth/login" element={<Login/>} />
-        <Route path="/auth/register" element={<Register/>} />
-        <Route path="/user-auth" element={<AuthPage />} />
-        <Route
-          path="/verification-success/:verificationToken"
-          element={<VerificationSuccess />}
-        />
-        <Route path="/find-jobs" element={<FindJobs />} />
-        <Route path="/companies" element={<Companies />} />
-
-        <Route element={<Layout />}>
-          <Route element={<LayoutDash />}>
-          <Route
-          path="/"
-          element={
-            user ? (
-              user.accountType === 'seeker' ? (
-                <Navigate to="/user-profile" replace={true} />
-              ) : (
-                <Navigate to="/company-profile" replace={true} />
-              )
-            ) : (
-              <Navigate to="/user-auth" replace={true} />
-            )
-          }
-        />
-            <Route path="Dashboard" element={<Dashboard />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="all-application" element={<AllApplication />} />
-            <Route path="my-schedule" element={<Schedule />} />
-            <Route path="/skills-assessment" element={<SkillsAssessment />} />
-
+      return (
+        <main className="bg-[#f7fdfd]">
+          {!hideNavbar && <Navbar />}
+          {user && !hideExtraComponents && (
+            <>
+              <NewestDeals />
+              <AboutUs />
+              <Footer />
+            </>
+          )}
+          <Routes>
+            <Route path="/auth" element={<Auth/>} />
+            <Route path="/auth/login" element={<Login/>} />
+            <Route path="/auth/register" element={<Register/>} />
+            <Route path="/user-auth" element={<AuthPage />} />
             <Route
-              path="skills-assessment"
-              element={(props) => <ProgressBar {...props} />}
+              path="/verification-success/:verificationToken"
+              element={<VerificationSuccess />}
             />
+            <Route path="/find-jobs" element={<FindJobs />} />
+            <Route path="/companies" element={<Companies />} />
+    
+            <Route element={<Layout />}>
+              <Route element={<LayoutDash />}>
+              <Route
+              path="/"
+              element={
+                user ? (
+                  user.accountType === 'seeker' ? (
+                    <Navigate to="/user-profile" replace={true} />
+                  ) : (
+                    <Navigate to="/company-profile" replace={true} />
+                  )
+                ) : (
+                  <Navigate to="/user-auth" replace={true} />
+                )
+              }
+            />
+                <Route path="Dashboard" element={<Dashboard />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="all-application" element={<AllApplication />} />
+                <Route path="my-schedule" element={<Schedule />} />
+                <Route path="/skills-assessment" element={<SkillsAssessment />} />
+    
+                <Route
+                  path="skills-assessment"
+                  element={(props) => <ProgressBar {...props} />}
+                />
+                <Route
+                  path="skills-assessment/select-category"
+                  element={<AssessmentCategorySelect />}
+                />
+    
+                <Route
+                  path="skills-assessment/job-matched-dashboard"
+                  element={<JobMatchedDashboard />}
+                />
+    
+                {/* Route for selecting assessment category */}
+                <Route path="/user-profile" element={<UserProfile />} />
+                <Route path="settings" element={<Settings />} />
+                <Route path="help-center" element={<HelpCenter />} />
+                {/* <Route path="/job-available" element={<JobAvailable />} /> */}
+              </Route>
+    
+              <Route element={<CompanyLayoutDash />}>
+                <Route element={<CDashboard />} />
+                <Route path="CompanyDash" element={<CDashboard />} />
+                <Route path="cmessages" element={<CMessages />} />
+                <Route path="all-applicants" element={<AllApplicants />} />
+                <Route path="schedule" element={<CSchedule />} />
+                <Route path="/company-profile" element={<CompanyProfile />} />
+                <Route path="cjoblisting" element={<CJobListing />} />
+                <Route path="/generate-reports" element={<GenerateReports />} />
+                <Route path="CSettings" element={<CSettings />} />
+                <Route path="CHelpCenter" element={<CHelpCenter />} />
+              </Route>
+
+              <Route
+                path={
+                  user?.accountType === 'seeker'
+                    ? '/user-profile'
+                    : '/user-profile/:id'
+                }
+                element={<UserProfile />}
+              />
+    
+              <Route path={'/company-profile'} element={<CompanyProfile />} />
+              <Route path={'/company-profile/:id'} element={<CompanyProfile />} />
+              <Route path={'/upload-job'} element={<UploadJob />} />
+              <Route path={'/upload-job/:id'} element={<UploadJob />} />
+              <Route path={'/job-detail/:id'} element={<JobDetail />} />
+            </Route>
             <Route
-              path="skills-assessment/select-category"
-              element={<AssessmentCategorySelect />}
-            />
+                    path="/AdminDashboard"
+                    element={<AdminDashboardHOC />}
+                  />
+                  <Route path="/admin/users" element={<DashUsersHOC />} />
+                  <Route path="/admin/jobs" element={<DashJobsHOC />} />
+                  <Route path="/admin/companies" element={<DashCompaniesHOC />} />
+                  <Route path="/admin/category" element={<DashCategoryHOC />} />
+                  <Route path="/admin/job/create" element={<DashCreateJobHOC />} />
+                  <Route path="/admin/category/create" element={<DashCreateCategoryHOC />} />
 
-            <Route
-              path="skills-assessment/job-matched-dashboard"
-              element={<JobMatchedDashboard />}
-            />
-
-            {/* Route for selecting assessment category */}
-            <Route path="/user-profile" element={<UserProfile />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="help-center" element={<HelpCenter />} />
-            {/* <Route path="/job-available" element={<JobAvailable />} /> */}
-          </Route>
-
-          <Route element={<CompanyLayoutDash />}>
-            <Route element={<CDashboard />} />
-            <Route path="CompanyDash" element={<CDashboard />} />
-            <Route path="cmessages" element={<CMessages />} />
-            <Route path="all-applicants" element={<AllApplicants />} />
-            <Route path="schedule" element={<CSchedule />} />
-            <Route path="/company-profile" element={<CompanyProfile />} />
-            <Route path="cjoblisting" element={<CJobListing />} />
-            <Route path="/generate-reports" element={<GenerateReports />} />
-            <Route path="CSettings" element={<CSettings />} />
-            <Route path="CHelpCenter" element={<CHelpCenter />} />
-          </Route>
-
-          <Route
-            path="/AdminDashboard"
-            element={
-              <AdminDashboard>
-                <AdminDashboardHOC />
-              </AdminDashboard>
-            }
-          />
-          <Route path="/admin/users" element={<DashUsersHOC />} />
-          <Route path="/admin/jobs" element={<DashJobsHOC />} />
-          <Route path="/admin/companies" element={<DashCompaniesHOC />} />
-          <Route path="/admin/category" element={<DashCategoryHOC />} />
-          <Route path="/admin/job/create" element={<DashCreateJobHOC />} />
-          <Route path="/auth/*" element={<Auth/>} />
-          <Route
-            path="/admin/category/create"
-            element={<DashCreateCategoryHOC />}
-          />
-
-          <Route
-            path={
-              user?.accountType === 'seeker'
-                ? '/user-profile'
-                : '/user-profile/:id'
-            }
-            element={<UserProfile />}
-          />
-
-          <Route path={'/company-profile'} element={<CompanyProfile />} />
-          <Route path={'/company-profile/:id'} element={<CompanyProfile />} />
-          <Route path={'/upload-job'} element={<UploadJob />} />
-          <Route path={'/upload-job/:id'} element={<UploadJob />} />
-          <Route path={'/job-detail/:id'} element={<JobDetail />} />
-        </Route>
-        <Route path="/AboutPage" element={<AboutPage />} />
-        <Route path="/ContactPage" element={<ContactPage />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/terms-of-service" element={<TermsOfService />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/about-us" element={<About />} />
-      </Routes>
-    </main>
-  )
-}
-
-export default App
+            <Route path="/AboutPage" element={<AboutPage />} />
+            <Route path="/ContactPage" element={<ContactPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/about-us" element={<About />} />
+          </Routes>
+        </main>
+      )
+    }
+    
+    export default App
