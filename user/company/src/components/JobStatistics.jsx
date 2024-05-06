@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   BarChart,
   Bar,
@@ -8,8 +8,8 @@ import {
   YAxis,
   Tooltip,
   Legend,
-} from "recharts";
-import { DATA1, DUMMY_DATA_INFO } from "./lib/consts/dummy/dummy";
+} from 'recharts'
+import { DATA1, DUMMY_DATA_INFO } from './lib/consts/dummy/dummy'
 
 export default function JobStatistics() {
   return (
@@ -45,5 +45,5 @@ export default function JobStatistics() {
         </BarChart>
       </ResponsiveContainer>
     </div>
-  );
+  )
 }

@@ -1,129 +1,139 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { HiLocationMarker } from "react-icons/hi";
-import { AiOutlineMail } from "react-icons/ai";
-import { FiPhoneCall } from "react-icons/fi";
-import { PlusOutlined, DownloadOutlined } from "@ant-design/icons";
-import { Modal, Upload } from "antd";
-import { InboxOutlined } from '@ant-design/icons';
-import { message } from 'antd';
-import { CustomButton, TextInput, Loading } from "../components";
-import { handleFileUpload } from "../utils";
-import { apiRequest } from "../utils";
-import { Login } from "../redux/userSlice";
+import { Dialog, Transition } from '@headlessui/react'
+import { Fragment, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
+import { HiLocationMarker } from 'react-icons/hi'
+import { AiOutlineMail } from 'react-icons/ai'
+import { FiPhoneCall } from 'react-icons/fi'
+import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
+import { Modal, Upload } from 'antd'
+import { InboxOutlined } from '@ant-design/icons'
+import { message } from 'antd'
+import { CustomButton, TextInput, Loading } from '../components'
+import { handleFileUpload } from '../utils'
+import { apiRequest } from '../utils'
+import { Login } from '../redux/userSlice'
 
+const UserForm = ({ open, setOpen, user, profileUrl }) => {
+  const dispatch = useDispatch()
+  const [profileImage, setProfileImage] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewTitle, setPreviewTitle] = useState('')
+  const [fileList, setFileList] = useState([])
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+  const handleCancel = () => setPreviewOpen(false)
 
-const UserForm = ({ open, setOpen, setResumeUrl }) => {
-  const { user } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
-    getValues,
-    watch,
     formState: { errors },
-  } = useForm({
-    mode: "onChange",
-    defaultValues: { ...user },
-  });
+    setValue,
+  } = useForm()
 
-  const dispatch = useDispatch();
-  const [profileImage, setProfileImage] = useState("");
-  const [uploadCv, setUploadCv] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
+  const closeModal = () => setOpen(false)
 
-  const handleCancel = () => setPreviewOpen(false);
+  useEffect(() => {
+    if (user) {
+      Object.entries(user).forEach(([key, value]) => {
+        setValue(key, value)
+      })
+    }
+  }, [user, setValue])
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true)
+    try {
+      if (profileImage) {
+        // const profileImageData = new FormData()
+        // profileImageData.append('file', profileImage)
+        // const response = await handleFileUpload(profileImageData)
+        // profileUrl = response.data.url
+        const response = await handleFileUpload(profileImage)
+        profileUrl = response
+      }
+
+      // Construct data with updated profileUrl and resumeUrl
+      const newData = {
+        ...data,
+        profileUrl,
+      }
+      const res = await apiRequest({
+        url: '/users/update-user',
+        token: user.token,
+        data: newData,
+        method: 'PUT',
+      })
+
+      const getUser = async () => {
+        const resUser = await apiRequest({
+          url: '/users/get-user',
+          token: user?.token,
+          method: 'GET',
+        })
+        const updatedUserInfo = { token: user?.token, ...resUser?.user }
+        dispatch(Login(updatedUserInfo)) // Update user state in Redux
+      }
+
+      if (res) {
+        // If the request is successful, update user state in Redux store
+        // dispatch(Login(res.user)) // Update user state in Redux
+        getUser()
+        setOpen(false)
+      }
+      setIsSubmitting(false)
+    } catch (error) {
+      setIsSubmitting(false)
+      console.log(error)
+    }
+  }
+
+  const handleProfileImageChange = async (info) => {
+    const { file, fileList } = info
+    setFileList(fileList)
+
+    // if (file.status === 'done' && file.originFileObj) {
+    //   const imageFile = file.originFileObj;
+    //   const imageUrl = URL.createObjectURL(imageFile);
+    //   console.log('Image URL:', imageUrl);
+
+    //   setProfileImage(imageFile);
+    //   handlePreview(imageFile);
+    // }
+
+    setProfileImage(file)
+  }
+
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList)
+
+  const handleResumeChange = async (info) => {
+    const { status, response } = info.file
+    if (status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully.`)
+    } else if (status === 'error') {
+      message.error(`${info.file.name} file upload failed.`)
+    }
+  }
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+      file.preview = await getBase64(file.originFileObj)
     }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf("/") + 1));
-  };
-
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-
-  const handleResumeChange = async (info) => {
-    const { status, response } = info.file;
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-      setResumeUrl(response.url); // Update the resumeUrl state in UserProfile component
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  };
-
-  const onSubmit = async (data) => {
-    setIsSubmitting(true);
-    try {
-      // Upload profile picture
-      const uri = profileImage && (await handleFileUpload(profileImage));
-  
-      // Upload resume
-      const resumeUrl = uploadCv && (await handleFileUpload(uploadCv));
-  
-      // Construct newData with updated profileUrl and resumeUrl
-      const newData = uri ? { ...data, profileUrl: uri, resumeUrl } : data;
-  
-      // Send PUT request to update user data
-      const res = await apiRequest({
-        url: "/users/update-user",
-        token: user?.token,
-        data: newData,
-        method: "PUT",
-      });
-  
-      if (res) {
-        // If the request is successful, update user state in Redux store
-        const updatedUserInfo = { token: res?.token, ...res?.user };
-        dispatch(Login(updatedUserInfo)); // Update user state in Redux
-        setOpen(false);
-        // Update the resumeUrl state in UserProfile component if available
-        setResumeUrl(resumeUrl);
-      }
-    } catch (error) {
-      setIsSubmitting(false);
-      console.log(error);
-    }
-  };
-  
-  
-
-  const closeModal = () => setOpen(false);
-
-  // const uploadButton = (
-  //   <button
-  //     style={{
-  //       border: 0,
-  //       background: "none",
-  //     }}
-  //     type="button"
-  //   >
-  //     <PlusOutlined />
-  //     <div
-  //       style={{
-  //         marginTop: 8,
-  //       }}
-  //     >
-  //       Upload
-  //     </div>
-  //   </button>
-  // );
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
+    )
+  }
 
   return (
     <>
@@ -145,12 +155,12 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
-                enter='ease-out duration-300'
-                enterFrom='opacity-0 scale-95'
-                enterTo='opacity-100 scale-100'
-                leave='ease-in duration-200'
-                leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-screen max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
@@ -163,77 +173,66 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
                     className="w-full mt-2 flex flex-col gap-5"
                     onSubmit={handleSubmit(onSubmit)}
                   >
-                    <div className='w-full flex gap-2'>
-                      <div className='w-1/2'>
+                    <div className="w-full flex gap-2">
+                      <div className="w-1/2">
                         <TextInput
-                          name='firstName'
-                          label='First Name'
-                          placeholder='James'
-                          type='text'
-                          register={register("firstName", {
-                            required: "First Name is required",
+                          name="firstName"
+                          label="First Name"
+                          placeholder="James"
+                          type="text"
+                          register={register('firstName', {
+                            required: 'First Name is required',
                           })}
                           error={
-                            errors.firstName ? errors.firstName?.message : ""
+                            errors.firstName ? errors.firstName?.message : ''
                           }
                         />
                       </div>
-                      <div className='w-1/2'>
+                      <div className="w-1/2">
                         <TextInput
-                          name='lastName'
-                          label='Last Name'
-                          placeholder='Wagonner'
-                          type='text'
-                          register={register("lastName", {
-                            required: "Last Name is required",
+                          name="lastName"
+                          label="Last Name"
+                          placeholder="Wagonner"
+                          type="text"
+                          register={register('lastName', {
+                            required: 'Last Name is required',
                           })}
                           error={
-                            errors.lastName ? errors.lastName?.message : ""
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className='w-full flex gap-2'>
-                      <div className='w-1/2'>
-                        <TextInput
-                          name='contact'
-                          label='Contact'
-                          placeholder='Phone Number'
-                          type='text'
-                          register={register("contact", {
-                            required: "Coontact is required!",
-                          })}
-                          error={errors.contact ? errors.contact?.message : ""}
-                        />
-                      </div>
-
-                      <div className='w-1/2'>
-                        <TextInput
-                          name='location'
-                          label='Location'
-                          placeholder='Location'
-                          type='text'
-                          register={register("location", {
-                            required: "Location is required",
-                          })}
-                          error={
-                            errors.location ? errors.location?.message : ""
+                            errors.lastName ? errors.lastName?.message : ''
                           }
                         />
                       </div>
                     </div>
 
-                    <TextInput
-                      name='jobTitle'
-                      label='Job Title'
-                      placeholder='Software Engineer'
-                      type='text'
-                      register={register("jobTitle", {
-                        required: "Job Title is required",
-                      })}
-                      error={errors.jobTitle ? errors.jobTitle?.message : ""}
-                    />
+                    <div className="w-full flex gap-2">
+                      <div className="w-1/2">
+                        <TextInput
+                          name="contact"
+                          label="Contact"
+                          placeholder="Phone Number"
+                          type="text"
+                          register={register('contact', {
+                            required: 'Coontact is required!',
+                          })}
+                          error={errors.contact ? errors.contact?.message : ''}
+                        />
+                      </div>
+
+                      <div className="w-1/2">
+                        <TextInput
+                          name="location"
+                          label="Location"
+                          placeholder="Location"
+                          type="text"
+                          register={register('location', {
+                            required: 'Location is required',
+                          })}
+                          error={
+                            errors.location ? errors.location?.message : ''
+                          }
+                        />
+                      </div>
+                    </div>
                     {/* Profile Picture */}
                     <div className="w-full flex gap-2 text-sm">
                       <div className="w-1/2">
@@ -245,14 +244,15 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
                           listType="picture-card"
                           fileList={fileList}
                           onPreview={handlePreview}
-                          onChange={handleChange}
+                          onChange={handleProfileImageChange}
                           beforeUpload={() => false}
+                          accept="image/jpeg, image/png" // Restrict files to JPEG and PNG formats
                         >
                           {fileList.length >= 1 ? null : (
                             <button
                               style={{
                                 border: 0,
-                                background: "none",
+                                background: 'none',
                               }}
                               type="button"
                             >
@@ -271,7 +271,9 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
 
                       {/* Resume */}
                       <div className="flex w-1/2">
-                        <label className="text-gray-600 text-sm mb-1">Resume</label>
+                        <label className="text-gray-600 text-sm mb-1">
+                          Resume
+                        </label>
                         <Upload
                           name="file"
                           multiple={false}
@@ -281,7 +283,6 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
                           <button
                             style={{
                               border: 0,
-
                             }}
                             type="button"
                             className="outline-dashed outline-1 outline-offset-2 outline-gray-200 hover:outline-green-500 bg-gray-100 px-8 mt-8 w-full"
@@ -299,24 +300,48 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
                       </div>
                     </div>
 
-                    <div className='flex flex-col'>
-                      <label className='text-gray-600 text-sm mb-1'>
+                    <div className="flex flex-col">
+                      <label className="text-gray-600 text-sm mb-1">
+                        Skill
+                      </label>
+                      <textarea
+                        className="rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none"
+                        rows={4}
+                        cols={6}
+                        {...register('skills', {
+                          required:
+                            'Write your skills (e.g. Cleaning, Cooking)',
+                        })}
+                        aria-invalid={errors.skills ? 'true' : 'false'}
+                      ></textarea>
+                      {errors.skills && (
+                        <span
+                          role="alert"
+                          className="text-xs text-red-500 mt-0.5"
+                        >
+                          {errors.skills?.message}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label className="text-gray-600 text-sm mb-1">
                         About
                       </label>
                       <textarea
-                        className='rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none'
+                        className="rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none"
                         rows={4}
                         cols={6}
-                        {...register("about", {
+                        {...register('about', {
                           required:
-                            "Write a little bit about yourself and your projects",
+                            'Write a little bit about yourself and your projects',
                         })}
-                        aria-invalid={errors.about ? "true" : "false"}
+                        aria-invalid={errors.about ? 'true' : 'false'}
                       ></textarea>
                       {errors.about && (
                         <span
-                          role='alert'
-                          className='text-xs text-red-500 mt-0.5'
+                          role="alert"
+                          className="text-xs text-red-500 mt-0.5"
                         >
                           {errors.about?.message}
                         </span>
@@ -331,7 +356,7 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
                         <CustomButton
                           type="submit"
                           containerStyles="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none "
-                          title={"Submit"}
+                          title={'Submit'}
                         />
                       )}
                     </div>
@@ -352,71 +377,130 @@ const UserForm = ({ open, setOpen, setResumeUrl }) => {
         <img
           alt="example"
           style={{
-            width: "100%",
+            width: '100%',
           }}
           src={previewImage}
         />
       </Modal>
     </>
-  );
-};
+  )
+}
 
 const UserProfile = () => {
-  const { user } = useSelector((state) => state.user);
-  const [open, setOpen] = useState(false);
-  const [resumeUrl, setResumeUrl] = useState("");
-  
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.user)
+  const [open, setOpen] = useState(false)
+  const [userInfo, setUserInfo] = useState(null)
+  const [resumeUrl, setResumeUrl] = useState(null) // Define resumeUrl state
+  const [isEmailVerified, setIsEmailVerified] = useState(false)
 
-  const userInfo = user;
+  const getUser = async () => {
+    const res = await apiRequest({
+      url: '/users/get-user',
+      token: user?.token,
+      method: 'GET',
+    })
+    const updatedUserInfo = { token: user?.token, ...res?.user }
+    setUserInfo(updatedUserInfo)
+    setIsEmailVerified(updatedUserInfo?.emailVerified) // Set email verification status
+    dispatch(Login(updatedUserInfo))
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      setUserInfo(user)
+    }
+  }, [user])
+
+  useEffect(() => {
+    let resultSkillAssessment = localStorage.getItem('resultAssessment')
+    if (resultSkillAssessment) {
+      const parsedResult = JSON.stringify(resultSkillAssessment)
+
+      const updatedSkills = userInfo?.skills
+        ? `${userInfo?.skills}\n${parsedResult}`
+        : parsedResult
+
+      const updatedUserInfo = {
+        ...userInfo,
+        skills: updatedSkills,
+      }
+      // Update the userInfo state
+      setUserInfo(updatedUserInfo)
+    }
+  }, [])
 
   return (
-    <div className='container mx-auto flex items-center justify-center pt-10 pb-24 bg-green-200'>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+    <div className="container mx-auto flex items-center justify-center pt-10 pb-24 bg-green-200">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Side */}
-        <div className='bg-slate-100 p-6 pb-2 rounded-lg flex flex-col items-center overflow-hidden'>
+        <div className="bg-slate-100 p-6 pb-2 rounded-lg flex flex-col items-center overflow-hidden">
           <div>
             <img
               src={userInfo?.profileUrl || userInfo?.NoProfile}
               alt={userInfo?.firstName}
-              className='w-full h-48 object-contain rounded-lg mb-4'
+              className="w-full h-48 object-contain rounded-lg mb-4"
             />
-            <h1 className='text-2xl font-semibold text-slate-600'>
-              {userInfo?.firstName + " " + userInfo?.lastName}
+            <h1 className="text-2xl font-semibold text-slate-600 flex items-center">
+              {userInfo?.firstName + ' ' + userInfo?.lastName}
+              {isEmailVerified && ( // Render verified icon if email is verified
+                <span className="ml-2">
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAADGElEQVR4nO2W3U9ScRzG2dwaL5mCYAio2NaW11w0t7TxYmb4iqCCJghsttTavOOmNVTESpQIEeUgpFM84tra7GWzf6GXtS66aqs711ZNGFfwbb+jkA6OHA7rzucePnu+5znPcxiMM1GQeMcqqYkYxyWbQ2PitQEJ439Jgo+Ia3CrrC4yrKrdMs1WR0yJ6k0jVG8MgXh9MCFaG3CKwgZVVcggk4R04uKJuK6kbscakm5bUlLcDLVbw1ATMUEaKlm/DeK1QRA9HwBR2ABVq3oQYv0pYaAviH5Lm1sXtdikUQtQhgb7QYj1wcVALwj8Whst6KXoyGVp1BKjA61c1gF/qSfG92kuF3beqMUm3TbH6UIFfi0IlnqgYlET53m7bJTOTjxTmuc9DuX7NFDh7Qbesy7gejqxvOktKEi5oD4N8Bf/QXmeTuA+bU/yXd1VpOBa3NxQFNSrAetLJ5heOIDn7jyCdkD5Qjtw59saSMHSiLmpGOjEWw+kIAXJVAp0+APgug+h5fNtUO5SN5I73jLN5oSGqUORfiUO4GrgTgZa5lJD6ZNWJ2kNHm+kNFSM6WFizwv12DBl6PXV8UOXR9ALc7eg9HFrgjWnzm411L1ZToMGwD7uEn/4Zf8bXFkx0YVC6aObwHHeGMtO9IZxPOuZYvoMOANfHqIFPT/bkhuMVgYVflaQlnoh/OlNBv7153eo9xvh/ms3ESKk34kDkIfu5YMmWFOK3ANCrEyO9Ap9Wtj8vJeB//izX6hTYDmaZ0hTLQwZmsjSW+nRQOjDqwy8AKfAdjQDc1pB/jqJwvqG02pQ4O6C1fe7BUPZ0ypgOpTkBYJGnNjTU7qXv9ABD99hcC14lzKUNaVIsqcaySuTOHegL3ha4RM16EbF0E4RqgTmpHyFkVe4rgSNON+vjeeEHnUvRadxpl1ObRbTQiNesdgdow2dVMTO2VUFfAgcExpxek6VQDilLVxXgkYc7WkB500y7fJAUR97aaERL3OrZWUutQqtDCr8E4003ezkTCpVbLtclje9xQitDGemZZQz0zxKWoNnYpzUXzW9KCUUY2u8AAAAAElFTkSuQmCC"
+                    alt="Verified Icon"
+                  />
+                </span>
+              )}
             </h1>
-            <h5 className='text-green-900 text-lg font-bold mb-4 mt-4'>
-              {userInfo?.jobTitle || "Add Job Title"}
+            <h5 className="text-green-900 text-lg font-bold mb-4 mt-4">
+              Applicant
             </h5>
           </div>
         </div>
 
         {/* Right Side */}
-        <div className='flex flex-col gap-4'>
+        <div className="flex flex-col gap-4">
           {/* Upper Right */}
-          <div className='bg-slate-50 p-6 rounded-lg h-auto overflow-hidden max-w-md'>
-            <div className='flex gap-1 items-center justify-start px-3 py-1 text-sm text-slate-600'>
+          <div className="bg-slate-50 p-6 rounded-lg h-auto overflow-hidden max-w-md">
+            <div className="flex gap-1 items-center justify-start px-3 py-1 text-sm text-slate-600">
               <HiLocationMarker size={24} className="text-green-800" />
-              <p className="pl-2 text-lg">{userInfo?.location ?? "No Location"}</p>
+              <p className="pl-2 text-lg">
+                {userInfo?.location ?? 'No Location'}
+              </p>
             </div>
-            <div className='flex gap-1 items-center justify-start px-3 py-1 text-sm text-slate-600'>
+            <div className="flex gap-1 items-center justify-start px-3 py-1 text-sm text-slate-600">
               <AiOutlineMail size={24} className="text-green-800" />
-              <p className="pl-2 text-lg">{userInfo?.email ?? "No Email"}</p>
+              <p className="pl-2 text-lg">{userInfo?.email ?? 'No Email'}</p>
             </div>
-            <div className='flex gap-1 items-center justify-start px-3 py-1 pb-4 text-sm text-slate-600'>
+            <div className="flex gap-1 items-center justify-start px-3 py-1 pb-4 text-sm text-slate-600">
               <FiPhoneCall size={24} className="text-green-800" />
-              <p className="pl-2 text-lg">{userInfo?.contact ?? "No Contact"}</p>
+              <p className="pl-2 text-lg">
+                {userInfo?.contact ?? 'No Contact'}
+              </p>
             </div>
-            {/* Wrap the "About" section with overflow-auto class and set max-height */}
-            <p className='text-green-600 font-bold text-lg text-left'>ABOUT</p>
-            <div className='overflow-y-auto max-h-40'>
-              <p className='text-base text-left leading-7 px-3 py-4 text-sm text-slate-600'>
-                {userInfo?.about ?? "No About Found"}
+
+            <p className="text-green-600 font-bold text-lg text-left">SKILLS</p>
+            <div className="overflow-y-auto max-h-40">
+              <p className="text-base text-left leading-7 px-3 py-2 text-sm text-slate-600">
+                {userInfo?.skills ?? 'No Skills Indicated'}
+              </p>
+            </div>
+
+            <p className="text-green-600 font-bold text-lg text-left">ABOUT</p>
+            <div className="overflow-y-auto max-h-40">
+              <p className="text-base text-left leading-7 px-3 py-2 text-sm text-slate-600">
+                {userInfo?.about ?? 'No About Found'}
               </p>
             </div>
           </div>
 
           {/* Lower Right */}
           <button
-            className='bg-green-600 text-white py-2 px-44 rounded hover:bg-[#86EFAC] hover:text-[#15803D] focus:outline-none self-start mt-4'
+            className="bg-green-600 text-white py-2 px-44 rounded hover:bg-[#86EFAC] hover:text-[#15803D] focus:outline-none self-start mt-4"
             onClick={() => setOpen(true)}
           >
             Edit Profile
@@ -434,12 +518,16 @@ const UserProfile = () => {
               </a>
             </div>
           )}
-
         </div>
       </div>
-      <UserForm open={open} setOpen={setOpen} setResumeUrl={setResumeUrl} />
+      <UserForm
+        open={open}
+        setOpen={setOpen}
+        user={user}
+        profileUrl={userInfo?.profileUrl}
+      />
     </div>
-  );
-};
+  )
+}
 
-export default UserProfile;
+export default UserProfile

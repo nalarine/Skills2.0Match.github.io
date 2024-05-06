@@ -1,6 +1,5 @@
-
 import axios from "axios"
-const API_URL = "http://localhost:8800/api-v1";
+const API_URL = "https://usaid-project-1.onrender.com/api-v1";
 
 
 export const API = axios.create({
@@ -32,7 +31,7 @@ export const apiRequest = async ({url, token, data, method}) => {
 export const handleFileUpload = async (uploadFile) => {
     const formData = new FormData();
     formData.append("file", uploadFile);
-    formData.append("upload_preset", "usaidproject");
+    formData.append("upload_preset", "USAIDPROJECT");
 
     try {
         const response = await axios.post(

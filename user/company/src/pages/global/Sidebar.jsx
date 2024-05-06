@@ -1,85 +1,175 @@
-import React from 'react';
-import { useSelector } from 'react-redux'; // Importing useSelector from react-redux
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { Box, Typography } from '@mui/material'; // Importing Typography from @mui/material
-import { Link } from 'react-router-dom';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import WorkIcon from '@mui/icons-material/Work';
-import GroupsIcon from '@mui/icons-material/Groups';
-import CategoryIcon from '@mui/icons-material/Category';
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
-import logoDashboard from '../../assets/logo.svg'; // Import logo image
-import { Logout } from '../../redux/userSlice';
-import { AiOutlineLogout } from 'react-icons/ai'; // Import Logout icon
-import { useDispatch } from 'react-redux'; // Import useDispatch from react-redux
+import { alpha } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import ListItemButton from '@mui/material/ListItemButton';
+import { useSelector } from 'react-redux'
+import { usePathname } from '../admin2/routes/hooks';
+import { RouterLink } from '../admin2/routes/components';
 
-const SidebarAdm = () => {
-    const { user } = useSelector((state) => state.user); // Using useSelector to access user state
-    const profileUrl = user?.profileUrl || '';
-    const dispatch = useDispatch(); // Using useDispatch to dispatch actions
+import { useResponsive } from '../admin2/hooks/use-responsive';
 
-    const handleLogout = () => {
-        dispatch(Logout());
-    };
+import { account } from '../admin2/_mock/account';
 
-    return (
-        <Sidebar backgroundColor="#C1E1C1" style={{ borderRightStyle: "none" }}>
-            <Box className="flex flex-col justify-between h-full">
-                <Box>
-                    <Box className="pt-3 pb-5 flex justify-center items-center"> {/* Added items-center to center the text */}
-                        <img
-                            src={logoDashboard} // Use the imported logo image here
-                            alt="LOGO"
-                            className="h-[60px] w-[60px]" // You might adjust the size as needed
-                        />
-                        <span className="font-bold ml-2">Skills2.0Match</span> {/* Added ml-2 for spacing */}
-                    </Box>
-                    <Menu className="text-[#14532d]">
-                        <MenuItem icon={<DashboardIcon />}>
-                            <Link to="/AdminDashboard">Dashboard</Link>
-                        </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<GroupAddIcon />}>
-                            <Link to="/admin/users">Users</Link>
-                        </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<GroupsIcon />}>
-                            <Link to="/admin/companies">Companies</Link>
-                        </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<WorkIcon />}>
-                            <Link to="/admin/jobs">Jobs</Link>
-                        </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                        <MenuItem icon={<CategoryIcon />}>
-                            <Link to="/admin/category">Category</Link>
-                        </MenuItem>
-                        <hr className="my-1" /> {/* Add a horizontal line */}
-                    </Menu>
-                </Box>
-                <div className="flex flex-col gap-6 items-center py-5">
-                    <div className="flex items-center gap-4">
-                        <Avatar src={profileUrl} alt="avatar" />
-                        <div>
-                            <Typography variant="h6">{user?.firstName}</Typography>
-                            <Typography variant="body2" color="textSecondary" className="font-normal">
-                                {user?.email}
-                            </Typography>
-                        </div>
-                    </div>
-                    {/* Logout button */}
-                    <button
-                        onClick={handleLogout}
-                        className="group flex items-center rounded-md px-2 py-2 text-sm text-gray-900 hover:bg-green-500 hover:text-white"
-                    >
-                        <AiOutlineLogout className="text-gray-600 mr-2 h-5 w-5" aria-hidden="true" />
-                        Log Out
-                    </button>
-                </div>
-            </Box>
-        </Sidebar>
-    );
+import Logo from '../admin2/components/logo';
+import Scrollbar from '../admin2/components/scrollbar';
+
+import { NAV } from '../admin2/layouts/dashboard/config-layout';
+import navConfig from '../admin2/layouts/dashboard/config-navigation';
+
+// ----------------------------------------------------------------------
+
+export default function Nav({ openNav, onCloseNav }) {
+  const pathname = usePathname();
+  const { user } = useSelector((state) => state.user)
+
+  const profileUrl = user?.profileUrl || '' // Initialize profileUrl to empty string if not available
+
+  const upLg = useResponsive('up', 'lg');
+
+  useEffect(() => {
+    if (openNav) {
+      onCloseNav();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  const renderAccount = (
+    <Box
+      sx={{
+        my: 3,
+        mx: 2.5,
+        py: 2,
+        px: 2.5,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
+      }}
+    >
+      <Avatar src={profileUrl} alt="photoURL" />
+
+      <Box sx={{ ml: 2 }}>
+        <Typography variant="subtitle2">{user?.firstName}</Typography>
+
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {account.role}
+        </Typography>
+      </Box>
+    </Box>
+  );
+
+  const renderMenu = (
+    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+      {navConfig.map((item) => (
+        <NavItem key={item.title} item={item} />
+      ))}
+    </Stack>
+  );
+
+  const renderContent = (
+    <Scrollbar
+      sx={{
+        height: 1,
+        '& .simplebar-content': {
+          height: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        },
+      }}
+    >
+      <Logo sx={{ mt: 3, ml: 4 }} />
+
+      {renderAccount}
+
+      {renderMenu}
+
+    </Scrollbar>
+  );
+
+  return (
+    <Box
+      sx={{
+        flexShrink: { lg: 0 },
+        width: { lg: NAV.WIDTH },
+      }}
+    >
+      {upLg ? (
+        <Box
+          sx={{
+            height: 1,
+            position: 'fixed',
+            width: NAV.WIDTH,
+            borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+          }}
+        >
+          {renderContent}
+        </Box>
+      ) : (
+        <Drawer
+          open={openNav}
+          onClose={onCloseNav}
+          PaperProps={{
+            sx: {
+              width: NAV.WIDTH,
+            },
+          }}
+        >
+          {renderContent}
+        </Drawer>
+      )}
+    </Box>
+  );
+}
+
+Nav.propTypes = {
+  openNav: PropTypes.bool,
+  onCloseNav: PropTypes.func,
 };
 
-export default SidebarAdm;
+// ----------------------------------------------------------------------
+
+function NavItem({ item }) {
+  const pathname = usePathname();
+
+  const active = item.path === pathname;
+
+  return (
+    <ListItemButton
+      component={RouterLink}
+      href={item.path}
+      sx={{
+        minHeight: 44,
+        borderRadius: 0.75,
+        typography: 'body2',
+        color: 'text.secondary',
+        textTransform: 'capitalize',
+        fontWeight: 'fontWeightBold',
+        ...(active && {
+          color: 'green',
+          fontWeight: 'fontWeightBold',
+          bgcolor: '#B0D9B1',
+          '&:hover': {
+            bgcolor: '#D0E7D2',
+          },
+        }),
+      }}
+    >
+      <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+        {item.icon}
+      </Box>
+
+      <Box component="span">{item.title} </Box>
+    </ListItemButton>
+  );
+}
+
+NavItem.propTypes = {
+  item: PropTypes.object,
+};

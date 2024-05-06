@@ -1,9 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose"; // Import Schema along with mongoose
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import JWT from "jsonwebtoken";
 
-//schema
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -16,49 +15,60 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, " Email is Required!"],
+      required: [true, "Email is Required!"],
       unique: true,
-      validate: validator.isEmail,
+      validate: {
+        validator: function (value) {
+          return validator.isEmail(value) && /@gmail\.com$/.test(value);
+        },
+        message: (props) => `${props.value} is not a valid Gmail address.`,
+      },
     },
     password: {
       type: String,
       required: [true, "Password is Required!"],
-      minlength: [6, "Password length should be greater than 6 character"],
+      minlength: [6, "Password length should be greater than 6 characters"],
       validate: {
-        validator: function(value) {
-          // Password should have at least one digit, one special character, and one uppercase letter
+        validator: function (value) {
           return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{6,}$/.test(value);
         },
-        message: props => `${props.value} is not a valid password. It should contain at least one digit, one special character, and one uppercase letter.`
+        message: (props) =>
+          `${props.value} is not a valid password. It should contain at least one digit, one special character, and one uppercase letter.`,
       },
       select: true,
     },
     accountType: { type: String, default: "seeker" },
-    role: { type: Number, default: 0 }, // Define role field explicitly
+    role: { type: Number, default: 0 },
+    isAdmin: { type: Boolean, default: false }, 
     contact: { type: String },
     location: { type: String },
     profileUrl: { type: String },
     cvUrl: { type: String },
     jobTitle: { type: String },
     about: { type: String },
+    skills: { type: String },
+    birthdate: { type: Date },
+    application: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
+    emailVerified: { type: Boolean, default: false }, // New field for email verification
+    verificationToken: { type: String }, // New field for verification token
+    savedJobs: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
   },
   { timestamps: true }
 );
 
-// middlewares
+// Middleware to hash password before saving
 userSchema.pre("save", async function () {
-  if (!this.isModified) return;
+  if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-//compare password
+// Method to compare password
 userSchema.methods.comparePassword = async function (userPassword) {
-  const isMatch = await bcrypt.compare(userPassword, this.password);
-  return isMatch;
+  return await bcrypt.compare(userPassword, this.password);
 };
 
-//JSON WEBTOKEN
+// Method to generate JWT
 userSchema.methods.createJWT = function () {
   return JWT.sign({ userId: this._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: "1d",

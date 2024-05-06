@@ -6,6 +6,13 @@
   font-weight: 400;
 }
 
+.fr-box ol {
+  list-style: decimal;
+}
+.fr-box ul {
+  list-style: disc;
+}
+
 a {
   font-weight: 400;
   text-decoration: inherit;
@@ -130,6 +137,10 @@ body {
 
 .dot:nth-child(3) {
   animation-delay: 0.1s;
+}
+
+.custom-overlay {
+  background: rgba(0,0,0,.5);
 }
 
 @keyframes pulse {

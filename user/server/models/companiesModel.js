@@ -25,7 +25,9 @@ const companySchema = new Schema({
   about: { type: String },
   profileUrl: { type: String },
   jobPosts: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
-});
+  applicants: [ { type: Object }],
+  application: [{ type: Schema.Types.ObjectId, ref: "Users" }],
+}, { timestamps: true });
 
 // middlewares
 companySchema.pre("save", async function () {

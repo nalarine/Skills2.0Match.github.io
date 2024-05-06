@@ -1,18 +1,20 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Avatar, Typography } from "@material-tailwind/react";
-import { Link, useLocation } from "react-router-dom";
-import classNames from "classnames";
+import React, { useContext, createContext, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { MoreVertical, ChevronLast, ChevronFirst } from "lucide-react";
+import { Link, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 import {
   COMPANY_DASHBOARD_SIDEBAR_LINKS,
   COMPANY_DASHBOARD_SIDEBAR_BOTTOM_LINKS,
-} from "../lib/consts/companynavigation";
+} from '../lib/consts/companynavigation'
 
-import { Logout } from "../../redux/userSlice"
-import { AiOutlineLogout } from 'react-icons/ai';
+import { Logout } from '../../redux/userSlice';
+import { FiLogOut } from 'react-icons/fi';
 
 const linkClasses =
-  "flex items-center gap-2 font-regular px-3 py-2 hover:bg-light-yellow hover:no-underline rounded-sm text-base";
+  'flex items-center gap-2 font-regular px-3 py-2 hover:bg-light-yellow hover:no-underline rounded-sm text-base';
+
+const SidebarContext = createContext();
 
 const CompanySidebar = () => {
   const { user } = useSelector((state) => state.user);
@@ -22,60 +24,97 @@ const CompanySidebar = () => {
   const handleLogout = () => {
     dispatch(Logout());
   };
+  const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="bg-[#C1E1C1] w-72 p-3 flex flex-col">
-      <div className="flex items-center gap-2 px-1 py-3">
-        <img
-          src="../../src/assets/logo.svg"
-          alt="LOGO"
-          className="h-[60px] w-[60px]"
-        />
-        <span className="font-bold">Skills2.0Match</span>
-      </div>
-      <div className="flex-2 py-5 flex flex-col gap-1.5">
-        {COMPANY_DASHBOARD_SIDEBAR_LINKS.map((item) => (
-          <SidebarLink key={item.key} item={item} pathname={pathname} />
-        ))}
-      </div>
-      <div className="flex-1 py-5 flex flex-col gap-1.5 pt-2 border-t border-blue">
-        {COMPANY_DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((item) => (
-          <SidebarLink key={item.key} item={item} pathname={pathname} />
-        ))}
-      </div>
-      <div className="flex flex-col gap-6 items-center py-5">
-        <div className="flex items-center gap-4">
-          <Avatar src={profileUrl} alt="avatar" />
-          <div>
-            <Typography variant="h6">{user?.name}</Typography>
-            <Typography variant="small" color="gray" className="font-normal">
-              {user?.email}
-            </Typography>
+    <aside className="h-screen">
+      <nav className="h-full flex flex-col bg-[#C1E1C1] border-r shadow-sm">
+      <div className="p-4 pb-4 flex justify-between items-center">
+      {expanded && (
+        <div className="flex items-center gap-2">
+          <img
+            src="../../src/assets/logo.svg"
+            className="w-12 h-12"
+            alt="Logo"
+          />
+          <h1 className="ml-2 font-bold">Skills 2.0 Match</h1>
+        </div>
+      )}
+      <button
+        onClick={() => setExpanded((curr) => !curr)}
+        className="p-1.5 rounded-lg hover:bg-[#14532d] hover:text-[#ffffff]"
+      >
+        {expanded ? <ChevronFirst /> : <ChevronLast />}
+      </button>
+    </div>
+        <SidebarContext.Provider value={{ expanded }}>
+          <ul className="flex-1 px-3 mb-3">
+            {/* Render the sidebar links */}
+            {COMPANY_DASHBOARD_SIDEBAR_LINKS.map((item) => (
+              <SidebarLink key={item.key} item={item} pathname={pathname} />
+            ))}
+          </ul>
+        </SidebarContext.Provider>
+
+        <SidebarContext.Provider value={{ expanded }}>
+          <ul className="flex-1 px-3 flex flex-col gap-1.5 pt-2 border-t border-green-500">
+            {/* Render the sidebar links */}
+            {COMPANY_DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((item) => (
+              <SidebarLink key={item.key} item={item} pathname={pathname} />
+            ))}
+          </ul>
+        </SidebarContext.Provider>
+
+        <div className="border-t flex p-3">
+          <img
+            src={profileUrl}
+            alt="Profile"
+            className="w-10 h-10 rounded-md"
+          />
+          <div
+            className={`
+              flex justify-between items-center
+              overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
+            `}
+          >
+            <div className="leading-4">
+              <h4 className="font-semibold">{user?.name || 'No First Name'}</h4>
+              <span className="text-xs text-gray-600">{user?.email}</span>
+            </div>
+            {expanded && (
+              <button onClick={handleLogout}    
+              className="p-1.5 rounded-lg hover:bg-[#14532d] hover:text-[#ffffff]">
+                 <FiLogOut size={20} />
+              </button>
+            )}
           </div>
         </div>
-        <button
-            onClick={handleLogout}
-            className="group flex items-center rounded-md text-sm text-gray-900 hover:bg-green-500 hover:text-white p-2"
-        >
-            <AiOutlineLogout className="text-gray-600 mr-2 h-5 w-5" aria-hidden="true" />
-            Log Out
-        </button>
-      </div>
-    </div>
+      </nav>
+    </aside>
   );
-};
+}
 
 function SidebarLink({ item, pathname }) {
+  const { expanded } = useContext(SidebarContext);
+
   return (
     <Link
       to={item.path}
       className={classNames(
         linkClasses,
-        pathname === item.path && "bg-green-500" // Add bg-green-500 class conditionally
+        pathname === item.path && 'bg-green-500', // Add bg-green-500 class conditionally
       )}
+      style={{
+        borderRadius: expanded ? '0.5rem' : '0.5rem', // Add border radius conditionally
+      }}
     >
-      <span className="text-xl">{item.icon}</span>
-      {item.label}
+      {!expanded && <span className="text-xl">{item.icon}</span>}
+      {expanded && (
+        <>
+          <span className="text-xl">{item.icon}</span>
+          {item.label}
+        </>
+      )}
     </Link>
   );
 }

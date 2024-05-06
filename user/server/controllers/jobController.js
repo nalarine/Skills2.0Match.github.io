@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Jobs from "../models/jobsModel.js";
 import Companies from "../models/companiesModel.js";
+import User from "../models/userModel.js";
 
 export const allJobs = async (req, res, next) => {
   try {
@@ -40,7 +41,9 @@ export const editJob = async (req, res, next) => {
       !desc ||
       !requirements
     ) {
-      return res.status(400).json({ message: "Please provide all required fields" });
+      return res
+        .status(400)
+        .json({ message: "Please provide all required fields" });
     }
 
     if (!mongoose.Types.ObjectId.isValid(jobId)) {
@@ -57,7 +60,9 @@ export const editJob = async (req, res, next) => {
       detail: { desc, requirements },
     };
 
-    const updatedJob = await Jobs.findByIdAndUpdate(jobId, updatedJobData, { new: true });
+    const updatedJob = await Jobs.findByIdAndUpdate(jobId, updatedJobData, {
+      new: true,
+    });
 
     if (!updatedJob) {
       return res.status(404).json({ message: "Job not found" });
@@ -80,20 +85,32 @@ export const createJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       desc,
       requirements,
+      startHiringDate,
+      endHiringDate,
     } = req.body;
 
     if (
       !jobTitle ||
       !jobType ||
       !location ||
+      !jobLocationRegion ||
+      !jobLocationProvince ||
+      !jobLocationCity ||
       !salary ||
+      !salaryPeriod ||
       !requirements ||
-      !desc
+      !desc ||
+      !startHiringDate ||
+      !endHiringDate
     ) {
       next("Please Provide All Required Fields");
       return;
@@ -108,11 +125,17 @@ export const createJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       detail: { desc, requirements },
       company: id,
+      startHiringDate,
+      endHiringDate,
     };
 
     const job = new Jobs(jobPost);
@@ -143,11 +166,17 @@ export const updateJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       desc,
       requirements,
+      startHiringDate,
+      endHiringDate,
     } = req.body;
     const { jobId } = req.params;
 
@@ -155,9 +184,15 @@ export const updateJob = async (req, res, next) => {
       !jobTitle ||
       !jobType ||
       !location ||
+      !jobLocationRegion ||
+      !jobLocationProvince ||
+      !jobLocationCity ||
       !salary ||
+      !salaryPeriod ||
       !desc ||
-      !requirements
+      !requirements ||
+      !startHiringDate ||
+      !endHiringDate
     ) {
       next("Please Provide All Required Fields");
       return;
@@ -171,10 +206,16 @@ export const updateJob = async (req, res, next) => {
       jobTitle,
       jobType,
       location,
+      jobLocationRegion,
+      jobLocationProvince,
+      jobLocationCity,
       salary,
+      salaryPeriod,
       vacancies,
       experience,
       detail: { desc, requirements },
+      startHiringDate,
+      endHiringDate,
       _id: jobId,
     };
 
@@ -191,13 +232,150 @@ export const updateJob = async (req, res, next) => {
   }
 };
 
+export const applyJob = async (req, res, next) => {
+  try {
+    let vacancies, applicantId;
+    let {
+      application = [], // array of user id of applicant,
+      attachmentURL, // Resume link
+    } = req.body;
+    const { jobId } = req.params;
+
+    if (!application) {
+      next("Please Provide All Required Fields");
+      return;
+    }
+
+    applicantId = application[0];
+
+    const job = await Jobs.findById({ _id: jobId });
+    if (!job) return res.status(404).send(`No Company with id: ${id}`);
+
+    if (job.isArchived)
+      return res.status(400).json({ message: `Job post is already archived.` });
+
+    if (!job.vacancies)
+      return res
+        .status(400)
+        .json({ message: `Job post has no more vacancies.` });
+
+    if (job.application && job.application.length) {
+      if (job.application.includes(application[0]))
+        return res
+          .status(400)
+          .json({ message: `You have already applied to this job post.` });
+      else application = [...application, ...job.application];
+    }
+
+    vacancies = job.vacancies - 1;
+
+    const jobPost = {
+      application,
+      vacancies,
+      _id: jobId,
+    };
+
+    await Jobs.findByIdAndUpdate(jobId, jobPost, { new: true });
+
+    const updatedJob = await Jobs.findById({ _id: jobId });
+
+    //update the company information with job id
+    const company = await Companies.findById(updatedJob.company);
+    const user = await User.findById(applicantId);
+
+    if (
+      (company.applicants || [])
+        .map((v) => v.id)
+        .includes(`${applicantId}-${job._id}`)
+    ) {
+      return res
+        .status(400)
+        .json({ message: `You have already applied to this job post.` });
+    }
+
+    company.applicants.push({
+      fullName: `${user.firstName} ${user.lastName}`,
+      id: `${applicantId}-${job._id}`,
+      jobPost: updatedJob,
+      user,
+      jobRole: job.jobTitle,
+      appliedDate: new Date(new Date().setHours(0, 0, 0)),
+      hiringStage: "Pending",
+      resume: attachmentURL,
+    });
+
+    // user.applications.push({
+    //   companyName: company.name,
+    //   jobRole: job.jobTitle,
+    //   appliedDate: new Date(new Date().setHours(0,0,0)),
+    //   hiringStage: "Pending",
+    //   resume: attachmentURL
+    // });
+
+    const updatedCompany = await Companies.findByIdAndUpdate(
+      updatedJob.company,
+      company,
+      {
+        new: true,
+      }
+    );
+
+    //   const updatedUser = await User.findByIdAndUpdate(applicantId, user, {
+    //   new: true,
+    // });
+
+    res.status(200).json({
+      success: true,
+      message: "Job Application Successful",
+      updatedJob,
+      updatedCompany,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const getJobPosts = async (req, res, next) => {
   try {
-    const { search, sort, location, jType, exp } = req.query;
+    const { search, sort, location, jType, exp, user_id } = req.query;
     const types = jType?.split(","); //full-time,part-time
     const experience = exp?.split("-"); //2-6
 
-    let queryObject = {};
+    const user = await User.findById(user_id);
+
+    if (!user) return res.status(400).json({ message: "Invalid user id" });
+
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
+
+    let queryObject = {
+      startHiringDate: { $lte: new Date(date.setHours(0, 0, 0)) },
+      endHiringDate: { $gte: new Date(new Date().setHours(0, 0, 0)) },
+    };
+
+    // If user provides skills, include skill matching logic in the query
+    if (user.skills) {
+      const skillQueries = user.skills.split(/\s/).map((skill) => {
+        return { "detail.requirements": { $regex: skill, $options: "i" } };
+      });
+      queryObject.$or = skillQueries;
+    }
+
+    // If user provides job title, include job title matching logic in the query
+    if (user.jobTitle) {
+      queryObject.$or = queryObject.$or || [];
+      queryObject.$or.push({
+        jobTitle: { $regex: user.jobTitle, $options: "i" },
+      });
+    }
+
+    // If neither job title nor skills provided, return an error or handle as appropriate
+    if (!queryObject.$or || queryObject.$or.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Please provide either job title or skills" });
+    }
 
     if (location) {
       queryObject.location = { $regex: location, $options: "i" };
@@ -206,8 +384,6 @@ export const getJobPosts = async (req, res, next) => {
     if (jType) {
       queryObject.jobType = { $in: types };
     }
-
-    //    [2. 6]
 
     if (exp) {
       queryObject.experience = {
@@ -221,6 +397,8 @@ export const getJobPosts = async (req, res, next) => {
         $or: [
           { jobTitle: { $regex: search, $options: "i" } },
           { jobType: { $regex: search, $options: "i" } },
+          { "detail.requirements": { $regex: search, $options: "i" } }, // Match against job requirements
+          { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
         ],
       };
       queryObject = { ...queryObject, ...searchQuery };
@@ -264,6 +442,40 @@ export const getJobPosts = async (req, res, next) => {
       data: jobs,
       page,
       numOfPage,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getJobApplications = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      next("Please Provide All Required Fields");
+      return;
+    }
+
+    const company = await Companies.find({
+      applicants: { $elemMatch: { id: { $regex: userId } } },
+    });
+    //  return res.status(400).json(company)
+
+    const jobApplications = company.map((v) => {
+      return {
+        companyName: v.name,
+        applicants: v.applicants.filter((a) =>
+          a.id ? a.id.includes(userId) : false
+        ),
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Job Application Successful",
+      data: jobApplications,
     });
   } catch (error) {
     console.log(error);
@@ -329,5 +541,86 @@ export const deleteJobPost = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });
+  }
+};
+
+export const saveJob = async (req, res) => {
+  const { userId, id } = req.body;
+  try {
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the job ID is already saved
+    if (user.savedJobs.includes(id)) {
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Job already saved",
+          status: "success",
+        });
+    }
+
+    // Save the job ID to the savedJobs array
+    user.savedJobs.push(id);
+    await user.save();
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Job saved successfully",
+        status: "success",
+      });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const removeJob = async (req, res) => {
+  const { userId, id } = req.body;
+  try {
+    // Remove the job ID from the savedJobs array
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const index = user.savedJobs.indexOf(id);
+    if (index !== -1) {
+      user.savedJobs.splice(index, 1);
+      await user.save();
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Job removed successfully",
+          status: "success",
+        });
+    } else {
+      return res
+        .status(404)
+        .json({ message: "Job not found in saved jobs", status: "failed" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Controller to fetch saved jobs for a user
+export const getSavedJobs = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    // Fetch the user document and populate the savedJobs field
+    const user = await User.findById(userId).populate("savedJobs");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user.savedJobs);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

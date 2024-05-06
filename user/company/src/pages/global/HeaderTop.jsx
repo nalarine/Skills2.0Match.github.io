@@ -1,83 +1,79 @@
-import * as React from 'react';
-import { styled, alpha, ThemeProvider } from '@mui/material/styles'; // Import ThemeProvider
-import AppBar from '@mui/material/AppBar';
+import PropTypes from 'prop-types';
+
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import { DarkMode, LightMode } from "@mui/icons-material";
-import { toggleActionTheme } from '../../redux/themeAction';
-import { useTheme } from '@emotion/react';
-import { useDispatch } from 'react-redux';
 
-// Define your theme here
-const theme = {
-  palette: {
-    mode: 'light', // Set initial mode if needed
-    // Add other theme properties as needed
-  },
-};
+import { useResponsive } from '../admin2/hooks/use-responsive';
 
-// Your HeaderTop component remains the same
+import { bgBlur } from '../admin2/theme/css';
 
-const HeaderTop = () => {
-    const { palette } = useTheme();
-    const dispatch = useDispatch();
+import Iconify from '../admin2/components/iconify';
 
-    return (
-        <Box className="flex-grow">
-            <AppBar position="static" className="shadow-none bg-primary">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        className="mr-2"
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        className="flex-grow hidden sm:block"
-                    >
-                        HR APP
-                    </Typography>
+import Searchbar from '../admin2/layouts/dashboard/common/searchbar';
+import { NAV, HEADER } from '../admin2/layouts/dashboard/config-layout';
+import AccountPopover from '../admin2/layouts/dashboard/common/account-popover';
+import NotificationsPopover from '../admin2/layouts/dashboard/common/notifications-popover';
 
-                    {/* toggle dark theme */}
-                    <IconButton className="mr-4" onClick={() => dispatch(toggleActionTheme())}>
-                        {palette && palette.mode === "dark" ? (
-                            <DarkMode className="text-white text-xl" />
-                        ) : (
-                            <LightMode className="text-white text-xl" />
-                        )}
-                    </IconButton>
+// ----------------------------------------------------------------------
 
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
-                </Toolbar>
-            </AppBar>
-        </Box>
-    );
+export default function Header({ onOpenNav }) {
+  const theme = useTheme();
+
+  const lgUp = useResponsive('up', 'lg');
+
+  const renderContent = (
+    <>
+      {!lgUp && (
+        <IconButton onClick={onOpenNav} sx={{ mr: 1 }}>
+          <Iconify icon="eva:menu-2-fill" />
+        </IconButton>
+      )}
+
+      <Searchbar />
+
+      <Box sx={{ flexGrow: 1 }} />
+
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <NotificationsPopover />
+        <AccountPopover />
+      </Stack>
+    </>
+  );
+
+  return (
+    <AppBar
+      sx={{
+        boxShadow: 'none',
+        height: HEADER.H_MOBILE,
+        zIndex: theme.zIndex.appBar + 1,
+        ...bgBlur({
+          color: theme.palette.background.default,
+        }),
+        transition: theme.transitions.create(['height'], {
+          duration: theme.transitions.duration.shorter,
+        }),
+        ...(lgUp && {
+          width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+          height: HEADER.H_DESKTOP,
+        }),
+      }}
+    >
+      <Toolbar
+        sx={{
+          height: 1,
+          px: { lg: 5 },
+        }}
+      >
+        {renderContent}
+      </Toolbar>
+    </AppBar>
+  );
 }
 
-// Wrap your HeaderTop component with ThemeProvider and provide the theme
-const ThemedHeaderTop = () => (
-  <ThemeProvider theme={theme}>
-    <HeaderTop />
-  </ThemeProvider>
-);
-
-export default ThemedHeaderTop;
+Header.propTypes = {
+  onOpenNav: PropTypes.func,
+};

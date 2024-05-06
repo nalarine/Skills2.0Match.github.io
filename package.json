@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@mui/material": "^6.0.0-alpha.1",
     "@nextui-org/react": "^2.2.10",
     "antd": "^5.15.3",
     "evergreen-ui": "^7.1.9",
