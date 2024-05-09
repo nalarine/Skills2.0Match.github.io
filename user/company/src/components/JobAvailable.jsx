@@ -83,7 +83,7 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
   return (
     <div
       className="p-4 rounded-lg border border-gray flex flex-col flex-2 w-full"
-      style={{ height: '32rem' }}
+      style={{ height: '100vh' }} // Set height to 100vh for full screen height
     >
       {showHeader ? (
         <DashboardStatsGrid

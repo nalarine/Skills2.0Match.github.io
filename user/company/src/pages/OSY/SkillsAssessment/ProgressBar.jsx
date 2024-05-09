@@ -26,7 +26,7 @@ const CategoryProgress = ({ category, navigate }) => {
   }, [category.currentQuestion, category.totalQuestions])
 
   const handleButtonClick = () => {
-    navigate('/skills-assessment/select-category')
+    navigate('skills-assessment/select-category')
   }
 
   return (

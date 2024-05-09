@@ -78,21 +78,12 @@ const JobMatchedDashboard = () => {
   }
 
   return (
-    <Container
-      maxWidth="lg"
-      style={{ marginTop: '20px', marginRight: '200px' }}
-    >
+    <Container maxWidth="lg" style={{ marginTop: '20px' }}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={10}>
+        <Grid item xs={12} md={9}>
           <Paper
-            elevation={0}
-            style={{
-              marginTop: '10px',
-              padding: '20px',
-              borderRadius: '10px',
-              background: '#f9f9f9',
-              height: '175%',
-            }}
+            elevation={3}
+            style={{ padding: '20px', borderRadius: '10px' }}
           >
             <Typography
               variant="h4"
@@ -106,43 +97,75 @@ const JobMatchedDashboard = () => {
             >
               Assessment Results
             </Typography>
-
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {categories.map((category, index) => (
-                <Grid item xs={4} key={index}>
-                  <Typography
-                    variant="body1"
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Paper
+                    elevation={2}
                     style={{
-                      color: '#000',
-                      marginBottom: '10px',
-                      fontWeight: '600',
-                      borderBottom: '2px solid #333',
-                      paddingBottom: '5px',
+                      padding: '20px',
+                      borderRadius: '10px',
+                      background: '#fff',
+                      marginBottom: '20px',
+                      height: '100%', // Set height to fill the grid item
+                      display: 'flex',
+                      flexDirection: 'column',
                     }}
                   >
-                    {category.name}
-                  </Typography>
-                  <Typography variant="body2" style={{ color: 'red' }}>
-                    Total Score: {category.score} out of {category.totalPoints}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    style={{ color: '#000', marginBottom: '20px' }}
-                  >
-                    {category.score
-                      ? assessmentResult
-                      : 'Assessment not completed'}
-                  </Typography>
+                    <Typography
+                      variant="h6"
+                      style={{
+                        color: '#333',
+                        fontWeight: '600',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      {category.name}
+                    </Typography>
+                    <Typography variant="body1" style={{ color: 'green' }}>
+                      Total Score: {category.score} out of{' '}
+                      {category.totalPoints}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      style={{
+                        color: '#333',
+                        marginBottom: '20px',
+                        flex: 1,
+                        height: '100vh',
+                      }}
+                    >
+                      {category.score
+                        ? assessmentResult
+                        : 'Assessment not completed'}
+                    </Typography>
+                  </Paper>
                 </Grid>
               ))}
             </Grid>
+
             <JobAvailable showTop={false} showHeader={false} />
           </Paper>
         </Grid>
-        <Grid item xs={12} lg={2}>
-          <div style={{ position: 'sticky', top: '20px' }}>
+        <Grid item xs={12} md={3}>
+          <Paper
+            elevation={3}
+            style={{
+              padding: '20px',
+              borderRadius: '10px',
+              background: '#f9f9f9',
+              width: '360px',
+              height: '100vh',
+            }}
+          >
+            <Typography
+              variant="h6"
+              style={{ color: '#333', fontWeight: '600', marginBottom: '20px' }}
+            >
+              Progress
+            </Typography>
             <ProgressBar categories={categories} />
-          </div>
+          </Paper>
         </Grid>
       </Grid>
     </Container>
