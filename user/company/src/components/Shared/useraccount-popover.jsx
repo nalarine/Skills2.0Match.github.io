@@ -42,6 +42,7 @@ export default function AccountPopover() {
 
   const handleLogout = () => {
     dispatch(Logout())
+    window.location.href = '/user-auth'
   }
 
   const handleOpen = (event) => {
