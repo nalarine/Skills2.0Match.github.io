@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Container, Paper, Typography, Grid } from '@mui/material'
+import {
+  Container,
+  Paper,
+  Typography,
+  Grid,
+  CircularProgress,
+} from '@mui/material'
 import JobCard2 from '@/components/JobCard'
 import ProgressBar from './ProgressBar'
 import { isEmpty } from 'lodash'
@@ -28,7 +34,6 @@ const JobMatchedDashboard = () => {
     }, 1500)
   }, [])
 
-  // Define categories
   const categories = [
     {
       name: 'Technical Skills Assessment',
@@ -47,7 +52,6 @@ const JobMatchedDashboard = () => {
       currentQuestion: 5,
       totalQuestions: behavioralAssessment?.length,
     },
-    // { name: 'Scenario-Based', currentQuestion: 5, totalQuestions: 10 },
   ]
 
   const evaluateSkills = (score) => {
@@ -74,7 +78,10 @@ const JobMatchedDashboard = () => {
   }
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: '20px' }}>
+    <Container
+      maxWidth="lg"
+      style={{ marginTop: '20px', marginRight: '200px' }}
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={10}>
           <Paper
@@ -83,7 +90,8 @@ const JobMatchedDashboard = () => {
               marginTop: '10px',
               padding: '20px',
               borderRadius: '10px',
-              background: '#fff',
+              background: '#f9f9f9',
+              height: '175%',
             }}
           >
             <Typography
@@ -101,21 +109,25 @@ const JobMatchedDashboard = () => {
 
             <Grid container spacing={2}>
               {categories.map((category, index) => (
-                <Grid item xs={12} key={index}>
+                <Grid item xs={4} key={index}>
                   <Typography
                     variant="body1"
                     style={{
-                      color: '#555',
+                      color: '#000',
                       marginBottom: '10px',
-                      fontWeight: '500',
+                      fontWeight: '600',
+                      borderBottom: '2px solid #333',
+                      paddingBottom: '5px',
                     }}
                   >
-                    {category.name}:
+                    {category.name}
                   </Typography>
-
+                  <Typography variant="body2" style={{ color: 'red' }}>
+                    Total Score: {category.score} out of {category.totalPoints}
+                  </Typography>
                   <Typography
                     variant="body2"
-                    style={{ color: '#777', marginBottom: '20px' }}
+                    style={{ color: '#000', marginBottom: '20px' }}
                   >
                     {category.score
                       ? assessmentResult
@@ -124,6 +136,7 @@ const JobMatchedDashboard = () => {
                 </Grid>
               ))}
             </Grid>
+            <JobAvailable showTop={false} showHeader={false} />
           </Paper>
         </Grid>
         <Grid item xs={12} lg={2}>
@@ -140,16 +153,16 @@ const JobMatchedDashboard = () => {
 //   const headers = {
 //     'Content-Type': 'application/json',
 //     'Access-Control-Allow-Credentials': true,
-//   }
+//   };
 //   try {
 //     const response = await axios.post('http://127.0.0.1:5000/match', payload, {
 //       headers: headers,
-//     })
-//     console.log(response.data)
-//     return response.data
+//     });
+//     console.log(response.data);
+//     return response.data;
 //   } catch (error) {
-//     console.log(error)
-//     throw error
+//     console.log(error);
+//     throw error;
 //   }
 // }
 

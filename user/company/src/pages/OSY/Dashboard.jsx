@@ -38,7 +38,7 @@ const Dashboard = () => {
         </div>
         {/* <DashboardStatsGrid /> */}
         <div className="flex flex-col md:flex-row md:gap-4 w-full py-3">
-          <JobAvailable />
+          <JobAvailable showHeader={true} showTopJobs={true} />
         </div>
       </div>
     </>

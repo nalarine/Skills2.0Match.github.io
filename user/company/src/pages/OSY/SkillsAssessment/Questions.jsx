@@ -11,16 +11,11 @@ import {
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { technicalSkillsQuestionnaires } from './constants'
-import { useNavigate } from 'react-router-dom' // Import useNavigate hook
-import { LegendToggleOutlined } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
-  const navigate = useNavigate() // Initialize useNavigate
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+  const navigate = useNavigate()
+  const { handleSubmit } = useForm()
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
   const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(0)
@@ -34,13 +29,11 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   }
 
   const handleAnswerChange = (value) => {
-    let isChecked =
+    const isChecked =
       questions[currentQuestion].correctAnswer.trim() ===
       questions[currentQuestion].choices[value].trim()
 
-    // Check if the question has already been answered
     if (!answers.hasOwnProperty(questions[currentQuestion].question)) {
-      // Increment total questions answered and store in localStorage
       setTotalQuestionsAnswered((prevTotal) => prevTotal + 1)
       localStorage.setItem('totalQuestionsAnswered', totalQuestionsAnswered + 1)
     }
@@ -57,19 +50,19 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   }
 
   const onSubmit = useCallback(() => {
-    // Redirect to JobMatchedDashboard after submitting questionnaire
-    // console.log(answers)
     let score = 0
-
     Object.values(answers).forEach((item) => {
       score += item.point
     })
 
-    // console.log('score', score)
-    localStorage.setItem('answers', answers)
+    localStorage.setItem('answers', JSON.stringify(answers)) // Ensure to stringify before storing in localStorage
     localStorage.setItem('score', score)
     navigate('/skills-assessment/job-matched-dashboard')
-  }, [answers])
+  }, [answers, navigate])
+
+  const handleDashboardRedirect = () => {
+    navigate('/skills-assessment/job-matched-dashboard')
+  }
 
   return (
     <div>
@@ -127,16 +120,18 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
             background: '#fff',
           }}
         >
-          <Typography
-            variant="body2"
-            style={{ color: '#666', marginLeft: 'auto' }}
-          >{`${currentQuestion + 1} / ${questions.length}`}</Typography>
+          <Button
+            variant="outlined"
+            onClick={handleDashboardRedirect}
+            style={{ marginLeft: 'auto' }}
+          >
+            Go to Dashboard
+          </Button>
           <div>
             <Button
               variant="contained"
               onClick={handlePreviousQuestion}
               disabled={currentQuestion === 0}
-              style={{ marginLeft: 'auto' }}
             >
               Previous
             </Button>
@@ -144,18 +139,18 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
               variant="contained"
               onClick={handleNextQuestion}
               disabled={currentQuestion === questions.length - 1}
-              style={{ marginLeft: '10px', marginRight: '30px' }}
+              style={{ marginLeft: '10px' }}
             >
               Next
             </Button>
           </div>
-
           {currentQuestion === questions.length - 1 && (
             <Button
               variant="contained"
               type="submit"
               color="primary"
               onClick={handleSubmit(onSubmit)}
+              style={{ marginLeft: '30px' }}
             >
               Submit
             </Button>

@@ -1,64 +1,68 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, Button, TextField } from '@mui/material';
-import { CONTACTS } from '../../components/lib/consts/dummy/dummy';
-import { BiDotsVertical } from 'react-icons/bi';
-import { AiOutlinePushpin, AiOutlineStar, AiOutlinePaperClip } from 'react-icons/ai';
-import io from 'socket.io-client';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import React, { useState, useEffect, useRef } from 'react'
+import { Avatar, Button, TextField } from '@mui/material'
+import { CONTACTS } from '../../components/lib/consts/dummy/dummy'
+import { BiDotsVertical } from 'react-icons/bi'
+import {
+  AiOutlinePushpin,
+  AiOutlineStar,
+  AiOutlinePaperClip,
+} from 'react-icons/ai'
+import io from 'socket.io-client'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
-const socket = io('http://localhost:5137'); // Change the URL to match your Socket.io server
+// const socket = io('http://localhost:5137'); // Change the URL to match your Socket.io server
 
 export default function Messages() {
-  const [activeContact, setActiveContact] = useState(null);
-  const [message, setMessage] = useState(''); // Initial value with empty string
-  const [searchQuery, setSearchQuery] = useState('');
-  const [chatHistory, setChatHistory] = useState([]);
-  const chatEndRef = useRef(null);
+  const [activeContact, setActiveContact] = useState(null)
+  const [message, setMessage] = useState('') // Initial value with empty string
+  const [searchQuery, setSearchQuery] = useState('')
+  const [chatHistory, setChatHistory] = useState([])
+  const chatEndRef = useRef(null)
 
   useEffect(() => {
     socket.on('receiveMessage', (message) => {
-      setChatHistory((prevChatHistory) => [message, ...prevChatHistory]); // Add new message to the beginning
-    });
-  }, []);
+      setChatHistory((prevChatHistory) => [message, ...prevChatHistory]) // Add new message to the beginning
+    })
+  }, [])
 
   useEffect(() => {
-    scrollToBottom();
-  }, [chatHistory]);
+    scrollToBottom()
+  }, [chatHistory])
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   const handleContactClick = (contact) => {
-    setActiveContact(contact);
-  };
+    setActiveContact(contact)
+  }
 
   const handleMessageChange = (value) => {
-    setMessage(value);
-  };
+    setMessage(value)
+  }
   const handleSend = () => {
     if (message.trim() !== '' && activeContact) {
       const newMessage = {
         content: message,
         sender: activeContact.id,
-      };
-  
+      }
+
       // Add new message to the end of the chat history
-      setChatHistory((prevChatHistory) => [...prevChatHistory, newMessage]);
-      socket.emit('sendMessage', newMessage);
-  
-      setMessage('');
+      setChatHistory((prevChatHistory) => [...prevChatHistory, newMessage])
+      socket.emit('sendMessage', newMessage)
+
+      setMessage('')
     }
-  };
-  
+  }
+
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
+    setSearchQuery(e.target.value)
+  }
 
   const filteredContacts = CONTACTS.filter((contact) =>
-    contact.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    contact.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   return (
     <div className="fixed-background">
@@ -67,7 +71,9 @@ export default function Messages() {
         <div className="bg-gray-200 w-1/4 p-2">
           {/* Search bar */}
           <div className="fixed top-20 bg-gray-200 z-10 p-5 mt-6 mr-6">
-            <span className="text-3xl font-black text-black mb-0">Messages</span>
+            <span className="text-3xl font-black text-black mb-0">
+              Messages
+            </span>
             <br />
             <br />
             <TextField
@@ -132,16 +138,22 @@ export default function Messages() {
                 <div className="flex justify-between items-center bg-white px-4 sticky top-0 z-10">
                   <Avatar src={activeContact.profile} alt="avatar" />
                   <div className="ml-3">
-                    <span className="font-bold text-black">{activeContact.name}</span>
+                    <span className="font-bold text-black">
+                      {activeContact.name}
+                    </span>
                     <br />
-                    <span className="text-sm text-black">{activeContact.position}</span>
+                    <span className="text-sm text-black">
+                      {activeContact.position}
+                    </span>
                     <div className="border-b border-gray-400 w-full mt-2"></div>
                   </div>
                   <div className="flex items-center">
                     <AiOutlinePushpin size="25px" className="text-gray-500" />
                     <AiOutlineStar size="25px" className="text-gray-500" />
                     <BiDotsVertical size="25px" className="text-gray-500" />
-                    <span className="font-bold text-green-500">View Profile</span>
+                    <span className="font-bold text-green-500">
+                      View Profile
+                    </span>
                   </div>
                 </div>
                 {/* Chat messages */}
@@ -185,7 +197,9 @@ export default function Messages() {
             ) : (
               // Placeholder when no contact is selected
               <div className="flex items-center justify-center h-full">
-                <span className="text-gray-500">Select a contact to view messages.</span>
+                <span className="text-gray-500">
+                  Select a contact to view messages.
+                </span>
               </div>
             )}
           </div>
@@ -196,28 +210,31 @@ export default function Messages() {
               style={{ marginBottom: '50px' }} // Adjust margin bottom
             >
               <div className="flex items-center">
-              <ReactQuill
+                <ReactQuill
                   theme="snow"
                   value={message}
                   onChange={handleMessageChange}
                   placeholder="Insert text here..."
                   className="w-full mr-3 rounded-full"
                   style={{
-                    float: 'left', 
+                    float: 'left',
                     marginRight: '3px',
-                    textAlign: 'left' // Aligns text within the editor to the left
+                    textAlign: 'left', // Aligns text within the editor to the left
                   }}
                   modules={{
                     toolbar: [
-                      [{ 'header': [1, 2, false] }],
+                      [{ header: [1, 2, false] }],
                       ['bold', 'italic', 'underline', 'strike'],
-                      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                      [{ list: 'ordered' }, { list: 'bullet' }],
                       ['link', 'image'],
-                      ['clean']
-                    ]
+                      ['clean'],
+                    ],
                   }}
                 />
-                <button onClick={handleSend} className="bg-green-700 hover:bg-green-200 text-white hover:text-green-700 font-bold py-2 px-4 rounded">
+                <button
+                  onClick={handleSend}
+                  className="bg-green-700 hover:bg-green-200 text-white hover:text-green-700 font-bold py-2 px-4 rounded"
+                >
                   Send
                 </button>
               </div>
@@ -226,5 +243,5 @@ export default function Messages() {
         </div>
       </div>
     </div>
-  );
+  )
 }

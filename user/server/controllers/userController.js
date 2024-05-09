@@ -19,7 +19,9 @@ export const allUsers = async (req, res, next) => {
       email: user.email,
       profileUrl: user.profileUrl,
       role: user.role,
-      birthdate: user.birthdate,
+      birthdate: user.birthdate
+        ? new Date(user.birthdate).toLocaleDateString()
+        : "N/A",
       application: user.application, // Include user's role
     }));
 
@@ -181,8 +183,8 @@ export const updateUser = async (req, res, next) => {
       !email ||
       !contact ||
       !about ||
-      !skills ||
-      !birthdate
+      !skills
+      // !birthdate
     ) {
       return res
         .status(400)

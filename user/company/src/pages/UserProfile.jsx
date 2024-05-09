@@ -42,6 +42,54 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
     }
   }, [user, setValue])
 
+  useEffect(() => {
+    const updateSkills = async () => {
+      const resultAssessment = localStorage.getItem('resultAssessment')
+      if (resultAssessment) {
+        try {
+          const upSkill = `${resultAssessment}\n${user.skills}`
+
+          const newData = {
+            ...user,
+            profileUrl,
+            skills: upSkill,
+          }
+
+          const res = await apiRequest({
+            url: '/users/update-user',
+            token: user.token,
+            data: newData,
+            method: 'PUT',
+          })
+
+          console.log(res)
+          console.log(newData)
+
+          const getUser = async () => {
+            const resUser = await apiRequest({
+              url: '/users/get-user',
+              token: user?.token,
+              method: 'GET',
+            })
+            const updatedUserInfo = { token: user?.token, ...resUser?.user }
+            console.log(updatedUserInfo)
+            dispatch(Login(updatedUserInfo))
+          }
+
+          if (res) {
+            getUser()
+            setOpen(false)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+
+    updateSkills()
+    localStorage.removeItem('resultAssessment')
+  }, [])
+
   const onSubmit = async (data) => {
     setIsSubmitting(true)
     try {
@@ -66,6 +114,8 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
         method: 'PUT',
       })
 
+      console.log(res)
+      console.log(newData)
       const getUser = async () => {
         const resUser = await apiRequest({
           url: '/users/get-user',
@@ -73,6 +123,7 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
           method: 'GET',
         })
         const updatedUserInfo = { token: user?.token, ...resUser?.user }
+        console.log(updatedUserInfo)
         dispatch(Login(updatedUserInfo)) // Update user state in Redux
       }
 
@@ -212,7 +263,7 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
                           placeholder="Phone Number"
                           type="text"
                           register={register('contact', {
-                            required: 'Coontact is required!',
+                            required: 'Contact is required!',
                           })}
                           error={errors.contact ? errors.contact?.message : ''}
                         />
@@ -415,24 +466,6 @@ const UserProfile = () => {
       setUserInfo(user)
     }
   }, [user])
-
-  useEffect(() => {
-    let resultSkillAssessment = localStorage.getItem('resultAssessment')
-    if (resultSkillAssessment) {
-      const parsedResult = JSON.stringify(resultSkillAssessment)
-
-      const updatedSkills = userInfo?.skills
-        ? `${userInfo?.skills}\n${parsedResult}`
-        : parsedResult
-
-      const updatedUserInfo = {
-        ...userInfo,
-        skills: updatedSkills,
-      }
-      // Update the userInfo state
-      setUserInfo(updatedUserInfo)
-    }
-  }, [])
 
   return (
     <div className="container mx-auto flex items-center justify-center pt-10 pb-24 bg-green-200">

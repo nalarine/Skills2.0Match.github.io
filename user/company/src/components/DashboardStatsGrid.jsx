@@ -11,7 +11,7 @@ export default function DashboardStatsGrid({ jobMatches }) {
           <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
         </div>
         <div className="pl-8">
-          <span className="text-sm font-semibold">Job Matches</span>
+          <span className="text-sm font-semibold">Total Job Matches</span>
           <div className="flex items-center">
             <strong className="text-xl font-bold">
               {jobMatches} New Job Suited
