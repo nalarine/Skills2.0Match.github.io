@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import TextInput from './TextInput'; // Assuming TextInput is a custom component
+import {EyeFilledIcon} from "./EyeFilledIcon";
+import {EyeSlashFilledIcon} from "./EyeSlashFilledIcon";
 
 const StrongPasswordInput = ({ isRegister, register, errors }) => {
   const [isPasswordHovered, setIsPasswordHovered] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordStrength, setPasswordStrength] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
 
   const calculatePasswordStrength = (password) => {
     if (password.length < 6) {
@@ -35,24 +41,30 @@ const StrongPasswordInput = ({ isRegister, register, errors }) => {
     <div className="max-w-sm">
       <div className="flex">
         <div className="relative flex-1">
-          <TextInput
-            name='password'
-            label='Password'
-            placeholder='Password'
-            type='password'
-            id="hs-strong-password-with-indicator-and-hint-in-popover"
-            className="block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-            onMouseEnter={() => setIsPasswordHovered(true)}
-            onMouseLeave={() => setIsPasswordHovered(false)}
-            onChange={handlePasswordChange}
-            // onBlur={validatePassword}
-            register={register("password", {
-              required: "Password is required!",
-            })}
-            error={
-              errors.password ? errors.password?.message : ""
-            }
-          />
+         <TextInput
+  name='password'
+  label='Password'
+  placeholder='Password'
+  endContent={
+    <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+      {isVisible ? (
+        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+      ) : (
+        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+      )}
+    </button>
+  }
+  type={isVisible ? "text" : "password"}
+  id="hs-strong-password-with-indicator-and-hint-in-popover"
+  className="block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+  onMouseEnter={() => setIsPasswordHovered(true)}
+  onMouseLeave={() => setIsPasswordHovered(false)}
+  onChange={handlePasswordChange}
+  register={register("password", {
+    required: "Password is required!",
+  })}
+  error={errors.password ? errors.password?.message : ""}
+/>
           {isRegister && isPasswordHovered && password && (
             <div className="absolute z-10 w-full bg-white shadow-md rounded-lg p-4 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700">
               <h4 className="mt-3 text-sm font-semibold text-gray-800 dark:text-white">
