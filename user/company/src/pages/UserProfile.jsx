@@ -42,53 +42,53 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
     }
   }, [user, setValue])
 
-  useEffect(() => {
-    const updateSkills = async () => {
-      const resultAssessment = localStorage.getItem('resultAssessment')
-      if (resultAssessment) {
-        try {
-          const upSkill = `${resultAssessment}\n${user.skills}`
+  // useEffect(() => {
+  //   const updateSkills = async () => {
+  //     const resultAssessment = localStorage.getItem('resultAssessment')
+  //     if (resultAssessment) {
+  //       try {
+  //         const upSkill = `${resultAssessment}\n${user.skills}`
 
-          const newData = {
-            ...user,
-            profileUrl,
-            skills: upSkill,
-          }
+  //         const newData = {
+  //           ...user,
+  //           profileUrl,
+  //           skills: upSkill,
+  //         }
 
-          const res = await apiRequest({
-            url: '/users/update-user',
-            token: user.token,
-            data: newData,
-            method: 'PUT',
-          })
+  //         const res = await apiRequest({
+  //           url: '/users/update-user',
+  //           token: user.token,
+  //           data: newData,
+  //           method: 'PUT',
+  //         })
 
-          console.log(res)
-          console.log(newData)
+  //         console.log(res)
+  //         console.log(newData)
 
-          const getUser = async () => {
-            const resUser = await apiRequest({
-              url: '/users/get-user',
-              token: user?.token,
-              method: 'GET',
-            })
-            const updatedUserInfo = { token: user?.token, ...resUser?.user }
-            console.log(updatedUserInfo)
-            dispatch(Login(updatedUserInfo))
-          }
+  //         const getUser = async () => {
+  //           const resUser = await apiRequest({
+  //             url: '/users/get-user',
+  //             token: user?.token,
+  //             method: 'GET',
+  //           })
+  //           const updatedUserInfo = { token: user?.token, ...resUser?.user }
+  //           console.log(updatedUserInfo)
+  //           dispatch(Login(updatedUserInfo))
+  //         }
 
-          if (res) {
-            getUser()
-            setOpen(false)
-          }
-        } catch (error) {
-          console.log(error)
-        }
-      }
-    }
+  //         if (res) {
+  //           getUser()
+  //           setOpen(false)
+  //         }
+  //       } catch (error) {
+  //         console.log(error)
+  //       }
+  //     }
+  //   }
 
-    updateSkills()
-    localStorage.removeItem('resultAssessment')
-  }, [])
+  //   updateSkills()
+  //   localStorage.removeItem('resultAssessment')
+  // }, [])
 
   const onSubmit = async (data) => {
     setIsSubmitting(true)

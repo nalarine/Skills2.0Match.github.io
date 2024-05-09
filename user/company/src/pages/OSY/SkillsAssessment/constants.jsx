@@ -325,7 +325,7 @@ export const technicalSkillsQuestionnaires = [
   }, //
   {
     category: 'Numeracy',
-    image: 'https://ibb.co/F4KRb8w',
+    image: 'https://i.ibb.co/23yG7ct/Question-26.png',
     question:
       'A 6-foot tall man is standing near a tree on level ground as shown in the picture above. If the man’s shadow is 4 feet long, how many feet tall is the tree? ',
     choices: [' A. 27 ', ' B. 12 ', ' C. 45 ', ' D. 38 '],

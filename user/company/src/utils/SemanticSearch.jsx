@@ -1,7 +1,15 @@
 // const axios = require('axios').default
 import axios from 'axios'
 
+let cache = {}
+
 export async function semanticSearch(texts, query) {
+  const cacheKey = JSON.stringify({ texts, query })
+
+  if (cache[cacheKey]) {
+    return cache[cacheKey]
+  }
+
   const options = {
     method: 'POST',
     url: 'https://api.edenai.run/v2/text/search',
@@ -18,9 +26,11 @@ export async function semanticSearch(texts, query) {
 
   try {
     const response = await axios.request(options)
-    // console.log(response.data)
-    return response.data.openai.items
+    const searchData = response.data.openai.items
+    cache[cacheKey] = searchData
+    return searchData
   } catch (error) {
     console.error(error)
+    throw error // Rethrow the error to handle it at the caller level
   }
 }
