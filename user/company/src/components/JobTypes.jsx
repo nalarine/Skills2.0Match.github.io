@@ -2,12 +2,22 @@ import { Fragment, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { BsCheck2, BsChevronExpand } from 'react-icons/bs'
 
-const types = ['Full-Time', 'Part-Time', 'Contract', 'Intern']
+const types = ['Full-Time', 'Part-Time', 'Contract', 'Intern', 'Other']
 
 export default function JobTypes({ jobTitle, setJobTitle }) {
+  const [customJobType, setCustomJobType] = useState('')
+
+  const handleJobTypeChange = (value) => {
+    if (value === 'Other') {
+      setJobTitle(customJobType)
+    } else {
+      setJobTitle(value)
+    }
+  }
+
   return (
-    <div className="w-full ">
-      <Listbox value={jobTitle} onChange={setJobTitle}>
+    <div className="w-full relative">
+      <Listbox value={jobTitle} onChange={handleJobTypeChange}>
         <div className="relative">
           <Listbox.Button className="relative w-full cursor-default rounded bg-white py-2.5 pl-3 pr-10 text-left focus:outline-none border border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500  sm:text-sm">
             <span className="block truncate">{jobTitle}</span>
@@ -24,7 +34,7 @@ export default function JobTypes({ jobTitle, setJobTitle }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {types.map((type, index) => (
                 <Listbox.Option
                   key={index}
@@ -57,6 +67,16 @@ export default function JobTypes({ jobTitle, setJobTitle }) {
           </Transition>
         </div>
       </Listbox>
+      {jobTitle === 'Other' && (
+        <input
+          type="text"
+          placeholder="Enter custom job type"
+          className="absolute z-10 top-full left-0 w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          value={customJobType}
+          onChange={(e) => setCustomJobType(e.target.value)}
+        />
+      )}
+      
     </div>
   )
 }
