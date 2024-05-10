@@ -78,8 +78,8 @@ const JobMatchedDashboard = () => {
   }
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: '20px' }}>
-      <Grid container spacing={3}>
+    <Container maxWidth="xl" style={{ marginTop: '20px' }}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={9}>
           <Paper
             elevation={3}
@@ -90,7 +90,7 @@ const JobMatchedDashboard = () => {
               gutterBottom
               style={{
                 color: '#333',
-                marginBottom: '20px',
+                marginBottom: '30px',
                 fontFamily: 'Poppins',
                 fontWeight: '600',
               }}
@@ -99,7 +99,7 @@ const JobMatchedDashboard = () => {
             </Typography>
             <Grid container spacing={3}>
               {categories.map((category, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
+                <Grid item xs={12} sm={12} md={4} key={index}>
                   <Paper
                     elevation={2}
                     style={{
@@ -107,7 +107,8 @@ const JobMatchedDashboard = () => {
                       borderRadius: '10px',
                       background: '#fff',
                       marginBottom: '20px',
-                      height: '100%', // Set height to fill the grid item
+
+                      height: '100%',
                       display: 'flex',
                       flexDirection: 'column',
                     }}
@@ -142,9 +143,10 @@ const JobMatchedDashboard = () => {
                   </Paper>
                 </Grid>
               ))}
-            </Grid>
+              <br />
 
-            <JobAvailable showTop={false} showHeader={false} />
+              <JobAvailable showTopJobs={true} showHeader={false} />
+            </Grid>
           </Paper>
         </Grid>
         <Grid item xs={12} md={3}>
@@ -155,12 +157,12 @@ const JobMatchedDashboard = () => {
               borderRadius: '10px',
               background: '#f9f9f9',
               width: '360px',
-              height: '100vh',
+              height: '103vh',
             }}
           >
             <Typography
               variant="h6"
-              style={{ color: '#333', fontWeight: '600', marginBottom: '20px' }}
+              style={{ color: '#333', fontWeight: '600', marginBottom: '1px' }}
             >
               Progress
             </Typography>
