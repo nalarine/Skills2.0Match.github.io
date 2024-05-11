@@ -34,6 +34,7 @@ import Admin2 from './admin2/Admin2'
 import UserPage from './admin2/pages/user'
 import ProductsPage from './admin2/pages/products'
 import GenerateReports from '../pages/COMPANY/GenerateReports'
+import AdminGenerateReports from '../pages/admin/AdminGenerateReports'
 
 
 export {
@@ -73,4 +74,5 @@ export {
   UserPage,
   ProductsPage,
   GenerateReports,
+  AdminGenerateReports,
 }

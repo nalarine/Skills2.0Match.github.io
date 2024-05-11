@@ -27,6 +27,11 @@ const navConfig = [
     path: '/admin/jobs',
     icon: icon('admin_job'),
   },
+  {
+    title: 'reports',
+    path: '/admin/reports',
+    icon: icon('admin_reports'),
+  },
 ];
 
 export default navConfig;

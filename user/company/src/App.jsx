@@ -58,6 +58,7 @@ import DashCompanies from './pages/admin/DashCompanies'
 import AssessmentCategorySelect from './pages/OSY/SkillsAssessment/AssessmentCategorySelect'
 import JobMatchedDashboard from './pages/OSY/SkillsAssessment/JobMatchedDashboard'
 import ProgressBar from './pages/OSY/SkillsAssessment/ProgressBar'
+import AdminGenerateReports from './pages/admin/AdminGenerateReports'
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
@@ -67,6 +68,7 @@ const DashCompaniesHOC = AdLayout(DashCompanies)
 const DashCategoryHOC = AdLayout(DashCategory)
 const DashCreateJobHOC = AdLayout(DashCreateJob)
 const DashCreateCategoryHOC = AdLayout(DashCreateCategory)
+const AdminGenerateReportsHOC = AdLayout(AdminGenerateReports)
 
 function Layout() {
   const { user } = useSelector((state) => state.user)
@@ -86,19 +88,6 @@ function App() {
   if (!user) {
     return <Navigate to="/user-auth" replace />
   }
-
-  // Check session expiration
-  const lastActivityTime = localStorage.getItem('lastActivityTime')
-  const maxInactiveTime = 3600000 // 1 hour in milliseconds
-
-  if (lastActivityTime && Date.now() - lastActivityTime > maxInactiveTime) {
-    // Clear user data and redirect to logout page if session expired
-    localStorage.removeItem('lastActivityTime')
-    return <Navigate to="/logout" replace />
-  }
-
-  // Update last activity time
-  localStorage.setItem('lastActivityTime', Date.now())
 
   const hideNavbar =
     location.pathname === '/' ||
@@ -128,6 +117,7 @@ function App() {
     location.pathname.startsWith('/CHelpCenter') ||
     location.pathname.startsWith('/CSettings') ||
     location.pathname.startsWith('/forgot-password') ||
+    location.pathname.startsWith('/admin/reports') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -162,6 +152,7 @@ function App() {
       location.pathname.startsWith('/CHelpCenter') ||
       location.pathname.startsWith('/CSettings') ||
       location.pathname.startsWith('/forgot-password') ||
+      location.pathname.startsWith('/admin/reports') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -244,18 +235,15 @@ function App() {
           </Route>
 
           <Route
-            path="/AdminDashboard"
-            element={
-              <AdminDashboard>
-                <AdminDashboardHOC />
-              </AdminDashboard>
-            }
-          />
+                    path="/AdminDashboard"
+                    element={<AdminDashboardHOC />}
+                  />
           <Route path="/admin/users" element={<DashUsersHOC />} />
           <Route path="/admin/jobs" element={<DashJobsHOC />} />
           <Route path="/admin/companies" element={<DashCompaniesHOC />} />
           <Route path="/admin/category" element={<DashCategoryHOC />} />
           <Route path="/admin/job/create" element={<DashCreateJobHOC />} />
+          <Route path="/admin/reports" element={<AdminGenerateReportsHOC />} />
           <Route
             path="/admin/category/create"
             element={<DashCreateCategoryHOC />}

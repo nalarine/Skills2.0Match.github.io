@@ -6,7 +6,6 @@ import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import { parseISO, differenceInCalendarYears, format } from 'date-fns'
 
 const DashUsers = () => {
   const [users, setUsers] = useState([])
@@ -24,9 +23,14 @@ const DashUsers = () => {
   })
 
   function calculateAge(birthdate) {
-    const birthday = parseISO(birthdate)
+    const birthday = new Date(birthdate)
     const today = new Date()
-    return differenceInCalendarYears(today, birthday)
+    let age = today.getFullYear() - birthday.getFullYear()
+    const m = today.getMonth() - birthday.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+      age--
+    }
+    return age
   }
 
   useEffect(() => {
@@ -40,7 +44,7 @@ const DashUsers = () => {
           ...user,
           id: user._id,
           birthdate: user.birthdate
-            ? format(parseISO(user.birthdate), 'MM/dd/yyyy')
+            ? new Date(user.birthdate).toLocaleDateString()
             : 'N/A',
           age: user.birthdate ? calculateAge(user.birthdate) : 'N/A',
         }))
@@ -112,12 +116,7 @@ const DashUsers = () => {
 
   const handleEdit = (user) => {
     setEditUser(user)
-    setNewUser({
-      ...user,
-      birthdate: user.birthdate
-        ? format(parseISO(user.birthdate), 'yyyy-MM-dd')
-        : '', // Correct format for input[type="date"]
-    })
+    setNewUser(user)
     setOpenModal(true)
   }
 
@@ -164,13 +163,15 @@ const DashUsers = () => {
             <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
               Email
             </th>
+            {/* <th className="px-6 py-4 font-medium text-gray-900">State</th> */}
             <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
               Birthdate
             </th>
             <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
               Age
             </th>
-            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
+            {/* <th className="px-6 py-4 font-medium text-gray-900">Team</th> */}
+            <th className="px-6 py-4 font-medium text-green-900 fonr-semibold text-base">
               Actions
             </th>
           </tr>
@@ -300,6 +301,7 @@ const DashUsers = () => {
           </Button>
         </Box>
       </Modal>
+      {/* Delete Confirmation Modal */}
       <Modal
         open={deleteConfirmationOpen}
         onClose={cancelDelete}
