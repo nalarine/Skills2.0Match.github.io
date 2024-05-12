@@ -202,7 +202,14 @@ const JobDetail = () => {
               <div className="">
                 <div className="text-left">
                   <p className="text-xl font-semibold mb-4">Job Description</p>
-                  <p>{job?.detail[0]?.desc}</p>
+                  <div
+                  className="flex gap-2"
+                  dangerouslySetInnerHTML={{
+                    __html: job?.detail[0]?.desc,
+                  }}
+                ></div>
+                  
+                  {/* <p>{job?.detail[0]?.desc}</p> */}
                 </div>
               </div>
               <hr className="my-4" />
