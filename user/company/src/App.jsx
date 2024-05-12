@@ -59,6 +59,9 @@ import AssessmentCategorySelect from './pages/OSY/SkillsAssessment/AssessmentCat
 import JobMatchedDashboard from './pages/OSY/SkillsAssessment/JobMatchedDashboard'
 import ProgressBar from './pages/OSY/SkillsAssessment/ProgressBar'
 import AdminGenerateReports from './pages/admin/AdminGenerateReports'
+import Auth from './pages/admin/layout/Auth'
+import Login from "./pages/admin/auth/Login";
+import Register from "./pages/admin/auth/Register";
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
@@ -118,6 +121,9 @@ function App() {
     location.pathname.startsWith('/CSettings') ||
     location.pathname.startsWith('/forgot-password') ||
     location.pathname.startsWith('/admin/reports') ||
+    location.pathname.startsWith('/auth') ||
+    location.pathname.startsWith('/auth/login') ||
+    location.pathname.startsWith('/auth/register') ||
     location.pathname.startsWith('/AdminDashboard')
 
   const hideExtraComponents =
@@ -153,6 +159,9 @@ function App() {
       location.pathname.startsWith('/CSettings') ||
       location.pathname.startsWith('/forgot-password') ||
       location.pathname.startsWith('/admin/reports') ||
+      location.pathname.startsWith('/auth') ||
+      location.pathname.startsWith('/auth/login') ||
+      location.pathname.startsWith('/auth/register') ||
       location.pathname.startsWith('/AdminDashboard'))
 
   return (
@@ -166,6 +175,9 @@ function App() {
         </>
       )}
       <Routes>
+        <Route path="/auth" element={<Auth/>} />
+        <Route path="/auth/login" element={<Login/>} />
+        <Route path="/auth/register" element={<Register/>} />
         <Route path="/user-auth" element={<AuthPage />} />
         <Route
           path="/verification-success/:verificationToken"
@@ -176,24 +188,18 @@ function App() {
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-            <Route
-              path="/"
-              element={
-                user ? (
-                  user.accountType === 'seeker' ? (
-                    <Navigate to="/user-profile" replace={true} />
-                  ) : user.role === 1 ? (
-                    <Navigate to="/AdminDashboard" replace={true} />
-                  ) : (
-                    <>
-                      <Navigate to="/company-profile" replace={true} />
-                    </>
-                  )
-                ) : (
-                  <Navigate to="/user-auth" replace={true} />
-                )
-              }
-            />
+          <Route
+          path="/"
+          element={
+            user
+              ? user.accountType === 'seeker'
+                ? <Navigate to="/user-profile" replace />
+                : user.isAdmin === true
+                ? <Navigate to="/AdminDashboard" replace />
+                : <Navigate to="/company-profile" replace />
+              : <Navigate to="/user-auth" replace />
+          }
+        />
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />

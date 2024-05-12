@@ -147,57 +147,43 @@ const NewestDeals = () => {
   }, [])
 
   return (
-    <section className="popular section container mt-96 p-8 justify-center items-center">
-      <div className="secContainer">
-        <div className="secHeader flex">
-          <div
-            data-aos="fade-right"
-            data-aos-duration="2500"
-            className="textDiv"
-          >
-            <h2 className="secTitle font-bold text-3xl mt-72 mb-9">
-              You deserve to love your job – let's find it.
-            </h2>
+    <section className="popular section container mt-[220%] md:mt-[40%] lg:mt-80 xl:mt-[45%] p-6 md:p-12 xl:p-16 min-h-screen">
+    <div className="secContainer">
+      <div className="secHeader">
+        <div className="textDiv" data-aos="fade-right" data-aos-duration="2500">
+          <h2 className="secTitle text-left font-bold text-2xl md:text-3xl mb-4 md:mt-8">
+            You deserve to love your job – let's find it.
+          </h2>
+        </div> 
+      </div>
+
+      <div className="mainContent grid gap-4 grid-cols-1 md:gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      {/* Map through your data array */}
+      {Data.map(({ id, imgSrc, destTitle, desc }) => (
+        <div key={id} data-aos="fade-up" className="singleDestination mb-6 text-center md:text-left">
+          <div className="destImage relative overflow-hidden rounded-lg shadow-md">
+            {/* Display your image */}
+            <img src={imgSrc} alt="TitleImage" className="object-cover w-full h-40 md:h-52" />
+
+            {/* Overlay info */}
+            <div className="overlayInfo absolute inset-0 flex flex-col justify-center items-left px-4 text-white bg-black bg-opacity-70 opacity-0 transition-opacity duration-300 hover:opacity-100">
+              <h3 className="text-l font-bold mb-1 md:text-xl">{destTitle}</h3>
+              <p className="text-xs md:text-sm">{desc}</p>
+            </div>
+          </div>
+
+          {/* Footer section */}
+          <div className="destFooter p-2">
+            <div className="destText">
+              <h6 className="font-semibold text-sm md:text-base">{destTitle}</h6>
+            </div>
           </div>
         </div>
+      ))}
+    </div>
+  </div>
+</section>
+);
+};
 
-        <div className="mainContent grid gap-x-10 gap-4 grid-cols-5 grid-rows-4 ml-2">
-          {/* Map through your data array */}
-          {Data.map(({ id, imgSrc, destTitle, desc }) => (
-            <div
-              key={id}
-              data-aos="fade-up"
-              className="singleDestination w-56 h-72 mb-5 text-l font-semibold overflow-hidden border rounded-2xl shadow-md group"
-            >
-              <div className="destImage relative overflow-hidden h-52 transition-opacity duration-300">
-                {/* Display your image */}
-                <img
-                  src={imgSrc}
-                  alt="TitleImage"
-                  className="object-cover h-52"
-                />
-
-                {/* Overlay info */}
-                <div className="overlayInfo absolute bottom-0 w-full h-full flex flex-col justify-center items-left px-4 text-white bg-zinc-950 transition-all duration-300 opacity-0 group-hover:opacity-100 hover:bg-opacity-70">
-                  <h3 className="text-left text-l font-bold pt-5">
-                    {destTitle}
-                  </h3>
-                  <p className=" text-xs font-normal pt-2">{desc}</p>
-                </div>
-              </div>
-
-              {/* Footer section */}
-              <div className="destFooter p-4">
-                <div className="destText flex justify-between">
-                  <h6>{destTitle}</h6>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-export default NewestDeals
+export default NewestDeals;

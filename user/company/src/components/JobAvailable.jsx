@@ -94,7 +94,7 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
       )}
       <div className="flex flex-row justify-between items-center">
         <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
-          Top 3 jobs matched based on user-defined skills
+        Top 3 jobs matched to your skills
         </strong>
       </div>
       <div className="w-full flex flex-wrap gap-4 justify-center ">

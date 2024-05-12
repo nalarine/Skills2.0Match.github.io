@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react'
-
-import Aos from 'aos'
-import 'aos/dist/aos.css'
-
-//import images
-import icon1 from '../assets/discover.png'
-import icon2 from '../assets/sched.png'
-import icon3 from '../assets/success.png'
-import about from '../assets/about 1.0.png'
+import React, { useEffect } from 'react';
+import Aos from 'aos';
+import 'aos/dist/aos.css';
+import icon1 from '../assets/discover.png';
+import icon2 from '../assets/sched.png';
+import icon3 from '../assets/success.png';
+import about from '../assets/about 1.0.png';
 
 const About = () => {
   useEffect(() => {
-    Aos.init({ duration: 2000 })
-  }, [])
+    Aos.init({ duration: 2000 });
+  }, []);
 
   return (
     <div className="about section">
@@ -20,12 +17,12 @@ const About = () => {
         <h2
           data-aos="fade-right"
           data-aos-duration="2000"
-          className="title text-black line-clamp-5 ml-14 mb-3 mt-10 pb-8 pl-4 text-3xl font-bold font-poppins"
+          className="title text-black line-clamp-5 ml-14 mb-3 mt-2 pb-8 pl-4 text-3xl font-bold font-poppins"
         >
           Join, Work, and Succeed
         </h2>
 
-        <div className="mainContent container ml-10 grid gap-4 grid-cols-3">
+        <div className="mainContent container ml-10 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <div
             data-aos="fade-up"
             data-aos-duration="2000"
@@ -78,7 +75,7 @@ const About = () => {
         </div>
 
         <div
-          className="videoCard container mt-14 ml-10 h-80 pt-10 mb-10"
+          className="videoCard container mt-14 ml-10 mb-10"
           style={{
             backgroundImage:
               "linear-gradient(rgba(33,33,33,0.522), rgba(33,33,33,0.522)), url('../../../src/assets/bg.jpg')",
@@ -119,7 +116,7 @@ const About = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default About
+export default About;
