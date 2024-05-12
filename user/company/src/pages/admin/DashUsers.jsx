@@ -164,14 +164,9 @@ const DashUsers = () => {
               Email
             </th>
             {/* <th className="px-6 py-4 font-medium text-gray-900">State</th> */}
-            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
-              Birthdate
-            </th>
-            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
-              Age
-            </th>
+            
             {/* <th className="px-6 py-4 font-medium text-gray-900">Team</th> */}
-            <th className="px-6 py-4 font-medium text-green-900 fonr-semibold text-base">
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
               Actions
             </th>
           </tr>
@@ -188,8 +183,8 @@ const DashUsers = () => {
                 {user.firstName} {user.lastName}
               </td>
               <td className="px-6 py-4">{user.email}</td>
-              <td className="px-6 py-4">{user.birthdate}</td>
-              <td className="px-6 py-4">{user.age}</td>
+              {/* <td className="px-6 py-4">{user.birthdate}</td> */}
+              {/* <td className="px-6 py-4">{user.age}</td> */}
               <td className="px-6 py-4 flex justify-start gap-4">
                 <button
                   onClick={() => handleEdit(user)}

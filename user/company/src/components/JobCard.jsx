@@ -84,7 +84,13 @@ const JobCard = ({ job, onSave, isSaved }) => {
               </Skeleton>
             ) : (
               <div className="text-sm text-left">
-                {job?.detail[0]?.desc?.slice(0, 150) + '...'}
+                <div
+                  className="flex gap-2"
+                  dangerouslySetInnerHTML={{
+                    __html: job?.detail[0]?.desc?.slice(0, 150) + '...',
+                  }}
+                ></div>
+                {/* {job?.detail[0]?.desc?.slice(0, 150) + '...'} */}
               </div>
             )}
           </div>
@@ -138,7 +144,7 @@ const JobCard = ({ job, onSave, isSaved }) => {
             ) : (
               <>
                 <div className="bg-[#BEF264] text-green-700 py-0.5 px-1.5 rounded font-semibold text-sm">
-                  {job?.jobType}
+                {job?.jobType}
                 </div>
                 <div className="text-gray-500 text-sm">
                   {moment(job?.createdAt).fromNow()}
