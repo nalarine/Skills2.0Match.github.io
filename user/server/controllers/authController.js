@@ -3,10 +3,10 @@ import { sendVerificationEmail } from "../emailService.js";
 import { v4 as uuidv4 } from 'uuid';
 
 export const register = async (req, res, next) => {
-  const { firstName, lastName, email, password, role } = req.body;
+  const { firstName, lastName, email, password, role, birthdate } = req.body;
 
   // Validate fields
-  if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !lastName || !email || !password || !birthdate) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -18,16 +18,27 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ message: "Email address already exists" });
     }
 
+    // Validate birthdate
+    const today = new Date();
+    const minDate = new Date(today.getFullYear() - 24, today.getMonth(), today.getDate());
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    const userBirthdate = new Date(birthdate);
+
+    if (userBirthdate < minDate || userBirthdate > maxDate) {
+      return res.status(400).json({ message: "You must be between 18 to 24 years old to register." });
+    }
+
     // Generate unique verification token
     const verificationToken = uuidv4();
 
-    // Create new user with role and verification token
+    // Create new user with role, verification token, and birthdate
     const user = await Users.create({
       firstName,
       lastName,
       email,
       password,
       role,
+      birthdate,
       verificationToken, // Save the verification token
       emailVerified: false // Set email verification status to false by default
     });
@@ -57,6 +68,7 @@ export const register = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 export async function verifyEmail(verificationToken) {
   try {
     // Check if the verification token is provided
@@ -141,6 +153,7 @@ export const signIn = async (req, res, next) => {
         role: user.role,
         accountType: user.accountType,
         isAdmin: user.isAdmin, 
+        birthdate: user.birthdate,
       },
       verificationToken,
       token,
