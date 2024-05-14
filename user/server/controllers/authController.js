@@ -140,6 +140,7 @@ export const signIn = async (req, res, next) => {
         email: user.email,
         role: user.role,
         accountType: user.accountType,
+        isAdmin: user.isAdmin, 
       },
       verificationToken,
       token,
@@ -303,11 +304,6 @@ export const signInAdmin = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Check if email is verified (you can add this check if needed)
-    // if (!user.emailVerified) {
-    //   return res.status(401).json({ message: "Email not verified" });
-    // }
-
     // Compare password
     const isMatch = await user.comparePassword(password);
 
@@ -320,7 +316,7 @@ export const signInAdmin = async (req, res, next) => {
     // Generate JWT token
     const token = user.createJWT();
 
-    // Send success response with JWT token
+    // Send success response with JWT token and isAdmin property
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -330,6 +326,7 @@ export const signInAdmin = async (req, res, next) => {
         lastName: user.lastName,
         email: user.email,
         role: user.role,
+        isAdmin: true, 
       },
       token,
     });

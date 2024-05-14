@@ -17,12 +17,12 @@ const About = () => {
         <h2
           data-aos="fade-right"
           data-aos-duration="2000"
-          className="title text-black line-clamp-5 mr-4 mb-3 mt-0 pb-8 pl-4 text-3xl font-bold font-poppins"
+          className="title text-black line-clamp-5 ml-6 mr-4 mb-3 mt-0 pb-8 pl-4 text-3xl font-bold font-poppins text-left"
         >
           Join, Work, and Succeed
         </h2>
 
-        <div className="mainContent container mr-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mainContent container mr-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ml-6">
           <div
             data-aos="fade-up"
             data-aos-duration="2000"
@@ -75,7 +75,7 @@ const About = () => {
         </div>
 
         <div
-          className="videoCard container mt-14 mr-4 mb-10"
+          className="videoCard container mt-14 mr-4 mb-10 ml-6"
           style={{
             backgroundImage:
               "linear-gradient(rgba(33,33,33,0.522), rgba(33,33,33,0.522)), url('../../../src/assets/bg.jpg')",

@@ -189,17 +189,17 @@ function App() {
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
           <Route
-          path="/"
-          element={
-            user
-              ? user.accountType === 'seeker'
-                ? <Navigate to="/user-profile" replace />
-                : user.isAdmin === true
-                ? <Navigate to="/AdminDashboard" replace />
-                : <Navigate to="/company-profile" replace />
-              : <Navigate to="/user-auth" replace />
-          }
-        />
+            path="/"
+            element={
+              user
+                ? user.isAdmin === true
+                  ? <Navigate to="/AdminDashboard" replace />
+                  : user.accountType === 'seeker'
+                  ? <Navigate to="/user-profile" replace />
+                  : <Navigate to="/company-profile" replace />
+                : <Navigate to="/user-auth" replace />
+            }
+          />
             <Route path="Dashboard" element={<Dashboard />} />
             <Route path="messages" element={<Messages />} />
             <Route path="all-application" element={<AllApplication />} />

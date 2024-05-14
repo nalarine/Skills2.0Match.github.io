@@ -7,7 +7,7 @@ import Logo from "../../../assets/header.png";
 import { apiRequest } from "../../../utils";
 
 export default function Login() {
-    const [formData, setFormData] = useState({
+    const [data, setData] = useState({
         email: "",
         password: ""
     });
@@ -17,8 +17,8 @@ export default function Login() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setData({
+            ...data,
             [name]: value
         });
     };
@@ -28,12 +28,25 @@ export default function Login() {
         try {
             const response = await apiRequest({
                 method: "POST",
-                url: "/auth/admin/login",
-                data: formData
+                url: "/auth/login",
+                data: data
             });
-            navigate("/AdminDashboard");
+
+            console.log("Login response:", response);
+
+            // Check if API response indicates successful login
+            if (response?.success) {
+                // Save user data in local storage
+                localStorage.setItem("user", JSON.stringify(response.user));
+
+                // Redirect to AdminDashboard
+                console.log("Redirecting to AdminDashboard...");
+                navigate("/AdminDashboard");
+            } else {
+                setError(response?.message || "An error occurred");
+            }
         } catch (error) {
-            setError(error.response.data.message);
+            setError(error.response?.data?.message || "An error occurred");
         }
     };
 
@@ -91,7 +104,7 @@ export default function Login() {
                                                     type="email"
                                                     id="email"
                                                     name="email"
-                                                    value={formData.email}
+                                                    value={data.email}
                                                     onChange={handleChange}
                                                     className="poppins-font border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     placeholder="Email"
@@ -108,7 +121,7 @@ export default function Login() {
                                                 <Input.Password
                                                     id="password"
                                                     name="password"
-                                                    value={formData.password}
+                                                    value={data.password}
                                                     onChange={handleChange}
                                                     className="poppins-font border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     placeholder="Password"
@@ -129,6 +142,12 @@ export default function Login() {
                                                     Forgot your password?
                                                 </Link>
                                             </div>
+
+                                            {error && (
+                                                <div className="text-red-500 mb-4">
+                                                    {error}
+                                                </div>
+                                            )}
 
                                             <div className="text-center">
                                                 <button

@@ -76,7 +76,7 @@ export const sendVerificationEmail = async (user) => {
       <p>Hello <strong>${user.firstName}</strong>,</p>
       <p>Thank you for registering with Skills 2.0 Match.</p>
       <p>Please click the button below to verify your account. The link will expire after one hour.</p>
-      <a href="https://skills2match.netlify.app/verification-success/${user.verificationToken}" class="button">Verify Account</a>
+      <a href="http://localhost:5173/verification-success/${user.verificationToken}" class="button">Verify Account</a>
       <p>If you did not register for an account, you can ignore this email.</p>
     </div>
     <div class="footer">
