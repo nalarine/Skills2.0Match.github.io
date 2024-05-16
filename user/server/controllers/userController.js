@@ -5,10 +5,22 @@ export const allUsers = async (req, res, next) => {
   // Enable pagination
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
-  const count = await Users.countDocuments();
+  const { startDate, endDate } = req.query;
+
+  let query = {};
+
+  // If both startDate and endDate are provided, add a date range filter to the query
+  if (startDate && endDate) {
+    query.createdAt = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate),
+    };
+  }
 
   try {
-    const users = await Users.find()
+    const count = await Users.countDocuments(query);
+
+    const users = await Users.find(query)
       .sort({ createdAt: -1 })
       .select("-password");
 
@@ -19,16 +31,12 @@ export const allUsers = async (req, res, next) => {
       email: user.email,
       profileUrl: user.profileUrl,
       role: user.role,
-      birthdate: user.birthdate
-        ? new Date(user.birthdate).toLocaleDateString()
-        : "N/A",
+      birthdate: user.birthdate ? new Date(user.birthdate).toLocaleDateString() : "N/A",
       application: user.application, // Include user's role
+      createdAt: user.createdAt,
     }));
 
-    const paginatedUsers = modifiedUsers.slice(
-      pageSize * (page - 1),
-      pageSize * page
-    );
+    const paginatedUsers = modifiedUsers.slice(pageSize * (page - 1), pageSize * page);
 
     res.status(200).json({
       success: true,
@@ -51,6 +59,7 @@ export const createUser = async (req, res, next) => {
     email,
     password, // Assuming you also want to create a password
     birthdate,
+    createdAt,
   } = req.body;
 
   try {
@@ -67,6 +76,7 @@ export const createUser = async (req, res, next) => {
       email,
       password, // Assuming you also want to create a password
       birthdate,
+      createdAt,
     });
 
     // Save the new user to the database

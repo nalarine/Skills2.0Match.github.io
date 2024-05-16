@@ -9,22 +9,22 @@ export default function Auth() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <main>
-        <section className="relative w-full h-full py-40 min-h-screen">
-          <div
-            className="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full"
-            style={{
-              backgroundImage: `url(${adminBg})`, // Use the imported image
-            }}
-          ></div>
+    <main>
+      <section className="relative w-full h-full py-40 min-h-screen">
+        <div
+          className="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-cover"
+          style={{
+            backgroundImage: `url(${adminBg})`, // Use the imported image
+          }}
+        ></div>
+        <div className="relative z-10">
           <Routes>
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
           </Routes>
           {/* Footer component */}
-        </section>
-      </main>
-    </>
+        </div>
+      </section>
+    </main>
   );
 }

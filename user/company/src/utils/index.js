@@ -7,10 +7,11 @@ export const API = axios.create({
   responseType: 'json',
 })
 
-export const apiRequest = async ({ url, token, data, method }) => {
+export const apiRequest = async ({ url, token, data, method, params }) => {
   try {
     const result = await API(url, {
       method: method || 'GET',
+      params,
       data: data,
       headers: {
         'Content-Type': 'application/json',

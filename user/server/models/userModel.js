@@ -52,6 +52,7 @@ const userSchema = new mongoose.Schema(
     emailVerified: { type: Boolean, default: false }, // New field for email verification
     verificationToken: { type: String }, // New field for verification token
     savedJobs: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
+    createdAt: { type: Date, default: Date.now } // New field for creation date
   },
   { timestamps: true }
 );

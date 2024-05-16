@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { apiRequest } from '../../utils/index'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
@@ -13,6 +15,8 @@ const DashUsers = () => {
   const [openModal, setOpenModal] = useState(false)
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false)
   const [editUser, setEditUser] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [dateRange, setDateRange] = useState([null, null])
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
@@ -21,6 +25,7 @@ const DashUsers = () => {
     password: '',
     userType: 'user',
   })
+  const [startDate, endDate] = dateRange
 
   function calculateAge(birthdate) {
     const birthday = new Date(birthdate)
@@ -139,12 +144,109 @@ const DashUsers = () => {
     }
   }
 
+  const fetchUsers = async () => {
+    try {
+      const response = await apiRequest({
+        url: '/users/allusers',
+        method: 'GET',
+      })
+      const modifiedUsers = response.data.users.map((user) => ({
+        ...user,
+        id: user._id,
+        birthdate: user.birthdate
+          ? new Date(user.birthdate).toLocaleDateString()
+          : 'N/A',
+        age: user.birthdate ? calculateAge(user.birthdate) : 'N/A',
+        createdAt: new Date(user.createdAt).toLocaleDateString(),
+      }))
+      setUsers(modifiedUsers)
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching users:', error)
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsersWithDateRange = async () => {
+    if (!startDate || !endDate) return // Ensure both dates are selected
+
+    try {
+      const response = await apiRequest({
+        url: '/users/allusers',
+        method: 'GET',
+        params: {
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        },
+      })
+      const modifiedUsers = response.data.users.map((user) => ({
+        ...user,
+        id: user._id,
+        birthdate: user.birthdate
+          ? new Date(user.birthdate).toLocaleDateString()
+          : 'N/A',
+        age: user.birthdate ? calculateAge(user.birthdate) : 'N/A',
+        createdAt: new Date(user.createdAt).toLocaleDateString(),
+      }))
+      setUsers(modifiedUsers)
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching users with date range:', error)
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchUsersWithDateRange() // Fetch users when date range changes
+    } else {
+      fetchUsers() // Fetch all users when date range is cleared
+    }
+  }, [startDate, endDate])
+
   const cancelDelete = () => {
     setDeleteConfirmationOpen(false)
   }
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value)
+  }
+
+  const filteredUsers = users.filter(user =>
+    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md mt-[100px]">
+    <div className="overflow-hidden rounded-lg border border-gray-200 mt-[100px]">
+      <div className='flex gap-2'>
+          <div className="flex mb-4">
+          <DatePicker
+            selected={startDate}
+            placeholderText='Filter by Date'
+            onChange={(update) => {
+              setDateRange(update)
+            }}
+            selectsRange
+            startDate={startDate}
+            endDate={endDate}
+            isClearable
+            className="py-2 px-4 pr-10 rounded-lg border border-gray-300 w-[100%]"
+          />
+        </div>
+        <div className="flex mb-4 w-[50%]">
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="py-2 px-4 rounded-lg border border-gray-300 w-full"
+          />
+        </div>
+        </div>
       <div className="px-4 py-2 flex justify-between items-center bg-gray-50">
         <h1 className="text-xl text-gray-700 font-bold">Applicants</h1>
         <button
@@ -163,16 +265,19 @@ const DashUsers = () => {
             <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
               Email
             </th>
-            <th className="px-6 py-4 font-medium text-gray-900">Birthdate</th>
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">Birthdate</th>
             
-            <th className="px-6 py-4 font-medium text-gray-900">Age</th>
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">Age</th>
+            <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
+              Date Created
+            </th>
             <th className="px-6 py-4 font-medium text-green-900 font-semibold text-base">
               Actions
             </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <tr className="hover:bg-gray-50" key={user.id}>
               <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-3">
                 <img
@@ -185,6 +290,11 @@ const DashUsers = () => {
               <td className="px-6 py-4">{user.email}</td>
               <td className="px-6 py-4">{user.birthdate}</td>
               <td className="px-6 py-4">{user.age}</td>
+              <td className="px-6 py-4">
+                <div className="text-sm text-gray-900 text-left">
+                {new Date(user.createdAt).toLocaleDateString()}
+                </div>
+              </td>
               <td className="px-6 py-4 flex justify-start gap-4">
                 <button
                   onClick={() => handleEdit(user)}
