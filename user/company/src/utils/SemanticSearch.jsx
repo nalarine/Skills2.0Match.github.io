@@ -5,7 +5,7 @@ let cache = {}
 
 export async function semanticSearch(texts, query) {
   const cacheKey = JSON.stringify({ texts, query })
-
+  // console.log(JSON.stringify(import.meta.env.VITE_EDEN_BEARER)) for debugging
   if (cache[cacheKey]) {
     return cache[cacheKey]
   }
@@ -14,8 +14,7 @@ export async function semanticSearch(texts, query) {
     method: 'POST',
     url: 'https://api.edenai.run/v2/text/search',
     headers: {
-      authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjkxMmU0MWUtNTYwNi00OWM3LWJiODgtZTJlYTNkMmQwYzY4IiwidHlwZSI6ImFwaV90b2tlbiJ9.NenS4n9wen9Xm1S5fB-RZhU1G1ArLPU7BxSDnN9i1RY', //create new account in EdenAI to get free 1 dollar token and change the bearer if that happens
+      authorization: `Bearer ${import.meta.env.VITE_EDEN_BEARER}`, //create new account in EdenAI to get free 1 dollar token and change the bearer if that happens
     },
     data: {
       texts: texts,
