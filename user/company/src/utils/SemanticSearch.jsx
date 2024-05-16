@@ -15,7 +15,7 @@ export async function semanticSearch(texts, query) {
     url: 'https://api.edenai.run/v2/text/search',
     headers: {
       authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI0ZTNiOTYtNjMzNS00MmMzLTkxODMtODNkZDMxOWQwZmU2IiwidHlwZSI6ImFwaV90b2tlbiJ9.cArlXoQuruusX1KEfEoSmE1jGk8xWgVCr1MfopAORfY', //create new account in EdenAI to get free 1 dollar token and change the bearer if that happens
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjkxMmU0MWUtNTYwNi00OWM3LWJiODgtZTJlYTNkMmQwYzY4IiwidHlwZSI6ImFwaV90b2tlbiJ9.NenS4n9wen9Xm1S5fB-RZhU1G1ArLPU7BxSDnN9i1RY', //create new account in EdenAI to get free 1 dollar token and change the bearer if that happens
     },
     data: {
       texts: texts,

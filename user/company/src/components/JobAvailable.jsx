@@ -7,7 +7,7 @@ import DashboardStatsGrid from '../components/DashboardStatsGrid'
 import { semanticSearch } from '../utils/SemanticSearch.jsx'
 import { result } from 'lodash'
 
-const JobAvailable = ({ showTopJobs, showHeader }) => {
+const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
   const { user } = useSelector((state) => state.user)
   const [postedJobs, setPostedJobs] = useState([])
   const [isFetching, setIsFetching] = useState(false)
@@ -92,16 +92,23 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
       ) : (
         ''
       )}
-      <div className="flex flex-row justify-between items-center">
-        <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
-        Top 3 jobs matched to your skills
-        </strong>
-      </div>
-      <div className="w-full flex flex-wrap gap-4 justify-center ">
-        {matchedJobs.map((matchedJob, index) => (
-          <JobCard job={postedJobs[matchedJob.document]} key={index} />
-        ))}
-      </div>
+      {showBasedSkills ? (
+        <>
+          <div className="flex flex-row justify-between items-center">
+            <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
+              Top 3 jobs matched to your profile skills
+            </strong>
+          </div>
+
+          <div className="w-full flex flex-wrap gap-4 justify-center ">
+            {matchedJobs.map((matchedJob, index) => (
+              <JobCard job={postedJobs[matchedJob.document]} key={index} />
+            ))}
+          </div>
+        </>
+      ) : (
+        ''
+      )}
       {resultAssessment && resultAssessment?.length > 0 && (
         <>
           <div className="flex flex-row justify-between items-center mt-5 ml-20">

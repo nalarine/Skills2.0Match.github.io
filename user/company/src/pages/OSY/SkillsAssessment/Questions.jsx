@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   const navigate = useNavigate()
   const { handleSubmit } = useForm()
+  const [category, setCategory] = useState('')
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState({})
   const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(0)
@@ -29,24 +30,51 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
   }
 
   const handleAnswerChange = (value) => {
-    const isChecked =
-      questions[currentQuestion].correctAnswer.trim() ===
-      questions[currentQuestion].choices[value].trim()
+    setCategory(questions[currentQuestion].category)
 
-    if (!answers.hasOwnProperty(questions[currentQuestion].question)) {
-      setTotalQuestionsAnswered((prevTotal) => prevTotal + 1)
-      localStorage.setItem('totalQuestionsAnswered', totalQuestionsAnswered + 1)
+    if (questions[currentQuestion].hasOwnProperty('correctAnswer')) {
+      const isChecked =
+        questions[currentQuestion].correctAnswer.trim() ===
+        questions[currentQuestion].choices[value].trim()
+
+      if (!answers.hasOwnProperty(questions[currentQuestion].question)) {
+        setTotalQuestionsAnswered((prevTotal) => prevTotal + 1)
+        localStorage.setItem(
+          `${category}-totalQuestionsAnswered`,
+          totalQuestionsAnswered + 1,
+        )
+      }
+
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [questions[currentQuestion].question]: {
+          index: value,
+          correctAnswer: questions[currentQuestion].correctAnswer.trim(),
+          choice: questions[currentQuestion].choices[value].trim(),
+          point: isChecked ? questions[currentQuestion].points : 0,
+        },
+      }))
+    } else {
+      const isChecked = questions[currentQuestion].choices[value].trim()
+
+      if (!answers.hasOwnProperty(questions[currentQuestion].question)) {
+        setTotalQuestionsAnswered((prevTotal) => prevTotal + 1)
+        localStorage.setItem(
+          `${category}-totalQuestionsAnswered`,
+          totalQuestionsAnswered + 1,
+        )
+      }
+
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [questions[currentQuestion].question]: {
+          index: value,
+          // correctAnswer: questions[currentQuestion].correctAnswer.trim(),
+          choice: questions[currentQuestion].choices[value].trim(),
+          point: isChecked ? questions[currentQuestion].points : 0,
+        },
+      }))
     }
-
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [questions[currentQuestion].question]: {
-        index: value,
-        correctAnswer: questions[currentQuestion].correctAnswer.trim(),
-        choice: questions[currentQuestion].choices[value].trim(),
-        point: isChecked ? questions[currentQuestion].points : 0,
-      },
-    }))
   }
 
   const onSubmit = useCallback(() => {
@@ -55,8 +83,11 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
       score += item.point
     })
 
-    localStorage.setItem('answers', JSON.stringify(answers)) // Ensure to stringify before storing in localStorage
-    localStorage.setItem('score', score)
+    console.log(answers)
+    console.log(score)
+
+    localStorage.setItem(`${category}-answers`, JSON.stringify(answers)) // Ensure to stringify before storing in localStorage
+    localStorage.setItem(`${category}-score`, score)
     navigate('/skills-assessment/job-matched-dashboard')
   }, [answers, navigate])
 
