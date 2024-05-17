@@ -204,7 +204,7 @@ const SignUp = ({ open, setOpen }) => {
                     <TextInput
                       name="email"
                       label="Email Address"
-                      placeholder="email@example.com"
+                      placeholder="user@gmail.com"
                       type="email"
                       register={register('email', {
                         required: 'Email Address is required!',
@@ -268,7 +268,7 @@ const SignUp = ({ open, setOpen }) => {
                             }
                             placeholder={
                               accountType === 'seeker'
-                                ? 'eg. James'
+                                ? 'eg. Juan'
                                 : 'Company name'
                             }
                             type="text"
@@ -298,7 +298,7 @@ const SignUp = ({ open, setOpen }) => {
                             <TextInput
                               name="lastName"
                               label="Last Name"
-                              placeholder="Wagonner"
+                              placeholder="Dela Cruz"
                               type="text"
                               register={register('lastName', {
                                 required: 'Last Name is required',
@@ -441,7 +441,7 @@ const SignUp = ({ open, setOpen }) => {
                         : 'Do not have an account?'}
 
                       <span
-                        className="text-sm font-bold text-[#14532d] ml-2 hover:text-[#C1E1C1] hover:font-semibold cursor-pointer"
+                        className="text-sm font-bold text-[#14532d] ml-2 hover:text-lime-700 hover:font-semibold cursor-pointer"
                         onClick={() => setIsRegister((prev) => !prev)}
                       >
                         {isRegister ? 'Login' : 'Create Account'}
