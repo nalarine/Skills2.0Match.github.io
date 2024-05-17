@@ -280,11 +280,11 @@ const DashUsers = () => {
           {filteredUsers.map((user) => (
             <tr className="hover:bg-gray-50" key={user.id}>
               <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-3">
-                <img
+                {/* <img
                   src={user.profileUrl || 'default-profile.png'}
                   alt={`${user.firstName} ${user.lastName}`}
                   style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-                />
+                /> */}
                 {user.firstName} {user.lastName}
               </td>
               <td className="px-6 py-4">{user.email}</td>

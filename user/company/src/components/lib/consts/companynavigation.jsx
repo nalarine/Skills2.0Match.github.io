@@ -48,12 +48,12 @@ export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
     path: '/generate-reports',
     icon: <img src={report} alt="Reports Icon" className="w-[28px] h-[28px]" />,
   },
-  {
-    key: 'messages',
-    label: 'Messages',
-    path: '/cmessages',
-    icon: <img src={message} alt="Messages Icon" className="w-[28px] h-[28px]" />,
-  },
+  // {
+  //   key: 'messages',
+  //   label: 'Messages',
+  //   path: '/cmessages',
+  //   icon: <img src={message} alt="Messages Icon" className="w-[28px] h-[28px]" />,
+  // },
 ];
 
 // Define the bottom sidebar links

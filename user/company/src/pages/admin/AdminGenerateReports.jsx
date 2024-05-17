@@ -185,10 +185,6 @@ export default function AdminGenerateReports() {
     setShowAllJobs(true)
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value)
-  }
-
   const getCompanyName = (companyId) => {
     const company = companies.find((company) => company.id === companyId);
     return company ? company.name : 'N/A';
@@ -197,6 +193,30 @@ export default function AdminGenerateReports() {
   const filteredUsers = users.filter(user =>
     `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+    const generateReport = (type) => {
+    switch (type) {
+      case 'userList':
+        setShowAllApplicants(true);
+        setShowAllCompany(false);
+        setShowAllJobs(false);
+        break;
+      case 'companyList':
+        setShowAllApplicants(false);
+        setShowAllCompany(true);
+        setShowAllJobs(false);
+        break;
+      case 'jobList':
+        setShowAllApplicants(false);
+        setShowAllCompany(false);
+        setShowAllJobs(true);
+        break;
+      default:
+        setShowAllApplicants(false);
+        setShowAllCompany(false);
+        setShowAllJobs(false);
+    }
+  };
 
   return (
     <div className="rounded-lg mt-[100px]">
@@ -240,19 +260,19 @@ export default function AdminGenerateReports() {
                 </span>
                 <a
                   className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                  onClick={handleAllApplicantsClick} // Update this line
+                  onClick={() => generateReport('userList')} // Update this line
                 >
                   List of Users
                 </a>
                 <a
                   className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                  onClick={handleListOfCompaniesClick}
+                  onClick={() => generateReport('companyList')}
                 >
                   List of Companies
                 </a>
                 <a
                   className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                  onClick={handleListOfJobsClick}
+                  onClick={() => generateReport('jobList')}
                 >
                   List of Jobs
                 </a>
@@ -339,31 +359,6 @@ export default function AdminGenerateReports() {
           <h2 className="text-xl font-semibold mb-4 mt-8 text-left">
             List of Applicants
           </h2>
-          {/* <div className='flex gap-2'>
-          <div className="flex mb-4">
-          <DatePicker
-            selected={startDate}
-            placeholderText='Filter by Date'
-            onChange={(update) => {
-              setDateRange(update)
-            }}
-            selectsRange
-            startDate={startDate}
-            endDate={endDate}
-            isClearable
-            className="py-2 px-4 pr-10 rounded-lg border border-gray-300 w-[100%]"
-          />
-        </div>
-        <div className="flex mb-4 w-[50%]">
-          <input
-            type="text"
-            placeholder="Search by name"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="py-2 px-4 rounded-lg border border-gray-300 w-full"
-          />
-        </div>
-        </div> */}
           {loading ? (
             <p>Loading...</p>
           ) : (
@@ -487,16 +482,6 @@ export default function AdminGenerateReports() {
                         {company.status}
                       </div>
                     </td>
-                    {/* <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.age}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.createdAt}
-                      </div>
-                    </td> */}
                   </tr>
                 ))}
               </tbody>
@@ -573,16 +558,6 @@ export default function AdminGenerateReports() {
                       {new Date(job.createdAt).toLocaleDateString()}
                     </div>
                   </td>
-                    {/* <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.age}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.createdAt}
-                      </div>
-                    </td> */}
                   </tr>
                 ))}
               </tbody>
