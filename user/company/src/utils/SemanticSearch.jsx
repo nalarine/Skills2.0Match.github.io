@@ -3,6 +3,9 @@ import axios from 'axios'
 
 let cache = {}
 
+const token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTIxNzgzYTgtZDU0NC00MjkyLWFiM2UtYjU3ZDI4MzkxZGUyIiwidHlwZSI6ImFwaV90b2tlbiJ9.50Zi5BaZX8vjKHPx0c7_fzxv4enp6pfjOvQN2-26r0k'
+
 export async function semanticSearch(texts, query) {
   const cacheKey = JSON.stringify({ texts, query })
 
@@ -14,8 +17,7 @@ export async function semanticSearch(texts, query) {
     method: 'POST',
     url: 'https://api.edenai.run/v2/text/search',
     headers: {
-      authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI0ZTNiOTYtNjMzNS00MmMzLTkxODMtODNkZDMxOWQwZmU2IiwidHlwZSI6ImFwaV90b2tlbiJ9.cArlXoQuruusX1KEfEoSmE1jGk8xWgVCr1MfopAORfY', //create new account in EdenAI to get free 1 dollar token and change the bearer if that happens
+      authorization: `Bearer ${token}`, //create new account in EdenAI to get free 1 dollar token and change the bearer if that happens
     },
     data: {
       texts: texts,

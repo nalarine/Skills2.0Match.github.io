@@ -7,7 +7,7 @@ import DashboardStatsGrid from '../components/DashboardStatsGrid'
 import { semanticSearch } from '../utils/SemanticSearch.jsx'
 import { result } from 'lodash'
 
-const JobAvailable = ({ showTopJobs, showHeader }) => {
+const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
   const { user } = useSelector((state) => state.user)
   const [postedJobs, setPostedJobs] = useState([])
   const [isFetching, setIsFetching] = useState(false)
@@ -46,18 +46,22 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
         })
         const userSkills = userResponse.user.skills
         // Uses semanticSearch for job matching
-        const matchedJobItems = await semanticSearch(jobDetails, userSkills) // Query from User-defined skills
+        // const matchedJobItems = await semanticSearch(jobDetails, userSkills) // Query from User-defined skills
         // Semantic search using assessment result as query
 
         if (resultAssessment) {
           const matchedJobItemsAssessmentBased = await semanticSearch(
             jobDetails,
-            resultAssessment,
+            userSkills + resultAssessment,
           )
 
           setMatchedJobAssessment(matchedJobItemsAssessmentBased.slice(0, 3))
           setResultAssessment(resultAssessment)
+        } else {
+          const matchedJobItems = await semanticSearch(jobDetails, userSkills)
+          setMatchedJobAssessment(matchedJobItems.slice(0, 3))
         }
+
         console.log(matchedJobItems.slice(0, 3))
         console.log(matchedJobsAssessment)
 
@@ -85,23 +89,24 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
       className="p-4 rounded-lg border border-gray flex flex-col flex-2 w-full"
       style={{ height: '100vh' }} // Set height to 100vh for full screen height
     >
-      {showHeader ? (
-        <DashboardStatsGrid
-          jobMatches={matchedJobs.length + matchedJobsAssessment.length}
-        />
+      {showHeader ? <DashboardStatsGrid jobMatches={matchedJobs.length} /> : ''}
+      {showBasedSkills ? (
+        <>
+          <div className="flex flex-row justify-between items-center">
+            <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
+              Top 3 jobs matched to your profile skills
+            </strong>
+          </div>
+
+          <div className="w-full flex flex-wrap gap-4 justify-center ">
+            {matchedJobs.map((matchedJob, index) => (
+              <JobCard job={postedJobs[matchedJob.document]} key={index} />
+            ))}
+          </div>
+        </>
       ) : (
         ''
       )}
-      <div className="flex flex-row justify-between items-center">
-        <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
-          Top 3 jobs matched based on user-defined skills
-        </strong>
-      </div>
-      <div className="w-full flex flex-wrap gap-4 justify-center ">
-        {matchedJobs.map((matchedJob, index) => (
-          <JobCard job={postedJobs[matchedJob.document]} key={index} />
-        ))}
-      </div>
       {resultAssessment && resultAssessment?.length > 0 && (
         <>
           <div className="flex flex-row justify-between items-center mt-5 ml-20">
