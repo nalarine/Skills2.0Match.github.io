@@ -92,28 +92,29 @@ const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
       ) : (
         ''
       )}
-      {showBasedSkills ? (
-        <>
-          <div className="flex flex-row justify-between items-center">
-            <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
-              Top 3 jobs matched to your profile skills
-            </strong>
-          </div>
-
-          <div className="w-full flex flex-wrap gap-4 justify-center ">
-            {matchedJobs.map((matchedJob, index) => (
-              <JobCard job={postedJobs[matchedJob.document]} key={index} />
-            ))}
-          </div>
-        </>
-      ) : (
-        ''
-      )}
+      <div className="flex flex-row justify-between items-center">
+        <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
+        {matchedJobs.length > 0 ? (
+      "Top 3 jobs matched to your skills"
+    ) : (
+      "No matched jobs"
+    )}
+        </strong>
+      </div>
+      <div className="w-full flex flex-wrap gap-4 justify-center ">
+        {matchedJobs.map((matchedJob, index) => (
+          <JobCard job={postedJobs[matchedJob.document]} key={index} />
+        ))}
+      </div>
       {resultAssessment && resultAssessment?.length > 0 && (
         <>
           <div className="flex flex-row justify-between items-center mt-5 ml-20">
             <strong className="font-bold text-2xl mb-4">
-              Top 3 jobs matched based on assessed skills
+            {matchedJobsAssessment.length > 0 ? (
+      "Top 3 jobs matched based on assessed skills"
+    ) : (
+      "No matched jobs based on assessed skills"
+    )}
             </strong>
           </div>
           <div className="w-full flex flex-wrap gap-4 justify-center">

@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom'; // Import useParams hook to access URL parameters
+import { useParams } from 'react-router-dom'; 
 import loadingGif from '../assets/loading.gif';
 
 const VerificationSuccess = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
-  const { verificationToken } = useParams(); // Extract verification token from URL
+  const navigate = useNavigate(); 
+  const { verificationToken } = useParams(); 
+  const [user, setUser] = useState(null); // State to store user details
 
-   // Function to handle login button click
-   const handleLoginClick = () => {
+  // Function to handle login button click
+  const handleLoginClick = () => {
     // Redirect user based on their account type
     if (user && user.accountType === 'seeker') {
       navigate('/user-profile');
@@ -19,21 +20,19 @@ const VerificationSuccess = () => {
 
   // Effect to verify email on component mount
   useEffect(() => {
-    // Send verification token to backend API
     fetch(`http://localhost:8800/api-v1/auth/verification-success/${verificationToken}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     })
-      .then(response => {
-        if (response.ok) {
-          // Handle successful verification
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
           console.log('Email verified successfully!');
-          // You can redirect here if you want
+          setUser(data.user); // Store user details in state
         } else {
-          // Handle verification failure
-          console.error('Failed to verify email:', response.statusText);
+          console.error('Failed to verify email:', data.message);
         }
       })
       .catch(error => {
@@ -47,8 +46,8 @@ const VerificationSuccess = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh', // Ensure full viewport height
-        backgroundColor: '#E5E7EB', // Background color
+        minHeight: '100vh',
+        backgroundColor: '#E5E7EB',
       }}
     >
       <div
@@ -61,7 +60,6 @@ const VerificationSuccess = () => {
           backgroundColor: '#fff',
         }}
       >
-        {/* Loading GIF */}
         <img
           src={loadingGif}
           alt="Loading..."
@@ -69,22 +67,20 @@ const VerificationSuccess = () => {
             width: '100px',
             height: '100px',
             marginBottom: '20px',
-            display: 'block', // To center the image
-            margin: '0 auto', // To center the image
+            display: 'block',
+            margin: '0 auto',
           }}
         />
 
-        {/* Verification Success Message */}
         <div style={{ marginBottom: '20px' }}>
           <h2>Verification Successful!</h2>
           <p>Your email has been successfully verified.</p>
           <p>You can now log in to your account.</p>
         </div>
 
-        {/* Interactive Login Button */}
         <button
           style={{
-            backgroundColor: '#34D399', // Green-500
+            backgroundColor: '#34D399',
             color: '#fff',
             border: 'none',
             borderRadius: '10px',
@@ -92,17 +88,16 @@ const VerificationSuccess = () => {
             fontSize: '16px',
             cursor: 'pointer',
             transition: 'background-color 0.3s ease',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Box shadow
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
           }}
-          // Call handleLoginClick function on button click
           onClick={handleLoginClick}
-          // Hover effect
           onMouseEnter={(e) => {
-            e.target.style.backgroundColor = '#34D399'; // Green-400
+            e.target.style.backgroundColor = '#34D399';
           }}
           onMouseLeave={(e) => {
-            e.target.style.backgroundColor = '#047857'; // Green-500
+            e.target.style.backgroundColor = '#047857';
           }}
+          disabled={!user} // Disable button until user is set
         >
           Proceed to Login
         </button>

@@ -65,31 +65,30 @@ router.get("/verify-email/:verificationToken", async (req, res) => {
   }
 });
 
-// Verification success route
+/// Verification success route
 router.get("/verification-success/:verificationToken", async (req, res) => {
   try {
     // Extract the verification token from the URL parameters
-    const { verificationToken } = req.params; // Destructure verificationToken directly
+    const { verificationToken } = req.params;
     if (!verificationToken) {
-      throw new Error("Verification token is missing");
+      return res.status(400).json({ success: false, message: "Verification token is missing" });
     }
 
     // Verify the email using the token
     const { success, user } = await verifyEmail(verificationToken);
 
-    // Render a page indicating successful or failed verification
     if (success) {
-      // Here, you can perform additional actions like updating UI, logging in the user, etc.
-      // For simplicity, let's just send a success message
-      res.send("Email verified successfully!");
+      // Return success response with user details
+      res.json({ success: true, user, message: "Email verified successfully." });
     } else {
-      res.send("Email verification failed.");
+      res.status(400).json({ success: false, message: "Email verification failed." });
     }
   } catch (error) {
     console.error("Error verifying email:", error);
-    res.status(500).send("An error occurred while verifying email.");
+    res.status(500).json({ success: false, message: "An error occurred while verifying email." });
   }
 });
+
 
 
 router.post("/login", loginLimiter, async (req, res) => {

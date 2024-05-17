@@ -89,7 +89,6 @@ export async function verifyEmail(verificationToken) {
 
     // Update the user's email verification status to true and clear the verification token
     user.emailVerified = true;
-    user.verificationToken = null;
     await user.save();
 
     // Log the updated user object

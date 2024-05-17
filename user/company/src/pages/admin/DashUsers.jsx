@@ -70,6 +70,7 @@ const DashUsers = () => {
       firstName: '',
       lastName: '',
       email: '',
+      birthdate: '',
       password: '',
       userType: 'user',
     })
@@ -83,6 +84,7 @@ const DashUsers = () => {
       firstName: '',
       lastName: '',
       email: '',
+      birthdate: '',
       password: '',
       userType: 'user',
     })
@@ -374,6 +376,23 @@ const DashUsers = () => {
             value={newUser.email}
             onChange={handleInputChange}
             style={{ marginBottom: '10px' }}
+            InputProps={{
+              style: { fontFamily: 'Poppins, sans-serif' },
+            }}
+          />
+          <TextField
+            fullWidth
+            type="date"
+            label="Birthdate"
+            variant="outlined"
+            margin="normal"
+            name="birthdate"
+            value={newUser.birthdate}
+            onChange={handleInputChange}
+            style={{ marginBottom: '10px' }}
+            InputLabelProps={{
+              shrink: true,
+            }}
             InputProps={{
               style: { fontFamily: 'Poppins, sans-serif' },
             }}
