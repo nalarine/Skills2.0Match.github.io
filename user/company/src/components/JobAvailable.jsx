@@ -94,7 +94,7 @@ const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
         <>
           <div className="flex flex-row justify-between items-center">
             <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
-              Top 3 jobs matched to your profile skills
+              Best jobs matched to your profile skills
             </strong>
           </div>
 
@@ -111,7 +111,7 @@ const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
         <>
           <div className="flex flex-row justify-between items-center mt-5 ml-20">
             <strong className="font-bold text-2xl mb-4">
-              Top 3 jobs matched based on assessed skills
+              Best job matched based on assessed skills
             </strong>
           </div>
           <div className="w-full flex flex-wrap gap-4 justify-center">
