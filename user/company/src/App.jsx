@@ -9,6 +9,7 @@ import {
   PrivacyPolicy,
   TermsOfService,
   ForgotPassword,
+  SignUp
 } from './components'
 import {
   About,
@@ -74,10 +75,12 @@ function Layout() {
   const { user } = useSelector((state) => state.user)
   const location = useLocation()
 
-  return user?.token ? (
+  if (!user) {
+    return <Navigate to="/sign-up" state={{ from: location }} replace />
+  }
+
+  return (
     <Outlet />
-  ) : (
-    <Navigate to="/user-auth" state={{ from: location }} replace />
   )
 }
 function App() {
@@ -86,7 +89,7 @@ function App() {
 
   // Redirect to user-auth if the user is not logged in
   if (!user) {
-    return <Navigate to="/user-auth" replace />
+    return <Navigate to="/sign-up" replace />
   }
 
   // Check session expiration
@@ -133,6 +136,7 @@ function App() {
     location.pathname.startsWith('/AdminDashboard') ||
     location.pathname.startsWith('/admin/reports') 
 
+
   const hideExtraComponents =
     user &&
     (location.pathname === '/' ||
@@ -165,6 +169,7 @@ function App() {
       location.pathname.startsWith('/CHelpCenter') ||
       location.pathname.startsWith('/CSettings') ||
       location.pathname.startsWith('/forgot-password') ||
+      location.pathname.startsWith('/sign-up') ||
       location.pathname.startsWith('/AdminDashboard')) ||
       location.pathname.startsWith('/admin/reports') 
 
@@ -180,6 +185,7 @@ function App() {
       )}
       <Routes>
         <Route path="/user-auth" element={<AuthPage />} />
+        <Route path="/sign-up" element={<SignUp />} /> 
         <Route
           path="/verification-success/:verificationToken"
           element={<VerificationSuccess />}
@@ -189,22 +195,16 @@ function App() {
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-            <Route
-              path="/"
-              element={
-                user ? (
-                  user.accountType === 'seeker' ? (
-                    <Navigate to="/user-profile" replace={true} />
-                  ) : user.role === 1 ? (
-                    <Navigate to="/AdminDashboard" replace={true} />
-                  ) : (
-                    <>
-                      <Navigate to="/company-profile" replace={true} />
-                    </>
-                  )
-                ) : (
-                  <Navigate to="/user-auth" replace={true} />
-                )
+          <Route
+            path="/"
+            element={
+              user
+                ? user.isAdmin === true
+                  ? <Navigate to="/AdminDashboard" replace />
+                  : user.accountType === 'seeker'
+                  ? <Navigate to="/user-profile" replace />
+                  : <Navigate to="/company-profile" replace />
+                : <Navigate to="/user-auth" replace />
               }
             />
             <Route path="Dashboard" element={<Dashboard />} />

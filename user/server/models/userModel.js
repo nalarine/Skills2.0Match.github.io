@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       validate: {
         validator: function (value) {
-          return validator.isEmail(value) && /@gmail\.com$/.test(value);
+          return validator.isEmail(value) && /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(value);
         },
         message: (props) => `${props.value} is not a valid Gmail address.`,
       },
@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema(
     },
     accountType: { type: String, default: "seeker" },
     role: { type: Number, default: 0 },
+    isAdmin: { type: Boolean, default: false }, 
     contact: { type: String },
     location: { type: String },
     profileUrl: { type: String },

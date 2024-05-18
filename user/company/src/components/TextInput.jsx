@@ -1,17 +1,15 @@
 import React from 'react';
 import { Input } from '@nextui-org/react';
 
-const placements = [
-  "outside",
-];
+const placements = ["outside"];
 
 const TextInput = React.forwardRef(
-  ({ type, label, register, name, error, ...rest }, ref) => {
+  ({ type, label, register, name, error, required, ...rest }, ref) => {
     return (
       <div className='flex flex-col mt-2'>
         {placements.map((placement) => (
           <div key={placement} className={`${placement === 'outside' ? 'w-40%' : 'w-full'}`}>
-            <p className='text-gray-600 text-sm mb-1'>{label}</p>
+            <p className='text-gray-600 text-sm mb-1'>{label} {required && <span className="text-red-500">*</span>}</p>
             <Input
               type={type}
               name={name}

@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Menu } from '@headlessui/react'
+import { useNavigate } from 'react-router-dom';
 import { BiChevronDown } from 'react-icons/bi'
 import { CgProfile } from 'react-icons/cg'
 import { HiMenuAlt3 } from 'react-icons/hi'
@@ -95,9 +96,12 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const navigate = useNavigate();
 
   const toggleNavbar = () => setIsOpen((prev) => !prev)
-  const handleSignInRegister = () => setOpen(true)
+  const handleSignInRegister = () => {
+    navigate('/sign-up');
+  };
 
   const handleScroll = () => {
     const offset = window.scrollY
@@ -203,8 +207,6 @@ function Navbar() {
           <MenuList user={user} onClick={toggleNavbar} />
         )}
       </div>
-
-      {open && <SignUp open={open} setOpen={setOpen} />}
     </>
   )
 }

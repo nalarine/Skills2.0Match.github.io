@@ -1,20 +1,16 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'; // Import useParams hook to access URL parameters
 import loadingGif from '../assets/loading.gif';
 
 const VerificationSuccess = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
   const { verificationToken } = useParams(); // Extract verification token from URL
+  const { user } = useSelector((state) => state.user)
 
-   // Function to handle login button click
-   const handleLoginClick = () => {
-    // Redirect user based on their account type
-    if (user && user.accountType === 'seeker') {
-      navigate('/user-profile');
-    } else {
-      navigate('/company-profile');
-    }
+  const handleLoginClick = () => {
+    navigate('/sign-up');
   };
 
   // Effect to verify email on component mount

@@ -1,22 +1,23 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import bgopen from '../assets/bgopen.png'
-import SignUp from '../components/SignUp'
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import bgopen from '../assets/bgopen.png';
 
 const Auth = () => {
-  const { user } = useSelector((state) => state.user)
-  const [open, setOpen] = useState(false) // Set initial state to false
-  const location = useLocation()
+  const { user } = useSelector((state) => state.user);
+  const location = useLocation();
+  const navigate = useNavigate(); // Use useNavigate hook to navigate programmatically
 
-  let from = location?.state?.from?.pathname || '/'
+  let from = location?.state?.from?.pathname || '/';
 
   const handleGetStarted = () => {
-    setOpen(true) // Open SignUp component when Get Started button is clicked
-  }
+    if (!user.token) {
+      navigate('/sign-up'); // Navigate to /sign-up if user is not logged in
+    }
+  };
 
   if (user.token) {
-    return window.location.replace(from)
+    return window.location.replace(from);
   }
   return (
     <div className="absolute inset-0 w-full h-full object-scale-down z-2">
@@ -43,13 +44,12 @@ const Auth = () => {
               >
                 Get Started
               </button>
-              {open && <SignUp open={open} setOpen={setOpen} />}
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;
