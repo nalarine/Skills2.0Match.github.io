@@ -49,6 +49,7 @@ import CSettings from './pages/COMPANY/CompanySettings'
 
 //ADMIN
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminGenerateReports from './pages/admin/AdminGenerateReports'
 import DashCategory from './pages/admin/DashCategory'
 import DashCreateCategory from './pages/admin/DashCreateCategory'
 import DashCreateJob from './pages/admin/DashCreateJob'
@@ -61,6 +62,7 @@ import ProgressBar from './pages/OSY/SkillsAssessment/ProgressBar'
 
 //HOC
 const AdminDashboardHOC = AdLayout(AdminDashboard)
+const AdminGenerateReportsHOC = AdLayout(AdminGenerateReports)
 const DashUsersHOC = AdLayout(DashUsers)
 const DashJobsHOC = AdLayout(DashJobs)
 const DashCompaniesHOC = AdLayout(DashCompanies)
@@ -128,7 +130,8 @@ function App() {
     location.pathname.startsWith('/CHelpCenter') ||
     location.pathname.startsWith('/CSettings') ||
     location.pathname.startsWith('/forgot-password') ||
-    location.pathname.startsWith('/AdminDashboard')
+    location.pathname.startsWith('/AdminDashboard') ||
+    location.pathname.startsWith('/admin/reports') 
 
   const hideExtraComponents =
     user &&
@@ -162,7 +165,8 @@ function App() {
       location.pathname.startsWith('/CHelpCenter') ||
       location.pathname.startsWith('/CSettings') ||
       location.pathname.startsWith('/forgot-password') ||
-      location.pathname.startsWith('/AdminDashboard'))
+      location.pathname.startsWith('/AdminDashboard')) ||
+      location.pathname.startsWith('/admin/reports') 
 
   return (
     <main className="bg-[#f7fdfd]">
@@ -245,17 +249,14 @@ function App() {
 
           <Route
             path="/AdminDashboard"
-            element={
-              <AdminDashboard>
-                <AdminDashboardHOC />
-              </AdminDashboard>
-            }
+            element={<AdminDashboardHOC />}
           />
           <Route path="/admin/users" element={<DashUsersHOC />} />
           <Route path="/admin/jobs" element={<DashJobsHOC />} />
           <Route path="/admin/companies" element={<DashCompaniesHOC />} />
           <Route path="/admin/category" element={<DashCategoryHOC />} />
           <Route path="/admin/job/create" element={<DashCreateJobHOC />} />
+          <Route path="/admin/reports" element={<AdminGenerateReportsHOC />} />
           <Route
             path="/admin/category/create"
             element={<DashCreateCategoryHOC />}

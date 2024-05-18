@@ -1,90 +1,116 @@
-import React from 'react'
-import { Box, Stack, Typography, CssBaseline } from '@mui/material'
-import SidebarAdm from '../global/Sidebar'
-import StatComponent from '../../components/StatComponent'
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
-import WorkIcon from '@mui/icons-material/Work'
-import CategoryIcon from '@mui/icons-material/Category'
-import { Chart } from 'react-google-charts'
-import { data, options } from './data/data'
-import ChartComponent from '../../components/ChartComponent'
+import React, { useState, useEffect } from 'react';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { axisClasses } from '@mui/x-charts';
+import { apiRequest } from '../../utils/index';
+import BuildingIcon from '../../assets/building.png';
+import WorkIcon from '../../assets/work.png';
+import UserIcon from '../../assets/user.png';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
-// Importing Poppins font
-import { createTheme, ThemeProvider } from '@mui/material/styles'
-
-const theme = createTheme({
-  typography: {
-    fontFamily: [
-      'Poppins',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-    ].join(','),
+const chartSetting = {
+  yAxis: [
+    {
+      label: 'Count',
+    },
+  ],
+  width: 500,
+  height: 300,
+  sx: {
+    [`.${axisClasses.left} .${axisClasses.label}`]: {
+      transform: 'translate(-10px, 0)',
+    },
   },
-})
+};
 
-const AdminDashboard = () => {
+const AdminDashboardChart = () => {
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const companiesResponse = await apiRequest({
+          url: '/companies/allcompanies',
+          method: 'GET',
+        });
+        const jobsResponse = await apiRequest({
+          url: '/jobs/alljobs',
+          method: 'GET',
+        });
+        const usersResponse = await apiRequest({
+          url: '/users/allusers',
+          method: 'GET',
+        });
+
+        console.log('Users Response:', usersResponse.data); // Log users data to console
+
+        const chartData = [
+          { category: 'Companies', count: companiesResponse.data.length, color: '#add8e6' },
+          { category: 'Jobs', count: jobsResponse.data.length, color: '#90ee90' },
+          { category: 'Users', count: usersResponse.data.count, color: '#b19cd9' },
+        ];
+
+        setChartData(chartData);
+        setUsers(usersResponse.data.users);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', backgroundColor: '#14532d' }}>
-        {' '}
-        {/* Change the background color */}
-        <SidebarAdm /> {/* Render the SidebarAdm component */}
-        <Box sx={{ flexGrow: 1, paddingBottom: 9 }}>
-          {' '}
-          {/* Add flexGrow for the main content and paddingBottom to remove white space */}
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h4" className="text-black pb-3">
-              Admin Dashboard
-            </Typography>
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={{ xs: 1, sm: 2, md: 4 }}
-            >
-              <StatComponent
-                value="45621"
-                icon={
-                  <SupervisorAccountIcon className="text-green-500 text-3xl" />
-                }
-                description="Administrators"
-                money=""
-              />
-              <StatComponent
-                value="450"
-                icon={<WorkIcon className="text-green-500 text-3xl" />}
-                description="Jobs"
-                money=""
-              />
-              <StatComponent
-                value="6548"
-                icon={<CategoryIcon className="text-green-500 text-3xl" />}
-                description="Jobs categories"
-                money=""
-              />
-            </Stack>
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              className="mt-3"
-              spacing={{ xs: 1, sm: 2, md: 4 }}
-            >
-              <ChartComponent>
-                <Chart
-                  chartType="Bar"
-                  data={data}
-                  options={options}
-                  width="100%"
-                  height="300px"
-                  legendToggle
-                />
-              </ChartComponent>
-            </Stack>
-          </Box>
-        </Box>
-      </Box>
-    </ThemeProvider>
-  )
+    <div style={{ paddingTop: '80px', display: 'flex', justifyContent: 'center' }}>
+      <div style={{ width: '100%', backgroundColor: 'white', borderRadius: '8px', fontFamily: 'Poppins', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', padding: '10px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '20px', textAlign: 'center', fontSize: '30px', fontWeight: 'bold' }}>Admin Dashboard</div>
+        <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
+          {chartData.map(({ category, count, color }) => (
+            <div key={category} style={{ width: '20%', textAlign: 'center', padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
+              <img src={category === 'Companies' ? BuildingIcon : category === 'Jobs' ? WorkIcon : UserIcon} alt={`${category} Icon`} width={80} height={80} style={{ marginBottom: '10px' }} />
+              <div style={{ display: 'flex', alignItems: 'center', fontSize: '24px', fontWeight: 'bold' }}>
+                <span>{count}</span>
+                <span style={{ marginLeft: '5px', fontSize: '16px', color: '#666' }}>{category}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ width: '80%', margin: '0 auto' }}>
+          <BarChart
+            dataset={chartData}
+            xAxis={[{ scaleType: 'band', dataKey: 'category' }]}
+            series={[{ dataKey: 'count', label: 'Count', color: '#095c1d' }]}
+            aria-label="Admin Dashboard Chart"
+            {...chartSetting}
+          />
+        </div>
+        <div className="mt-[-25%] w-1/3 float-right mr-[10%]">
+          <h2 className="text-center mb-2 text-gray-800 text-lg font-semibold">Registered Users</h2>
+          {loading ? (
+            <div className="text-center text-gray-600">Loading...</div>
+          ) : (
+            <div className="max-h-60 overflow-y-auto text-left">
+              <Table border="collapse">
+                <TableHeader>
+                  <TableColumn>Name</TableColumn>
+                </TableHeader>
+                <TableBody>
+                  {users.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.firstName} {user.lastName}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default AdminDashboard
+export default AdminDashboardChart;
