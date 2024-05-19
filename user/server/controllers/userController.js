@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import Users from "../models/userModel.js";
 
 export const allUsers = async (req, res, next) => {
-  const pageSize = 10;
-  const page = Number(req.query.page) || 1;
+  const pageSize = 10; // Set page size to 10 users per page
+  const page = Number(req.query.page) || 1; // Get the page number from the query string, default to page 1 if not provided
   const { startDate, endDate } = req.query;
 
   let query = {};
@@ -18,10 +18,14 @@ export const allUsers = async (req, res, next) => {
   try {
     const count = await Users.countDocuments(query);
 
+    // Calculate the offset based on the page number and page size
+    const offset = (page - 1) * pageSize;
+
+    // Fetch users for the specified page
     const users = await Users.find(query)
       .sort({ createdAt: -1 })
       .select("-password")
-      .skip(pageSize * (page - 1))
+      .skip(offset)
       .limit(pageSize);
 
     const modifiedUsers = users.map((user) => ({
@@ -49,7 +53,6 @@ export const allUsers = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export const createUser = async (req, res, next) => {
   const {

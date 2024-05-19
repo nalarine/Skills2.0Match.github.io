@@ -46,12 +46,8 @@ const DashUsers = () => {
     try {
       console.log(`Fetching users for page: ${page}`);
       const response = await apiRequest({
-        url: '/users/allusers',
+        url: `/users/allusers?page=${page}&limit=${usersPerPage}`, // Append page and limit to the URL
         method: 'GET',
-        params: {
-          page,
-          limit: usersPerPage,
-        },
       });
       console.log('API response:', response);
       const modifiedUsers = response.data.users.map((user) => ({
@@ -69,7 +65,7 @@ const DashUsers = () => {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchUsers(currentPage);
   }, [currentPage]);
