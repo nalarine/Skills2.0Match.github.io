@@ -1,6 +1,7 @@
 import Users from "../models/userModel.js";
 import { sendVerificationEmail } from "../emailService.js";
 import { v4 as uuidv4 } from 'uuid';
+import { sendForgotPasswordEmail } from "../sendVerificationEmail.js"
 
 export const register = async (req, res, next) => {
   const { firstName, lastName, email, password, role, birthdate } = req.body;
@@ -167,14 +168,26 @@ export const signIn = async (req, res, next) => {
 // Import necessary modules and dependencies
 
 export const resetPassword = async (req, res, next) => {
-  const { email, newPassword } = req.body;
+  const { email, newPassword, token } = req.body;
 
   try {
-    // Check if email exists
-    const user = await Users.findOne({ email });
+    let user;
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    // Check if token is provided
+    if (token) {
+      // Find the user by reset password token
+      user = await Users.findOne({ resetPasswordToken: token });
+      if (!user) {
+        return res.status(404).json({ message: 'Invalid or expired token' });
+      }
+      // Invalidate the reset password token
+      user.resetPasswordToken = null;
+    } else {
+      // Check if email exists
+      user = await Users.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
     }
 
     // Update user's password
@@ -183,10 +196,35 @@ export const resetPassword = async (req, res, next) => {
 
     res.status(200).json({ success: true, message: 'Password reset successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Error resetting password:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+export const resetPasswordusingEmail = async (req, res) => {
+  const { email } = req.body;
+  try {
+    // Find the user by email address
+    const user = await Users.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    // Generate a unique token for the user
+    const resetPasswordToken = uuidv4();
+    // Associate the token with the user's account
+    user.resetPasswordToken = resetPasswordToken;
+    await user.save();
+    // Send the reset password email
+    await sendForgotPasswordEmail(user);
+    res.status(200).json({ message: 'Password reset email sent successfully' });
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 
 export const deleteAccount = async (req, res) => {
   const { email, password } = req.body;

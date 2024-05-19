@@ -28,7 +28,7 @@ const ChangePasswordForm = () => {
 
     try {
       const response = await apiRequest({
-        url: '/auth/reset-password',
+        url: '/auth/reset-password/:token',
         method: 'POST',
         data: { email, newPassword }
       });

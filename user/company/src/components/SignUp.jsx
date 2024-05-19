@@ -19,6 +19,7 @@ import 'daisyui/dist/full.css';
 import '../App.css';
 
 const SignUp = () => {
+  const [email, setEmail] = useState('');
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -112,15 +113,28 @@ const SignUp = () => {
     setForgotPasswordModalOpen(false);
   };
 
-  const handleResetPassword = () => {
-    // Logic to reset password using the provided email
-    console.log("Reset password for email:", forgotPasswordEmail);
-    setForgotPasswordModalOpen(false);
+  const handleResetPassword = async () => {
+    try {
+      const res = await apiRequest({
+        url: '/auth/reset-password-using-email',
+        method: 'POST',
+        data: { email: forgotPasswordEmail },
+      });
+  
+      if (res && res.status === 200) {
+        setSuccessMessage('Password reset email sent successfully');
+        setErrMsg(''); // Reset error message
+      } else {
+        setErrMsg('An error occurred while sending the password reset email');
+      }
+    } catch (error) {
+      setErrMsg('An error occurred while sending the password reset email');
+      console.error('Error sending password reset email:', error);
+    } finally {
+      setForgotPasswordModalOpen(false);
+    }
   };
 
-  const handleOverlayClick = (e) => {
-    e.stopPropagation();
-  };
 
   return (
     <div className="pt-[7%] flex min-h-screen items-center justify-center p-4 content-center bg-gradient-to-b from-[#c1e1c1] to-[#143c1d] bg-blur-sm">
@@ -154,16 +168,20 @@ const SignUp = () => {
         </div>
 
         <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
+        <TextInput
             name="email"
             label="Email Address"
-            placeholder="email@example.com"
+            placeholder="user@gmail.com"
             type="email"
             register={register('email', {
               required: 'Email Address is required!',
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: 'Please enter a valid email address.',
+              },
             })}
             error={errors.email ? errors.email.message : ''}
-            required 
+            required
           />
           {isRegister && accountType === 'seeker' && (
             <>
@@ -223,7 +241,7 @@ const SignUp = () => {
                   }
                   placeholder={
                     accountType === 'seeker'
-                      ? 'eg. James'
+                      ? 'eg. Juan'
                       : 'Company name'
                   }
                   type="text"
@@ -254,7 +272,7 @@ const SignUp = () => {
                   <TextInput
                     name="lastName"
                     label="Last Name"
-                    placeholder="Wagonner"
+                    placeholder="Dela Cruz"
                     type="text"
                     register={register('lastName', {
                       required: 'Last Name is required',
@@ -465,14 +483,16 @@ const SignUp = () => {
                       Enter your email address below and we will send you instructions to reset your password.
                     </p>
                   </div>
-                  <div className="mt-4">
+
+                 <div className="mt-4">
                     <TextInput
                       name="forgotPasswordEmail"
                       label="Email Address"
-                      placeholder="email@example.com"
+                      placeholder="user@gmail.com"
                       type="email"
                       value={forgotPasswordEmail}
-                      onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                      onChange={(e) => setForgotPasswordEmail(e.target.value)} // Update the email state
+                      error={errors.forgotPasswordEmail ? errors.forgotPasswordEmail.message : ''}
                       required
                     />
                   </div>
