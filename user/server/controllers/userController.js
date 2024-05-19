@@ -2,14 +2,12 @@ import mongoose from "mongoose";
 import Users from "../models/userModel.js";
 
 export const allUsers = async (req, res, next) => {
-  // Enable pagination
   const pageSize = 10;
-  const page = Number(req.query.pageNumber) || 1;
+  const page = Number(req.query.page) || 1;
   const { startDate, endDate } = req.query;
 
   let query = {};
 
-  // If both startDate and endDate are provided, add a date range filter to the query
   if (startDate && endDate) {
     query.createdAt = {
       $gte: new Date(startDate),
@@ -22,7 +20,9 @@ export const allUsers = async (req, res, next) => {
 
     const users = await Users.find(query)
       .sort({ createdAt: -1 })
-      .select("-password");
+      .select("-password")
+      .skip(pageSize * (page - 1))
+      .limit(pageSize);
 
     const modifiedUsers = users.map((user) => ({
       _id: user._id,
@@ -32,16 +32,14 @@ export const allUsers = async (req, res, next) => {
       profileUrl: user.profileUrl,
       role: user.role,
       birthdate: user.birthdate ? new Date(user.birthdate).toLocaleDateString() : "N/A",
-      application: user.application, // Include user's role
+      application: user.application,
       createdAt: user.createdAt,
     }));
-
-    const paginatedUsers = modifiedUsers.slice(pageSize * (page - 1), pageSize * page);
 
     res.status(200).json({
       success: true,
       data: {
-        users: paginatedUsers,
+        users: modifiedUsers,
         page,
         pages: Math.ceil(count / pageSize),
         count,
@@ -51,6 +49,7 @@ export const allUsers = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const createUser = async (req, res, next) => {
   const {
