@@ -1,3 +1,5 @@
+import { AllApplicants } from '../../../../pages'
+
 export const DUMMY_DATA_ABOUT = [
   {
     image: 'src/components/lib/consts/dummy/profile3.svg',

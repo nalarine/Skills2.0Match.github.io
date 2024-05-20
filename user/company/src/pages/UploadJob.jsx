@@ -31,7 +31,7 @@ const UploadJob = () => {
   })
 
   const [errMsg, setErrMsg] = useState('')
-  const [jobType, setJobType] = useState('Full-Time')
+  const [jobType, setJobType] = useState('Select job type')
   const [isLoading, setIsLoading] = useState(false)
   const [recentPost, setRecentPost] = useState([])
   const [requirementsText, setRequirementsText] = useState('')
@@ -44,7 +44,14 @@ const UploadJob = () => {
   const [jobCategory, setJobCategory] = useState('') // State to hold selected job category
   const [jobSubcategory, setJobSubcategory] = useState('') // State to hold selected job subcategory
 
-  const minimumSalary = salaryPeriod === 'hour' ? 50 : 400
+  const minimumSalaryMap = {
+    hour: 65,
+    day: 530,
+    week: 2650,
+    month: 10600,
+  }
+
+  const minimumSalary = minimumSalaryMap[salaryPeriod]
 
   const categories = jobCategories.map((category) => category.category)
   const subcategories =
@@ -70,6 +77,11 @@ const UploadJob = () => {
     setLocationCity(defaultCity)
   }
 
+  const validateSkills = (value) => {
+    const skills = value.split('\n').filter((skill) => skill.trim() !== '')
+    return skills.length >= 2 || 'At least 2 skills are required'
+  }
+
   const onSubmit = async (data) => {
     setIsLoading(true)
     setErrMsg(null)
@@ -82,7 +94,12 @@ const UploadJob = () => {
     data.endHiringDate = new Date(data.endHiringDate)
     data.salaryPeriod = salaryPeriod // Add salary period to form data
 
-    const newData = { ...data, jobType: jobType }
+    const newData = {
+      ...data,
+      jobType: jobType,
+      jobCategory: jobCategory, // Include job category in form data
+      jobSubcategory: jobSubcategory, // Include job subcategory in form data
+    }
 
     try {
       const res = await apiRequest({
@@ -150,24 +167,34 @@ const UploadJob = () => {
             new Date(data.endHiringDate).toISOString().split('T')[0],
           )
           setJobType(data.jobType)
+
           if (data.jobLocationRegion) {
-            const region = philippines.regions.filter(
-              (region) => region.key == data.jobLocationRegion,
-            )[0]
-            setLocationRegion(region)
+            const region = philippines.regions.find(
+              (region) => region.key === data.jobLocationRegion,
+            )
+            if (region) {
+              setLocationRegion(region)
+            }
           }
+
           if (data.jobLocationProvince) {
-            const province = philippines.provinces.filter(
-              (province) => province.key == data.jobLocationProvince,
-            )[0]
-            setLocationProvince(province)
+            const province = philippines.provinces.find(
+              (province) => province.key === data.jobLocationProvince,
+            )
+            if (province) {
+              setLocationProvince(province)
+            }
           }
+
           if (data.jobLocationCity) {
-            const city = philippines.cities.filter(
-              (city) => city.name == data.jobLocationCity,
-            )[0]
-            setLocationCity(city)
+            const city = philippines.cities.find(
+              (city) => city.name === data.jobLocationCity,
+            )
+            if (city) {
+              setLocationCity(city)
+            }
           }
+
           setSalaryPeriod(data.salaryPeriod)
           setValue('desc', data.detail[0].desc)
           setRequirementsText(data.detail[0].requirements)
@@ -210,12 +237,12 @@ const UploadJob = () => {
               })}
               error={errors.jobTitle ? errors.jobTitle?.message : ''}
             />
-
             <div className="w-full flex gap-4">
               <div className="w-1/2">
                 <TextInput
                   name="startHiringDate"
                   label="Start Hiring Date"
+                  required={true}
                   placeholder="Select Date"
                   type="date"
                   min={new Date().toISOString().split('T')[0]} // Set min attribute to today's date
@@ -235,6 +262,7 @@ const UploadJob = () => {
                   name="endHiringDate"
                   label="End Hiring Date"
                   placeholder="Select Date"
+                  required={true}
                   type="date"
                   min={new Date().toISOString().split('T')[0]} // Set min attribute to today's date
                   register={register('endHiringDate', {
@@ -246,16 +274,20 @@ const UploadJob = () => {
                 />
               </div>
             </div>
-
             <div className="w-full flex gap-4">
-              <div className={`w-1/2 mt-2`}>
+              <div className={`w-1/4 mt-2`} style={{ zIndex: 9999 }}>
                 <label className="text-gray-600 text-sm mb-1">Job Type</label>
-                <JobTypes jobTitle={jobType} setJobTitle={setJobType} />
+                <JobTypes
+                  required={true}
+                  jobTitle={jobType}
+                  setJobTitle={setJobType}
+                />
               </div>
 
-              <div className="w-1/2">
+              <div className="w-2/4">
                 <TextInput
                   name="salary"
+                  required={true}
                   label="Salary (PHP)"
                   placeholder={`Enter not less than ${minimumSalary}`}
                   type="number"
@@ -288,16 +320,18 @@ const UploadJob = () => {
               </div>
               {/* Dropdown for salary period END */}
             </div>
-
             <div className="w-full flex gap-4">
               <div className="w-1/2 z-9999">
                 <TextInput
                   name="vacancies"
                   label="No. of Vacancies"
                   placeholder="vacancies"
+                  required={true}
                   type="number"
                   register={register('vacancies', {
                     required: 'Vacancies is required!',
+                    validate: (value) =>
+                      value > 0 || 'Number of vacancies must be greater than 0',
                   })}
                   error={errors.vacancies ? errors.vacancies?.message : ''}
                 />
@@ -307,6 +341,7 @@ const UploadJob = () => {
                 <TextInput
                   name="experience"
                   label="Years of Experience"
+                  required={true}
                   placeholder="experience"
                   type="number"
                   register={register('experience', {
@@ -316,7 +351,6 @@ const UploadJob = () => {
                 />
               </div>
             </div>
-
             {/* <TextInput
               name='location'
               label='Job Location'
@@ -327,34 +361,46 @@ const UploadJob = () => {
               })}
               error={errors.location ? errors.location?.message : ""}
             /> */}
-
             {/* Job Categories START */}
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm mb-1">Job Category</label>
+              <label className="text-gray-600 text-sm mb-1">
+                Job Category<span className="text-red-500">*</span>
+              </label>
               <DropdownCategories
+                name="jobCategory"
+                label="Job Category"
+                required={true}
+                categories={categories}
                 selectedCategory={jobCategory}
                 setSelectedCategory={setJobCategory}
-                selectedSubcategory={jobSubcategory}
-                setSelectedSubcategory={setJobSubcategory}
+                placeholder="Select a category"
+                error={errors.jobCategory ? errors.jobCategory?.message : ''}
+                register={register('jobCategory', {
+                  required: 'Job Category is required',
+                })}
+              />
+
+              <DropdownCategories
+                name="jobSubcategory"
+                label="Job Subcategory"
+                required={true}
+                categories={subcategories}
+                selectedCategory={jobSubcategory}
+                setSelectedCategory={setJobSubcategory}
+                placeholder="Select a subcategory"
+                error={
+                  errors.jobSubcategory ? errors.jobSubcategory?.message : ''
+                }
+                register={register('jobSubcategory', {
+                  required: 'Job Subcategory is required',
+                })}
               />
             </div>
 
-            {jobCategory && (
-              <div className="flex flex-col">
-                <label className="text-gray-600 text-sm mb-1">
-                  Job Subcategory
-                </label>
-                <DropdownCategories
-                  title={jobSubcategory}
-                  setTitle={setJobSubcategory}
-                  items={subcategories}
-                  key="subcategories"
-                />
-              </div>
-            )}
-
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm mb-1">Job Region</label>
+              <label className="text-gray-600 text-sm mb-1">
+                Job Region<span className="text-red-500">*</span>
+              </label>
               <Dropdown
                 title={locationRegion}
                 setTitle={onChangeLocationRegion}
@@ -363,7 +409,9 @@ const UploadJob = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm mb-1">Job Province</label>
+              <label className="text-gray-600 text-sm mb-1">
+                Job Province<span className="text-red-500">*</span>
+              </label>
               <Dropdown
                 title={locationProvince}
                 setTitle={onChangeLocationProvince}
@@ -374,7 +422,9 @@ const UploadJob = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label className="text-gray-600 text-sm mb-1">Job City</label>
+              <label className="text-gray-600 text-sm mb-1">
+                Job City<span className="text-red-500">*</span>
+              </label>
               <Dropdown
                 title={locationCity}
                 setTitle={setLocationCity}
@@ -386,7 +436,7 @@ const UploadJob = () => {
             </div>
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm mb-1">
-                Job Description
+                Job Description<span className="text-red-500">*</span>
               </label>
               <textarea
                 className="rounded border border-gray-400 focus:outline-none focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-base px-4 py-2 resize-none"
@@ -394,6 +444,14 @@ const UploadJob = () => {
                 cols={6}
                 {...register('desc', {
                   required: 'Job Description is required!',
+                  minLength: {
+                    value: 100,
+                    message: 'Job Description must be at least 100 characters.',
+                  },
+                  maxLength: {
+                    value: 500,
+                    message: 'Job Description must not exceed 200 characters.',
+                  },
                 })}
                 aria-invalid={errors.desc ? 'true' : 'false'}
               ></textarea>
@@ -403,30 +461,21 @@ const UploadJob = () => {
                 </span>
               )}
             </div>
-
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm mb-1">
-                Skills Requirements
+                Skills Requirements<span className="text-red-500">*</span>
               </label>
-              {/* <textarea
-                id='froala-editor'
-                className='rounded border border-gray-400 focus:outline-none focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-base px-4 py-2 resize-none'
-                rows={4}
-                cols={6}
-                {...register("requirements")}
-              ></textarea> */}
               <FroalaEditorComponent
                 tag="textarea"
                 model={requirementsText}
                 onModelChange={setRequirementsText}
               />
+              {errors.requirements && (
+                <span role="alert" className="text-xs text-red-500 mt-0.5">
+                  {errors.requirements.message}
+                </span>
+              )}
             </div>
-
-            {errMsg && (
-              <span role="alert" className="text-sm text-red-500 mt-0.5">
-                {errMsg}
-              </span>
-            )}
             <div className="mt-2">
               {isLoading ? (
                 <Loading />

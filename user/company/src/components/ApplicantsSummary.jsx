@@ -46,9 +46,11 @@ export default function ApplicantsSummary() {
           </strong>
         </div>
         <div className="bg-white w-[20rem] h-[19rem] p-4 flex flex-col rounded-md border border-gray">
-          <strong className="font-semibold text-l">Job Applied Summary</strong>
+          <strong className="font-semibold text-l">
+            Candidates Qualification
+          </strong>
           <strong className="font-bold text-2xl py-1 text-blue">
-            {totalApplicants} Total Application
+            {totalApplicants} Total Applicants
           </strong>
           <div className="w-full mt-1 flex-1 text-s">
             <ResponsiveContainer width="100%" height="100%">

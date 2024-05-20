@@ -20,41 +20,44 @@ export default function DashboardStatsGrid() {
             {/* Added 'key' prop */}
             <BoxWrapper>
               <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
-                <img src={job} alt="image" className="w-24 h-18 mr-2" /> {/* Added image tag */}
+                <img src={job} alt="image" className="w-24 h-18 mr-2" />{' '}
+                {/* Added image tag */}
               </div>
               <div className="pl-8">
-                <span className="text-sm font-semibold">Job Matches</span>
+                <span className="text-sm font-semibold">Job Available</span>
                 <div className="flex items-center">
                   <strong className="text-xl font-bold">
-                    {item.candidatesReview} New Job Suited
+                    {item.candidatesReview} Job Posted
                   </strong>
                 </div>
               </div>
             </BoxWrapper>
             <BoxWrapper>
               <div className="rounded-full h-12 w-16 bg-dark-yellow flex items-center justify-center">
-                <img src={interview} alt="image" className="w-24 h-18 mr-2" /> {/* Added image tag */}
+                <img src={interview} alt="image" className="w-24 h-18 mr-2" />{' '}
+                {/* Added image tag */}
               </div>
-              <div >
-                <span className="text-sm font-semibold">
-                  Schedule for Interview
-                </span>
+              <div>
+                <span className="text-sm font-semibold">Job Application</span>
                 <div className="flex items-center">
                   <strong className="text-xl font-bold">
-                    {item.toInterview} Candidates for Interview
+                    {item.toInterview} All Applicants
                   </strong>
                 </div>
               </div>
             </BoxWrapper>
             <BoxWrapper>
               <div className="rounded-full h-12 w-16 bg-green flex items-center justify-center">
-                <img src={messages} alt="image" className="w-24 h-18 mr-2" /> {/* Added image tag */}
+                <img src={messages} alt="image" className="w-24 h-18 mr-2" />{' '}
+                {/* Added image tag */}
               </div>
               <div className="pl-4">
-                <span className="text-sm font-semibold">Messages Received</span>
+                <span className="text-sm font-semibold">
+                  Archived Job Posts
+                </span>
                 <div className="flex items-center">
                   <strong className="text-xl font-bold">
-                    {item.receivedMessages} messages
+                    {item.receivedMessages} Archived Jobs
                   </strong>
                 </div>
               </div>
