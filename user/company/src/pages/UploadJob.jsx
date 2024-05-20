@@ -361,7 +361,7 @@ const UploadJob = () => {
               })}
               error={errors.location ? errors.location?.message : ""}
             /> */}
-            {/* Job Categories START */}
+            {/* Job Categories START
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm mb-1">
                 Job Category<span className="text-red-500">*</span>
@@ -395,7 +395,7 @@ const UploadJob = () => {
                   required: 'Job Subcategory is required',
                 })}
               />
-            </div>
+            </div> */}
 
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm mb-1">

@@ -26,7 +26,7 @@ const CategoryProgress = ({ category, navigate }) => {
   }, [category.currentQuestion, category.totalQuestions])
 
   const handleButtonClick = () => {
-    navigate('skills-assessment/select-category')
+    navigate(`skills-assessment/select-category/${category.name}`)
   }
 
   return (
@@ -81,10 +81,26 @@ const CategoryProgress = ({ category, navigate }) => {
           <Typography variant="body2">
             {category.currentQuestion} of {category.totalQuestions} Questions
           </Typography>
-          <Typography variant="body2">
-            {/* {category.totalQuestions - category.currentQuestion} Remaining */}
-            {category.score} out of {category.totalPoints}
+          <Typography
+            variant="body2"
+            style={{
+              color:
+                category.score !== undefined
+                  ? category.score / category.totalPoints >= 0.6
+                    ? 'green'
+                    : 'red'
+                  : '',
+            }}
+          >
+            {category.score !== undefined ? (
+              <>
+                {category.score} out of {category.totalPoints}
+              </>
+            ) : (
+              ''
+            )}
           </Typography>
+
           <button
             style={{
               marginTop: '10px',

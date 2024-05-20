@@ -11,50 +11,72 @@ import JobCard2 from '@/components/JobCard'
 import ProgressBar from './ProgressBar'
 import { isEmpty } from 'lodash'
 import {
-  behavioralAssessment,
+  selfAssessment,
   softSkillsQuestionnaires,
   technicalSkillsQuestionnaires,
 } from './constants'
 import { JobAvailable } from '@/components'
+import { generateSelfAssessment } from './selfAssessmentSummary.js'
 
 const JobMatchedDashboard = () => {
   const [matchedJobs, setMatchedJobs] = useState([])
   const [isFetching, setIsFetching] = useState(false)
   const [assessmentResult, setAssessmentResults] = useState('')
+  const [softSkillsResult, setSoftSkillsResult] = useState('')
+  const [selfAssessmentSummary, setSelfAssessmentSummary] = useState('')
 
-  useEffect(() => {
-    setIsFetching(true)
-    setTimeout(() => {
-      const dummyMatchedJobs = searchJob({
-        query: ['public speaking', 'communication'],
-        k: 5,
-      })
-      setMatchedJobs(dummyMatchedJobs)
-      setIsFetching(false)
-    }, 1500)
-  }, [])
+  const totalPointsTech = technicalSkillsQuestionnaires.reduce(
+    (total, item) => {
+      if (item && typeof item.points === 'number') {
+        return total + item.points
+      } else {
+        return total
+      }
+    },
+    0,
+  )
+
+  const totalPointsSoft = softSkillsQuestionnaires.reduce((total, item) => {
+    if (item && typeof item.points === 'number') {
+      return total + item.points
+    } else {
+      return total
+    }
+  }, 0)
 
   const categories = [
     {
       name: 'Technical Skills Assessment',
-      currentQuestion: localStorage.getItem('totalQuestionsAnswered'),
+      currentQuestion: localStorage.getItem(
+        'technicalquestions-totalQuestionsAnswered',
+      ),
       totalQuestions: technicalSkillsQuestionnaires?.length,
-      score: localStorage.getItem('score'),
-      totalPoints: 95,
+      score:
+        localStorage.getItem('technicalquestions-score') !== null
+          ? localStorage.getItem('technicalquestions-score')
+          : undefined,
+      totalPoints: totalPointsTech,
     },
     {
       name: 'Soft Skills Assessment',
-      currentQuestion: 7,
+      currentQuestion: localStorage.getItem('Literacy-totalQuestionsAnswered'),
       totalQuestions: softSkillsQuestionnaires?.length,
+      score:
+        localStorage.getItem('Literacy-score') !== null
+          ? localStorage.getItem('Literacy-score')
+          : undefined,
+      totalPoints: totalPointsSoft,
     },
     {
-      name: 'Behavioral Assessment',
-      currentQuestion: 5,
-      totalQuestions: behavioralAssessment?.length,
+      name: 'Self Assessment Tool',
+      currentQuestion: localStorage.getItem(
+        'SelfAssessmentQuestions-totalQuestionsAnswered',
+      ),
+      totalQuestions: selfAssessment?.length,
     },
   ]
 
-  const evaluateSkills = (score) => {
+  const evaluateTechnicalSkills = (score) => {
     if (score >= 0.8 * 95) {
       return 'Advanced proficiency in basic math, math problem-solving, reading comprehension, writing, and digital literacy.'
     } else if (score >= 0.6 * 95 && score <= 0.79 * 95) {
@@ -66,16 +88,58 @@ const JobMatchedDashboard = () => {
     }
   }
 
+  const evaluateSoftSkills = (score) => {
+    if (score >= 0.8 * totalPointsSoft) {
+      return 'Excellent soft skills, demonstrating strong communication, teamwork, and problem-solving abilities.'
+    } else if (score >= 0.6 * totalPointsSoft) {
+      return 'Good soft skills, showing solid communication, teamwork, and problem-solving abilities.'
+    } else if (score >= 0.4 * totalPointsSoft) {
+      return 'Moderate soft skills, with room for improvement in communication, teamwork, and problem-solving.'
+    } else {
+      return 'Needs significant improvement in soft skills, including communication, teamwork, and problem-solving.'
+    }
+  }
+
+  // Handles summary for technical skills questions
   useEffect(() => {
-    const score = localStorage.getItem('score')
-    const _result = evaluateSkills(score)
-    setAssessmentResults(_result)
-    localStorage.setItem('resultAssessment', _result)
+    const techScore = localStorage.getItem('technicalquestions-score')
+    const techResult = evaluateTechnicalSkills(techScore)
+    setAssessmentResults(techResult)
+    localStorage.setItem('resultAssessment', techResult)
   }, [])
 
-  const handleButtonClick = () => {
-    // Define functionality for the button click event here
-  }
+  // Handles summary for soft skills questions
+  useEffect(() => {
+    const softScore = localStorage.getItem('Literacy-score')
+    const softResult = evaluateSoftSkills(softScore)
+    setSoftSkillsResult(softResult)
+    localStorage.setItem('softSkillsResult', softResult)
+  }, [])
+
+  // Handles summary for self assessment questions
+  useEffect(() => {
+    const assessmentDataString = localStorage.getItem(
+      'SelfAssessmentQuestions-answers',
+    )
+
+    if (assessmentDataString) {
+      console.log('Retrieved data from localStorage:', assessmentDataString)
+
+      try {
+        const assessmentData = JSON.parse(assessmentDataString)
+        console.log('Parsed assessment data:', assessmentData)
+
+        const generatedSelfAssessmentSummary =
+          generateSelfAssessment(assessmentData)
+        setSelfAssessmentSummary(generatedSelfAssessmentSummary)
+        console.log(selfAssessmentSummary)
+      } catch (error) {
+        console.error('Error parsing assessment data from localStorage:', error)
+      }
+    } else {
+      console.warn('No assessment data found in localStorage.')
+    }
+  }, [])
 
   return (
     <Container maxWidth="xl" style={{ marginTop: '20px' }}>
@@ -123,10 +187,27 @@ const JobMatchedDashboard = () => {
                     >
                       {category.name}
                     </Typography>
-                    <Typography variant="body1" style={{ color: 'green' }}>
-                      Total Score: {category.score} out of{' '}
-                      {category.totalPoints}
+                    <Typography
+                      variant="body2"
+                      style={{
+                        color:
+                          category.score !== undefined && category.score !== 0
+                            ? category.score / category.totalPoints >= 0.6
+                              ? 'green'
+                              : 'red'
+                            : '',
+                      }}
+                    >
+                      {category.score !== undefined && category.score !== 0 ? (
+                        <>
+                          {category.score} out of {category.totalPoints}
+                        </>
+                      ) : (
+                        // ''
+                        'Score not available'
+                      )}
                     </Typography>
+
                     <Typography
                       variant="body2"
                       style={{
@@ -136,16 +217,23 @@ const JobMatchedDashboard = () => {
                         height: '100vh',
                       }}
                     >
-                      {category.score
-                        ? assessmentResult
-                        : 'Assessment not completed'}
+                      {category.name === 'Technical Skills Assessment' &&
+                        assessmentResult}
+                      {category.name === 'Soft Skills Assessment' &&
+                        softSkillsResult}
+                      {category.name === 'Self Assessment Tool' &&
+                        selfAssessmentSummary}
                     </Typography>
                   </Paper>
                 </Grid>
               ))}
               <br />
 
-              <JobAvailable showTopJobs={true} showHeader={false} />
+              <JobAvailable
+                showTopJobs={true}
+                showHeader={false}
+                showBasedSkills={false}
+              />
             </Grid>
           </Paper>
         </Grid>
@@ -173,22 +261,5 @@ const JobMatchedDashboard = () => {
     </Container>
   )
 }
-
-// async function searchJob(payload) {
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     'Access-Control-Allow-Credentials': true,
-//   };
-//   try {
-//     const response = await axios.post('http://127.0.0.1:5000/match', payload, {
-//       headers: headers,
-//     });
-//     console.log(response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.log(error);
-//     throw error;
-//   }
-// }
 
 export default JobMatchedDashboard

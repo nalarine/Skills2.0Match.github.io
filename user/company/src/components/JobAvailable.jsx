@@ -5,9 +5,8 @@ import JobCard from '../components/JobCard' // Import your JobCard component
 import { useSelector } from 'react-redux'
 import DashboardStatsGrid from '../components/DashboardStatsGrid'
 import { semanticSearch } from '../utils/SemanticSearch.jsx'
-import { result } from 'lodash'
 
-const JobAvailable = ({ showTopJobs, showHeader }) => {
+const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
   const { user } = useSelector((state) => state.user)
   const [postedJobs, setPostedJobs] = useState([])
   const [isFetching, setIsFetching] = useState(false)
@@ -20,7 +19,6 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
 
     const fetchJobs = async () => {
       if (!user?._id) {
-        // No user id available, cannot fetch jobs
         console.error('No user ID available, skipping jobs fetch.')
         return
       }
@@ -38,35 +36,36 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
         for (const job of response.data || []) {
           jobDetails.push(job.detail[0].desc)
         }
-        // console.log(jobDetails)
+
         const userResponse = await apiRequest({
           url: `/users/get-user`,
           token: JSON.parse(localStorage.getItem('userInfo')).token,
           method: 'GET',
         })
         const userSkills = userResponse.user.skills
+
         // Uses semanticSearch for job matching
-        const matchedJobItems = await semanticSearch(jobDetails, userSkills) // Query from User-defined skills
-        // Semantic search using assessment result as query
+        const matchedJobItems = await semanticSearch(jobDetails, userSkills)
 
-        if (resultAssessment) {
-          const matchedJobItemsAssessmentBased = await semanticSearch(
-            jobDetails,
-            resultAssessment,
-          )
+        // Semantic search using assessment result as query (if available)
+        const matchedJobItemsAssessmentBased = resultAssessment
+          ? await semanticSearch(jobDetails, resultAssessment)
+          : []
 
-          setMatchedJobAssessment(matchedJobItemsAssessmentBased.slice(0, 3))
-          setResultAssessment(resultAssessment)
-        }
-        console.log(matchedJobItems.slice(0, 3))
-        console.log(matchedJobsAssessment)
+        // Combine matched job items based on skills and assessment
+        const combinedMatchedJobs = [
+          ...matchedJobItems,
+          ...matchedJobItemsAssessmentBased,
+        ]
 
-        // Set matched jobs to state
-        if (showTopJobs === true) {
-          setMatchedJobs(matchedJobItems.slice(0, 3))
-        } else {
-          setMatchedJobs(matchedJobItems)
-        }
+        // Filter matched jobs based on top keys (implementation assumed in semanticSearch)
+        const filteredMatchedJobs = combinedMatchedJobs.slice(0, 3) // Fallback: show top 3
+
+        setMatchedJobs(filteredMatchedJobs)
+        // console.log(matchedJobs)
+        setMatchedJobAssessment(matchedJobItemsAssessmentBased)
+
+        // console.log(matchedJobsAssessment)
       } catch (error) {
         console.error('Error fetching jobs:', error)
       }
@@ -75,10 +74,6 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
 
     fetchJobs()
   }, [user?._id])
-
-  if (!user?._id) {
-    return <div>No user data available.</div>
-  }
 
   return (
     <div
@@ -92,17 +87,24 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
       ) : (
         ''
       )}
-      <div className="flex flex-row justify-between items-center">
-        <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
-          Best jobs matched based on user-defined skills
-        </strong>
-      </div>
-      <div className="w-full flex flex-wrap gap-4 justify-center ">
-        {matchedJobs.map((matchedJob, index) => (
-          <JobCard job={postedJobs[matchedJob.document]} key={index} />
-        ))}
-      </div>
-      {resultAssessment && resultAssessment?.length > 0 && (
+      {showBasedSkills ? (
+        <>
+          <div className="flex flex-row justify-between items-center">
+            <strong className="font-bold text-2xl mb-4 ml-20 mt-5">
+              Best jobs matched to your defined skills
+            </strong>
+          </div>
+
+          <div className="w-full flex flex-wrap gap-4 justify-center">
+            {matchedJobs.map((matchedJob, index) => (
+              <JobCard job={postedJobs[matchedJob]} key={index} /> // Assuming matchedJob is the job object
+            ))}
+          </div>
+        </>
+      ) : (
+        ''
+      )}
+      {showTopJobs ? (
         <>
           <div className="flex flex-row justify-between items-center mt-5 ml-20">
             <strong className="font-bold text-2xl mb-4">
@@ -111,10 +113,12 @@ const JobAvailable = ({ showTopJobs, showHeader }) => {
           </div>
           <div className="w-full flex flex-wrap gap-4 justify-center">
             {matchedJobsAssessment.map((matchedJob, index) => (
-              <JobCard job={postedJobs[matchedJob.document]} key={index} />
+              <JobCard job={postedJobs[matchedJob]} key={index} />
             ))}
           </div>
         </>
+      ) : (
+        ''
       )}
       {isFetching && <Loading />}
     </div>
