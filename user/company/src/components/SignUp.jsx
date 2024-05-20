@@ -47,29 +47,37 @@ const SignUp = () => {
       alert('Please verify that you are not a robot.');
       return;
     }
-
+  
     let URL = null;
     if (isRegister) {
       URL = accountType === 'seeker' ? 'auth/register' : 'companies/register';
     } else {
       URL = accountType === 'seeker' ? 'auth/login' : 'companies/login';
     }
-
+  
     try {
       setLoading(true);
       setLoadingText(isRegister ? 'Creating Account...' : 'Logging in...');
-
+  
       const res = await apiRequest({
         url: URL,
         data: data,
         method: 'POST',
       });
-
+  
       if (res?.status === 'failed') {
-        if (res?.message === 'Email address already exists') {
-          setErrMsg('Email Address already exists');
+        if (isRegister) {
+          if (res?.message === 'Email address already exists') {
+            setErrMsg('Email Address already exists');
+          } else {
+            setErrMsg('Registration failed. Please try again.');
+          }
         } else {
-          setErrMsg('Incorrect email or password.');
+          if (res?.message === 'Invalid email or password') {
+            setErrMsg('Invalid email or password.');
+          } else {
+            setErrMsg('Login failed. Please check your credentials and try again.');
+          }
         }
         setLoading(false);
       } else {
@@ -84,19 +92,14 @@ const SignUp = () => {
         }
       }
     } catch (error) {
+      console.error('API Request Error:', error);
+      setErrMsg('Please check you credentials and try again.');
       setLoading(false);
-      if (error.response && error.response.status === 400) {
-        if (error.response.data.errors.password) {
-          setErrMsg(error.response.data.errors.password.message);
-        } else {
-          setErrMsg('Validation error occurred.');
-        }
-      } else {
-        setErrMsg('An error occurred.');
-      }
     }
   };
-
+  
+  
+  
   const handleReCaptchaChange = (isChecked) => {
     setReCaptchaVerified(isChecked);
   };
@@ -121,14 +124,14 @@ const SignUp = () => {
         data: { email: forgotPasswordEmail },
       });
   
-      if (res && res.status === 200) {
+      if (res.success) {
         setSuccessMessage('Password reset email sent successfully');
         setErrMsg(''); // Reset error message
       } else {
-        setErrMsg('An error occurred while sending the password reset email');
+        setErrMsg('');
       }
     } catch (error) {
-      setErrMsg('An error occurred while sending the password reset email');
+      setErrMsg('');
       console.error('Error sending password reset email:', error);
     } finally {
       setForgotPasswordModalOpen(false);
@@ -166,6 +169,8 @@ const SignUp = () => {
             Company Account
           </button>
         </div>
+
+        {errMsg && <div className="text-red-600">{errMsg}</div>}
 
         <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
         <TextInput
@@ -416,20 +421,6 @@ const SignUp = () => {
                       </span>
                     </p>
                   </div>
-          {errMsg && (
-            <Transition
-              show={errMsg !== ''}
-              enter="transition-opacity duration-500"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity duration-500"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <p className="text-red-500 text-center">{errMsg}</p>
-            </Transition>
-          )}
-
           {successMessage && (
             <Transition
               show={successMessage !== ''}
