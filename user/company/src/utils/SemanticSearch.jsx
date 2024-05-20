@@ -4,7 +4,7 @@ import axios from 'axios'
 let cache = {}
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTIxNzgzYTgtZDU0NC00MjkyLWFiM2UtYjU3ZDI4MzkxZGUyIiwidHlwZSI6ImFwaV90b2tlbiJ9.50Zi5BaZX8vjKHPx0c7_fzxv4enp6pfjOvQN2-26r0k'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjkxMmU0MWUtNTYwNi00OWM3LWJiODgtZTJlYTNkMmQwYzY4IiwidHlwZSI6ImFwaV90b2tlbiJ9.NenS4n9wen9Xm1S5fB-RZhU1G1ArLPU7BxSDnN9i1RY'
 
 export async function semanticSearch(texts, query) {
   const cacheKey = JSON.stringify({ texts, query })
