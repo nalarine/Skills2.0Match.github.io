@@ -470,9 +470,9 @@ const UploadJob = () => {
                 model={requirementsText}
                 onModelChange={setRequirementsText}
               />
-              {errors.requirements && (
+              {!requirementsText && (
                 <span role="alert" className="text-xs text-red-500 mt-0.5">
-                  {errors.requirements.message}
+                  Skills Requirements are required!
                 </span>
               )}
             </div>
