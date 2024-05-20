@@ -1,44 +1,45 @@
-import React, { useState, useEffect } from 'react'
-import { apiRequest } from '../../utils/index'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import React, { useState, useEffect } from 'react';
+import { apiRequest } from '../../utils/index';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 export default function AdminGenerateReports() {
-  const [reportType, setReportType] = useState('')
-  const [users, setUsers] = useState([])
-  const [data, setData] = useState([]);
+  const [reportType, setReportType] = useState('');
+  const [users, setUsers] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [companies, setCompanies] = useState([]);
-  const [loading, setLoading] = useState(true)
-  const [loadingCompanies, setLoadingCompanies] = useState(true);
-  const [isActionsOpen, setIsActionsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState('Create Report')
-  const [showAllApplicants, setShowAllApplicants] = useState(false)
-  const [showAllCompany, setShowAllCompany] = useState(false)
-  const [showAllJobs, setShowAllJobs] = useState(false)
-  const [dateRange, setDateRange] = useState([null, null])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [newUser, setNewUser] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    birthdate: '',
-    password: '',
-    userType: 'user',
-  })
-  const [startDate, endDate] = dateRange
+  const [loading, setLoading] = useState(true);
+  const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [jobMetrics, setJobMetrics] = useState({
+    totalJobs: 0,
+    totalVacancies: 0,
+    jobsPerCompany: {},
+    jobsPerType: {},
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const usersPerPage = 10;
+
+  const [startDate, endDate] = dateRange;
 
   function calculateAge(birthdate) {
-    const birthday = new Date(birthdate)
-    const today = new Date()
-    let age = today.getFullYear() - birthday.getFullYear()
-    const m = today.getMonth() - birthday.getMonth()
+    const birthday = new Date(birthdate);
+    const today = new Date();
+    let age = today.getFullYear() - birthday.getFullYear();
+    const m = today.getMonth() - birthday.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
-      age--
+      age--;
     }
-    return age
+    return age;
   }
 
   const fetchJobs = async () => {
@@ -52,10 +53,11 @@ export default function AdminGenerateReports() {
         const modifiedJobs = response.data.map((job) => ({
           ...job,
           id: job._id,
-          jobType: job.jobType || '', // Populate jobType
-          vacancies: job.vacancies || 0, // Populate vacancies
+          jobType: job.jobType || '',
+          vacancies: job.vacancies || 0,
         }));
         setJobs(modifiedJobs);
+        calculateJobMetrics(modifiedJobs); // Calculate job metrics after fetching jobs
         setLoading(false);
       } else {
         console.error('Error: Jobs data is missing or not an array');
@@ -67,42 +69,65 @@ export default function AdminGenerateReports() {
     }
   };
 
-    useEffect(() => {
-      fetchUsers();
-      fetchCompanies(); // Fetch companies when component mounts
-      fetchJobs(); // Fetch jobs when component mounts
-    }, []);
+  const calculateJobMetrics = (jobs) => {
+    const totalJobs = jobs.length;
+    const totalVacancies = jobs.reduce((sum, job) => sum + job.vacancies, 0);
+
+    const jobsPerCompany = jobs.reduce((acc, job) => {
+      acc[job.company] = (acc[job.company] || 0) + 1;
+      return acc;
+    }, {});
+
+    const jobsPerType = jobs.reduce((acc, job) => {
+      acc[job.jobType] = (acc[job.jobType] || 0) + 1;
+      return acc;
+    }, {});
+
+    setJobMetrics({ totalJobs, totalVacancies, jobsPerCompany, jobsPerType });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchCompanies(); // Fetch companies when component mounts
+    fetchJobs(); // Fetch jobs when component mounts
+  }, []);
 
   useEffect(() => {
     if (startDate && endDate) {
-      fetchUsersWithDateRange() // Fetch users when date range changes
+      fetchUsersWithDateRange(); // Fetch users when date range changes
     } else {
-      fetchUsers() // Fetch all users when date range is cleared
+      fetchUsers(); // Fetch all users when date range is cleared
     }
-  }, [startDate, endDate])
+  }, [startDate, endDate]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (page = 1) => {
+    setLoading(true);
     try {
+      console.log(`Fetching users for page: ${page}`);
       const response = await apiRequest({
-        url: '/users/allusers',
+        url: `/users/allusers?page=${page}&limit=${usersPerPage}`, // Append page and limit to the URL
         method: 'GET',
-      })
+      });
+      console.log('API response:', response);
       const modifiedUsers = response.data.users.map((user) => ({
         ...user,
         id: user._id,
-        birthdate: user.birthdate
-          ? new Date(user.birthdate).toLocaleDateString()
-          : 'N/A',
+        birthdate: user.birthdate ? new Date(user.birthdate).toLocaleDateString() : 'N/A',
         age: user.birthdate ? calculateAge(user.birthdate) : 'N/A',
         createdAt: new Date(user.createdAt).toLocaleDateString(),
-      }))
-      setUsers(modifiedUsers)
-      setLoading(false)
+      }));
+      setUsers(modifiedUsers);
+      setTotalPages(response.data.pages);
+      setLoading(false);
     } catch (error) {
-      console.error('Error fetching users:', error)
-      setLoading(false)
+      console.error('Error fetching users:', error);
+      setLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    fetchUsers(currentPage);
+  }, [currentPage]);
 
   const fetchCompanies = async () => {
     try {
@@ -129,7 +154,7 @@ export default function AdminGenerateReports() {
   };
 
   const fetchUsersWithDateRange = async () => {
-    if (!startDate || !endDate) return // Ensure both dates are selected
+    if (!startDate || !endDate) return; // Ensure both dates are selected
 
     try {
       const response = await apiRequest({
@@ -139,7 +164,7 @@ export default function AdminGenerateReports() {
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
         },
-      })
+      });
       const modifiedUsers = response.data.users.map((user) => ({
         ...user,
         id: user._id,
@@ -148,41 +173,65 @@ export default function AdminGenerateReports() {
           : 'N/A',
         age: user.birthdate ? calculateAge(user.birthdate) : 'N/A',
         createdAt: new Date(user.createdAt).toLocaleDateString(),
-      }))
-      setUsers(modifiedUsers)
-      setLoading(false)
+      }));
+      setUsers(modifiedUsers);
+      setLoading(false);
     } catch (error) {
-      console.error('Error fetching users with date range:', error)
-      setLoading(false)
+      console.error('Error fetching users with date range:', error);
+      setLoading(false);
     }
-  }
+  };
 
   const toggleDropdown = () => {
-    setIsActionsOpen(!isActionsOpen)
-  }
+    setIsActionsOpen(!isActionsOpen);
+  };
 
   const handleAllApplicantsClick = () => {
-    setActiveTab('List of Users')
-    setReportType('userList') // Add this line to set the reportType to 'userList'
-    setShowAllApplicants(true)
-    setShowAllJobs(false)
-    setShowAllCompany(false) // Add this line to hide the company list
-  }
+    setReportType('userList');
+  };
 
   const handleListOfCompaniesClick = () => {
-    setActiveTab('List of Companies');
-    setReportType('userList') // Add this line to set the reportType to 'userList'
-    setShowAllCompany(true)
-    setShowAllJobs(false)
-    setShowAllApplicants(false) // Add this line to hide the applicants list
+    setReportType('companyList');
   };
 
   const handleListOfJobsClick = () => {
-    setActiveTab('List of Companies');
-    setReportType('userList') // Add this line to set the reportType to 'userList'
-    setShowAllCompany(false)
-    setShowAllApplicants(false) // Add this line to hide the applicants list
-    setShowAllJobs(true)
+    setReportType('jobList');
+  };
+
+  const handlePageChange = (pageNumber) => {
+    console.log(`Page changed to: ${pageNumber}`);
+    setCurrentPage(pageNumber);
+  };
+
+  const handleDownloadReport = (type) => {
+    let data;
+    let filename;
+
+    switch (type) {
+      case 'users':
+        data = users;
+        filename = 'users_report.csv';
+        break;
+      case 'companies':
+        data = companies;
+        filename = 'companies_report.csv';
+        break;
+      case 'jobs':
+        data = jobs;
+        filename = 'jobs_report.csv';
+        break;
+      default:
+        return;
+    }
+
+    const csv = data.map(row => Object.values(row).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const getCompanyName = (companyId) => {
@@ -192,40 +241,36 @@ export default function AdminGenerateReports() {
 
   const filteredUsers = users.filter(user =>
     `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
-    const generateReport = (type) => {
-    switch (type) {
-      case 'userList':
-        setShowAllApplicants(true);
-        setShowAllCompany(false);
-        setShowAllJobs(false);
-        break;
-      case 'companyList':
-        setShowAllApplicants(false);
-        setShowAllCompany(true);
-        setShowAllJobs(false);
-        break;
-      case 'jobList':
-        setShowAllApplicants(false);
-        setShowAllCompany(false);
-        setShowAllJobs(true);
-        break;
-      default:
-        setShowAllApplicants(false);
-        setShowAllCompany(false);
-        setShowAllJobs(false);
-    }
+  // Data for charts
+  const jobsChartData = {
+    labels: jobs.map(job => job.jobTitle),
+    datasets: [
+      {
+        label: '# of Vacancies',
+        data: jobs.map(job => job.vacancies),
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      },
+    ],
+  };
+
+  const companiesChartData = {
+    labels: companies.map(company => company.name),
+    datasets: [
+      {
+        label: 'Number of Jobs',
+        data: companies.map(company => jobs.filter(job => job.company === company.id).length),
+        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+      },
+    ],
   };
 
   return (
     <div className="rounded-lg mt-[100px]">
-      <div className="flex items-center gap-x-3">
-        <h2 className="text-xl mb-4 font-bold text-gray-800 dark:text-white">
-          Generate Reports
-        </h2>
-      </div>
-      <div className="flex gap-2 w-[50%]">
+      <ToastContainer />
+
+      <div className="flex gap-2 w-[50%] top-[80px]">
         <div className="relative">
           <button
             onClick={toggleDropdown}
@@ -260,19 +305,19 @@ export default function AdminGenerateReports() {
                 </span>
                 <a
                   className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                  onClick={() => generateReport('userList')} // Update this line
+                  onClick={handleAllApplicantsClick} // Update this line
                 >
                   List of Users
                 </a>
                 <a
                   className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                  onClick={() => generateReport('companyList')}
+                  onClick={handleListOfCompaniesClick}
                 >
                   List of Companies
                 </a>
                 <a
                   className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                  onClick={() => generateReport('jobList')}
+                  onClick={handleListOfJobsClick}
                 >
                   List of Jobs
                 </a>
@@ -353,218 +398,140 @@ export default function AdminGenerateReports() {
           )}
         </div>
       </div>
-      <ToastContainer />
-      {showAllApplicants && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4 mt-8 text-left">
-            List of Applicants
-          </h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Birthdate
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Age
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Date Created
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-left">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900 text-left">
-                            {user.firstName} {user.lastName}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.email}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.birthdate}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.age}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {user.createdAt}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
-      {showAllCompany && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4 mt-8 text-left">
-            List of Companies
-          </h2>
 
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Company Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Registration Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {companies.map((company) => (
-                  <tr key={company.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-left">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900 text-left">
-                            {company.name}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 text-left">
-                        {company.location}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 text-left">
-                        {new Date(company.createdAt).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 text-left">
-                        {company.email}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 text-left">
-                        {company.status}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          {reportType === 'userList' && (
+            <>
+              <h2 className="text-2xl font-bold mb-4">All Applicants</h2>
+              <div className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Search by name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="px-4 py-2 border rounded-md"
+                />
+              </div>
+              <div>
+                <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 font-sm text-green-900 font-semibold text-base">First Name</th>
+                      <th className="px-6 py-4 font-sm text-green-900 font-semibold text-base">Last Name</th>
+                      <th className="px-6 py-4 font-sm text-green-900 font-semibold text-base">Email</th>
+                      <th className="px-6 py-4 font-sm text-green-900 font-semibold text-base">Birthdate</th>
+                      <th className="px-6 py-4 font-sm text-green-900 font-semibold text-base">Age</th>
+                      <th className="px-6 py-4 font-sm text-green-900 font-semibold text-base">Created At</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredUsers.map((user) => (
+                      <tr key={user.id}>
+                        <td className="px-6 py-4">{user.firstName}</td>
+                        <td className="px-6 py-4">{user.lastName}</td>
+                        <td className="px-6 py-4">{user.email}</td>
+                        <td className="px-6 py-4">{user.birthdate}</td>
+                        <td className="px-6 py-4">{user.age}</td>
+                        <td className="px-6 py-4">{user.createdAt}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="flex justify-center mt-4">
+                  <nav className="bg-white rounded-md border border-gray-200">
+                    <ul className="flex">
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <li key={i} className="cursor-pointer">
+                          <button
+                            className={`relative block p-2 px-4 border text-sm leading-5 font-medium focus:z-10 focus:outline-none transition ease-in-out duration-150 ${
+                              currentPage === i + 1
+                                ? 'text-green-700 border-green-700 bg-green-50'
+                                : 'text-gray-700 border-gray-300 hover:text-gray-500 hover:border-gray-300 hover:bg-gray-50'
+                            }`}
+                            onClick={() => handlePageChange(i + 1)}
+                          >
+                            {i + 1}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md" onClick={() => handleDownloadReport('users')}>
+                Download Report
+              </button>
+            </>
           )}
-        </div>
-      )}
-      {showAllJobs && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4 mt-8 text-left">
-            List of Jobs
-          </h2>
 
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <table className="w-full border-collapse bg-white text-left text-sm text-gray-500 font-poppins">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Job Title
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Company
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Job Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Vacancies
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-bold text-green-700 uppercase tracking-wider">
-                    Date Posted
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {jobs.map((job) => (
-                  <tr key={job.id}>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center text-left">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900 text-left">
-                            {job.jobTitle}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {getCompanyName(job.company)}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {job.location}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-left">
-                        {job.jobType}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 text-center">
-                        {job.vacancies}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900 text-left">
-                      {new Date(job.createdAt).toLocaleDateString()}
-                    </div>
-                  </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {reportType === 'companyList' && (
+            <>
+              <h2 className="text-2xl font-bold mb-4">List of Companies</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="border p-2">Company Name</th>
+                      <th className="border p-2">Location</th>
+                      <th className="border p-2">Registration</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {companies.map((company) => (
+                      <tr key={company.id}>
+                        <td className="border p-2">{company.name}</td>
+                        <td className="border p-2">{company.location}</td>
+                        <td className="border p-2">{new Date(company.createdAt).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md" onClick={() => handleDownloadReport('companies')}>
+                Download Report
+              </button>
+              <h2 className="text-2xl font-bold mt-8 mb-4">Company-wise Job Distribution</h2>
+              <Bar data={companiesChartData} options={{ indexAxis: 'y' }} />
+            </>
           )}
-        </div>
+
+          {reportType === 'jobList' && (
+            <>
+              <h2 className="text-2xl font-bold mb-4">List of Jobs</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="border p-2">Job Title</th>
+                      <th className="border p-2">Company</th>
+                      <th className="border p-2">Job Type</th>
+                      <th className="border p-2">Vacancies</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {jobs.map((job) => (
+                      <tr key={job.id}>
+                        <td className="border p-2">{job.jobTitle}</td>
+                        <td className="border p-2">{getCompanyName(job.company)}</td>
+                        <td className="border p-2">{job.jobType}</td>
+                        <td className="border p-2">{job.vacancies}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md" onClick={() => handleDownloadReport('jobs')}>
+                Download Report
+              </button>
+              <h2 className="text-2xl font-bold mt-8 mb-4">Job-wise Vacancy Distribution</h2>
+              <Bar data={jobsChartData} options={{ indexAxis: 'y' }} />
+            </>
+          )}
+        </>
       )}
     </div>
-  )
+  );
 }
