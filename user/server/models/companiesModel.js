@@ -27,7 +27,10 @@ const companySchema = new Schema({
   jobPosts: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
   applicants: [ { type: Object }],
   application: [{ type: Schema.Types.ObjectId, ref: "Users" }],
-});
+  createdAt: { type: Date, default: Date.now } // New field for creation date
+},
+{ timestamps: true }
+);
 
 // middlewares
 companySchema.pre("save", async function () {
