@@ -3,9 +3,9 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 // Use the actual image paths
-import retail from '../../assets/retail.png'
-import img1 from '../../assets/customer.jpg'
-import img2 from '../../assets/food.jpg'
+// import retail from '../../assets/retail.png'
+// import img1 from '../../assets/customer.jpg'
+import img2 from '../../assets/foodservice.png'
 import img3 from '../../assets/construction.jpg'
 import img4 from '../../assets/domestic.png'
 import img5 from '../../assets/informal.jpg'
@@ -13,10 +13,10 @@ import img6 from '../../assets/manufacturing.jpg'
 import img7 from '../../assets/security.jpg'
 import img8 from '../../assets/delivery.jpg'
 import img9 from '../../assets/warehouse.jpg'
-import img10 from '../../assets/childcare.jpg'
-import img11 from '../../assets/data entry.jpg'
-import img12 from '../../assets/entrylevel.jpg'
-import img13 from '../../assets/fitness.jpg'
+// import img10 from '../../assets/childcare.jpg'
+// import img11 from '../../assets/data entry.jpg'
+// import img12 from '../../assets/entrylevel.jpg'
+// import img13 from '../../assets/fitness.jpg'
 import img14 from '../../assets/event staff.jpg'
 import img15 from '../../assets/photography.jpg'
 import img16 from '../../assets/research.jpg'
@@ -25,21 +25,9 @@ import img18 from '../../assets/pet.jpg'
 
 const Data = [
   {
-    id: 1,
-    imgSrc: retail,
-    destTitle: 'Retail and Sales',
-    desc: 'Jobs involving the sale of products or services to customers, often in stores or online.',
-  },
-  {
-    id: 2,
-    imgSrc: img1,
-    destTitle: 'Customer Service',
-    desc: 'Roles dedicated to assisting and resolving customer inquiries to ensure a positive experience.',
-  },
-  {
     id: 3,
     imgSrc: img2,
-    destTitle: 'Food Service and Hospitality',
+    destTitle: 'Food Service',
     desc: 'Positions in the food and hospitality industry, where employees provide food, accommodation, and service to guests.',
   },
   {
@@ -75,7 +63,7 @@ const Data = [
   {
     id: 9,
     imgSrc: img8,
-    destTitle: 'Delivery Driver',
+    destTitle: 'Driver',
     desc: 'Jobs involving the transportation and delivery of goods to customers or businesses.',
   },
   {
@@ -83,60 +71,6 @@ const Data = [
     imgSrc: img9,
     destTitle: 'Warehouse Worker',
     desc: ' Positions responsible for managing and organizing inventory in storage facilities.',
-  },
-  {
-    id: 11,
-    imgSrc: img10,
-    destTitle: 'Childcare Assistant',
-    desc: 'Roles in childcare and early childhood education, assisting in caring for and nurturing children.',
-  },
-  {
-    id: 12,
-    imgSrc: img11,
-    destTitle: 'Data Entry Clerk',
-    desc: 'Jobs that entail inputting and managing data in computer systems.',
-  },
-  {
-    id: 13,
-    imgSrc: img12,
-    destTitle: 'Entry-Level Tradesperson',
-    desc: 'Beginner-level positions in skilled trades like plumbing, electrical work, or carpentry.',
-  },
-  {
-    id: 14,
-    imgSrc: img13,
-    destTitle: 'Fitness Instructor',
-    desc: 'Roles centered on leading and guiding fitness and exercise activities.',
-  },
-  {
-    id: 15,
-    imgSrc: img14,
-    destTitle: 'Event Staff',
-    desc: 'Workers responsible for various tasks at events, including setup, customer service, and cleanup.',
-  },
-  {
-    id: 16,
-    imgSrc: img15,
-    destTitle: 'Photography Assistant',
-    desc: 'Jobs supporting photographers in studios or on-location shoots.',
-  },
-  {
-    id: 17,
-    imgSrc: img16,
-    destTitle: 'Research Assistant',
-    desc: 'Positions providing support to researchers in conducting experiments, collecting data, and aiding research projects.',
-  },
-  {
-    id: 18,
-    imgSrc: img17,
-    destTitle: 'Social Service Aid',
-    desc: 'Jobs focused on assisting individuals and communities in need, often in social work or counseling contexts.',
-  },
-  {
-    id: 19,
-    imgSrc: img18,
-    destTitle: 'Pet Caretaker',
-    desc: 'Roles involving the care and well-being of animals, such as pet sitting and grooming.',
   },
   // Add other data items
 ]
