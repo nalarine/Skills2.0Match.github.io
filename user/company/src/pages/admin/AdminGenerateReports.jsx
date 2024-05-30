@@ -406,7 +406,7 @@ export default function AdminGenerateReports() {
           {reportType === 'userList' && (
             <>
               <h2 className="text-2xl font-bold mb-4">All Applicants</h2>
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <input
                   type="text"
                   placeholder="Search by name..."
@@ -414,7 +414,7 @@ export default function AdminGenerateReports() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="px-4 py-2 border rounded-md"
                 />
-              </div>
+              </div> */}
               <div>
                 <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
                   <thead className="bg-gray-50">
