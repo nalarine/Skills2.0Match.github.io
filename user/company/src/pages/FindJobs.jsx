@@ -215,7 +215,7 @@ const FindJobs = () => {
                 <img
                   class="object-cover object-center mx-auto rounded-lg shadow-2xl h-[470px]"
                   alt="hero"
-                  src="/../../src/assets/findjobs header.svg"
+                  src="/../../src/assets/findjobs header.png"
                 />
               </div>
             </div>
