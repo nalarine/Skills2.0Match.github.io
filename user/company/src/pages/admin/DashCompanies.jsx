@@ -11,7 +11,7 @@ const DashCompanies = () => {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterDate, setFilterDate] = useState('');
+  const [filterDate, setFilterDate] = useState(null); // Change to Date object
 
   useEffect(() => {
     fetchCompanies();
@@ -47,7 +47,7 @@ const DashCompanies = () => {
       company.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     const matchesDate = filterDate
-      ? new Date(company.createdAt).toLocaleDateString('en-CA') === filterDate
+      ? new Date(company.createdAt).toLocaleDateString('en-CA') === filterDate.toLocaleDateString('en-CA') // Compare dates
       : true;
 
     return matchesSearchTerm && matchesDate;
@@ -63,7 +63,7 @@ const DashCompanies = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full md:w-2/3"
         />
-         <div className="w-full md:w-1/3">
+        <div className="w-full md:w-1/3">
           <DatePicker
             selected={filterDate}
             onChange={(date) => setFilterDate(date)}
