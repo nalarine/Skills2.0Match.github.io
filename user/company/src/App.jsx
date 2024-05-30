@@ -6,6 +6,7 @@ import {
   Navbar,
   NewestDeals,
   VerificationSuccess,
+  VerificationSuccessPageCompany,
   PrivacyPolicy,
   TermsOfService,
   ForgotPassword,
@@ -129,6 +130,7 @@ function App() {
     location.pathname.startsWith('/admin/jobs') ||
     location.pathname.startsWith('/admin/companies') ||
     location.pathname.startsWith('/verification-success') ||
+    location.pathname.startsWith('/verification-success-company') ||
     location.pathname.startsWith('/generate-reports') ||
     location.pathname.startsWith('/CHelpCenter') ||
     location.pathname.startsWith('/CSettings') ||
@@ -163,6 +165,7 @@ function App() {
       location.pathname.startsWith('/admin/jobs') ||
       location.pathname.startsWith('/admin/companies') ||
       location.pathname.startsWith('/verification-success') ||
+      location.pathname.startsWith('/verification-success-company') ||
       location.pathname.startsWith('/privacy-policy') ||
       location.pathname.startsWith('/terms-of-service') ||
       location.pathname.startsWith('/generate-reports') ||
@@ -189,6 +192,10 @@ function App() {
         <Route
           path="/verification-success/:verificationToken"
           element={<VerificationSuccess />}
+        />
+          <Route
+          path="/verification-success-company/:verificationToken"
+          element={<VerificationSuccessPageCompany />}
         />
            <Route path="/reset-password/:token" element={<ForgotPassword />} />
         <Route path="/find-jobs" element={<FindJobs />} />

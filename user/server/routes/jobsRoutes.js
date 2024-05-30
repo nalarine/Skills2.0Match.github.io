@@ -12,7 +12,8 @@ import {
   editJob,
   saveJob,
   removeJob,
-  getSavedJobs
+  getSavedJobs,
+  withdrawApplication,
 } from "../controllers/jobController.js";
 
 const router = express.Router();
@@ -39,6 +40,8 @@ router.get("/job-applications/:userId", getJobApplications);
 router.get("/get-job-detail/:id", getJobById);
 
 router.post("/create-job", userAuth, createJob);
+
+router.delete('/:jobId/withdraw-application', withdrawApplication);
 
 // DELETE JOB POST
 router.delete("/delete-job/:id", deleteJobPost);

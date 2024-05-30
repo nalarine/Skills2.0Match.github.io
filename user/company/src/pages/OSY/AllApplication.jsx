@@ -6,8 +6,6 @@ import ViewApplicantCard from '../../components/ViewApplicantCard';
 export default function AllApplication() {
   const { user } = useSelector((state) => state.user);
   const [tableData, setTableData] = useState([]);
-  const [userInfo, setUserInfo] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -17,27 +15,66 @@ export default function AllApplication() {
         url: `/jobs/job-applications/${user._id}`,
         method: 'GET',
         token: user?.token,
-      });
-      let tableData = [];
+      });;
+      let tableData = [];;
       for (let data of res.data) {
         for (let applicant of data.applicants) {
           tableData.push({
             id: data._id, // Make sure to include the job ID here
             companyName: data.companyName,
             ...applicant,
-          });
+          });;
         }
       }
-      setTableData(tableData);
+      setTableData(tableData);;
     } catch (error) {
-      console.log(error);
+      console.log(error);;
       setError('Failed to load data');
     }
-  };
+  };;
 
   useEffect(() => {
     getUser();
   }, []);
+
+  const handleWithdraw = async (jobId) => {
+    try {
+      // Convert jobId to ObjectId format
+      const objectIdJobId = jobId.split('-')[1];
+      await apiRequest({
+        url: `/jobs/${objectIdJobId}/withdraw-application`,
+        method: 'DELETE',
+        token: user?.token,
+      });
+      setTableData((prevData) =>
+        prevData.filter((item) => item.id !== jobId)
+      );
+    } catch (error) {
+      console.error('Failed to withdraw application:', error);
+    }
+  };
+  
+
+  const renderCell = (params, jobId) => (
+    <div className="flex space-x-2">
+      <a
+        href={'/job-detail/' + params.id.split('-')[1]}
+        className="cursor-pointer font-medium text-blue-600 text-green-700 bg-green-100 hover:bg-green-700 hover:text-white px-3 py-2 border rounded-md"
+      >
+        <div className="flex">
+          <div className="mr-1">View</div>
+          <div>Job</div>
+        </div>
+      </a>
+      <a
+  href={`/${jobId}/withdraw-application/${params.id.split('-')[1]}`}
+  className="cursor-pointer font-medium text-red-600 bg-red-100 hover:bg-red-700 hover:text-white px-4 py-2 border rounded-md"
+>
+  Withdraw
+</a>
+
+    </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-2">
@@ -81,12 +118,7 @@ export default function AllApplication() {
                   <td className="py-4 px-6 text-base">{new Date(item.appliedDate).toLocaleDateString()}</td>
                   <td className="py-4 px-6 text-base">{item.jobRole}</td>
                   <td className="py-4 px-6 text-base">
-                    <a
-                      href={`/job-detail/${item.id}`}
-                      className="font-medium text-blue-600 text-green-700 bg-green-100 hover:bg-green-700 hover:text-white px-4 pt-2 pb-2 border rounded-md"
-                    >
-                      View Job
-                    </a>
+                    {renderCell(item)}
                   </td>
                 </tr>
               ))}
@@ -94,11 +126,7 @@ export default function AllApplication() {
           </table>
         </div>
       )}
-      <ViewApplicantCard
-        userInfo={userInfo}
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
+      <ViewApplicantCard />
     </div>
   );
 }

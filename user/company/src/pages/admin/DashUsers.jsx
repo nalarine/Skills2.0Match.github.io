@@ -17,6 +17,7 @@ const DashUsers = () => {
   const [editUser, setEditUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
+  const [birthdateError, setBirthdateError] = useState('');
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
@@ -138,11 +139,27 @@ const DashUsers = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+  
+    if (name === "birthdate") {
+      const birthDate = new Date(value);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const isOSY = age >= 18 && age <= 24;
+  
+      if (!isOSY) {
+        setBirthdateError("Birthdate must be between 18 to 24 years old.");
+      } else {
+        setBirthdateError(""); // Reset error if birthdate is within the range
+      }
+    }
+  
     setNewUser((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
+
+  
 
   const handleSubmit = async () => {
     try {
@@ -345,18 +362,20 @@ const DashUsers = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
-            label="Birthdate"
-            name="birthdate"
-            type="date"
-            value={newUser.birthdate}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+         <TextField
+          label="Birthdate"
+          name="birthdate"
+          type="date"
+          value={newUser.birthdate}
+          onChange={handleInputChange}
+          fullWidth
+          margin="normal"
+          error={!!birthdateError} // Set error state based on whether there's an error message
+          helperText={birthdateError} // Display the error message
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
           <TextField
             label="Password"
             name="password"

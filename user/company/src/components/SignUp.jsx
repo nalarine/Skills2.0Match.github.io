@@ -68,15 +68,15 @@ const SignUp = () => {
       if (res?.status === 'failed') {
         if (isRegister) {
           if (res?.message === 'Email address already exists') {
-            setErrMsg('Email Address already exists');
+            setErrMsg('User with that email already exist');
           } else {
-            setErrMsg('Registration failed. Please try again.');
+            setErrMsg('Email Already Registered. Please use another email.');
           }
         } else {
           if (res?.message === 'Invalid email or password') {
             setErrMsg('Invalid email or password.');
           } else {
-            setErrMsg('Login failed. Please check your credentials and try again.');
+            setErrMsg('Your email or password is incorrect. Please try again.');
           }
         }
         setLoading(false);

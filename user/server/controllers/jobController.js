@@ -680,3 +680,42 @@ export const getSavedJobs = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const withdrawApplication = async (req, res) => {
+    const { jobId } = req.params;
+    const { userId } = req.body;
+
+    try {
+        // Log the incoming request for debugging
+        console.log(`Withdraw Application Request: jobId=${jobId}, userId=${userId}`);
+
+        // Find the job
+        const job = await Jobs.findById(jobId);
+
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        // Ensure the user withdrawing the application is the applicant
+        if (!job.applicants || !Array.isArray(job.applicants)) {
+            return res.status(403).json({ message: 'Unauthorized action' });
+        }
+
+        const applicantIndex = job.applicants.findIndex(app => app.userId.toString() === userId);
+
+        if (applicantIndex === -1) {
+            return res.status(403).json({ message: 'Unauthorized action' });
+        }
+
+        // Remove the applicant
+        job.applicants.splice(applicantIndex, 1);
+        await job.save();
+
+        res.status(200).json({ message: 'Application withdrawn successfully' });
+    } catch (error) {
+        // Log the error for debugging
+        console.error('Error in withdrawApplication:', error);
+
+        res.status(500).json({ message: 'Server error', error });
+    }
+};

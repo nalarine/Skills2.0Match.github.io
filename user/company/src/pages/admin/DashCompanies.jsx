@@ -8,7 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const DashCompanies = () => {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterDate, setFilterDate] = useState(null); // Change to Date object
 
   useEffect(() => {
     fetchCompanies();
@@ -69,9 +70,41 @@ const DashCompanies = () => {
       toast.error('Error approving companies. Please try again.');
     }
   };
+  const filteredCompanies = companies.filter((company) => {
+    const matchesSearchTerm = (
+      company.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      company.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      company.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const matchesDate = filterDate
+      ? new Date(company.createdAt).toLocaleDateString('en-CA') === filterDate.toLocaleDateString('en-CA') // Compare dates
+      : true;
+
+    return matchesSearchTerm && matchesDate;
+  });
 
   return (
     <div style={{ paddingTop: '110px', fontFamily: 'Poppins' }}>
+      <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+        <Input
+          icon="search"
+          placeholder="Search by name, location, or email"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full md:w-2/3"
+        />
+        <div className="w-full md:w-1/3">
+          <DatePicker
+            selected={filterDate}
+            onChange={(date) => setFilterDate(date)}
+            placeholderText="Filter by date"
+            className="p-2 border rounded w-full"
+            dateFormat="yyyy-MM-dd"
+          />
+        </div>
+      </div>
+      <Table className="ui compact celled w-full border-collapse bg-white text-left text-sm text-gray-500">
+        <Table.Header className="bg-gray-50">
       <Table className="ui compact celled">
         <Table.Header>
           <Table.Row>

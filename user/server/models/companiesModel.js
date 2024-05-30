@@ -27,6 +27,8 @@ const companySchema = new Schema({
   jobPosts: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
   applicants: [ { type: Object }],
   application: [{ type: Schema.Types.ObjectId, ref: "Users" }],
+  emailVerified: { type: Boolean, default: false }, // New field for email verification
+  verificationToken: { type: String }, // New field for verification token
   createdAt: { type: Date, default: Date.now } // New field for creation date
 },
 { timestamps: true }
