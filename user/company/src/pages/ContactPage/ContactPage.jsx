@@ -63,10 +63,10 @@ const ContactPage = () => {
 
       <div className="homeText text-center relative z-10">
         <h1 data-aos="fade-up" className="title text-white text-6xl font-semibold m-0 flex flex-col items-center mt-20 pl-42 p-8">
-          Navigate to Our Inbox
+          Message Us
         </h1>
         <p data-aos="fade-up" data-aos-duration="2500" className="subTitle text-white opacity-9 text-xl font-weight-300 py-1 mb-5 max-w-70 mx-auto pl-42">
-          We look forward to hearing from you and addressing your needs—stay connected with us!
+          We look forward to hearing from you and addressing your concern to us!
         </p>
       </div>
 

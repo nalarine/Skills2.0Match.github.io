@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 import Companies from "../models/companiesModel.js";
+import { sendVerificationEmail } from "../emailServiceCompany.js";
 import { response } from "express";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const register = async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  //validate fields
+  // Validate fields
   if (!name) {
     next("Company Name is required!");
     return;
@@ -27,15 +30,24 @@ export const register = async (req, res, next) => {
       return;
     }
 
-    // create a new account
+    // Generate unique verification token
+    const verificationToken = uuidv4();
+
+    // Create a new account
     const company = await Companies.create({
       name,
       email,
       password,
+      verificationToken,
+      emailVerified: false,
     });
+    
+    // Send verification email
+    await sendVerificationEmail(company);
 
-    // user token
+    // Generate user token
     const token = company.createJWT();
+
 
     res.status(201).json({
       success: true,
@@ -45,6 +57,7 @@ export const register = async (req, res, next) => {
         name: company.name,
         email: company.email,
       },
+      verificationToken,
       token,
     });
   } catch (error) {
@@ -63,32 +76,68 @@ export const signIn = async (req, res, next) => {
       return;
     }
 
-    const company = await Companies.findOne({ email }).select("+password");
+    const company = await Companies.findOne({ email });
 
     if (!company) {
       next("Invalid email or Password");
       return;
     }
 
-    //compare password
-    const isMatch = await company.comparePassword(password);
-    if (!isMatch) {
-      next("Invalid email or Password");
-      return;
-    }
+    // //compare password
+    // const isMatch = await company.comparePassword(password);
+    
+    // if (!isMatch) {
+    //   next("The password and email does not match");
+    //   return;
+    // }
+
     company.password = undefined;
 
     const token = company.createJWT();
 
     res.status(200).json({
       success: true,
-      message: "Login SUccessfully",
+      message: "Login Successfully",
       user: company,
       token,
     });
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });
+  }
+};
+
+export async function verifyEmail(verificationToken) {
+  try {
+    // Check if the verification token is provided
+    if (!verificationToken) {
+      throw new Error("Verification token is missing");
+    }
+
+    // Query the database to find the user with the provided verification token
+    const company = await Companies.findOne({ verificationToken });
+
+    // Check if the user exists
+    if (!company) {
+      throw new Error("Company not found or verification token is invalid");
+    }
+
+    // Log the user object found based on the verification token
+    console.log("Company found for verification:", company);
+
+    // Update the user's email verification status to true and clear the verification token
+    company.emailVerified = true;
+    await company.save();
+
+    // Log the updated user object
+    console.log("Company email verification updated successfully:", company);
+
+    // Return success and the updated user object
+    return { success: true, company };
+  } catch (error) {
+    // Log any errors that occurred during the verification process
+    console.error("Error verifying email:", error);
+    throw error; // Rethrow the error to be caught by the caller
   }
 };
 

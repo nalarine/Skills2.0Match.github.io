@@ -58,17 +58,17 @@ const SignUp = () => {
     try {
       setLoading(true);
       setLoadingText(isRegister ? 'Creating Account...' : 'Logging in...');
-  
+    
       const res = await apiRequest({
         url: URL,
         data: data,
         method: 'POST',
       });
-  
-      if (res?.status === 'failed') {
+    
+      if (res?.success === false) {
         if (isRegister) {
           if (res?.message === 'Email address already exists') {
-            setErrMsg('User with that email already exist');
+            setErrMsg('User with that email already exists');
           } else {
             setErrMsg('Email Already Registered. Please use another email.');
           }
@@ -93,7 +93,7 @@ const SignUp = () => {
       }
     } catch (error) {
       console.error('API Request Error:', error);
-      setErrMsg('Please check you credentials and try again.');
+      setErrMsg('Please check your credentials and try again.');
       setLoading(false);
     }
   };

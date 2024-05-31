@@ -104,7 +104,7 @@ const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
       ) : (
         ''
       )}
-      {showTopJobs ? (
+      {/* {showTopJobs ? (
         <>
           <div className="flex flex-row justify-between items-center mt-5 ml-20">
             <strong className="font-bold text-2xl mb-4">
@@ -119,7 +119,7 @@ const JobAvailable = ({ showTopJobs, showHeader, showBasedSkills }) => {
         </>
       ) : (
         ''
-      )}
+      )} */}
       {isFetching && <Loading />}
     </div>
   )

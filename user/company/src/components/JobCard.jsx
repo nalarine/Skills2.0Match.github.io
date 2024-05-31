@@ -43,7 +43,7 @@ const JobCard = ({ job, onSave, isSaved }) => {
           <div className="flex gap-3">
             {showSkeleton ? (
               <Skeleton
-                img
+                img="true" // Pass a string value instead of a boolean
                 src={job?.logo}
                 alt={job?.name}
                 className="w-16 h-16"

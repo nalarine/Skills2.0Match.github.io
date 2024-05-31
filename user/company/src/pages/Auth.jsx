@@ -22,24 +22,22 @@ const Auth = () => {
   return (
     <div className="absolute inset-0 w-full h-full object-scale-down z-2">
       <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat lg:bg-left xl:bg-right"
+        className="absolute inset-0 w-full h-full bg-cover bg-cover bg-no-repeat lg:bg-center xl:bg-right"
         style={{ backgroundImage: `url(${bgopen})` }}
       >
-        <div className="absolute inset-0 sm:inset-9 flex justify-start items-center text-white pl-3 mt-8 sm:mt-32">
+        <div className="absolute inset-0 sm:inset-9 flex justify-center items-center text-white pl-3 mt-[20%] sm:mb-[20%]">
           <div data-aos="fade-up" className="text-black">
-            <h1 className="text-3xl sm:text-6xl font-semibold m-0 animated-text text-left pl-3">
-              Seamless <span style={{ color: '#14532D' }}>SKILLS</span>, <br />
-              Best <span style={{ color: '#14532D' }}>MATCHES</span>.
+            <h1 className="text-3xl sm:text-[50px] font-bold m-0 animated-text text-center pl-3">
+            Job Matches for <span class="text-transparent bg-clip-text bg-gradient-to-r to-sky-500 from-emerald-600">Out-of-School Youth</span> 
             </h1>
             <br />
-            <p className="text-lg sm:text-xl opacity-90 font-weight-300 py-1 max-w-xs sm:max-w-lg pl-3 text-left">
-              Great platform for Out-of-School Youth searching for new career
-              heights and passionate about startups.
+            <p className="ml-[24%] font-semibold text-lg sm:text-xl opacity-90 italic font-weight-600 py-1 max-w-xs sm:max-w-lg pl-3 text-center">
+            "Your Perfect Job: Matched to Your Skills"
             </p>
             <br />
             <div className="btn-container pr-4 sm:pr-[12%] pb-8 sm:pb-24">
               <button
-                className="btn py-2 px-4 bg-green-800 text-white rounded-full animate-bounce transition-transform duration-300 transform hover:scale-110"
+                className="ml-[17%] mt-[2%] btn py-2 px-8 text-lg bg-green-600 text-white rounded-full animate-bounce transition-transform duration-300 transform hover:scale-110"
                 onClick={handleGetStarted}
               >
                 Get Started
