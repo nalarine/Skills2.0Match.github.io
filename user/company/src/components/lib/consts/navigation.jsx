@@ -50,14 +50,14 @@ export const DASHBOARD_SIDEBAR_LINKS = [
       <img src={calendar} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
     ),
   },
-  {
-    key: 'messages',
-    label: 'Messages',
-    path: '/messages',
-    icon: (
-      <img src={message} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
-    ),
-  },
+  // {
+  //   key: 'messages',
+  //   label: 'Messages',
+  //   path: '/messages',
+  //   icon: (
+  //     <img src={message} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
+  //   ),
+  // },
 ]
 
 export const DASHBOARD_SIDEBAR_BOTTOM_LINKS = [

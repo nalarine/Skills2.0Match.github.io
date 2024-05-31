@@ -12,7 +12,7 @@ import { Logout } from '../../redux/userSlice';
 import { FiLogOut } from 'react-icons/fi';
 
 const linkClasses =
-  'flex items-center gap-2 font-regular px-3 py-2 hover:bg-light-yellow hover:no-underline rounded-sm text-base';
+  'relative flex items-center py-2 px-3 my-1 rounded-md cursor-pointer transition-colors group hover:bg-green-700'
 
 const SidebarContext = createContext();
 
@@ -27,8 +27,8 @@ const CompanySidebar = () => {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <aside className="h-screen">
-      <nav className="h-full flex flex-col bg-[#C1E1C1] border-r shadow-sm">
+    <aside className="h-screen" style={{ zIndex: 1000 }}>
+      <nav className="h-full flex flex-col bg-[#C1E1C1] border-r shadow-sm transition-all duration-300">
       <div className="p-4 pb-4 flex justify-between items-center">
       {expanded && (
         <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ const CompanySidebar = () => {
       </button>
     </div>
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3 mb-3">
+        <ul className="flex-1 px-3 flex flex-col gap-1.5 pt-2 border-t border-green-500">
             {/* Render the sidebar links */}
             {COMPANY_DASHBOARD_SIDEBAR_LINKS.map((item) => (
               <SidebarLink key={item.key} item={item} pathname={pathname} />
@@ -65,7 +65,7 @@ const CompanySidebar = () => {
           </ul>
         </SidebarContext.Provider>
 
-        <div className="border-t flex p-3">
+        <div className="border-t flex p-3 ml-2">
           <img
             src={profileUrl}
             alt="Profile"
@@ -73,11 +73,11 @@ const CompanySidebar = () => {
           />
           <div
             className={`
-              flex justify-between items-center
-              overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
+            flex justify-between items-center
+            overflow-hidden transition-all duration-500 ease-out  ${expanded ? "w-52 ml-3" : "w-0"}
             `}
           >
-            <div className="leading-4">
+            <div className="leading-4 ml-4">
               <h4 className="font-semibold">{user?.name || 'No First Name'}</h4>
               <span className="text-xs text-gray-600">{user?.email}</span>
             </div>
@@ -102,21 +102,36 @@ function SidebarLink({ item, pathname }) {
       to={item.path}
       className={classNames(
         linkClasses,
-        pathname === item.path && 'bg-green-500', // Add bg-green-500 class conditionally
+        expanded && 'hover:bg-green-500 hover:text-white', // Add hover effect only when expanded
       )}
-      style={{
-        borderRadius: expanded ? '0.5rem' : '0.5rem', // Add border radius conditionally
-      }}
     >
-      {!expanded && <span className="text-xl">{item.icon}</span>}
-      {expanded && (
-        <>
-          <span className="text-xl">{item.icon}</span>
+      <div className="flex items-center">
+        {item.icon}
+        <span
+          className={`overflow-hidden truncate ${
+            expanded ? 'ml-3 text-sm' : 'ml-1 text-xs' // Adjust font size based on expanded state
+          }`} // Adjust marginLeft when expanded
+          style={{ width: expanded ? 'auto' : '0' }}
+        >
           {item.label}
-        </>
+        </span>
+      </div>
+
+      {!expanded && (
+        <div
+          className={`
+          absolute left-full rounded-md px-2 py-1 ml-6
+          bg-green-500 text-black-800 text-sm
+          invisible opacity-20 -translate-x-3 transition-all duration-500
+          group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
+          overflow-hidden truncate  // Add overflow-hidden and truncate classes
+        `}
+        >
+          {item.label}
+        </div>
       )}
     </Link>
-  );
+  )
 }
 
 export default CompanySidebar;

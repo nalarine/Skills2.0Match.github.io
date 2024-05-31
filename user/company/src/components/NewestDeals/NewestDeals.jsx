@@ -71,7 +71,6 @@ const NewestDeals = () => {
   }, []);
 
   return (
-<<<<<<< Updated upstream
     <div className="flex flex-col md:flex-row mt-[620px]">
       {/* About Section */}
       <section className="about section py-12 w-full md:w-1/2 ">
@@ -130,17 +129,6 @@ const NewestDeals = () => {
                 />
               </div>
           </div>
-=======
-    <section className="popular section container mt-[220%] md:mt-[40%] lg:mt-80 xl:mt-[45%] p-6 md:p-12 xl:p-16 min-h-screen">
-    <div className="secContainer">
-      <div className="secHeader">
-        <div className="textDiv" data-aos="fade-right" data-aos-duration="2500">
-          <h2 className="secTitle text-left font-bold text-2xl md:text-3xl mb-4 md:mt-8">
-          Find Your Perfect Job
-          </h2>
-        </div> 
-      </div>
->>>>>>> Stashed changes
 
         </div>
       </section>

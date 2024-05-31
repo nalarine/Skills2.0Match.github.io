@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { CustomButton, JobCard, JobTypes, TextInput } from '../components'
-import { jobs } from '../utils/data'
+import { jobs, jobCategories } from '../utils/data'
 import { apiRequest } from '../utils'
 import { Link, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -13,7 +13,6 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 import philippines from 'philippines'
 import Dropdown from '../components/Dropdown'
 import DropdownCategories from '../components/DropdownCategories'
-import { jobCategories } from '../utils/data'
 
 const UploadJob = () => {
   const { id } = useParams()
@@ -69,6 +68,7 @@ const UploadJob = () => {
     setLocationProvince(defaultProvince)
     setLocationCity(defaultCity)
   }
+
   const onChangeLocationProvince = (v) => {
     const defaultCity = philippines.cities.filter(
       (city) => city.province == v.key,
@@ -115,7 +115,7 @@ const UploadJob = () => {
         setErrMsg({ status: 'success', message: res.message })
         setTimeout(() => {
           window.location.reload()
-        }, 2000)
+        }, 1000)
       }
       setIsLoading(false)
     } catch (error) {
@@ -123,6 +123,7 @@ const UploadJob = () => {
       setIsLoading(false)
     }
   }
+
   const getRecentPost = async () => {
     try {
       const id = user?._id

@@ -54,12 +54,12 @@ export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
       <img src={calendar} alt="Schedule Icon" className="w-[28px] h-[28px]" />
     ),
   },
-  // {
-  //   key: 'reports',
-  //   label: 'Generate Reports',
-  //   path: '/generate-reports',
-  //   icon: <img src={report} alt="Reports Icon" className="w-[28px] h-[28px]" />,
-  // },
+  {
+    key: 'reports',
+    label: 'Generate Reports',
+    path: '/generate-reports',
+    icon: <img src={report} alt="Reports Icon" className="w-[28px] h-[28px]" />,
+  },
   // {
   //   key: 'messages',
   //   label: 'Messages',
