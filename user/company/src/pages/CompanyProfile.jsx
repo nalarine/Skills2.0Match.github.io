@@ -161,7 +161,7 @@ const CompnayForm = ({ open, setOpen }) => {
                     <TextInput
                       name="location"
                       label="Location/Address"
-                      placeholder="eg. Califonia"
+                      placeholder="eg. Manila"
                       type="text"
                       register={register('location', {
                         required: 'Address is required',

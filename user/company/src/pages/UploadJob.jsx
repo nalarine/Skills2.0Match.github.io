@@ -230,7 +230,7 @@ const UploadJob = () => {
             <TextInput
               name="jobTitle"
               label="Job Title"
-              placeholder="eg. Software Engineer"
+              placeholder="eg. Waitress"
               type="text"
               required={true}
               register={register('jobTitle', {

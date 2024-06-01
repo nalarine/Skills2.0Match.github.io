@@ -208,15 +208,15 @@ const DashJobs = () => {
     alignItems: 'center',
     position: 'absolute',
     top: '10px',
-    right: '60px',
+    right: '5px',
     transition: 'background-color 0.3s',
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', marginTop: '7%' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: "90%" }}>
-          <button style={createJobStyle} onClick={handleButtonClick}>
+        <div style={{ width: "100%" }}>
+          <button style={createJobStyle} onClick={handleButtonClick} >
             <AddCircleIcon style={{ marginRight: '5px' }} />
             Post Job
           </button>
@@ -229,7 +229,6 @@ const DashJobs = () => {
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                checkboxSelection
                 components={{
                   header: {
                     cell: () => null,
