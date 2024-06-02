@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Input, Space, Tooltip, Select, DatePicker } from 'antd';
-import { PlusCircleOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, EditOutlined, DeleteOutlined, SearchOutlined  } from '@ant-design/icons';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
@@ -290,45 +290,37 @@ const DashJobs = () => {
                 <table className="w-full border-collapse bg-white text-left text-sm text-gray-500 font-poppins">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Job Title</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Company</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Location</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Job Type</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Salary</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Vacancies</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Start Date</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">End Date</th>
-                      <th scope="col" className="px-6 py-4 font-medium text-gray-900">Actions</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Job Title</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Company</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Location</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Hiring Date</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Type</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md text-center tracking-wide">Salary</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Period</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md text-center tracking-wide">Vacancies</th>
+                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-                    {filteredJobs.map((job) => (
-                      <tr className="hover:bg-gray-50" key={job.id}>
+                    {jobs.map((job) => (
+                      <tr key={job.id}>
                         <td className="px-6 py-4">{job.jobTitle}</td>
                         <td className="px-6 py-4">{getCompanyName(job.company)}</td>
                         <td className="px-6 py-4">{job.location}</td>
+                        <td className="px-6 py-4">Start: {new Date(job.startHiringDate).toLocaleDateString()} <br /> End: {new Date(job.endHiringDate).toLocaleDateString()}</td>
                         <td className="px-6 py-4">{job.jobType}</td>
-                        <td className="px-6 py-4">{job.salary}</td>
-                        <td className="px-6 py-4">{job.vacancies}</td>
-                        <td className="px-6 py-4">{moment(job.startHiringDate).format('YYYY-MM-DD')}</td>
-                        <td className="px-6 py-4">{moment(job.endHiringDate).format('YYYY-MM-DD')}</td>
+                        <td className="px-6 py-4 text-center">{job.salary}</td>
+                        <td className="px-6 py-4">{job.salaryType}</td>
+                        <td className="px-6 py-4 text-center">{job.vacancies}</td>
                         <td className="px-6 py-4">
-                          <div className="flex space-x-2">
+                          <Space size="middle">
                             <Tooltip title="Edit">
-                              <Button
-                                type="primary"
-                                icon={<EditOutlined />}
-                                onClick={() => handleEdit(job)}
-                              />
+                              <Button type="danger" icon={<EditOutlined />} onClick={() => handleEdit(job)} className="bg-green-700 hover:bg-green-900 border-none text-white"/>
                             </Tooltip>
                             <Tooltip title="Delete">
-                              <Button
-                                type="danger"
-                                icon={<DeleteOutlined />}
-                                onClick={() => handleDelete(job)}
-                              />
+                              <Button type="danger" icon={<DeleteOutlined />} onClick={() => handleDelete(job)} className="bg-red-700 hover:bg-red-900 border-none text-white"/>
                             </Tooltip>
-                          </div>
+                          </Space>
                         </td>
                       </tr>
                     ))}
@@ -336,118 +328,144 @@ const DashJobs = () => {
                 </table>
               </div>
             )}
-            <Modal
-              title={editJob ? 'Edit Job' : 'Create Job'}
-              visible={openModal}
-              onOk={handleSubmit}
-              onCancel={handleCloseModal}
-            >
-              <Input
-                name="jobTitle"
-                value={newJob.jobTitle}
-                onChange={handleInputChange}
-                placeholder="Job Title"
-                style={{ marginBottom: '10px' }}
-              />
-              <Select
-                name="company"
-                value={newJob.company}
-                onChange={(value) => handleSelectChange(value, 'company')}
-                placeholder="Company"
-                style={{ width: '100%', marginBottom: '10px' }}
-              >
-                {companies.map((company) => (
-                  <Option key={company.id} value={company.id}>{company.name}</Option>
-                ))}
-              </Select>
-              <Input
-                name="location"
-                value={newJob.location}
-                onChange={handleInputChange}
-                placeholder="Location"
-                style={{ marginBottom: '10px' }}
-              />
-              <TextArea
-                name="desc"
-                value={newJob.desc}
-                onChange={handleInputChange}
-                placeholder="Description"
-                style={{ marginBottom: '10px' }}
-              />
-              <TextArea
-                name="requirements"
-                value={newJob.requirements}
-                onChange={handleInputChange}
-                placeholder="Requirements"
-                style={{ marginBottom: '10px' }}
-              />
-              <Select
-                name="jobType"
-                value={newJob.jobType}
-                onChange={handleJobTypeChange}
-                placeholder="Job Type"
-                style={{ width: '100%', marginBottom: '10px' }}
-              >
-                <Option value="Full-time">Full-time</Option>
-                <Option value="Part-time">Part-time</Option>
-                <Option value="Contract">Contract</Option>
-              </Select>
-              <Input
-                name="salary"
-                value={newJob.salary}
-                onChange={handleInputChange}
-                type="number"
-                placeholder="Salary"
-                style={{ marginBottom: '10px' }}
-              />
-              <Select
-                name="salaryType"
-                value={newJob.salaryType}
-                onChange={(value) => handleSelectChange(value, 'salaryType')}
-                placeholder="Salary Type"
-                style={{ width: '100%', marginBottom: '10px' }}
-              >
-                <Option value="Hour">Hour</Option>
-                <Option value="Day">Day</Option>
-                <Option value="Week">Week</Option>
-                <Option value="Month">Month</Option>
-              </Select>
-              <Input
-                name="vacancies"
-                value={newJob.vacancies}
-                onChange={handleInputChange}
-                type="number"
-                placeholder="Vacancies"
-                style={{ marginBottom: '10px' }}
-              />
-              <DatePicker
-                name="startHiringDate"
-                value={newJob.startHiringDate}
-                onChange={handleStartDateChange}
-                placeholder="Start Hiring Date"
-                style={{ width: '100%', marginBottom: '10px' }}
-                disabledDate={disablePastDates}
-              />
-              <DatePicker
-                name="endHiringDate"
-                value={newJob.endHiringDate}
-                onChange={handleEndDateChange}
-                placeholder="End Hiring Date"
-                style={{ width: '100%', marginBottom: '10px' }}
-                disabledDate={disablePastDates}
-              />
-            </Modal>
-            <Modal
-              title="Confirm Delete"
-              visible={deleteConfirmationOpen}
-              onOk={confirmDelete}
-              onCancel={cancelDelete}
-            >
-              <p>Are you sure you want to delete this job?</p>
-            </Modal>
           </div>
         </div>
       </div>
+
+      <Modal title={editJob ? 'Edit Job' : 'Post New Job'} visible={openModal} onCancel={handleCloseModal} footer={null}>
+        <label>Job Title</label>
+        <Input
+          placeholder="Job Title"
+          name="jobTitle"
+          value={newJob.jobTitle}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <label>Company</label>
+        <Select
+          placeholder="Select Company"
+          name="company"
+          value={newJob.company || undefined}
+          onChange={(value) => handleSelectChange(value, 'company')}
+          style={{ marginBottom: '10px', width: '100%' }}
+        >
+          {companies.map((company) => (
+            <Option key={company.id} value={company.id}>
+              {company.name}
+            </Option>
+          ))}
+        </Select>
+        <label>Location</label>
+        <Input
+          placeholder="Location"
+          name="location"
+          value={newJob.location}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <label>Description</label>
+        <TextArea
+          placeholder="Description"
+          name="desc"
+          value={newJob.desc}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <label>Requirements</label>
+        <TextArea
+          placeholder="Requirements"
+          name="requirements"
+          value={newJob.requirements}
+          onChange={handleInputChange}
+          style={{ marginBottom: '10px' }}
+        />
+        <Space align="baseline" style={{ marginBottom: '10px' }}>
+          <div>
+            <label>Salary Period</label>
+            <Select
+              placeholder="Select Salary Period"
+              name="salaryType"
+              value={newJob.salaryType || undefined}
+              onChange={(value) => handleSelectChange(value, 'salaryType')}
+              style={{ width: '100%', marginBottom: '10px' }}
+            >
+              <Option value="Hour">Hour</Option>
+              <Option value="Day">Day</Option>
+              <Option value="Week">Week</Option>
+              <Option value="Month">Month</Option>
+            </Select>
+          </div>
+          <div>
+            <label>Salary</label>
+            <Input
+              placeholder="Salary"
+              name="salary"
+              value={newJob.salary}
+              onChange={handleInputChange}
+              type="number"
+              style={{ width: '100%', marginBottom: '10px' }}
+            />
+            {newJob.salaryType && newJob.salary < salaryRestrictions[newJob.salaryType] && (
+              <p style={{ color: 'red', marginBottom: '5px' }}>
+                Minimum allowed: {salaryRestrictions[newJob.salaryType]}
+              </p>
+            )}
+          </div>
+        </Space>
+        <label>Job Type</label>
+        <Select
+          placeholder="Select Job Type"
+          name="jobType"
+          value={newJob.jobType || undefined}
+          onChange={handleJobTypeChange}
+          style={{ marginBottom: '20px', width: '100%' }}
+        >
+          <Option value="Full-time">Full-time</Option>
+          <Option value="Part-time">Part-time</Option>
+          <Option value="Contract">Contract</Option>
+        </Select>
+        <label>Vacancies</label>
+        <Input
+          placeholder="Vacancies"
+          name="vacancies"
+          value={newJob.vacancies}
+          onChange={handleInputChange}
+          type="number"
+          style={{ marginBottom: '20px' }}
+        />
+        <label>Start Hiring Date</label>
+        <DatePicker
+          placeholder="Start Hiring Date"
+          value={newJob.startHiringDate}
+          onChange={handleStartDateChange}
+          disabledDate={disablePastDates}
+          style={{ marginBottom: '10px', width: '100%' }}
+        />
+        <label>End Hiring Date</label>
+        <DatePicker
+          placeholder="End Hiring Date"
+          value={newJob.endHiringDate}
+          onChange={handleEndDateChange}
+          disabledDate={disablePastDates}
+          style={{ marginBottom: '20px', width: '100%' }}
+        />
+        <Button type="danger" onClick={handleSubmit} style={{ width: '100%' }} className="bg-green-700 hover:bg-green-900 border-none text-white">
+          {editJob ? 'Update' : 'Submit'}
+        </Button>
+      </Modal>
+
+      <Modal
+        title="Confirm Deletion"
+        visible={deleteConfirmationOpen}
+        onCancel={cancelDelete}
+        onOk={confirmDelete}
+        okText="Yes, Delete"
+        cancelText="Cancel"
+        okButtonProps={{ style: { backgroundColor: '#2F855A', borderColor: '#2F855A' } }}
+      >
+        <p>Are you sure you want to delete this job?</p>
+      </Modal>
+
       <ToastContainer />
     </div>
   );
