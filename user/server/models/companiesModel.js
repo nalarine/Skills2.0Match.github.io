@@ -20,6 +20,13 @@ const companySchema = new Schema({
     minlength: [6, "Password must be at least"],
     select: true,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+  },
   contact: { type: String },
   location: { type: String },
   about: { type: String },
@@ -27,16 +34,14 @@ const companySchema = new Schema({
   jobPosts: [{ type: Schema.Types.ObjectId, ref: "Jobs" }],
   applicants: [ { type: Object }],
   application: [{ type: Schema.Types.ObjectId, ref: "Users" }],
-  emailVerified: { type: Boolean, default: false }, // New field for email verification
-  verificationToken: { type: String }, // New field for verification token
   createdAt: { type: Date, default: Date.now } // New field for creation date
 },
 { timestamps: true }
 );
 
-// middlewares
+// Middleware to hash password before saving
 companySchema.pre("save", async function () {
-  if (!this.isModified) return;
+  if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });

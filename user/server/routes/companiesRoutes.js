@@ -17,8 +17,6 @@ import {
 } from "../controllers/companiesController.js";
 import userAuth from "../middlewares/authMiddleware.js";
 import { deleteUser } from "../controllers/userController.js";
-// Import your email verification function from your email service file
-import { sendVerificationEmail } from "../emailServiceCompany.js";
 
 const router = express.Router();
 
@@ -33,6 +31,8 @@ const limiter = rateLimit({
 // REGISTER
 router.post("/register", limiter, register);
 
+// LOGIN
+router.post("/login", limiter, signIn);
 
 // Verify email route with verification token
 router.get("/verify-email-company/:verificationToken", async (req, res) => {
@@ -67,7 +67,7 @@ router.get("/verification-success-company/:verificationToken", async (req, res) 
     }
 
     // Verify the email using the token
-    const { success, company } = await verifyEmail(verificationToken);
+    const { success } = await verifyEmail(verificationToken);
 
     // Render a page indicating successful or failed verification
     if (success) {
@@ -82,12 +82,6 @@ router.get("/verification-success-company/:verificationToken", async (req, res) 
     res.status(500).send("An error occurred while verifying email.");
   }
 });
-
-
-// LOGIN
-router.post("/login", limiter, signIn);
-
-
 
 // GET DATA
 router.post("/create-company", createCompany);
