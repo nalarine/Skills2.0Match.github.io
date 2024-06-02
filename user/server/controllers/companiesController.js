@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
 import Companies from "../models/companiesModel.js";
 import { sendVerificationEmail } from "../emailServiceCompany.js";
-import { response } from "express";
 import { v4 as uuidv4 } from 'uuid';
-
 
 export const register = async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  // Validate fields
+  //validate fields
   if (!name) {
     next("Company Name is required!");
     return;
@@ -30,24 +28,25 @@ export const register = async (req, res, next) => {
       return;
     }
 
-    // Generate unique verification token
-    const verificationToken = uuidv4();
-
     // Create a new account
     const company = await Companies.create({
       name,
       email,
-      password,
-      verificationToken,
-      emailVerified: false,
+      password, 
     });
-    
+
+    // Generate unique verification token
+    const verificationToken = uuidv4();
+
+    // Save verification token temporarily (consider storing in a separate collection)
+    company.verificationToken = verificationToken;
+    await company.save();
+
     // Send verification email
     await sendVerificationEmail(company);
 
-    // Generate user token
+    // user token
     const token = company.createJWT();
-
 
     res.status(201).json({
       success: true,
@@ -57,48 +56,6 @@ export const register = async (req, res, next) => {
         name: company.name,
         email: company.email,
       },
-      verificationToken,
-      token,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(404).json({ message: error.message });
-  }
-};
-
-export const signIn = async (req, res, next) => {
-  const { email, password } = req.body;
-
-  try {
-    //validation
-    if (!email || !password) {
-      next("Please Provide AUser Credentials");
-      return;
-    }
-
-    const company = await Companies.findOne({ email });
-
-    if (!company) {
-      next("Invalid email or Password");
-      return;
-    }
-
-    // //compare password
-    // const isMatch = await company.comparePassword(password);
-    
-    // if (!isMatch) {
-    //   next("The password and email does not match");
-    //   return;
-    // }
-
-    company.password = undefined;
-
-    const token = company.createJWT();
-
-    res.status(200).json({
-      success: true,
-      message: "Login Successfully",
-      user: company,
       token,
     });
   } catch (error) {
@@ -119,18 +76,18 @@ export async function verifyEmail(verificationToken) {
 
     // Check if the user exists
     if (!company) {
-      throw new Error("Company not found or verification token is invalid");
+      throw new Error("User not found or verification token is invalid");
     }
 
     // Log the user object found based on the verification token
-    console.log("Company found for verification:", company);
+    console.log("User found for verification:", company);
 
     // Update the user's email verification status to true and clear the verification token
-    company.emailVerified = true;
+    company.verified = true;
     await company.save();
 
     // Log the updated user object
-    console.log("Company email verification updated successfully:", company);
+    console.log("User email verification updated successfully:", company);
 
     // Return success and the updated user object
     return { success: true, company };
@@ -139,7 +96,55 @@ export async function verifyEmail(verificationToken) {
     console.error("Error verifying email:", error);
     throw error; // Rethrow the error to be caught by the caller
   }
+}
+
+
+export const signIn = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    //validation
+    if (!email || !password) {
+      next("Please provide user credentials");
+      return;
+    }
+
+    const company = await Companies.findOne({ email }).select("+password");
+
+    if (!company) {
+      next("Invalid email or password");
+      return;
+    }
+
+    // Check if email is verified
+    if (!company.verified) {
+      next("Email not verified. Please check your email to verify your account.");
+      return;
+    }
+
+    // Compare password
+    const isMatch = await company.comparePassword(password);
+    if (!isMatch) {
+      next("Invalid email or password");
+      return;
+    }
+
+    company.password = undefined;
+
+    const token = company.createJWT();
+
+    res.status(200).json({
+      success: true,
+      message: "Login successfully",
+      user: company,
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: error.message });
+  }
 };
+
 
 export const updateCompanyProfile = async (req, res, next) => {
   const { name, contact, location, profileUrl, about } = req.body;
@@ -425,7 +430,7 @@ export const createCompany = async (req, res, next) => {
     }
 
     // Create a new company
-    const newCompany = await Companies.create({
+    const company = await Companies.create({
       name,
       email,
       contact,
@@ -436,7 +441,7 @@ export const createCompany = async (req, res, next) => {
     res.status(201).json({
       success: true,
       message: "Company created successfully",
-      company: newCompany,
+      company: company,
     });
   } catch (error) {
     console.error("Error creating company:", error);

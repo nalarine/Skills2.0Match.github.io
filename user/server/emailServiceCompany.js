@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendVerificationEmail = async (user) => {
+export const sendVerificationEmail = async (company) => {
   const subject = "Verify your email address";
   const headerImagePath = path.join(__dirname, '..', 'company', 'src', 'assets', 'header-image.png');
   const logoPath = path.join(__dirname, '..', 'company', 'src', 'assets', 'logo.png');
@@ -73,10 +73,10 @@ export const sendVerificationEmail = async (user) => {
       <img src="cid:headerImage" alt="Header Image">
     </div>
     <div class="content">
-      <p>Hello <strong>${user.name}</strong>,</p>
+      <p>Hello <strong>${company.name}</strong>,</p>
       <p>Thank you for registering with Skills 2.0 Match.</p>
       <p>Please click the button below to verify your account. The link will expire after one hour.</p>
-      <a href="http://localhost:5173/verification-success-company/${user.verificationToken}" class="button">Verify Account</a>
+      <a href="http://localhost:5173/verification-success-company/${company.verificationToken}" class="button">Verify Account</a>
       <p>If you did not register for an account, you can ignore this email.</p>
     </div>
     <div class="footer">
@@ -93,7 +93,7 @@ export const sendVerificationEmail = async (user) => {
   try {
     await transporter.sendMail({
       from: 'Skills 2.0 Match <skills2match2024@gmail.com>',
-      to: user.email,
+      to: company.email,
       subject: subject,
       html: message,
       attachments: [
@@ -110,7 +110,7 @@ export const sendVerificationEmail = async (user) => {
       ]
     });
 
-    console.log(`Verification email sent to ${user.email}`);
+    console.log(`Verification email sent to ${company.email}`);
   } catch (error) {
     console.error("Error sending verification email:", error);
   }
