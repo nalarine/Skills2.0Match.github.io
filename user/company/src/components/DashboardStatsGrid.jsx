@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../utils';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import job from '../../../company/src/assets/job.png';
 import interview from '../../../company/src/assets/interview.png';
 import messages from '../../../company/src/assets/messages.png';
@@ -11,7 +12,7 @@ export default function DashboardStatsGrid({ jobMatches }) {
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (user && user._id) {
+    if (user && user._id && user.accountType === 'company') {
       const fetchData = async () => {
         try {
           const res = await apiRequest({
@@ -43,26 +44,47 @@ export default function DashboardStatsGrid({ jobMatches }) {
       }
     };
 
-    if (user && user._id) {
+    if (user && user._id && user.accountType === 'company') {
       fetchCompany();
     }
   }, [user]);
 
   return (
     <div className="flex gap-2 py-3">
-      <BoxWrapper>
-        <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
-          <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
-        </div>
-        <div className="pl-8">
-          <span className="text-sm font-semibold">Total Job Posted</span>
-          <div className="flex items-center">
-            <strong className="text-xl font-bold">
-              {totalJobPosts} Job Posted {/* Use totalJobPosts here */}
-            </strong>
+      {user?.accountType === 'company' ? (
+        <BoxWrapper>
+          <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
+            <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
           </div>
-        </div>
-      </BoxWrapper>
+          <div className="pl-8">
+            <span className="text-sm font-semibold">Total Job Posted</span>
+            <div className="flex items-center">
+              <strong className="text-xl font-bold">
+                {totalJobPosts} Job Posted
+              </strong>
+            </div>
+          </div>
+        </BoxWrapper>
+      ) : (
+        <BoxWrapper>
+          <Link
+            to={user?.accountType === 'seeker' ? '/Dashboard' : '/CompanyDash'}
+            className="flex items-center"
+          >
+            <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
+              <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
+            </div>
+            <div className="pl-8">
+              <span className="text-sm font-semibold">Total Job Matches</span>
+              <div className="flex items-center">
+                <strong className="text-xl font-bold">
+                  {jobMatches} New Job Suited
+                </strong>
+              </div>
+            </div>
+          </Link>
+        </BoxWrapper>
+      )}
       <BoxWrapper>
         <div className="rounded-full h-12 w-16 bg-dark-yellow flex items-center justify-center">
           <img src={interview} alt="image" className="w-24 h-18 mr-2" />

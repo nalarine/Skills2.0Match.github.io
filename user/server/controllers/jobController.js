@@ -340,130 +340,11 @@ export const applyJob = async (req, res, next) => {
     }
 };
 
-export const getJobPosts = async (req, res, next) => {
-    try {
-        const { sort, page, limit } = req.query;
-
-        let queryObject = {};
-
-        let queryResult = Jobs.find(queryObject).populate({
-            path: "company",
-            select: "-password",
-        });
-
-        // SORTING
-        if (sort === "Newest") {
-            queryResult = queryResult.sort("-createdAt");
-        }
-        if (sort === "Oldest") {
-            queryResult = queryResult.sort("createdAt");
-        }
-        if (sort === "A-Z") {
-            queryResult = queryResult.sort("jobTitle");
-        }
-        if (sort === "Z-A") {
-            queryResult = queryResult.sort("-jobTitle");
-        }
-
-        // Pagination
-        const pageNumber = Number(page) || 1;
-        const pageSize = Number(limit) || 20;
-        const skip = (pageNumber - 1) * pageSize;
-
-        queryResult = queryResult.skip(skip).limit(pageSize);
-
-        const totalJobs = await Jobs.countDocuments(queryObject);
-        const numOfPages = Math.ceil(totalJobs / pageSize);
-
-        const jobs = await queryResult;
-
-        res.status(200).json({
-            success: true,
-            totalJobs,
-            data: jobs,
-            page: pageNumber,
-            numOfPages,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(404).json({ message: error.message });
-    }
-};
-
 // export const getJobPosts = async (req, res, next) => {
 //     try {
-//         const { search, sort, location, jType, exp, user_id } = req.query;
-//         const types = jType?.split(","); //full-time,part-time
-//         const experience = exp?.split("-"); //2-6
+//         const { sort, page, limit } = req.query;
 
-//         const user = await User.findById(user_id);
-
-//         if (!user) return res.status(400).json({ message: "Invalid user id" });
-
-//         let date = new Date();
-//         date.setDate(date.getDate() + 1);
-
-//         let queryObject = {
-//             startHiringDate: { $lte: new Date(date.setHours(0, 0, 0)) },
-//             endHiringDate: { $gte: new Date(new Date().setHours(0, 0, 0)) },
-//         };
-
-//         // If user provides skills, include skill matching logic in the query
-//         if (user.skills) {
-//             const skillQueries = user.skills.split(/\s/).map((skill) => {
-//                 return {
-//                     "detail.requirements": { $regex: skill, $options: "i" },
-//                 };
-//             });
-//             queryObject.$or = skillQueries;
-//         }
-
-//         // If user provides job title, include job title matching logic in the query
-//         if (user.jobTitle) {
-//             queryObject.$or = queryObject.$or || [];
-//             queryObject.$or.push({
-//                 jobTitle: { $regex: user.jobTitle, $options: "i" },
-//             });
-//         }
-
-//         // If neither job title nor skills provided, return an error or handle as appropriate
-//         if (!queryObject.$or || queryObject.$or.length === 0) {
-//             return res
-//                 .status(400)
-//                 .json({ message: "Please provide either job title or skills" });
-//         }
-
-//         if (location) {
-//             queryObject.location = { $regex: location, $options: "i" };
-//         }
-
-//         if (jType) {
-//             queryObject.jobType = { $in: types };
-//         }
-
-//         if (exp) {
-//             queryObject.experience = {
-//                 $gte: Number(experience[0]) - 1,
-//                 $lte: Number(experience[1]) + 1,
-//             };
-//         }
-
-//         if (search) {
-//             const searchQuery = {
-//                 $or: [
-//                     { jobTitle: { $regex: search, $options: "i" } },
-//                     { jobType: { $regex: search, $options: "i" } },
-//                     {
-//                         "detail.requirements": {
-//                             $regex: search,
-//                             $options: "i",
-//                         },
-//                     }, // Match against job requirements
-//                     { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
-//                 ],
-//             };
-//             queryObject = { ...queryObject, ...searchQuery };
-//         }
+//         let queryObject = {};
 
 //         let queryResult = Jobs.find(queryObject).populate({
 //             path: "company",
@@ -484,16 +365,15 @@ export const getJobPosts = async (req, res, next) => {
 //             queryResult = queryResult.sort("-jobTitle");
 //         }
 
-//         // pagination
-//         const page = Number(req.query.page) || 1;
-//         const limit = Number(req.query.limit) || 20;
-//         const skip = (page - 1) * limit;
+//         // Pagination
+//         const pageNumber = Number(page) || 1;
+//         const pageSize = Number(limit) || 20;
+//         const skip = (pageNumber - 1) * pageSize;
 
-//         //records count
-//         const totalJobs = await Jobs.countDocuments(queryResult);
-//         const numOfPage = Math.ceil(totalJobs / limit);
+//         queryResult = queryResult.skip(skip).limit(pageSize);
 
-//         queryResult = queryResult.limit(limit * page);
+//         const totalJobs = await Jobs.countDocuments(queryObject);
+//         const numOfPages = Math.ceil(totalJobs / pageSize);
 
 //         const jobs = await queryResult;
 
@@ -501,14 +381,134 @@ export const getJobPosts = async (req, res, next) => {
 //             success: true,
 //             totalJobs,
 //             data: jobs,
-//             page,
-//             numOfPage,
+//             page: pageNumber,
+//             numOfPages,
 //         });
 //     } catch (error) {
 //         console.log(error);
 //         res.status(404).json({ message: error.message });
 //     }
 // };
+
+export const getJobPosts = async (req, res, next) => {
+    try {
+        const { search, sort, location, jType, exp, user_id } = req.query;
+        const types = jType?.split(","); //full-time,part-time
+        const experience = exp?.split("-"); //2-6
+
+        const user = await User.findById(user_id);
+
+        if (!user) return res.status(400).json({ message: "Invalid user id" });
+
+        let date = new Date();
+        date.setDate(date.getDate() + 1);
+
+        let queryObject = {
+            startHiringDate: { $lte: new Date(date.setHours(0, 0, 0)) },
+            endHiringDate: { $gte: new Date(new Date().setHours(0, 0, 0)) },
+        };
+
+        // If user provides skills, include skill matching logic in the query
+        if (user.skills) {
+            const skillQueries = user.skills.split(/\s/).map((skill) => {
+                return {
+                    "detail.requirements": { $regex: skill, $options: "i" },
+                };
+            });
+            queryObject.$or = skillQueries;
+        }
+
+        // If user provides job title, include job title matching logic in the query
+        if (user.jobTitle) {
+            queryObject.$or = queryObject.$or || [];
+            queryObject.$or.push({
+                jobTitle: { $regex: user.jobTitle, $options: "i" },
+            });
+        }
+
+        // If neither job title nor skills provided, return an error or handle as appropriate
+        if (!queryObject.$or || queryObject.$or.length === 0) {
+            return res
+                .status(400)
+                .json({ message: "Please provide either job title or skills" });
+        }
+
+        if (location) {
+            queryObject.location = { $regex: location, $options: "i" };
+        }
+
+        if (jType) {
+            queryObject.jobType = { $in: types };
+        }
+
+        if (exp) {
+            queryObject.experience = {
+                $gte: Number(experience[0]) - 1,
+                $lte: Number(experience[1]) + 1,
+            };
+        }
+
+        if (search) {
+            const searchQuery = {
+                $or: [
+                    { jobTitle: { $regex: search, $options: "i" } },
+                    { jobType: { $regex: search, $options: "i" } },
+                    {
+                        "detail.requirements": {
+                            $regex: search,
+                            $options: "i",
+                        },
+                    }, // Match against job requirements
+                    { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
+                ],
+            };
+            queryObject = { ...queryObject, ...searchQuery };
+        }
+
+        let queryResult = Jobs.find(queryObject).populate({
+            path: "company",
+            select: "-password",
+        });
+
+        // SORTING
+        if (sort === "Newest") {
+            queryResult = queryResult.sort("-createdAt");
+        }
+        if (sort === "Oldest") {
+            queryResult = queryResult.sort("createdAt");
+        }
+        if (sort === "A-Z") {
+            queryResult = queryResult.sort("jobTitle");
+        }
+        if (sort === "Z-A") {
+            queryResult = queryResult.sort("-jobTitle");
+        }
+
+        // pagination
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        //records count
+        const totalJobs = await Jobs.countDocuments(queryResult);
+        const numOfPage = Math.ceil(totalJobs / limit);
+
+        queryResult = queryResult.limit(limit * page);
+
+        const jobs = await queryResult;
+
+        res.status(200).json({
+            success: true,
+            totalJobs,
+            data: jobs,
+            page,
+            numOfPage,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: error.message });
+    }
+};
 
 export const getJobApplications = async (req, res, next) => {
     try {
