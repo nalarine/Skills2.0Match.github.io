@@ -569,3 +569,70 @@ export const deleteCompany = async (req, res, next) => {
   }
 };
 
+export const deleteAccount = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find user by email
+    const company = await Companies.findOne({ email });
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Check if provided password matches user's password
+    const isPasswordValid = await company.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ success: false, message: 'Invalid password' });
+    }
+
+    // Remove user document
+    await company.deleteOne();
+
+    res.status(200).json({ success: true, message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  const { currentEmail, newPassword } = req.body;
+
+  try {
+    // Check if email exists
+    const company = await Companies.findOne({ email: currentEmail });
+
+    if (!company) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's password
+    company.password = newPassword;
+    await company.save();
+
+    res.status(200).json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
+
+export const changeEmail = async (req, res) => {
+  const { currentEmail, newEmail } = req.body;
+
+  try {
+    // Find user by current email and update email
+    const company = await Companies.findOneAndUpdate({ email: currentEmail }, { email: newEmail });
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.status(200).json({ success: true, message: 'Email changed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+

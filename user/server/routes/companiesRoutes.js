@@ -16,6 +16,9 @@ import {
   verifyEmail,
   resetPassword,
   resetPasswordusingEmail,
+  deleteAccount,
+  changeEmail,
+  changePassword,
 } from "../controllers/companiesController.js";
 import userAuth from "../middlewares/authMiddleware.js";
 import { deleteUser } from "../controllers/userController.js";
@@ -95,6 +98,15 @@ router.post("/get-company-joblisting", userAuth, getCompanyJobListing);
 router.get("/", getCompanies);
 router.get("/get-company/:id", getCompanyById);
 router.get("/allcompanies", allCompanies);
+
+// Delete Account
+router.delete('/delete-account-company', deleteAccount);
+
+// Change Password
+router.put('/change-password-company', changePassword);
+
+// Change Email
+router.put('/change-email-company', changeEmail);
 
 // UPDATE DATA
 router.put("/update-company", userAuth, updateCompanyProfile);

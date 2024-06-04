@@ -470,7 +470,7 @@ export const getJobPosts = async (req, res, next) => {
                             $regex: search, $options: "i",
                         },
                     }, // Match against job requirements
-                    // { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
+                    { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
                 ],
             };
             queryObject = { ...queryObject, ...searchQuery };
