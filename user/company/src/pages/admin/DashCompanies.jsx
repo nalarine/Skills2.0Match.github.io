@@ -141,6 +141,7 @@ const DashCompanies = () => {
     setEditCompany(company);
     setDeleteConfirmationOpen(true);
   };
+  
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -204,7 +205,7 @@ const DashCompanies = () => {
   const confirmDelete = async () => {
     try {
       const response = await apiRequest({
-        url: `/delete/${editCompany.id}`,
+        url: `/companies/delete/${editCompany.id}`,
         method: "DELETE",
       });
       console.log("Company deleted:", response.data);
@@ -285,17 +286,17 @@ const DashCompanies = () => {
               <Table.Cell className="px-6 py-4">{company.location}</Table.Cell>
               <Table.Cell className="px-6 py-4 flex justify-start gap-4">
               <button
-                    onClick={handleEdit}
-                    className="bg-green-700 p-2 px-4 rounded-md text-slate-100 font-semibold text-md hover:text-slate-600 hover:bg-lime-300"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="bg-red-700 p-2 px-4 rounded-md text-slate-100 font-semibold text-md hover:text-slate-600 hover:bg-red-300"
-                  >
-                    Delete
-                  </button>
+                onClick={() => handleEdit(company)}
+                className="bg-green-700 p-2 px-4 rounded-md text-slate-100 font-semibold text-md hover:text-slate-600 hover:bg-lime-300"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(company)}
+                className="bg-red-700 p-2 px-4 rounded-md text-slate-100 font-semibold text-md hover:text-slate-600 hover:bg-red-300"
+              >
+                Delete
+              </button>
                 {/* <Button size="small" >Edit</Button>
                 <Button size="small" color="red" onClick={() => handleDelete(company.id)}>Delete</Button> */}
               </Table.Cell>

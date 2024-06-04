@@ -273,7 +273,7 @@ const DashJobs = () => {
                 onChange={handleSearch}
                 style={{ width: '300px', marginRight: '20px' }}
               />
-              <Button
+              {/* <Button
                 type="danger"
                 className="bg-green-700 hover:bg-green-900 border-none text-white"
                 icon={<PlusCircleOutlined />}
@@ -281,7 +281,7 @@ const DashJobs = () => {
                 style={{ backgroundColor: '#2F855A', borderColor: '#2F855A' }} // Override Ant Design styles
               >
                 Post Job
-              </Button>
+              </Button> */}
             </div>
             {loading ? (
               <p>Loading...</p>
@@ -298,7 +298,7 @@ const DashJobs = () => {
                       <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md text-center tracking-wide">Salary</th>
                       <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Period</th>
                       <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md text-center tracking-wide">Vacancies</th>
-                      <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Actions</th>
+                      {/* <th scope="col" className="px-6 py-4 font-semibold text-gray-900 text-md tracking-wide">Actions</th> */}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 border-t border-gray-100">
@@ -312,7 +312,7 @@ const DashJobs = () => {
                         <td className="px-6 py-4 text-center">{job.salary}</td>
                         <td className="px-6 py-4">{job.salaryType}</td>
                         <td className="px-6 py-4 text-center">{job.vacancies}</td>
-                        <td className="px-6 py-4">
+                        {/* <td className="px-6 py-4">
                           <Space size="middle">
                             <Tooltip title="Edit">
                               <Button type="danger" icon={<EditOutlined />} onClick={() => handleEdit(job)} className="bg-green-700 hover:bg-green-900 border-none text-white"/>
@@ -321,7 +321,7 @@ const DashJobs = () => {
                               <Button type="danger" icon={<DeleteOutlined />} onClick={() => handleDelete(job)} className="bg-red-700 hover:bg-red-900 border-none text-white"/>
                             </Tooltip>
                           </Space>
-                        </td>
+                        </td> */}
                       </tr>
                     ))}
                   </tbody>
