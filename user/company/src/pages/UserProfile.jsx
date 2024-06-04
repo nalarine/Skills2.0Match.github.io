@@ -321,7 +321,7 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
                       </div>
 
                       {/* Resume */}
-                      <div className="flex w-1/2">
+                      {/* <div className="flex w-1/2">
                         <label className="text-gray-600 text-sm mb-1">
                           Resume
                         </label>
@@ -348,7 +348,7 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
                             </div>
                           </button>
                         </Upload>
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="flex flex-col">

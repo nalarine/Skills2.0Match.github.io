@@ -217,7 +217,7 @@ const DashCompanies = () => {
       setCompanies(updatedCompanies);
     } catch (error) {
       console.error("Error deleting company:", error);
-      toast.error("Error deleting company. Please try again.");
+      // toast.error("Error deleting company. Please try again.");
     }
   };
 
