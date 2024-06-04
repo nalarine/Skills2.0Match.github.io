@@ -12,7 +12,7 @@ export default function DashboardStatsGrid({ jobMatches }) {
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (user && user._id && user.accountType === 'company') {
+    if (user && user._id && user.accountType === 'seeker') {
       const fetchData = async () => {
         try {
           const res = await apiRequest({
@@ -44,14 +44,14 @@ export default function DashboardStatsGrid({ jobMatches }) {
       }
     };
 
-    if (user && user._id && user.accountType === 'company') {
+    if (user && user._id && user.accountType === 'seeker') {
       fetchCompany();
     }
   }, [user]);
 
   return (
     <div className="flex gap-2 py-3">
-      {user?.accountType === 'company' ? (
+      {user?.accountType === 'seeker' ? (
         <BoxWrapper>
           <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
             <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />

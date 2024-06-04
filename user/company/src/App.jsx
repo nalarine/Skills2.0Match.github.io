@@ -10,6 +10,7 @@ import {
   PrivacyPolicy,
   TermsOfService,
   ForgotPassword,
+  ForgotPasswordCompany,
   SignUp
 } from './components'
 import {
@@ -135,6 +136,7 @@ function App() {
     location.pathname.startsWith('/CHelpCenter') ||
     location.pathname.startsWith('/CSettings') ||
     location.pathname.startsWith('/reset-password') ||
+     location.pathname.startsWith('/reset-password-token') ||
     location.pathname.startsWith('/AdminDashboard') ||
     location.pathname.startsWith('/admin/reports') 
 
@@ -172,6 +174,7 @@ function App() {
       location.pathname.startsWith('/CHelpCenter') ||
       location.pathname.startsWith('/CSettings') ||
       location.pathname.startsWith('/reset-password') ||
+      location.pathname.startsWith('/reset-password-token') ||
       location.pathname.startsWith('/sign-up') ||
       location.pathname.startsWith('/AdminDashboard')) ||
       location.pathname.startsWith('/admin/reports') 
@@ -198,6 +201,7 @@ function App() {
           element={<VerificationSuccessPageCompany />}
         />
            <Route path="/reset-password/:token" element={<ForgotPassword />} />
+           <Route path="/reset-password-token/:token" element={<ForgotPasswordCompany />} />
         <Route path="/find-jobs" element={<FindJobs />} />
         <Route path="/companies" element={<Companies />} />
 

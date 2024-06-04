@@ -44,21 +44,25 @@ const JobAvailable = () => {
       style={{ height: '32rem' }}
     >
       <DashboardStatsGrid jobMatches={postedJobs.length} />
-      <div className="flex flex-row justify-between items-center">
-        <strong className="font-bold text-3xl mb-4">Job Matches</strong>
-      </div>
-      <div className="w-full flex flex-wrap gap-4">
-        {postedJobs.map((job, index) => {
-          const newJob = {
-            name: job?.company?.name,
-            logo: job?.company?.profileUrl,
-            ...job,
-          }
+  <div className="flex flex-row justify-between items-center">
+    <strong className="font-bold text-3xl mb-4">Best Job Matched to your Skills</strong>
+  </div>
+  <div className="w-full flex flex-wrap gap-4">
+    {postedJobs.length > 0 ? (
+      postedJobs.map((job, index) => {
+        const newJob = {
+          name: job?.company?.name,
+          logo: job?.company?.profileUrl,
+          ...job,
+        };
 
-          return job.vacancies >= 0 && <JobCard job={newJob} key={index} />
-        })}
-      </div>
-      {isFetching && <Loading />}
+        return job.vacancies >= 0 && <JobCard job={newJob} key={index} />;
+      })
+    ) : (
+      <div className="w-full text-center text-xl">No jobs available</div>
+    )}
+  </div>
+  {isFetching && <Loading />}
     </div>
   )
 }

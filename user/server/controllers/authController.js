@@ -6,34 +6,27 @@ import { sendForgotPasswordEmail } from "../sendVerificationEmail.js"
 export const register = async (req, res, next) => {
   const { firstName, lastName, email, password, role, birthdate } = req.body;
 
-  // Validate fields
   if (!firstName || !lastName || !email || !password || !birthdate) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    // Check if email already exists
     const userExist = await Users.findOne({ email });
-
     if (userExist) {
       return res.status(400).json({ message: "Email address already exists" });
     }
 
-       // Validate birthdate
-       const today = new Date();
-       const minDate = new Date(today.getFullYear() - 24, today.getMonth(), today.getDate());
-       const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-       const userBirthdate = new Date(birthdate);
-   
-       if (userBirthdate < minDate || userBirthdate > maxDate) {
-         return res.status(400).json({ message: "You must be between 18 to 24 years old to register." });
-       }
-   
+    const today = new Date();
+    const minDate = new Date(today.getFullYear() - 24, today.getMonth(), today.getDate());
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    const userBirthdate = new Date(birthdate);
 
-    // Generate unique verification token
+    if (userBirthdate < minDate || userBirthdate > maxDate) {
+      return res.status(400).json({ message: "You must be between 18 to 24 years old to register." });
+    }
+
     const verificationToken = uuidv4();
 
-    // Create new user with role and verification token
     const user = await Users.create({
       firstName,
       lastName,
@@ -41,17 +34,15 @@ export const register = async (req, res, next) => {
       password,
       role,
       birthdate,
-      verificationToken, // Save the verification token
-      emailVerified: false // Set email verification status to false by default
+      verificationToken,
+      emailVerified: false
     });
 
-    // Send verification email
     await sendVerificationEmail(user);
 
     const token = await user.createJWT();
 
-    // Send success response with both tokens
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Account created successfully. Please verify your email to log in.",
       user: {
@@ -67,9 +58,10 @@ export const register = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 export async function verifyEmail(verificationToken) {
   try {
@@ -111,62 +103,56 @@ export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    // Validation
     if (!email || !password) {
       return res.status(400).json({ message: "Please provide user credentials" });
     }
 
-    // Find user by email
+    // Check if the user exists
     const user = await Users.findOne({ email });
-
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Email not registered" });
     }
 
-    // Check if email is verified
     if (!user.emailVerified) {
       return res.status(401).json({ message: "Email not verified" });
     }
 
-    // Compare password
     const isMatch = await user.comparePassword(password);
-
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    user.password = undefined;
+    // Send a simplified user object without circular references
+    const userResponse = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      accountType: user.accountType,
+      isAdmin: user.isAdmin,
+      birthdate: user.birthdate,
+    };
 
-    // Generate JWT token
     const token = user.createJWT();
 
     const verificationToken = jwt.sign({ userId: user._id }, 'USAIDPROJECT', { expiresIn: '1h' });
 
-    // Send success response with JWT token
+    // Send the response with the simplified user object
     res.status(200).json({
       success: true,
       message: "Login successful",
-      user: {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        accountType: user.accountType,
-        isAdmin: user.isAdmin, 
-        birthdate: user.birthdate,
-      },
+      user: userResponse,
       verificationToken,
       token,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error during sign in:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 // Import necessary modules and dependencies
-
 export const resetPassword = async (req, res, next) => {
   const { email, newPassword, token } = req.body;
 

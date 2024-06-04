@@ -65,30 +65,18 @@ const SignUp = () => {
         method: 'POST',
       });
     
-      if (res?.success === false) {
-        if (isRegister) {
-          if (res?.message === 'Email address already exists') {
-            setErrMsg('User with that email already exists');
-          } else {
-            setErrMsg('Email Already Registered. Please use another email.');
-          }
-        } else {
-          if (res?.message === 'Invalid email or password') {
-            setErrMsg('Invalid email or password.');
-          } else {
-            setErrMsg('Your email or password is incorrect. Please try again.');
-          }
-        }
+      if (!res.success) {
+        setErrMsg(res.message);
         setLoading(false);
       } else {
         setErrMsg('');
         if (isRegister) {
           setSuccessMessage('Registration successful! Please verify your email before logging in.');
         } else {
-          const userData = { token: res?.token, ...res?.user };
+          const userData = { token: res.token, ...res.user };
           dispatch(Login(userData));
           localStorage.setItem('userInfo', JSON.stringify(userData));
-          setForgotPasswordModalOpen(false);
+          navigate(from);
         }
       }
     } catch (error) {
@@ -118,13 +106,17 @@ const SignUp = () => {
 
   const handleResetPassword = async () => {
     try {
+      const url = accountType === 'seeker'
+        ? '/auth/reset-password-using-email'
+        : '/companies/reset-password-using-email-company';
+  
       const res = await apiRequest({
-        url: '/auth/reset-password-using-email',
+        url,
         method: 'POST',
         data: { email: forgotPasswordEmail },
       });
   
-      if (res.success) {
+      if (!res.success) {
         setSuccessMessage('Password reset email sent successfully');
         setErrMsg(''); // Reset error message
       } else {
@@ -137,7 +129,6 @@ const SignUp = () => {
       setForgotPasswordModalOpen(false);
     }
   };
-
 
   return (
     <div className="pt-[7%] flex min-h-screen items-center justify-center p-4 content-center bg-gradient-to-b from-[#c1e1c1] to-[#143c1d] bg-blur-sm">

@@ -14,6 +14,8 @@ import {
   editCompany,
   deleteCompany,
   verifyEmail,
+  resetPassword,
+  resetPasswordusingEmail,
 } from "../controllers/companiesController.js";
 import userAuth from "../middlewares/authMiddleware.js";
 import { deleteUser } from "../controllers/userController.js";
@@ -83,6 +85,9 @@ router.get("/verification-success-company/:verificationToken", async (req, res) 
   }
 });
 
+router.post('/reset-password-token/:token', resetPassword);
+
+router.post('/reset-password-using-email-company', resetPasswordusingEmail);
 // GET DATA
 router.post("/create-company", createCompany);
 router.post("/get-company-profile", userAuth, getCompanyProfile);

@@ -431,18 +431,18 @@ export const getJobPosts = async (req, res, next) => {
         }
 
         // If user provides job title, include job title matching logic in the query
-        if (user.jobTitle) {
-            queryObject.$or = queryObject.$or || [];
-            queryObject.$or.push({
-                jobTitle: { $regex: user.jobTitle, $options: "i" },
-            });
-        }
+        // if (user.jobTitle) {
+        //     queryObject.$or = queryObject.$or || [];
+        //     queryObject.$or.push({
+        //         jobTitle: { $regex: user.jobTitle, $options: "i" },
+        //     });
+        // }
 
         // If neither job title nor skills provided, return an error or handle as appropriate
         if (!queryObject.$or || queryObject.$or.length === 0) {
             return res
                 .status(400)
-                .json({ message: "Please provide either job title or skills" });
+                .json({ message: "Please provide job skills" });
         }
 
         if (location) {
@@ -469,8 +469,8 @@ export const getJobPosts = async (req, res, next) => {
                         "detail.requirements": {
                             $regex: search, $options: "i",
                         },
-                    },
-                    { "detail.desc": { $regex: search, $options: "i" } },
+                    }, // Match against job requirements
+                    // { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
                 ],
             };
             queryObject = { ...queryObject, ...searchQuery };

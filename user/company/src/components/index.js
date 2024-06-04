@@ -25,6 +25,7 @@ import PrivacyPolicy from './PrivacyPolicy'
 import TermsOfService from './TermsOfService'
 import StrongPasswordInput from './StrongPasswordInput'
 import ForgotPassword from './ForgotPassword'
+import ForgotPasswordCompany from './ForgotPasswordCompany'
 
 
 export {
@@ -55,4 +56,5 @@ export {
   TermsOfService,
   StrongPasswordInput,
   ForgotPassword,
+  ForgotPasswordCompany,
 }

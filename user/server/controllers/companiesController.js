@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Companies from "../models/companiesModel.js";
 import { sendVerificationEmail } from "../emailServiceCompany.js";
+import { sendForgotPasswordEmail } from "../sendVerificationEmailCompany.js"
 import { v4 as uuidv4 } from 'uuid';
 
 export const register = async (req, res, next) => {
@@ -103,30 +104,26 @@ export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    //validation
+    // Validation
     if (!email || !password) {
-      next("Please provide user credentials");
-      return;
+      return res.status(400).json({ message: "Please provide user credentials" });
     }
 
     const company = await Companies.findOne({ email }).select("+password");
 
     if (!company) {
-      next("Invalid email or password");
-      return;
+      return res.status(404).json({ message: "Email is not yet registered" });
     }
 
     // Check if email is verified
     if (!company.verified) {
-      next("Email not verified. Please check your email to verify your account.");
-      return;
+      return res.status(401).json({ message: "Email not verified. Please check your email to verify your account." });
     }
 
     // Compare password
     const isMatch = await company.comparePassword(password);
     if (!isMatch) {
-      next("Invalid email or password");
-      return;
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     company.password = undefined;
@@ -140,10 +137,70 @@ export const signIn = async (req, res, next) => {
       token,
     });
   } catch (error) {
-    console.log(error);
-    res.status(404).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+// Import necessary modules and dependencies
+export const resetPassword = async (req, res, next) => {
+  const { email, newPassword, token } = req.body;
+
+  try {
+    let company;
+
+    // Check if token is provided
+    if (token) {
+      // Find the user by reset password token
+      company = await Companies.findOne({ resetPasswordToken: token });
+      if (!company) {
+        return res.status(404).json({ message: 'Invalid or expired token' });
+      }
+      // Invalidate the reset password token
+      company.resetPasswordToken = null;
+    } else {
+      // Check if email exists
+      company = await Companies.findOne({ email });
+      if (!company) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+    }
+
+    // Update user's password
+    company.password = newPassword;
+    await company.save();
+
+    res.status(200).json({ success: true, message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+export const resetPasswordusingEmail = async (req, res) => {
+  const { email } = req.body;
+  try {
+    // Find the user by email address
+    const company = await Companies.findOne({ email });
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+    // Generate a unique token for the user
+    const resetPasswordToken = uuidv4();
+    // Associate the token with the user's account
+    company.resetPasswordToken = resetPasswordToken;
+    await company.save();
+    // Send the reset password email
+    await sendForgotPasswordEmail(company);
+    res.status(200).json({ message: 'Password reset email sent successfully' });
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 
 export const updateCompanyProfile = async (req, res, next) => {
