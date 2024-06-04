@@ -1,127 +1,82 @@
-import React, { useState } from 'react'
-import {
-  Container,
-  Paper,
-  Box,
-  Grid,
-  Typography,
-  Button,
-  CircularProgress,
-} from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import { skillAssessmentModules } from './constants'
-import { isEmpty } from 'lodash'
-import Questions from './Questions'
+import React, { useState } from 'react';
+import { Card, Typography, Layout, Row, Col, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { skillAssessmentModules } from './constants';
+import { isEmpty } from 'lodash';
+import Questions from './Questions';
 
-const Item = ({ title, description, sx, onClick, ...other }) => {
+const { Title, Text } = Typography;
+const { Content, Header, Footer } = Layout;
+
+const Item = ({ title, description, onClick }) => {
   return (
-    <Box
+    <Card
+      hoverable
       onClick={onClick}
-      sx={{
-        p: 3,
-        m: 1,
-        bgcolor: 'white',
-        color: '#333',
-        border: '0px solid',
-        height: '400px',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-        borderRadius: 10,
-        fontSize: '1.2rem',
-        fontWeight: '700',
-        transition: 'background-color 0.3s',
-        '&:hover': {
-          cursor: 'pointer',
-          color: 'white',
-          bgcolor: 'green',
-        },
-        ...sx,
+      style={{
+        width: '300px',
+        marginBottom: '20px',
+        borderRadius: '10px',
+        transition: 'transform 0.5s',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
       }}
-      {...other}
+      bodyStyle={{ padding: '20px' }}
     >
-      <Typography
-        variant="h4"
-        gutterBottom
-        style={{ fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}
-      >
-        {title}
-      </Typography>
-      <Typography
-        variant="body2"
-        component="ul"
-        style={{
-          pointerEvents: 'none',
-          fontSize: '0.9rem',
-          marginTop: '40px',
-          textAlign: 'center',
-        }}
-      >
+      <div style={{ marginBottom: '20px' }}>
+        <Title level={3} style={{ margin: 0 }}>{title}</Title>
+      </div>
+      <ul style={{ padding: 0, listStyleType: 'none', margin: 0 }}>
         {description.map((desc, index) => (
-          <li key={index} style={{ marginTop: '5px', textAlign: 'center' }}>
-            {desc}
+          <li key={index} style={{ marginTop: '5px' }}>
+            <Text>{desc}</Text>
           </li>
         ))}
-      </Typography>
-    </Box>
-  )
-}
+      </ul>
+    </Card>
+  );
+};
 
 const AssessmentCategorySelect = () => {
-  const [selectedModule, setSelectedModule] = useState()
-  const navigate = useNavigate() // Use useHistory hook to access history object
+  const [selectedModule, setSelectedModule] = useState();
+  const navigate = useNavigate();
 
   const handleCategoryClick = (module) => {
     if (module.title === 'Technical Skills') {
-      // history.push('/technicalSkillsQuestionnaires') // Redirect to technicalSkillsQuestionnaires
-      // navigate('/technicalSkillsQuestionnaires')
-      console.log('module', module)
-    } else {
-      // Handle other categories as needed
+      navigate('/technicalSkillsQuestionnaires');
     }
-  }
+  };
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: '50px' }}>
-      <Paper
-        elevation={0}
-        style={{ padding: '20px', borderRadius: '10px', background: 'none' }}
-      >
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header style={{ background: '#15803d', padding: '0 50px' }}>
+        <div style={{ color: '#fff', fontSize: '24px', fontWeight: 'bold' }}>Assessment Portal</div>
+      </Header>
+      <Content style={{ padding: '50px' }}>
         {isEmpty(selectedModule) ? (
-          <div>
-            <Typography
-              variant="h3"
-              gutterBottom
-              style={{
-                color: '#333',
-                marginBottom: '50px',
-                fontFamily: 'Poppins',
-                fontWeight: '600',
-                textAlign: 'center',
-              }}
-            >
-              Select Assessment Category
-            </Typography>
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={3}>
-                {!isEmpty(skillAssessmentModules) &&
-                  skillAssessmentModules.map((module, index) => (
-                    <Grid item xs={4} key={module?.id + index}>
-                      <Item
-                        title={module?.title}
-                        description={module?.description}
-                        onClick={() => setSelectedModule(module)}
-                      />
-                    </Grid>
-                  ))}
-              </Grid>
-            </Box>
+          <div style={{ textAlign: 'center' }}>
+            <Title level={2} style={{ marginBottom: '50px' }}>Select Assessment Category</Title>
+            <Row gutter={[16, 16]} justify="center">
+              {!isEmpty(skillAssessmentModules) &&
+                skillAssessmentModules.map((module, index) => (
+                  <Col key={module?.id + index}>
+                    <Item
+                      title={module?.title}
+                      description={module?.description}
+                      onClick={() => setSelectedModule(module)}
+                    />
+                  </Col>
+                ))}
+            </Row>
           </div>
         ) : (
-          <Questions questions={selectedModule?.questions} />
+          <>
+            <Questions questions={selectedModule?.questions} />
+          </>
         )}
-      </Paper>
-    </Container>
-  )
-}
+      </Content>
+      <Footer style={{ textAlign: 'center' }}>Assessment Portal ©2024</Footer>
+    </Layout>
+  );
+};
 
-export default AssessmentCategorySelect
+export default AssessmentCategorySelect;

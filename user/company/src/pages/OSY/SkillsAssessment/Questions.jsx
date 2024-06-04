@@ -151,29 +151,29 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
             background: '#fff',
           }}
         >
-          <Button
-            variant="outlined"
-            onClick={handleDashboardRedirect}
-            style={{ marginLeft: 'auto' }}
-          >
-            Go to Dashboard
-          </Button>
           <div>
+          <Button
+              variant="contained"
+              onClick={handleNextQuestion}
+              disabled={currentQuestion === questions.length - 1}
+            >
+              Next
+            </Button>
             <Button
               variant="contained"
               onClick={handlePreviousQuestion}
               disabled={currentQuestion === 0}
+              style={{ marginLeft: '10px' }}
             >
               Previous
             </Button>
-            <Button
-              variant="contained"
-              onClick={handleNextQuestion}
-              disabled={currentQuestion === questions.length - 1}
-              style={{ marginLeft: '10px' }}
-            >
-              Next
-            </Button>
+          <Button
+            variant="outlined"
+            onClick={handleDashboardRedirect}
+            style={{ marginLeft: '10px' }}
+          >
+            Go to Dashboard
+          </Button>
           </div>
           {currentQuestion === questions.length - 1 && (
             <Button
@@ -185,6 +185,7 @@ const Questions = ({ questions = technicalSkillsQuestionnaires }) => {
             >
               Submit
             </Button>
+            
           )}
         </CardActions>
       </Card>
