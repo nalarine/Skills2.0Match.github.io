@@ -393,8 +393,8 @@ export const applyJob = async (req, res, next) => {
 export const getJobPosts = async (req, res, next) => {
     try {
         const { search, sort, location, jType, exp, user_id } = req.query;
-        const types = jType?.split(","); //full-time,part-time
-        const experience = exp?.split("-"); //2-6
+        const types = jType?.split(","); // full-time, part-time
+        const experience = exp?.split("-"); // 2-6
 
         const user = await User.findById(user_id);
 
@@ -408,14 +408,26 @@ export const getJobPosts = async (req, res, next) => {
             endHiringDate: { $gte: new Date(new Date().setHours(0, 0, 0)) },
         };
 
+        // Function to validate and clean the skills
+        const cleanSkills = (skills) => {
+            return skills
+                .split(/\s+/) // Split the skills string into an array of words
+                .filter(skill => {
+                    // Remove any non-alphanumeric characters and filter out short common words
+                    const cleanedSkill = skill.replace(/[^a-zA-Z0-9]/g, '');
+                    return cleanedSkill.length > 2 && !["and", "the", "for", "with", "etc"].includes(cleanedSkill.toLowerCase());
+                });
+        };
+
         // If user provides skills, include skill matching logic in the query
         if (user.skills) {
-            const skillQueries = user.skills.split(/\s/).map((skill) => {
-                return {
+            const skills = cleanSkills(user.skills);
+            if (skills.length > 0) {
+                const skillQueries = skills.map(skill => ({
                     "detail.requirements": { $regex: skill, $options: "i" },
-                };
-            });
-            queryObject.$or = skillQueries;
+                }));
+                queryObject.$or = skillQueries;
+            }
         }
 
         // If user provides job title, include job title matching logic in the query
@@ -455,11 +467,10 @@ export const getJobPosts = async (req, res, next) => {
                     { jobType: { $regex: search, $options: "i" } },
                     {
                         "detail.requirements": {
-                            $regex: search,
-                            $options: "i",
+                            $regex: search, $options: "i",
                         },
-                    }, // Match against job requirements
-                    { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
+                    },
+                    { "detail.desc": { $regex: search, $options: "i" } },
                 ],
             };
             queryObject = { ...queryObject, ...searchQuery };
@@ -484,12 +495,12 @@ export const getJobPosts = async (req, res, next) => {
             queryResult = queryResult.sort("-jobTitle");
         }
 
-        // pagination
+        // Pagination
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;
         const skip = (page - 1) * limit;
 
-        //records count
+        // Records count
         const totalJobs = await Jobs.countDocuments(queryResult);
         const numOfPage = Math.ceil(totalJobs / limit);
 
