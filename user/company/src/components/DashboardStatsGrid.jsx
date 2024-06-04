@@ -9,18 +9,14 @@ import messages from '../../../company/src/assets/messages.png';
 export default function DashboardStatsGrid({ jobMatches }) {
   const [applicants, setApplicants] = useState([]);
   const [totalJobPosts, setTotalJobPosts] = useState(0);
-  const [archivedJobs, setArchivedJobs] = useState(0); // Assuming you'll get this data similarly
+  const [archivedJobs, setArchivedJobs] = useState(0);
+  const [totalApplications, setTotalApplications] = useState(0);
   const { user } = useSelector((state) => state.user);
   const location = useLocation();
 
   useEffect(() => {
-<<<<<<< Updated upstream
-    if (user && user._id && user.accountType === 'seeker') {
-      const fetchData = async () => {
-=======
     if (user && user._id && user.accountType === 'company') {
       const fetchCompanyData = async () => {
->>>>>>> Stashed changes
         try {
           const res = await apiRequest({
             url: `/companies/get-company/${user._id}`,
@@ -35,44 +31,28 @@ export default function DashboardStatsGrid({ jobMatches }) {
       };
 
       fetchCompanyData();
+    } else if (user && user._id && user.accountType === 'seeker') {
+      const fetchUserData = async () => {
+        try {
+          const res = await apiRequest({
+            url: `/jobs/job-applications/${user._id}`,
+            method: 'GET',
+            token: user?.token,
+          });
+          let applicationsCount = 0;
+          for (let data of res.data) {
+            applicationsCount += data.applicants.length;
+          }
+          setTotalApplications(applicationsCount);
+        } catch (error) {
+          console.error('Error loading user data:', error);
+        }
+      };
+
+      fetchUserData();
     }
   }, [user]);
 
-<<<<<<< Updated upstream
-  useEffect(() => {
-    const fetchCompany = async () => {
-      try {
-        const id = user?._id;
-        const res = await apiRequest({
-          url: '/companies/get-company/' + id,
-          method: 'GET',
-        });
-
-        setTotalJobPosts(res?.data?.jobPosts?.length || 0); // Set total job posts
-      } catch (error) {
-        console.error('Error loading company data:', error);
-      }
-    };
-
-    if (user && user._id && user.accountType === 'seeker') {
-      fetchCompany();
-    }
-  }, [user]);
-
-  return (
-    <div className="flex gap-2 py-3">
-      {user?.accountType === 'seeker' ? (
-        <BoxWrapper>
-          <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
-            <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
-          </div>
-          <div className="pl-8">
-            <span className="text-sm font-semibold">Total Job Posted</span>
-            <div className="flex items-center">
-              <strong className="text-xl font-bold">
-                {totalJobPosts} Job Posted
-              </strong>
-=======
   const isCompanyDash = location.pathname === '/CompanyDash';
 
   return (
@@ -82,7 +62,6 @@ export default function DashboardStatsGrid({ jobMatches }) {
           <BoxWrapper>
             <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
               <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
->>>>>>> Stashed changes
             </div>
             <div className="pl-8">
               <span className="text-sm font-semibold">Total Job Posted</span>
@@ -121,38 +100,40 @@ export default function DashboardStatsGrid({ jobMatches }) {
           </BoxWrapper>
         </>
       ) : (
-        <BoxWrapper>
-          <Link
-            to={user?.accountType === 'seeker' ? '/Dashboard' : '/CompanyDash'}
-            className="flex items-center"
-          >
-            <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
-              <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
+        <>
+          <BoxWrapper>
+            <Link
+              to={user?.accountType === 'seeker' ? '/Dashboard' : '/CompanyDash'}
+              className="flex items-center"
+            >
+              <div className="rounded-full h-8 w-16 bg-blue flex items-center justify-center">
+                <img src={job} alt="Job Matches" className="w-24 h-18 mr-2" />
+              </div>
+              <div className="pl-8">
+                <span className="text-sm font-semibold">Total Job Matches</span>
+                <div className="flex items-center">
+                  <strong className="text-xl font-bold">
+                    {jobMatches} New Job Suited
+                  </strong>
+                </div>
+              </div>
+            </Link>
+          </BoxWrapper>
+          <BoxWrapper>
+            <div className="rounded-full h-12 w-16 bg-dark-yellow flex items-center justify-center">
+              <img src={interview} alt="image" className="w-24 h-18 mr-2" />
             </div>
-            <div className="pl-8">
-              <span className="text-sm font-semibold">Total Job Matches</span>
+            <div>
+              <span className="text-sm font-semibold">Total Applications</span>
               <div className="flex items-center">
                 <strong className="text-xl font-bold">
-                  {jobMatches} New Job Suited
+                  {totalApplications} Applications
                 </strong>
               </div>
             </div>
-          </Link>
-        </BoxWrapper>
+          </BoxWrapper>
+        </>
       )}
-      <BoxWrapper>
-        <div className="rounded-full h-12 w-16 bg-dark-yellow flex items-center justify-center">
-          <img src={interview} alt="image" className="w-24 h-18 mr-2" />
-        </div>
-        <div>
-          <span className="text-sm font-semibold">Total Applicants</span>
-          <div className="flex items-center">
-            <strong className="text-xl font-bold">
-              {applicants.length} Applicants
-            </strong>
-          </div>
-        </div>
-      </BoxWrapper>
     </div>
   );
 }

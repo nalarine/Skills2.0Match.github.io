@@ -24,12 +24,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
       <img src={profile} alt="Dashboard Icon" className="w-[28px] h-[28px]" />
     ),
   },
-  {
-    key: 'skillsAssessment',
-    label: 'Skill Assessment',
-    path: '/skills-assessment',
-    icon: <img src={test} alt="Dashboard Icon" className="w-[28px] h-[28px]" />,
-  },
+  // {
+  //   key: 'skillsAssessment',
+  //   label: 'Skill Assessment',
+  //   path: '/skills-assessment',
+  //   icon: <img src={test} alt="Dashboard Icon" className="w-[28px] h-[28px]" />,
+  // },
   {
     key: 'allApplication',
     label: 'All Application',
