@@ -13,6 +13,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { BsArrowLeft } from 'react-icons/bs'
 import location from '../../src/assets/location.png'
 import { BsBalloonHeart } from 'react-icons/bs'
+import { FiAlertTriangle } from 'react-icons/fi' // Import the warning icon
 import { BsBalloonHeartFill } from 'react-icons/bs'
 import { PiMoney } from 'react-icons/pi'
 import { CgWorkAlt } from 'react-icons/cg'
@@ -32,6 +33,7 @@ const JobDetail = () => {
   const [isFetching, setIsFetching] = useState(false)
   const [resume, setResume] = useState(null)
   const [isSaved, setIsSaved] = useState(false)
+  const [isShowWarningModal, setShowWarningModal] = useState(false) // New state for warning modal
 
   const handleResume = (event) => {
     const file = event.target.files[0]
@@ -97,6 +99,12 @@ const JobDetail = () => {
   }
 
   const handleSubmit = async () => {
+
+    if (!resume) {
+      setShowWarningModal(true)
+      return
+    }
+
     toggleModal()
     const attachmentRef = ref(storage, `resumeFiles/${user._id}/${resume.name}`)
     await uploadBytes(attachmentRef, resume)
@@ -124,6 +132,10 @@ const JobDetail = () => {
 
   const toggleModal = () => {
     setShowModal(!isShowModal)
+  }
+
+  const toggleWarningModal = () => {
+    setShowWarningModal(!isShowWarningModal)
   }
 
   useEffect(() => {
@@ -377,11 +389,11 @@ const JobDetail = () => {
               file:rounded-full file:border-0
               file:text-sm file:font-semibold
               hover:file:bg-violet-100"
-              accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+              accept="application/pdf"
               onChange={handleResume}
             />
             <p class="mb-8 text-sm text-gray-600">
-              Please ensure your resume is in DOC, DOCX, or PDF format.
+              Please ensure your resume is in PDF format.
             </p>
             <div className="flex justify-between">
               <button
@@ -391,7 +403,37 @@ const JobDetail = () => {
               >
                 Submit
               </button>
+              <button
+                type="button"
+                onClick={toggleModal}
+                className="bg-gray-300 hover:bg-gray-500 hover:text-white text-gray-800 px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
             </div>
+          </div>
+        </div>
+      </Modal>      
+      <Modal
+        isOpen={isShowWarningModal}
+        onRequestClose={toggleWarningModal}
+        contentLabel="Warning"
+        className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-25"
+      >
+        <div className="bg-white rounded-lg p-8 max-w-lg w-full">
+          <h2 className="text-xl font-bold mb-4 flex justify-center text-red-500">
+            <FiAlertTriangle className="mr-2 w-6 h-6 text-red-500" /> Warning
+          </h2>
+          <p className="mb-4">Please upload a resume before submitting your application.</p>
+          <div className="flex justify-center bg-green-700 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold">
+            <button
+              type="button"
+              onClick={toggleWarningModal}
+              className="text-center"
+            >
+              Got it!
+            </button>
           </div>
         </div>
       </Modal>
