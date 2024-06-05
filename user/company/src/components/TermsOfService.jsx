@@ -38,7 +38,7 @@ const TermsOfService = () => {
             data-aos="fade-up"
             className="title text-white text-6xl font-semibold" // Example animation class
           >
-            TERMS AND CONDITIONS
+            TERMS OF USE OF AGREEMENT
           </h1>
         </div>
       </div>
@@ -49,7 +49,7 @@ const TermsOfService = () => {
       <div className="p-8">
         <div>
           <p className="mb-4 text-gray-700">
-          The stated Terms and Conditions will govern your use of Skills2.0Match as an applicant and a company and any related services offered by the website. By accessing or using Skills2.0Match, you acknowledge that these Terms will take effect once you started.
+          By accessing and using our Site, you agree to comply with and be legally bound by the following Terms of Use. Please review the following terms carefully. If you do not agree to these terms, you should not use this site.
           </p>
         </div>
       </div>
@@ -57,11 +57,10 @@ const TermsOfService = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">USE OF SERVICE</h3>
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">1. Acceptance of Agreement</h3>
         <div>
           <p className="mb-4 text-gray-700">
-          Skills2.0Match is an automated skills matching system specifically designed to help Out-of-School Youth to have wider access to various job opportunites based on the skills they have.  By using out services, you agree to use the platform only based on its intended purpose.
-            To be able to use the services for the applicant, you must be atleast 18 to 24 yeaars old.  If you are accessing the platform to share job opportunities on behalf of your company or organization, you claim and permit to bindi such etity and terms.
+          You agree to the terms and conditions outlined in the Terms of Use Agreement (“Agreement”). This Agreement constitutes the entire and only agreement between the System and you, and supersedes all prior or contemporaneous agreements, representations, warranties and understandings with respect to the Site, the content, products or services provided by or through the Site, and the subject matter of this Agreement. This Agreement may be amended at any time by us from time to time without prior notice to you.
           </p>
         </div>
       </div>
@@ -69,11 +68,10 @@ const TermsOfService = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">JOB MATCHING AND RECOMMENDATION</h4>
+        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">2. Copyright</h4>
         <div>
           <p className="mb-4 text-gray-700">
-          The Skills2.0Match utilizes Regex Algorithm to mach OSY's users with job opportunities based on the skills, qualification, and preferences entered.  As we strive to produce precise, accurate, and relevant jobs, we do not guarantee employment or job placement.
-        We encourage our applicants to analyze and review job listings that matched their profile and apply on jobs that align and suites their preference and interests.  Skills2.0Match is not responsible for the results of any job application or employment that walkthrough or facilitated by the platform.
+          The contents, organization, graphics, design, compilation, magnetic translation, digital conversion and other matters related to the Site are protected under applicable copyrights, trademarks and other proprietary (including but not limited to intellectual property) rights.
           </p>
         </div>
       </div>
@@ -81,10 +79,10 @@ const TermsOfService = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">INTELLECTUAL PROPERTY</h4>
+        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">4. Limited License or Permitted Use</h4>
         <div>
           <p className="mb-4 text-gray-700">
-          The service provided by the Skills2.0Match is and will continue to be a sole property of the said website and its licensors and developers, along with its features, functionality, and content.  The laws of copyright and trademark in the Philippines will provide protection against individuas who plan to copy or distribute services without prior written approval.
+          You are granted a non-exclusive, non-transferable, revocable license (a) to access and use the Site strictly in accordance with this Agreement; (b) to use the Site solely for internal, personal, non-commercial purposes; and (c) to print out discrete information from the Site solely for internal, personal, non-commercial purposes and provided that you maintain all copyright and other policies contained therein. 
           </p>
         </div>
       </div>
@@ -92,10 +90,10 @@ const TermsOfService = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">TERMINATION</h3>
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">5. Registration</h3>
         <div>
           <p className="mb-4 text-gray-700">
-          We may terminate or suspend your accout and access immediately, wihtout prior notice if breach of terms has been proven.  Upon termination, your access to any service and to your account will be immediately ceased. 
+          Certain sections of, or offerings from, the Site may require you to register. If registration is requested, you agree to provide us with accurate, complete registration information. Your registration must be done using accurate information. Each registration is for your personal use only. You are responsible to prevent unauthorized use of the Site using your registration information.
           </p>
         </div>
       </div>
@@ -103,10 +101,54 @@ const TermsOfService = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">CHANGES</h3>
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">6. Errors, Corrections and Changes</h3>
         <div>
           <p className="mb-4 text-gray-700">
-          We reserve and maintain the authority to amend or update these Terms at any instance, in our sole discretion.  Before doing any modification, we will send a notice at least 30 days prior to any new terms that will take effect if the adjustment is substantial.  Our sole judgment will be considered to identify and deciding what changes are qualified material.
+          We do not represent or warrant that the Site will be error-free, free of viruses or other harmful components, or that defects will be corrected. We do not represent or warrant that the information available on or through the Site will be correct, accurate, timely or otherwise reliable. We may make changes to the features, functionality or content of the Site at any time without any notification in advance. We reserve the right in our sole discretion to edit or delete any documents, information or other content appearing on the Site.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
+      <div className="p-8">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">7. Third Party Content</h3>
+        <div>
+          <p className="mb-4 text-gray-700">
+          Third party content from member agencies may appear on the Site or may be accessible via links from the Site. We are not responsible for and assume no liability for any mistakes, misstatements of law, defamation, omissions, falsehood in the statements, opinions, representations or any other form of content thereon. We are not liable for any damages or loss arising from access to those websites. Use of the hyperlinks and access to such linked websites are entirely at your own risk. You understand that the information and opinions in the third party content represent solely the thoughts of the owner and is neither endorsed by nor does it necessarily reflect our belief.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
+      <div className="p-8">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">8. Unlawful Activity</h3>
+        <div>
+          <p className="mb-4 text-gray-700">
+          We reserve the right to investigate complaints or reported violations of this Agreement and to take any action we deem appropriate, including but not limited to reporting any suspected unlawful activity to law enforcement officials, regulators, or other third parties and disclosing any information necessary or appropriate to such persons or entities relating to your profile, email addresses, usage history, posted materials, IP addresses and traffic information.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
+      <div className="p-8">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">9. Use of Information</h3>
+        <div>
+          <p className="mb-4 text-gray-700">
+          We reserve the right, and you authorize us, to the use and assignment of all information regarding Site used by you and all information provided by you in any manner consistent with our Privacy Policy. 
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
+      <div className="p-8">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">10. Privacy Policy</h3>
+        <div>
+          <p className="mb-4 text-gray-700">
+          Our Privacy Policy, as it may change from time to time, is a part of this Agreement.
           </p>
         </div>
       </div>

@@ -47,7 +47,7 @@ const PrivacyPolicy = () => {
   <div className="container mx-auto p-8 text-left mt-24">
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b-2 border-gray-500 pb-2">PRIVACY STATEMENT</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b-2 border-gray-500 pb-2">Privacy Statement</h2>
         <div>
           <p className="mb-4 text-gray-700">
             We assure our users that their shared information and data will never be sold or rented. We care about your privacy and spam is something that we detest. By agreeing with the Privacy Statement, you permit Skills2.0Match to use your personal information as stated in this Privacy Statement when you use this website.
@@ -58,64 +58,19 @@ const PrivacyPolicy = () => {
 
     <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
       <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">PERSONAL INFORMATION</h3>
         <div>
           <p className="mb-4 text-gray-700">
-            We may collect and use the gained personal information for the following purposes:
-            <ul className="list-disc pl-4 text-gray-700">
-              <li>Improve our support services</li>
-              <li>Improve user functionality and experience</li>
-            </ul>
+         1. Access to this website, maintained by the local organization, is free to all employers and applicants for employment purposes.
           </p>
-        </div>
-      </div>
-    </div>
-
-    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
-      <div className="p-8">
-        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">Company</h4>
-        <div>
           <p className="mb-4 text-gray-700">
-            The company must provide their personally identifiable information such as the company name, location, company logo, and description about their company.
+          2. Safeguard of the created and registered account user name and password, which shall be used as reference for all transactions in this website, shall be the responsibility of applicants and employers.
           </p>
-        </div>
-      </div>
-    </div>
-
-    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
-      <div className="p-8">
-        <h4 className="text-lg font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">Applicant</h4>
-        <div>
           <p className="mb-4 text-gray-700">
-            The applicant must provide with their name, last name, location, email, about, location, and profile picture. They can also enter their skills and show the jobs recommended for them.
+          3. Correctness of the data encoded into the system must be assured by the applicant and employer, otherwise, incorrect data shall be used and will affect the job matching and application process.
           </p>
-        </div>
-      </div>
-    </div>
-
-    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
-      <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">EMAIL</h3>
-        <div>
           <p className="mb-4 text-gray-700">
-            Skills2.0Match does not sell or rent users' email addresses to anyone. We ensure that only verified users will be able to enter the website and companies that have been only approved by the admin will be able to post a job.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div className="privacy-statement rounded-lg bg-green-200 shadow-md mb-8">
-      <div className="p-8">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 border-b-2 border-gray-500 pb-2">CONTACT INFORMATION</h3>
-        <div>
-          <p className="mb-4 text-gray-700">
-            If you have any concerns or questions about our Privacy Statement or any queries, you may contact us through the following:
-          </p>
-          <ul className="list-disc pl-4 mb-4 text-gray-700">
-            <li>E-mail: your@email.com</li>
-            <li>Phone Number: +123456789</li>
-            <li>Address: Your Address</li>
-          </ul>
+          4. All entries shall be treated with utmost confidentiality and in accordance to the REPUBLIC ACT 10173
+          DATA PRIVACY ACT OF 2012. </p>
         </div>
       </div>
     </div>
