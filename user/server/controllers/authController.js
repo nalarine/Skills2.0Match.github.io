@@ -1,6 +1,7 @@
 import Users from "../models/userModel.js";
 import { sendVerificationEmail } from "../emailService.js";
 import { v4 as uuidv4 } from 'uuid';
+import Companies from "../models/companiesModel.js";
 import { sendForgotPasswordEmail } from "../sendVerificationEmail.js"
 
 export const register = async (req, res, next) => {
@@ -11,8 +12,12 @@ export const register = async (req, res, next) => {
   }
 
   try {
+    // Check if the email is already registered as a user
     const userExist = await Users.findOne({ email });
-    if (userExist) {
+    // Check if the email is already registered as a company
+    const companyExist = await Companies.findOne({ email });
+
+    if (userExist || companyExist) {
       return res.status(400).json({ message: "Email address already exists" });
     }
 
@@ -61,7 +66,6 @@ export const register = async (req, res, next) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 export async function verifyEmail(verificationToken) {
   try {
@@ -122,7 +126,6 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Send a simplified user object without circular references
     const userResponse = {
       _id: user._id,
       firstName: user.firstName,
@@ -138,7 +141,6 @@ export const signIn = async (req, res, next) => {
 
     const verificationToken = jwt.sign({ userId: user._id }, 'USAIDPROJECT', { expiresIn: '1h' });
 
-    // Send the response with the simplified user object
     res.status(200).json({
       success: true,
       message: "Login successful",

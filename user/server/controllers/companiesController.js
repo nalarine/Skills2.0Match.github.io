@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Companies from "../models/companiesModel.js";
+import Users from "../models/userModel.js";
 import { sendVerificationEmail } from "../emailServiceCompany.js";
 import { sendForgotPasswordEmail } from "../sendVerificationEmailCompany.js"
 import { v4 as uuidv4 } from 'uuid';
@@ -7,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 export const register = async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  //validate fields
   if (!name) {
     next("Company Name is required!");
     return;
@@ -22,9 +22,12 @@ export const register = async (req, res, next) => {
   }
 
   try {
+    // Check if the email is already registered as a company
     const accountExist = await Companies.findOne({ email });
+    // Check if the email is already registered as a user
+    const userExist = await Users.findOne({ email });
 
-    if (accountExist) {
+    if (accountExist || userExist) {
       next("Email Already Registered. Please Login");
       return;
     }
@@ -33,20 +36,15 @@ export const register = async (req, res, next) => {
     const company = await Companies.create({
       name,
       email,
-      password, 
+      password,
     });
 
-    // Generate unique verification token
     const verificationToken = uuidv4();
-
-    // Save verification token temporarily (consider storing in a separate collection)
     company.verificationToken = verificationToken;
     await company.save();
 
-    // Send verification email
     await sendVerificationEmail(company);
 
-    // user token
     const token = company.createJWT();
 
     res.status(201).json({
@@ -104,7 +102,6 @@ export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    // Validation
     if (!email || !password) {
       return res.status(400).json({ message: "Please provide user credentials" });
     }
@@ -115,12 +112,10 @@ export const signIn = async (req, res, next) => {
       return res.status(404).json({ message: "Email is not yet registered" });
     }
 
-    // Check if email is verified
     if (!company.verified) {
       return res.status(401).json({ message: "Email not verified. Please check your email to verify your account." });
     }
 
-    // Compare password
     const isMatch = await company.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });

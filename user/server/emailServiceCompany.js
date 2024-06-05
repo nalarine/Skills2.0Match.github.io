@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendVerificationEmail = async (company) => {
   const subject = "Verify your email address";
-  const headerImagePath = path.join(__dirname, '..', 'company', 'src', 'assets', 'header-image.png');
+  const headerImagePath = path.join(__dirname, '..', 'company', 'src', 'assets', 'header-company.png');
   const logoPath = path.join(__dirname, '..', 'company', 'src', 'assets', 'logo.png');
   const message = `
   <html>
@@ -98,7 +98,7 @@ export const sendVerificationEmail = async (company) => {
       html: message,
       attachments: [
         {
-          filename: 'header-image.jpg',
+          filename: 'header-company.jpg',
           path: headerImagePath,
           cid: 'headerImage' // Unique identifier for the header image
         },

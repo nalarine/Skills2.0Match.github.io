@@ -201,70 +201,121 @@ export default function AdminGenerateReports() {
     setReportType('jobList');
   };
 
-  const handlePageChange = (pageNumber) => {
-    console.log(`Page changed to: ${pageNumber}`);
-    setCurrentPage(pageNumber);
-  };
-
   const handleDownloadReport = (type, format) => {
     let data;
     let filename;
-
+    
     switch (type) {
       case 'users':
-        data = users;
+        data = users.map(({ id, ...rest }) => rest); // Remove 'id' field
         filename = 'users_report';
         break;
       case 'companies':
-        data = companies;
+        data = companies.map(({ id, ...rest }) => rest); // Remove 'id' field
         filename = 'companies_report';
         break;
       case 'jobs':
-        data = jobs;
+        data = jobs.map(({ id, ...rest }) => rest); // Remove 'id' field
         filename = 'jobs_report';
         break;
       default:
         return;
     }
-
+  
     // Filter data based on selected criteria
     if (selectedFilter !== 'all') {
-      data = data.filter(user => {
-        switch (selectedFilter) {
-          case 'registrationDate':
-            return user.createdAt >= startDate && user.createdAt <= endDate;
-          case 'birthday':
-            return user.birthdate === new Date().toLocaleDateString(); // Example filter by today's date
-          case 'age':
-            return user.age === calculateAge(new Date().setFullYear(new Date().getFullYear() - parseInt(searchQuery)));
+      data = data.filter(item => {
+        switch (type) {
+          case 'users':
+            switch (selectedFilter) {
+              case 'registrationDate':
+                return new Date(item.createdAt) >= startDate && new Date(item.createdAt) <= endDate;
+              case 'birthday':
+                return item.birthdate === new Date().toLocaleDateString();
+              case 'age':
+                return item.age === calculateAge(new Date().setFullYear(new Date().getFullYear() - parseInt(searchQuery)));
+              default:
+                return true;
+            }
+          case 'companies':
+            switch (selectedFilter) {
+              case 'name':
+                return item.name.includes(searchQuery); // Filter by name
+              case 'email':
+                return item.email.includes(searchQuery); // Filter by email
+              case 'location':
+                return item.location.includes(searchQuery); // Filter by location
+              default:
+                return true;
+            }
+          case 'jobs':
+            switch (selectedFilter) {
+              case 'title':
+                return item.title.includes(searchQuery);
+              case 'type':
+                return item.jobType.includes(searchQuery);
+              case 'company':
+                return item.company.includes(searchQuery);
+              case 'vacancies':
+                return item.vacancies === parseInt(searchQuery);
+              default:
+                return true;
+            }
           default:
             return true;
         }
       });
     }
-
-    if (format === 'csv') {
-      const csv = data.map(row => Object.values(row).join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.setAttribute('download', `${filename}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else if (format === 'pdf') {
-      const doc = new jsPDF();
-      const pdfData = data.map(row => {
-        const { id, ...rest } = row;
-        return Object.values(rest);
+  
+    if (format === 'pdf') {
+      const doc = new jsPDF({
+        orientation: 'landscape'
       });
+  
+      // Prepare data for the PDF
+      const headers = Object.keys(data[0]);
+      const content = data.map(row => Object.values(row));
+  
+      // Remove 'id' field from headers and content
+      const idIndex = headers.indexOf('id');
+      if (idIndex !== -1) {
+        headers.splice(idIndex, 1);
+        content.forEach(row => row.splice(idIndex, 1));
+      }
+  
+      // Add autotable plugin
       doc.autoTable({
-        head: [Object.keys(data[0]).filter(key => key !== 'id')],
-        body: pdfData,
+        head: [headers],
+        body: content,
+        startY: 20, // Adjust the starting position if needed
+        columnStyles: { 0: { cellWidth: 'auto' } }, // Adjust the width of the first column
+        bodyStyles: { minCellHeight: 15 } // Adjust the height of the rows
       });
-      doc.save(`${type}.pdf`);
+  
+      // Save the PDF
+      doc.save(`${filename}.pdf`);
     }
   };
+  
+  
+  const getCompanyName = (companyId) => {
+    const company = companies.find((company) => company.id === companyId);
+    return company ? company.name : 'N/A';
+  };
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredJobs = jobs.filter((job) => {
+    const companyName = getCompanyName(job.company);
+    return (
+      job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+  
 
   return (
     <div>
@@ -303,44 +354,6 @@ export default function AdminGenerateReports() {
             )}
           </div>
         </div>
-        <div className="flex mb-4">
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-            onClick={() => handleDownloadReport('users', 'csv')}
-          >
-            Download Users CSV
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-            onClick={() => handleDownloadReport('users', 'pdf')}
-          >
-            Download Users PDF
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-            onClick={() => handleDownloadReport('companies', 'csv')}
-          >
-            Download Companies CSV
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-            onClick={() => handleDownloadReport('companies', 'pdf')}
-          >
-            Download Companies PDF
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-            onClick={() => handleDownloadReport('jobs', 'csv')}
-          >
-            Download Jobs CSV
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={() => handleDownloadReport('jobs', 'pdf')}
-          >
-            Download Jobs PDF
-          </button>
-        </div>
         {reportType === 'userList' && (
           <div>
             <h2 className="text-xl font-bold mb-4">List of all Applicants</h2>
@@ -357,7 +370,7 @@ export default function AdminGenerateReports() {
                   >
                     <option value="all">All</option>
                     <option value="registrationDate">Registration Date</option>
-                    <option value="birthday">Birthday</option>
+                    <option value="birthdate">Birthdate</option>
                     <option value="age">Age</option>
                   </select>
                   {selectedFilter === 'registrationDate' && (
@@ -383,6 +396,12 @@ export default function AdminGenerateReports() {
                       />
                     </div>
                   )}
+                   <button
+                      className="bg-green-500 text-white px-4 py-2 rounded ml-4"
+                      onClick={() => handleDownloadReport('users', 'pdf')}
+                    >
+                      Download Users PDF
+                    </button>
                 </div>
                 <table className="min-w-full bg-white border">
                   <thead>
@@ -429,13 +448,55 @@ export default function AdminGenerateReports() {
             {loading ? (
               <p>Loading...</p>
             ) : (
+              <div>
+              <div className="flex items-center mb-4">
+                <label className="mr-2">Filter by:</label>
+                <select
+                  className="border rounded px-2 py-1 mr-4"
+                  value={selectedFilter}
+                  onChange={(e) => setSelectedFilter(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  <option value="name">Name</option>
+                  <option value="email">Email</option>
+                  <option value="location">Location</option>
+                </select>
+                {selectedFilter === 'registrationDate' && (
+                  <div className="flex items-center mr-4">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={(update) => setDateRange(update)}
+                      startDate={startDate}
+                      endDate={endDate}
+                      selectsRange
+                      inline
+                    />
+                  </div>
+                )}
+                {selectedFilter === 'age' && (
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      className="border rounded px-2 py-1"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Enter age"
+                    />
+                  </div>
+                )}
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded ml-2"
+                  onClick={() => handleDownloadReport('companies', 'pdf')}
+                >
+                  Download Companies PDF
+                </button>
+              </div>
               <table className="min-w-full bg-white border">
                 <thead>
                   <tr>
                     <th className="px-4 py-2 border">Name</th>
                     <th className="px-4 py-2 border">Email</th>
                     <th className="px-4 py-2 border">Location</th>
-                    <th className="px-4 py-2 border">Industry</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -444,20 +505,65 @@ export default function AdminGenerateReports() {
                       <td className="px-4 py-2 border">{company.name}</td>
                       <td className="px-4 py-2 border">{company.email}</td>
                       <td className="px-4 py-2 border">{company.location}</td>
-                      <td className="px-4 py-2 border">{company.industry}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         )}
+
         {reportType === 'jobList' && (
           <div>
             <h2 className="text-xl font-bold mb-4">List of all Jobs</h2>
             {loading ? (
               <p>Loading...</p>
             ) : (
+              <div>
+              <div className="flex items-center mb-4">
+                <label className="mr-2">Filter by:</label>
+                <select
+                  className="border rounded px-2 py-1 mr-4"
+                  value={selectedFilter}
+                  onChange={(e) => setSelectedFilter(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  <option value="jobTitle">Title</option>
+                  <option value="company">Job Type</option>
+                  <option value="jobType">Company</option>
+                  <option value="vacancies">Vacancy</option>
+                </select>
+                {selectedFilter === 'registrationDate' && (
+                  <div className="flex items-center mr-4">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={(update) => setDateRange(update)}
+                      startDate={startDate}
+                      endDate={endDate}
+                      selectsRange
+                      inline
+                    />
+                  </div>
+                )}
+                {selectedFilter === 'age' && (
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      className="border rounded px-2 py-1"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Enter age"
+                    />
+                  </div>
+                )}
+                  <button
+                className="bg-green-500 text-white px-4 py-2 rounded mb-2"
+                onClick={() => handleDownloadReport('jobs', 'pdf')}
+              >
+                Download Jobs PDF
+              </button>
+              </div>
               <table className="min-w-full bg-white border">
                 <thead>
                   <tr>
@@ -470,14 +576,15 @@ export default function AdminGenerateReports() {
                 <tbody>
                   {jobs.map((job) => (
                     <tr key={job.id}>
-                      <td className="px-4 py-2 border">{job.title}</td>
-                      <td className="px-4 py-2 border">{job.company}</td>
-                      <td className="px-4 py-2 border">{job.type}</td>
+                      <td className="px-4 py-2 border">{job.jobTitle}</td>
+                      <td className="px-4 py-2 border">{getCompanyName(job.company)}</td>
+                      <td className="px-4 py-2 border">{job.jobType}</td>
                       <td className="px-4 py-2 border">{job.vacancies}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         )}

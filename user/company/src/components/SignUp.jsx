@@ -35,6 +35,7 @@ const SignUp = () => {
   const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const { user } = useSelector((state) => state.user);
+  const [emailType, setEmailType] = useState(accountType === 'seeker' ? 'gmail' : 'company');
 
   let from = location?.state?.from?.pathname || '/';
 
@@ -130,6 +131,16 @@ const SignUp = () => {
     }
   };
 
+// Seeker email regex (for Gmail addresses)
+const seekerEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+
+// Improved company email regex (allows .ph, .edu.ph, and gmail.com)
+const companyEmailRegex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9.-]+\.(ph|edu\.ph)|gmail\.com)$/;
+
+const handleEmailTypeChange = (event) => {
+  setEmailType(event.target.value);
+};
+
   return (
     <div className="pt-[7%] flex min-h-screen items-center justify-center p-4 content-center bg-gradient-to-b from-[#c1e1c1] to-[#143c1d] bg-blur-sm">
       <div className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl shadow-xl">
@@ -164,21 +175,44 @@ const SignUp = () => {
         {errMsg && <div className="text-red-600">{errMsg}</div>}
 
         <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-        <TextInput
+        {accountType === 'seeker' && (
+        <div>
+          <TextInput
             name="email"
             label="Email Address"
             placeholder="user@gmail.com"
             type="email"
-            register={register('email', {
+            {...register('email', {
               required: 'Email Address is required!',
               pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: 'Please enter a valid email address.',
+                value: seekerEmailRegex,
+                message: 'Please enter a valid Gmail email address.',
               },
             })}
             error={errors.email ? errors.email.message : ''}
             required
           />
+        </div>
+      )}
+      {accountType === 'company' && (
+        <div>
+          <TextInput
+            name="email"
+            label="Company Email Address"
+            placeholder="company@yourcompany.ph"
+            type="email"
+            {...register('email', {
+              required: 'Email Address is required!',
+              pattern: {
+                value: companyEmailRegex,
+                message: 'Please enter a valid Company email address.',
+              },
+            })}
+            error={errors.email ? errors.email.message : ''}
+            required
+          />
+        </div>
+      )}
           {isRegister && accountType === 'seeker' && (
             <>
               <TextInput

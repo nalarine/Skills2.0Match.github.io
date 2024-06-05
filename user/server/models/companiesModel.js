@@ -12,7 +12,17 @@ const companySchema = new Schema({
     type: String,
     required: [true, "Email is required"],
     unique: true,
-    validate: validator.isEmail,
+    validate: {
+      validator: (value) => {
+        // Enhanced email validation with support for .ph and exclusion of .edu
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isPhDomain = value.endsWith(".ph");
+  
+        // Allow .ph and any valid email address except .edu
+        return emailRegex.test(value) && (isPhDomain || !value.endsWith(".edu") || otherValidTLDs.test(value));
+      },
+      message: '{VALUE} is not a valid email address.'
+    }
   },
   password: {
     type: String,

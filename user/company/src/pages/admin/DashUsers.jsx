@@ -23,7 +23,6 @@ const DashUsers = () => {
     lastName: '',
     email: '',
     birthdate: '',
-    password: '',
     userType: 'user',
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -118,7 +117,6 @@ const DashUsers = () => {
       lastName: '',
       email: '',
       birthdate: '',
-      password: '',
       userType: 'user',
     });
     setEditUser(null);
@@ -132,7 +130,6 @@ const DashUsers = () => {
       lastName: '',
       email: '',
       birthdate: '',
-      password: '',
       userType: 'user',
     });
   };
@@ -188,13 +185,27 @@ const DashUsers = () => {
     setEditUser(user);
     setDeleteConfirmationOpen(true);
   };
-
+  
   const confirmDelete = async () => {
     try {
+      // Send email before deleting the user
+      await apiRequest({
+        url: '/users/send-delete-email',
+        method: 'POST',
+        data: {
+          email: editUser.email,
+          firstName: `${editUser.firstName} ${editUser.lastName}`,
+        },
+      });
+  
+      toast.info('Email sent to user before deletion');
+  
+      // Proceed with deleting the user
       await apiRequest({
         url: `/users/delete/${editUser.id}`,
         method: 'DELETE',
       });
+  
       setUsers((prevUsers) => prevUsers.filter((u) => u.id !== editUser.id));
       setDeleteConfirmationOpen(false);
       toast.success('User deleted successfully');
@@ -202,7 +213,6 @@ const DashUsers = () => {
       toast.error('Error deleting user. Please try again.');
     }
   };
-
   const cancelDelete = () => {
     setDeleteConfirmationOpen(false);
   };
@@ -376,15 +386,6 @@ const DashUsers = () => {
             shrink: true,
           }}
         />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            value={newUser.password}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          />
           <TextField
             label="User Type"
             name="userType"
