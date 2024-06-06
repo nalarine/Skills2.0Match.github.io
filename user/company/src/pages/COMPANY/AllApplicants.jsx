@@ -151,7 +151,7 @@ export default function AllApplicants({ dateRange }) {
                     />
                   </td>
                   <td className="px-4 py-2">
-                    {filteredApplicants.appliedDate}
+                  {new Date(filteredApplicants.appliedDate).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-2">{filteredApplicants.jobRole}</td>
                   <td className="px-4 py-2">
