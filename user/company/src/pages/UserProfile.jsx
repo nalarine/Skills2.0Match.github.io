@@ -22,6 +22,9 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
   const [fileList, setFileList] = useState([])
+  const [skills, setSkills] = useState([]) // Add state for skills
+  const [skillError, setSkillError] = useState('') // Add state for skill error
+  const [skillInput, setSkillInput] = useState('') // State for the skill input
 
   const handleCancel = () => setPreviewOpen(false)
 
@@ -39,6 +42,8 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
       Object.entries(user).forEach(([key, value]) => {
         setValue(key, value)
       })
+      // Initialize skills state from user data
+      setSkills(user.skills ? user.skills.split(' ').slice(0, 10) : [])
     }
   }, [user, setValue])
 
@@ -91,6 +96,15 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
   // }, [])
 
   const onSubmit = async (data) => {
+    if (skills.length < 5) {
+      setSkillError('You must enter at least 5 skills')
+      setIsSubmitting(false)
+      return
+    } else if (skills.length > 10) {
+      setSkillError('You can enter a maximum of 10 skills')
+      setIsSubmitting(false)
+      return
+    }
     setIsSubmitting(true)
     try {
       if (profileImage) {
@@ -106,6 +120,7 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
       const newData = {
         ...data,
         profileUrl,
+        skills: skills.join(' '),
       }
       const res = await apiRequest({
         url: '/users/update-user',
@@ -184,6 +199,26 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
     )
+  }
+
+  const handleSkillInputChange = (event) => {
+    setSkillInput(event.target.value)
+  }
+
+  const handleSkillKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const newSkill = skillInput.trim()
+      if (newSkill && !skills.includes(newSkill)) {
+        setSkills([...skills, newSkill])
+        setSkillInput('')
+        setSkillError('')
+      }
+    }
+  }
+
+  const removeSkill = (skillToRemove) => {
+    setSkills(skills.filter(skill => skill !== skillToRemove))
   }
 
   return (
@@ -352,27 +387,37 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
                     </div>
 
                     <div className="flex flex-col">
-                      <label className="text-gray-600 text-sm mb-1">
-                        Skill
+                    <label className="text-gray-600 text-sm mb-1">
+                        Skills
                       </label>
-                      <textarea
-                        className="rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none"
-                        rows={4}
-                        cols={6}
-                        {...register('skills', {
-                          required:
-                            'Write your skills (e.g. Cleaning, Cooking)',
-                        })}
-                        aria-invalid={errors.skills ? 'true' : 'false'}
-                      ></textarea>
-                      {errors.skills && (
-                        <span
-                          role="alert"
-                          className="text-xs text-red-500 mt-0.5"
-                        >
-                          {errors.skills?.message}
-                        </span>
+                      <input
+                        type="text"
+                        className="w-full border border-gray-300 rounded-md p-2"
+                        placeholder="Type a skill and press Enter"
+                        value={skillInput}
+                        onChange={handleSkillInputChange}
+                        onKeyDown={handleSkillKeyDown}
+                      />
+                      {skillError && (
+                        <p className="text-red-500 text-xs mt-1">{skillError}</p>
                       )}
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {skills.map((skill, index) => (
+                          <div
+                            key={index}
+                            className="bg-gray-200 rounded-full px-3 py-1 flex items-center gap-2"
+                          >
+                            <span className="text-sm">{skill}</span>
+                            <button
+                              type="button"
+                              onClick={() => removeSkill(skill)}
+                              className="text-red-500"
+                            >
+                              &times;
+                            </button>
+                          </div>
+                        ))}
+                    </div>
                     </div>
 
                     <div className="flex flex-col">
@@ -517,9 +562,18 @@ const UserProfile = () => {
             </div>
 
             <p className="text-green-600 font-bold text-lg text-left">SKILLS</p>
-            <div className="overflow-y-auto max-h-40">
-              <p className="text-base text-left leading-7 px-3 py-2 text-sm text-slate-600">
-                {userInfo?.skills ?? 'No Skills Indicated'}
+            <div className="flex flex-wrap">
+              <p className="text-base text-left leading-7 px-3 py-2 text-sm text-slate-600 flex flex-wrap">
+              {userInfo?.skills
+              ? userInfo.skills.split(' ').map((skill, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm mr-2 mb-2"
+                  >
+                    {skill.trim()}
+                  </span>
+                ))
+              : 'No Skills Indicated'}
               </p>
             </div>
 
@@ -539,7 +593,7 @@ const UserProfile = () => {
             Edit Profile
           </button>
 
-          {resumeUrl && (
+          {/* {resumeUrl && (
             <div className="flex items-center justify-center">
               <a
                 href={resumeUrl}
@@ -550,7 +604,7 @@ const UserProfile = () => {
                 Download Resume
               </a>
             </div>
-          )}
+          )} */}
         </div>
       </div>
       <UserForm
