@@ -85,33 +85,44 @@ const ViewApplicantCard = ({ userInfo, showModal, setShowModal }) => {
             <div className="border-t lg:border-t-0 lg:border-l pl-0 lg:pl-10 pt-6 lg:pt-0 flex-1">
               <div className="mb-6">
                 <p className="text-lg font-medium mb-1 flex items-center">
-                  <FaEnvelope className="mr-2" /> E-mail:
+                  <FaEnvelope className="mr-2 text-green-700" /> E-mail:
                 </p>
                 <p className="text-gray-700">{userInfo?.email}</p>
               </div>
               <div className="mb-6">
                 <p className="text-lg font-medium mb-1 flex items-center">
-                  <FaMapMarkerAlt className="mr-2" /> Location:
+                  <FaMapMarkerAlt className="mr-2 text-green-700" /> Location:
                 </p>
                 <p className="text-gray-700">{userInfo?.location}</p>
               </div>
               <div className="mb-6">
                 <p className="text-lg font-medium mb-1 flex items-center">
-                  <FaPhone className="mr-2" /> Contact:
+                  <FaPhone className="mr-2 text-green-700" /> Contact:
                 </p>
                 <p className="text-gray-700">{userInfo?.contact}</p>
               </div>
               <div className="mb-6">
                 <p className="text-lg font-medium mb-1 flex items-center">
-                  <FaInfoCircle className="mr-2" /> About:
+                  <FaInfoCircle className="mr-2 text-green-700" /> About:
                 </p>
                 <p className="text-gray-700">{userInfo?.about}</p>
               </div>
               <div className="mb-6">
                 <p className="text-lg font-medium mb-1 flex items-center">
-                  <FaList className="mr-2" /> Skills:
+                  <FaList className="mr-2 text-green-700" /> Skills:
                 </p>
-                <p className="text-gray-700">{userInfo?.skills}</p>
+                <p className="text-gray-700">
+                  {userInfo?.skills
+                    ? userInfo.skills.split(' ').map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm mr-2 mb-2"
+                        >
+                          {skill.trim()}
+                        </span>
+                      ))
+                    : 'No Skills Indicated'}
+              </p>
               </div>
               <div className="mb-6">
                 {userInfo?.resume ? (
