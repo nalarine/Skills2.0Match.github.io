@@ -6,8 +6,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import ReactPDF from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { saveAs } from 'file-saver';
+import { pdf } from '@react-pdf/renderer';
+
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
@@ -201,103 +204,93 @@ export default function AdminGenerateReports() {
     setReportType('jobList');
   };
 
-  const handleDownloadReport = (type, format) => {
+  const styles = StyleSheet.create({
+    page: {
+      flexDirection: 'row',
+      backgroundColor: '#E4E4E4',
+    },
+    section: {
+      margin: 10,
+      padding: 10,
+      flexGrow: 1,
+    },
+    header: {
+      fontSize: 20,
+      marginBottom: 10,
+    },
+    row: {
+      flexDirection: 'row',
+    },
+    column: {
+      flexDirection: 'column',
+      marginRight: 15,
+    },
+    columnHeader: {
+      fontWeight: 'bold',
+      marginBottom: 5,
+    },
+    cell: {
+      padding: 5,
+      borderBottomWidth: 1,
+      borderBottomColor: '#000',
+    },
+  });
+
+  const generatePDF = (type, data) => (
+    <Document>
+      <Page size="A4">
+        <View style={styles.section}>
+          <Text style={styles.header}>
+            {type === 'users' ? 'Users Report' : type === 'companies' ? 'Companies Report' : 'Jobs Report'}
+          </Text>
+          <View style={styles.row}>
+            {Object.keys(data[0]).map((key, index) => (
+              <View key={index} style={styles.column}>
+                <Text style={styles.columnHeader}>{key}</Text>
+                {data.map((item, i) => (
+                  <Text key={i} style={styles.cell}>
+                    {item[key]}
+                  </Text>
+                ))}
+              </View>
+            ))}
+          </View>
+        </View>
+      </Page>
+    </Document>
+  );
+  
+
+  const handleDownloadPDF = async (type) => {
     let data;
-    let filename;
-    
     switch (type) {
       case 'users':
-        data = users.map(({ id, ...rest }) => rest); // Remove 'id' field
-        filename = 'users_report';
+        data = users.map(({ id, ...rest }) => rest);
         break;
       case 'companies':
-        data = companies.map(({ id, ...rest }) => rest); // Remove 'id' field
-        filename = 'companies_report';
+        data = companies.map(({ id, ...rest }) => rest);
         break;
       case 'jobs':
-        data = jobs.map(({ id, ...rest }) => rest); // Remove 'id' field
-        filename = 'jobs_report';
+        data = jobs.map(({ id, ...rest }) => rest);
         break;
       default:
         return;
     }
   
-    // Filter data based on selected criteria
-    if (selectedFilter !== 'all') {
-      data = data.filter(item => {
-        switch (type) {
-          case 'users':
-            switch (selectedFilter) {
-              case 'registrationDate':
-                return new Date(item.createdAt) >= startDate && new Date(item.createdAt) <= endDate;
-              case 'birthday':
-                return item.birthdate === new Date().toLocaleDateString();
-              case 'age':
-                return item.age === calculateAge(new Date().setFullYear(new Date().getFullYear() - parseInt(searchQuery)));
-              default:
-                return true;
-            }
-          case 'companies':
-            switch (selectedFilter) {
-              case 'name':
-                return item.name.includes(searchQuery); // Filter by name
-              case 'email':
-                return item.email.includes(searchQuery); // Filter by email
-              case 'location':
-                return item.location.includes(searchQuery); // Filter by location
-              default:
-                return true;
-            }
-          case 'jobs':
-            switch (selectedFilter) {
-              case 'title':
-                return item.title.includes(searchQuery);
-              case 'type':
-                return item.jobType.includes(searchQuery);
-              case 'company':
-                return item.company.includes(searchQuery);
-              case 'vacancies':
-                return item.vacancies === parseInt(searchQuery);
-              default:
-                return true;
-            }
-          default:
-            return true;
-        }
-      });
-    }
+    const doc = generatePDF(type, data);
   
-    if (format === 'pdf') {
-      const doc = new jsPDF({
-        orientation: 'landscape'
-      });
-  
-      // Prepare data for the PDF
-      const headers = Object.keys(data[0]);
-      const content = data.map(row => Object.values(row));
-  
-      // Remove 'id' field from headers and content
-      const idIndex = headers.indexOf('id');
-      if (idIndex !== -1) {
-        headers.splice(idIndex, 1);
-        content.forEach(row => row.splice(idIndex, 1));
-      }
-  
-      // Add autotable plugin
-      doc.autoTable({
-        head: [headers],
-        body: content,
-        startY: 20, // Adjust the starting position if needed
-        columnStyles: { 0: { cellWidth: 'auto' } }, // Adjust the width of the first column
-        bodyStyles: { minCellHeight: 15 } // Adjust the height of the rows
-      });
-  
-      // Save the PDF
-      doc.save(`${filename}.pdf`);
+    try {
+      const pdfBlob = await pdf(doc).toBlob(); // Use pdf(doc).toBlob() to generate the PDF blob
+      saveAs(pdfBlob, `${type}_report.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      // Display an error message to the user
+      toast.error('Error generating PDF. Please try again later.');
     }
   };
   
   
+
   const getCompanyName = (companyId) => {
     const company = companies.find((company) => company.id === companyId);
     return company ? company.name : 'N/A';
@@ -315,7 +308,10 @@ export default function AdminGenerateReports() {
       job.location.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
-  
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
@@ -396,12 +392,12 @@ export default function AdminGenerateReports() {
                       />
                     </div>
                   )}
-                   <button
-                      className="bg-green-500 text-white px-4 py-2 rounded ml-4"
-                      onClick={() => handleDownloadReport('users', 'pdf')}
-                    >
-                      Download Users PDF
-                    </button>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded ml-4"
+                    onClick={() => handleDownloadPDF('users')}
+                  >
+                    Download Users PDF
+                  </button>
                 </div>
                 <table className="min-w-full bg-white border">
                   <thead>
@@ -449,71 +445,70 @@ export default function AdminGenerateReports() {
               <p>Loading...</p>
             ) : (
               <div>
-              <div className="flex items-center mb-4">
-                <label className="mr-2">Filter by:</label>
-                <select
-                  className="border rounded px-2 py-1 mr-4"
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)}
-                >
-                  <option value="all">All</option>
-                  <option value="name">Name</option>
-                  <option value="email">Email</option>
-                  <option value="location">Location</option>
-                </select>
-                {selectedFilter === 'registrationDate' && (
-                  <div className="flex items-center mr-4">
-                    <DatePicker
-                      selected={startDate}
-                      onChange={(update) => setDateRange(update)}
-                      startDate={startDate}
-                      endDate={endDate}
-                      selectsRange
-                      inline
-                    />
-                  </div>
-                )}
-                {selectedFilter === 'age' && (
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      className="border rounded px-2 py-1"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Enter age"
-                    />
-                  </div>
-                )}
-                <button
-                  className="bg-green-500 text-white px-4 py-2 rounded ml-2"
-                  onClick={() => handleDownloadReport('companies', 'pdf')}
-                >
-                  Download Companies PDF
-                </button>
-              </div>
-              <table className="min-w-full bg-white border">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 border">Name</th>
-                    <th className="px-4 py-2 border">Email</th>
-                    <th className="px-4 py-2 border">Location</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {companies.map((company) => (
-                    <tr key={company.id}>
-                      <td className="px-4 py-2 border">{company.name}</td>
-                      <td className="px-4 py-2 border">{company.email}</td>
-                      <td className="px-4 py-2 border">{company.location}</td>
+                <div className="flex items-center mb-4">
+                  <label className="mr-2">Filter by:</label>
+                  <select
+                    className="border rounded px-2 py-1 mr-4"
+                    value={selectedFilter}
+                    onChange={(e) => setSelectedFilter(e.target.value)}
+                  >
+                    <option value="all">All</option>
+                    <option value="name">Name</option>
+                    <option value="email">Email</option>
+                    <option value="location">Location</option>
+                  </select>
+                  {selectedFilter === 'registrationDate' && (
+                    <div className="flex items-center mr-4">
+                      <DatePicker
+                        selected={startDate}
+                        onChange={(update) => setDateRange(update)}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectsRange
+                        inline
+                      />
+                    </div>
+                  )}
+                  {selectedFilter === 'age' && (
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        className="border rounded px-2 py-1"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Enter age"
+                      />
+                    </div>
+                  )}
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded ml-4"
+                    onClick={() => handleDownloadPDF('companies')}
+                  >
+                    Download Companies PDF
+                  </button>
+                </div>
+                <table className="min-w-full bg-white border">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 border">Name</th>
+                      <th className="px-4 py-2 border">Email</th>
+                      <th className="px-4 py-2 border">Location</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {companies.map((company) => (
+                      <tr key={company.id}>
+                        <td className="px-4 py-2 border">{company.name}</td>
+                        <td className="px-4 py-2 border">{company.email}</td>
+                        <td className="px-4 py-2 border">{company.location}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
         )}
-
         {reportType === 'jobList' && (
           <div>
             <h2 className="text-xl font-bold mb-4">List of all Jobs</h2>
@@ -521,69 +516,43 @@ export default function AdminGenerateReports() {
               <p>Loading...</p>
             ) : (
               <div>
-              <div className="flex items-center mb-4">
-                <label className="mr-2">Filter by:</label>
-                <select
-                  className="border rounded px-2 py-1 mr-4"
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)}
-                >
-                  <option value="all">All</option>
-                  <option value="jobTitle">Title</option>
-                  <option value="company">Job Type</option>
-                  <option value="jobType">Company</option>
-                  <option value="vacancies">Vacancy</option>
-                </select>
-                {selectedFilter === 'registrationDate' && (
-                  <div className="flex items-center mr-4">
-                    <DatePicker
-                      selected={startDate}
-                      onChange={(update) => setDateRange(update)}
-                      startDate={startDate}
-                      endDate={endDate}
-                      selectsRange
-                      inline
-                    />
-                  </div>
-                )}
-                {selectedFilter === 'age' && (
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      className="border rounded px-2 py-1"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Enter age"
-                    />
-                  </div>
-                )}
+                <div className="mb-4 flex items-center">
+                  <input
+                    type="text"
+                    className="border rounded px-2 py-1 mr-4"
+                    placeholder="Search Jobs"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                  />
                   <button
-                className="bg-green-500 text-white px-4 py-2 rounded mb-2"
-                onClick={() => handleDownloadReport('jobs', 'pdf')}
-              >
-                Download Jobs PDF
-              </button>
-              </div>
-              <table className="min-w-full bg-white border">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 border">Title</th>
-                    <th className="px-4 py-2 border">Company</th>
-                    <th className="px-4 py-2 border">Type</th>
-                    <th className="px-4 py-2 border">Vacancies</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {jobs.map((job) => (
-                    <tr key={job.id}>
-                      <td className="px-4 py-2 border">{job.jobTitle}</td>
-                      <td className="px-4 py-2 border">{getCompanyName(job.company)}</td>
-                      <td className="px-4 py-2 border">{job.jobType}</td>
-                      <td className="px-4 py-2 border">{job.vacancies}</td>
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={() => handleDownloadPDF('jobs')}
+                  >
+                    Download Jobs PDF
+                  </button>
+                </div>
+                <table className="min-w-full bg-white border">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 border">Job Title</th>
+                      <th className="px-4 py-2 border">Company</th>
+                      <th className="px-4 py-2 border">Location</th>
+                      <th className="px-4 py-2 border">Vacancies</th>
+                      <th className="px-4 py-2 border">Type</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredJobs.map((job) => (
+                      <tr key={job.id}>
+                        <td className="px-4 py-2 border">{job.jobTitle}</td>
+                        <td className="px-4 py-2 border">{getCompanyName(job.company)}</td>
+                        <td className="px-4 py-2 border">{job.location}</td>
+                        <td className="px-4 py-2 border">{job.vacancies}</td>
+                        <td className="px-4 py-2 border">{job.jobType}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
@@ -591,5 +560,6 @@ export default function AdminGenerateReports() {
       </div>
     </div>
   );
-};
+}
+
 
