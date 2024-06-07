@@ -7,10 +7,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import ReactPDF from '@react-pdf/renderer';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import { pdf } from '@react-pdf/renderer';
-
+import logo from '../../assets/logo.png'
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
@@ -106,12 +106,12 @@ export default function AdminGenerateReports() {
     }
   }, [startDate, endDate]);
 
-  const fetchUsers = async (page = 1) => {
+  const fetchUsers = async (page = 1, ageFilter = '') => {
     setLoading(true);
     try {
       console.log(`Fetching users for page: ${page}`);
       const response = await apiRequest({
-        url: `/users/allusers?page=${page}&limit=${usersPerPage}`, // Append page and limit to the URL
+        url: `/users/allusers?page=${page}&limit=${usersPerPage}&age=${ageFilter}`, // Append age filter to the URL
         method: 'GET',
       });
       console.log('API response:', response);
@@ -130,6 +130,7 @@ export default function AdminGenerateReports() {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchUsers(currentPage);
@@ -204,53 +205,131 @@ export default function AdminGenerateReports() {
     setReportType('jobList');
   };
 
-  const styles = StyleSheet.create({
-    page: {
-      flexDirection: 'row',
-      backgroundColor: '#E4E4E4',
-    },
-    section: {
-      margin: 10,
-      padding: 10,
-      flexGrow: 1,
-    },
-    header: {
-      fontSize: 20,
-      marginBottom: 10,
-    },
-    row: {
-      flexDirection: 'row',
-    },
-    column: {
-      flexDirection: 'column',
-      marginRight: 15,
-    },
-    columnHeader: {
-      fontWeight: 'bold',
-      marginBottom: 5,
-    },
-    cell: {
-      padding: 5,
-      borderBottomWidth: 1,
-      borderBottomColor: '#000',
-    },
-  });
+  const generatePDF = (type, data) => {
+    const styles = StyleSheet.create({
+      page: {
+        flexDirection: 'row',
+        padding: 20,
+        backgroundColor: '#FFFFFF',
+      },
+      section: {
+        flex: 1,
+        margin: 10,
+      },
+      header: {
+        fontSize: 20,
+        marginBottom: 20,
+        textAlign: 'center',
+        fontWeight: 'bold',
+      },
+      table: {
+        display: 'table',
+        width: 'auto',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRightWidth: 0,
+        borderBottomWidth: 0,
+      },
+      tableRow: {
+        flexDirection: 'row',
+      },
+      tableColHeader: {
+        width: `${100 / (type === 'users' ? 5 : type === 'companies' ? 3 : 5)}%`,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#000',
+        borderLeftWidth: 0,
+        borderTopWidth: 0,
+        backgroundColor: '#f0f0f0',
+        padding: 5,
+        fontWeight: 'bold',
+        fontSize: 12,
+      },
+      tableCol: {
+        width: `${100 / (type === 'users' ? 5 : type === 'companies' ? 3 : 5)}%`,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#000',
+        borderLeftWidth: 0,
+        borderTopWidth: 0,
+        padding: 5,
+        fontSize: 10,
+      },
+      tableCell: {
+        margin: 'auto',
+        marginTop: 5,
+        fontSize: 10,
+      },
+    });
+  
+    const columns = {
+      users: {
+        all: ['Name', 'Email', 'Birthdate', 'Age', 'Registration Date'],
+        registrationDate: ['Name', 'Email', 'Registration Date'],
+        birthdate: ['Name', 'Email', 'Birthdate'],
+        age: ['Name', 'Email', 'Age'],
+      },
+      companies: {
+        all: ['Name', 'Email', 'Location'],
+        // Additional filters for companies if needed
+      },
+      jobs: {
+        all: ['Job Title', 'Company', 'Location', 'Vacancies', 'Type'],
+        // Additional filters for jobs if needed
+      },
+    };
+  
+    const getDisplayData = (type, data, selectedFilter) => {
+      switch (type) {
+        case 'users':
+          return data.map((user) => ({
+            Name: `${user.firstName} ${user.lastName}`,
+            Email: user.email,
+            Birthdate: user.birthdate,
+            Age: user.age,
+            'Registration Date': user.createdAt,
+          }));
+        case 'companies':
+          return data.map((company) => ({
+            Name: company.name,
+            Email: company.email,
+            Location: company.location,
+          }));
+        case 'jobs':
+          return data.map((job) => ({
+            'Job Title': job.jobTitle,
+            Company: job.companyName,
+            Location: job.location,
+            Vacancies: job.vacancies,
+            Type: job.jobType,
+          }));
+        default:
+          return [];
+      }
+    };
+  
+    const displayData = getDisplayData(type, data, selectedFilter);
 
-  const generatePDF = (type, data) => (
+  const displayColumns = columns[type][selectedFilter];
+
+  return (
     <Document>
-      <Page size="A4">
+      <Page size="A4" style={styles.page} orientation="landscape">
         <View style={styles.section}>
           <Text style={styles.header}>
             {type === 'users' ? 'Users Report' : type === 'companies' ? 'Companies Report' : 'Jobs Report'}
           </Text>
-          <View style={styles.row}>
-            {Object.keys(data[0]).map((key, index) => (
-              <View key={index} style={styles.column}>
-                <Text style={styles.columnHeader}>{key}</Text>
-                {data.map((item, i) => (
-                  <Text key={i} style={styles.cell}>
-                    {item[key]}
-                  </Text>
+          <View style={styles.table}>
+            <View style={styles.tableRow}>
+              {displayColumns.map((key, index) => (
+                <Text key={index} style={styles.tableColHeader}>{key}</Text>
+              ))}
+            </View>
+            {displayData.map((item, rowIndex) => (
+              <View key={rowIndex} style={styles.tableRow}>
+                {displayColumns.map((colKey, colIndex) => (
+                  <Text key={colIndex} style={styles.tableCol}>{item[colKey]}</Text>
                 ))}
               </View>
             ))}
@@ -259,10 +338,15 @@ export default function AdminGenerateReports() {
       </Page>
     </Document>
   );
+};
   
 
   const handleDownloadPDF = async (type) => {
     let data;
+    let ageFilter = '';
+    if (selectedFilter === 'age' && searchQuery) {
+      ageFilter = searchQuery; // Set age filter if selected filter is 'age' and search query is not empty
+    }
     switch (type) {
       case 'users':
         data = users.map(({ id, ...rest }) => rest);
@@ -277,7 +361,7 @@ export default function AdminGenerateReports() {
         return;
     }
   
-    const doc = generatePDF(type, data);
+    const doc = generatePDF(type, data, selectedFilter, ageFilter); // Pass age filter to generatePDF function
   
     try {
       const pdfBlob = await pdf(doc).toBlob(); // Use pdf(doc).toBlob() to generate the PDF blob
