@@ -19,7 +19,7 @@ import HelpCenter from '../pages/OSY/HelpCenter'
 import CDashboard from '../pages/COMPANY/Dashboard'
 import CMessages from '../pages/COMPANY/Messages'
 import AllApplicants from '../pages/COMPANY/AllApplicants'
-import CSchedule from '../pages/COMPANY/Schedule'
+// import CSchedule from '../pages/COMPANY/Schedule'
 import CJobListing from '../pages/COMPANY/JobListing'
 import CompanyLayoutDash from '../components/Shared/CompanyLayoutDash'
 import AdminDashboard from '../pages/admin/AdminDashboard'
@@ -34,7 +34,6 @@ import Admin2 from './admin2/Admin2'
 import UserPage from './admin2/pages/user'
 import ProductsPage from './admin2/pages/products'
 import GenerateReports from '../pages/COMPANY/GenerateReports'
-
 
 export {
   FindJobs,
@@ -58,7 +57,7 @@ export {
   CDashboard,
   CMessages,
   AllApplicants,
-  CSchedule,
+  // CSchedule,
   CJobListing,
   CompanyLayoutDash,
   AdminDashboard,

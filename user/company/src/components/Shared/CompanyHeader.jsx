@@ -66,7 +66,7 @@ const Header = ({ newJobDetails }) => {
         <div className="flex items-center gap-3 p-3 relative">
           <AccountPopover />
         </div>
-        <Link to="/find-jobs">
+        {/* <Link to="/find-jobs">
           <button
             className={`bg-green-700 hover:bg-green-500 border border-dark-yellow text-white font-bold py-2 px-4 rounded transition-transform ${isClicked ? 'scale-95' : ''}`}
             style={{
@@ -80,7 +80,7 @@ const Header = ({ newJobDetails }) => {
           >
             Seek Applicants
           </button>
-        </Link>
+        </Link> */}
       </div>
     </div>
   )

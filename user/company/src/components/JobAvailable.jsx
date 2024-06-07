@@ -24,6 +24,7 @@ const JobAvailable = () => {
           url: `/jobs/job-available?user_id=${user._id}`,
           method: 'GET',
         })
+        console.log(response)
         setPostedJobs(response.data || []) // Ensure always an array
       } catch (error) {
         console.error('Error fetching jobs:', error)
@@ -37,6 +38,7 @@ const JobAvailable = () => {
   if (!user?._id) {
     return <div>No user data available.</div>
   }
+  console.log(postedJobs)
 
   return (
     <div
@@ -44,25 +46,28 @@ const JobAvailable = () => {
       style={{ height: '32rem' }}
     >
       <DashboardStatsGrid jobMatches={postedJobs.length} />
-  <div className="flex flex-row justify-between items-center">
-    <strong className="font-bold text-3xl mb-4">Best Job Matched to your Skills</strong>
-  </div>
-  <div className="w-full flex flex-wrap gap-4">
-    {postedJobs.length > 0 ? (
-      postedJobs.map((job, index) => {
-        const newJob = {
-          name: job?.company?.name,
-          logo: job?.company?.profileUrl,
-          ...job,
-        };
-
-        return job.vacancies >= 0 && <JobCard job={newJob} key={index} />;
-      })
-    ) : (
-      <div className="w-full text-center text-xl">No jobs available</div>
-    )}
-  </div>
-  {isFetching && <Loading />}
+      <div className="flex flex-row justify-between items-center">
+        <strong className="font-bold text-3xl mb-4">
+          Best Job Matched to your Skills
+        </strong>
+      </div>
+      <div className="w-full flex flex-wrap gap-4">
+        {postedJobs.length > 0 ? (
+          postedJobs.map((job, index) => {
+            if (index < 3) {
+              const newJob = {
+                name: job?.company?.name,
+                logo: job?.company?.profileUrl,
+                ...job,
+              }
+              return job.vacancies >= 0 && <JobCard job={newJob} key={index} />
+            }
+          })
+        ) : (
+          <div className="w-full text-center text-xl">No jobs available</div>
+        )}
+      </div>
+      {isFetching && <Loading />}
     </div>
   )
 }

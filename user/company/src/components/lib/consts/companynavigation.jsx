@@ -46,14 +46,14 @@ export const COMPANY_DASHBOARD_SIDEBAR_LINKS = [
       />
     ),
   },
-  {
-    key: 'mySchedule',
-    label: 'My Schedule',
-    path: '/schedule',
-    icon: (
-      <img src={calendar} alt="Schedule Icon" className="w-[28px] h-[28px]" />
-    ),
-  },
+  // {
+  //   key: 'mySchedule',
+  //   label: 'My Schedule',
+  //   path: '/schedule',
+  //   icon: (
+  //     <img src={calendar} alt="Schedule Icon" className="w-[28px] h-[28px]" />
+  //   ),
+  // },
   {
     key: 'reports',
     label: 'Generate Reports',

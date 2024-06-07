@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ViewApplicantCard from '../../components/ViewApplicantCard'
 import { apiRequest } from '../../utils'
-import moment from 'moment' // Import moment
+import moment from 'moment'
 
 const HiringStageCell = ({ applicantId, value, onChange }) => (
   <select
@@ -33,6 +33,13 @@ export default function AllApplicants({ dateRange }) {
   const [userInfo, setUserInfo] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [filteredApplicants, setFilteredApplicants] = useState([])
+  const [filter, setFilter] = useState({
+    hiringStage: '',
+    fullName: '',
+    jobRole: '',
+    appliedDateStart: '',
+    appliedDateEnd: '',
+  })
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -50,36 +57,43 @@ export default function AllApplicants({ dateRange }) {
   }, [user._id])
 
   useEffect(() => {
-    if (dateRange && dateRange.length === 2 && dateRange[0] && dateRange[1]) {
-      const filtered = applicants.filter((applicant) => {
-        const appliedDate = moment(applicant.appliedDate)
-        return appliedDate.isBetween(
-          dateRange[0],
-          dateRange[1],
-          undefined,
-          '[]',
-        )
-      })
-      setFilteredApplicants(filtered)
-    } else {
-      setFilteredApplicants(applicants)
-    }
-  }, [applicants, dateRange])
+    let filtered = applicants
 
-  useEffect(() => {
-    const getCompany = async () => {
-      try {
-        const res = await apiRequest({
-          url: `/companies/get-company/${user._id}`,
-          method: 'GET',
-        })
-        setApplicants(res.data.applicants)
-      } catch (error) {
-        console.error('Error loading company data:', error)
-      }
+    // Filter by hiring stage
+    if (filter.hiringStage) {
+      filtered = filtered.filter((applicant) =>
+        applicant.hiringStage.includes(filter.hiringStage),
+      )
     }
-    getCompany()
-  }, [user._id])
+
+    // Filter by full name
+    if (filter.fullName) {
+      filtered = filtered.filter((applicant) =>
+        applicant.fullName
+          .toLowerCase()
+          .includes(filter.fullName.toLowerCase()),
+      )
+    }
+
+    // Filter by job role
+    if (filter.jobRole) {
+      filtered = filtered.filter((applicant) =>
+        applicant.jobRole.toLowerCase().includes(filter.jobRole.toLowerCase()),
+      )
+    }
+
+    // Filter by applied date range
+    if (filter.appliedDateStart && filter.appliedDateEnd) {
+      const startDate = moment(filter.appliedDateStart)
+      const endDate = moment(filter.appliedDateEnd)
+      filtered = filtered.filter((applicant) => {
+        const appliedDate = moment(applicant.appliedDate)
+        return appliedDate.isBetween(startDate, endDate, undefined, '[]')
+      })
+    }
+
+    setFilteredApplicants(filtered)
+  }, [applicants, filter])
 
   const handleStatusChange = async (applicantId, newStatus) => {
     try {
@@ -100,13 +114,20 @@ export default function AllApplicants({ dateRange }) {
   }
 
   const handleSeeProfile = (applicant) => {
-    // The detailedUser object should ideally contain all user-related data necessary for the modal
     const detailedUser = {
-      ...applicant.user, // assuming applicant has a nested user object as in the first snippet
-      resume: applicant.resume, // Ensure resume data is included
+      ...applicant.user,
+      resume: applicant.resume,
     }
     setUserInfo(detailedUser)
     setShowModal(true)
+  }
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      [name]: value,
+    }))
   }
 
   return (
@@ -115,7 +136,80 @@ export default function AllApplicants({ dateRange }) {
         <h1 className="text-3xl font-bold">
           Total Applicants: {applicants.length}
         </h1>
-        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <div className="flex flex-wrap gap-4 mt-4 items-center">
+          <div className="flex items-center">
+            <label className="block mr-2">
+              Hiring Stage:
+              <select
+                name="hiringStage"
+                value={filter.hiringStage}
+                onChange={handleFilterChange}
+                className="bg-white border border-gray-300 rounded-md p-2 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Hired">Hired</option>
+                <option value="Declined">Declined</option>
+                <option value="Shortlisted">Shortlisted</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label className="block">
+              Full Name:
+              <input
+                type="text"
+                name="fullName"
+                value={filter.fullName}
+                onChange={handleFilterChange}
+                className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+              />
+            </label>
+          </div>
+          <div>
+            <label className="block">
+              Job Role:
+              <input
+                type="text"
+                name="jobRole"
+                value={filter.jobRole}
+                onChange={handleFilterChange}
+                className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+              />
+            </label>
+          </div>
+          <div className="flex flex-col">
+            <label className="flex block items-center">
+              Applied Date Range:
+              <div className="flex">
+                <input
+                  type="date"
+                  value={filter.appliedDateStart}
+                  onChange={(e) =>
+                    handleFilterChange({
+                      target: {
+                        name: 'appliedDateStart',
+                        value: e.target.value,
+                      },
+                    })
+                  }
+                  className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500 mr-2"
+                />
+                <input
+                  type="date"
+                  value={filter.appliedDateEnd}
+                  onChange={(e) =>
+                    handleFilterChange({
+                      target: { name: 'appliedDateEnd', value: e.target.value },
+                    })
+                  }
+                  className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            </label>
+          </div>
+        </div>
+        <div className="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -151,7 +245,9 @@ export default function AllApplicants({ dateRange }) {
                     />
                   </td>
                   <td className="px-4 py-2">
-                  {new Date(filteredApplicants.appliedDate).toLocaleDateString()}
+                    {new Date(
+                      filteredApplicants.appliedDate,
+                    ).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-2">{filteredApplicants.jobRole}</td>
                   <td className="px-4 py-2">

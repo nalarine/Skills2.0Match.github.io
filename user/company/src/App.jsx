@@ -11,7 +11,7 @@ import {
   TermsOfService,
   ForgotPassword,
   ForgotPasswordCompany,
-  SignUp
+  SignUp,
 } from './components'
 import {
   About,
@@ -44,7 +44,7 @@ import CompanyLayoutDash from './components/Shared/CompanyLayoutDash'
 import CDashboard from './pages/COMPANY/Dashboard'
 import CMessages from './pages/COMPANY/Messages'
 import AllApplicants from './pages/COMPANY/AllApplicants'
-import CSchedule from './pages/COMPANY/Schedule'
+// import CSchedule from './pages/COMPANY/Schedule'
 import CJobListing from './pages/COMPANY/JobListing'
 import GenerateReports from './pages/COMPANY/GenerateReports'
 import CHelpCenter from './pages/COMPANY/CompanyHelpCenter'
@@ -81,9 +81,7 @@ function Layout() {
     return <Navigate to="/sign-up" state={{ from: location }} replace />
   }
 
-  return (
-    <Outlet />
-  )
+  return <Outlet />
 }
 function App() {
   const { user } = useSelector((state) => state.user)
@@ -136,48 +134,47 @@ function App() {
     location.pathname.startsWith('/CHelpCenter') ||
     location.pathname.startsWith('/CSettings') ||
     location.pathname.startsWith('/reset-password') ||
-     location.pathname.startsWith('/reset-password-token') ||
+    location.pathname.startsWith('/reset-password-token') ||
     location.pathname.startsWith('/AdminDashboard') ||
-    location.pathname.startsWith('/admin/reports') 
-
+    location.pathname.startsWith('/admin/reports')
 
   const hideExtraComponents =
-    user &&
-    (location.pathname === '/' ||
-      location.pathname.startsWith('/Dashboard') ||
-      location.pathname.startsWith('/CompanyDash') ||
-      location.pathname.startsWith('/messages') ||
-      location.pathname.startsWith('/all-application') ||
-      location.pathname.startsWith('/my-schedule') ||
-      location.pathname.startsWith('/skills-assessment') ||
-      location.pathname.startsWith('/user-profile') ||
-      location.pathname.startsWith('/settings') ||
-      location.pathname.startsWith('/help-center') ||
-      location.pathname.startsWith('/job-available') ||
-      location.pathname.startsWith('/AboutPage') ||
-      location.pathname.startsWith('/About') ||
-      location.pathname.startsWith('/ContactPage') ||
-      location.pathname.startsWith('/find-jobs') ||
-      location.pathname.startsWith('/company-profile') ||
-      location.pathname.startsWith('/job-detail/') ||
-      location.pathname.startsWith('/upload-job') ||
-      location.pathname.startsWith('/companies') ||
-      location.pathname.startsWith('/admin/category') ||
-      location.pathname.startsWith('/admin/users') ||
-      location.pathname.startsWith('/admin/jobs') ||
-      location.pathname.startsWith('/admin/companies') ||
-      location.pathname.startsWith('/verification-success') ||
-      location.pathname.startsWith('/verification-success-company') ||
-      location.pathname.startsWith('/privacy-policy') ||
-      location.pathname.startsWith('/terms-of-service') ||
-      location.pathname.startsWith('/generate-reports') ||
-      location.pathname.startsWith('/CHelpCenter') ||
-      location.pathname.startsWith('/CSettings') ||
-      location.pathname.startsWith('/reset-password') ||
-      location.pathname.startsWith('/reset-password-token') ||
-      location.pathname.startsWith('/sign-up') ||
-      location.pathname.startsWith('/AdminDashboard')) ||
-      location.pathname.startsWith('/admin/reports') 
+    (user &&
+      (location.pathname === '/' ||
+        location.pathname.startsWith('/Dashboard') ||
+        location.pathname.startsWith('/CompanyDash') ||
+        location.pathname.startsWith('/messages') ||
+        location.pathname.startsWith('/all-application') ||
+        location.pathname.startsWith('/my-schedule') ||
+        location.pathname.startsWith('/skills-assessment') ||
+        location.pathname.startsWith('/user-profile') ||
+        location.pathname.startsWith('/settings') ||
+        location.pathname.startsWith('/help-center') ||
+        location.pathname.startsWith('/job-available') ||
+        location.pathname.startsWith('/AboutPage') ||
+        location.pathname.startsWith('/About') ||
+        location.pathname.startsWith('/ContactPage') ||
+        location.pathname.startsWith('/find-jobs') ||
+        location.pathname.startsWith('/company-profile') ||
+        location.pathname.startsWith('/job-detail/') ||
+        location.pathname.startsWith('/upload-job') ||
+        location.pathname.startsWith('/companies') ||
+        location.pathname.startsWith('/admin/category') ||
+        location.pathname.startsWith('/admin/users') ||
+        location.pathname.startsWith('/admin/jobs') ||
+        location.pathname.startsWith('/admin/companies') ||
+        location.pathname.startsWith('/verification-success') ||
+        location.pathname.startsWith('/verification-success-company') ||
+        location.pathname.startsWith('/privacy-policy') ||
+        location.pathname.startsWith('/terms-of-service') ||
+        location.pathname.startsWith('/generate-reports') ||
+        location.pathname.startsWith('/CHelpCenter') ||
+        location.pathname.startsWith('/CSettings') ||
+        location.pathname.startsWith('/reset-password') ||
+        location.pathname.startsWith('/reset-password-token') ||
+        location.pathname.startsWith('/sign-up') ||
+        location.pathname.startsWith('/AdminDashboard'))) ||
+    location.pathname.startsWith('/admin/reports')
 
   return (
     <main className="bg-[#f7fdfd]">
@@ -191,32 +188,39 @@ function App() {
       )}
       <Routes>
         <Route path="/user-auth" element={<AuthPage />} />
-        <Route path="/sign-up" element={<SignUp />} /> 
+        <Route path="/sign-up" element={<SignUp />} />
         <Route
           path="/verification-success/:verificationToken"
           element={<VerificationSuccess />}
         />
-          <Route
+        <Route
           path="/verification-success-company/:verificationToken"
           element={<VerificationSuccessPageCompany />}
         />
-           <Route path="/reset-password/:token" element={<ForgotPassword />} />
-           <Route path="/reset-password-token/:token" element={<ForgotPasswordCompany />} />
+        <Route path="/reset-password/:token" element={<ForgotPassword />} />
+        <Route
+          path="/reset-password-token/:token"
+          element={<ForgotPasswordCompany />}
+        />
         <Route path="/find-jobs" element={<FindJobs />} />
         <Route path="/companies" element={<Companies />} />
 
         <Route element={<Layout />}>
           <Route element={<LayoutDash />}>
-          <Route
-            path="/"
-            element={
-              user
-                ? user.isAdmin === true
-                  ? <Navigate to="/AdminDashboard" replace />
-                  : user.accountType === 'seeker'
-                  ? <Navigate to="/user-profile" replace />
-                  : <Navigate to="/company-profile" replace />
-                : <Navigate to="/user-auth" replace />
+            <Route
+              path="/"
+              element={
+                user ? (
+                  user.isAdmin === true ? (
+                    <Navigate to="/AdminDashboard" replace />
+                  ) : user.accountType === 'seeker' ? (
+                    <Navigate to="/user-profile" replace />
+                  ) : (
+                    <Navigate to="/company-profile" replace />
+                  )
+                ) : (
+                  <Navigate to="/user-auth" replace />
+                )
               }
             />
             <Route path="Dashboard" element={<Dashboard />} />
@@ -251,7 +255,7 @@ function App() {
             <Route path="CompanyDash" element={<CDashboard />} />
             <Route path="cmessages" element={<CMessages />} />
             <Route path="all-applicants" element={<AllApplicants />} />
-            <Route path="schedule" element={<CSchedule />} />
+            {/* <Route path="schedule" element={<CSchedule />} /> */}
             <Route path="/company-profile" element={<CompanyProfile />} />
             <Route path="cjoblisting" element={<CJobListing />} />
             <Route path="/generate-reports" element={<GenerateReports />} />
@@ -259,10 +263,7 @@ function App() {
             <Route path="CHelpCenter" element={<CHelpCenter />} />
           </Route>
 
-          <Route
-            path="/AdminDashboard"
-            element={<AdminDashboardHOC />}
-          />
+          <Route path="/AdminDashboard" element={<AdminDashboardHOC />} />
           <Route path="/admin/users" element={<DashUsersHOC />} />
           <Route path="/admin/jobs" element={<DashJobsHOC />} />
           <Route path="/admin/companies" element={<DashCompaniesHOC />} />

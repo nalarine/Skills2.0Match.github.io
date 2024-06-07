@@ -47,12 +47,9 @@
     "@nextui-org/react": "^2.3.3",
     "@popperjs/core": "^2.11.8",
     "@preline/tooltip": "^2.1.0",
-<<<<<<< HEAD
-    "@react-pdf/renderer": "^3.4.4",
-=======
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
->>>>>>> 0c2e65ecd5a9b1b91ec6c2ba5a083c3de383557d
+    "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^2.1.0",
     "@saas-ui/react": "^2.8.1",
     "@testing-library/jest-dom": "^6.4.2",
