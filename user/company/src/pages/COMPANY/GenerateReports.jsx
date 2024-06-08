@@ -12,6 +12,7 @@ import {
   Chip,
   Tooltip,
 } from '@nextui-org/react';
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { EditIcon } from './EditIcon';
 import { DeleteIcon } from './DeleteIcon';
 import { EyeIcon } from './EyeIcon';
@@ -19,8 +20,6 @@ import { columns, users } from './data';
 import ViewApplicantCard from '../../components/ViewApplicantCard'; // Ensure correct path
 import { apiRequest } from '../../utils';
 import moment from 'moment';
-
-// Remove HiringStageCell component
 
 const ActionCell = ({ applicant, onSeeProfile }) => (
   <button
@@ -31,10 +30,106 @@ const ActionCell = ({ applicant, onSeeProfile }) => (
   </button>
 );
 
+const ApplicantsPDF = ({ applicants }) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <Text style={styles.title}>Applicants Report</Text>
+      <View style={styles.table}>
+        <View style={styles.tableHeader}>
+          <Text style={styles.tableHeaderCell}>Full Name</Text>
+          <Text style={styles.tableHeaderCell}>Hiring Stage</Text>
+          <Text style={styles.tableHeaderCell}>Applied Date</Text>
+          <Text style={styles.tableHeaderCell}>Job Role</Text>
+        </View>
+        {applicants.map((applicant) => (
+          <View key={applicant.id} style={styles.tableRow}>
+            <Text style={styles.tableCell}>{applicant.fullName}</Text>
+            <Text style={styles.tableCell}>{applicant.hiringStage}</Text>
+            <Text style={styles.tableCell}>
+              {moment(applicant.appliedDate).format('MMMM Do, YYYY')}
+            </Text>
+            <Text style={styles.tableCell}>{applicant.jobRole}</Text>
+          </View>
+        ))}
+      </View>
+    </Page>
+  </Document>
+);
+
+const JobPostsPDF = ({ jobPosts }) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <Text style={styles.title}>Job Posts Report</Text>
+      <View style={styles.table}>
+        <View style={styles.tableHeader}>
+          <Text style={styles.tableHeaderCell}>Job Title</Text>
+          <Text style={styles.tableHeaderCell}>Vacancies</Text>
+          <Text style={styles.tableHeaderCell}>Location</Text>
+          <Text style={styles.tableHeaderCell}>Type</Text>
+          <Text style={styles.tableHeaderCell}>Date Posted</Text>
+        </View>
+        {jobPosts.map((jobPost) => (
+          <View key={jobPost.id} style={styles.tableRow}>
+            <Text style={styles.tableCell}>{jobPost.jobTitle}</Text>
+            <Text style={styles.tableCell}>{jobPost.vacancies}</Text>
+            <Text style={styles.tableCell}>{jobPost.location}</Text>
+            <Text style={styles.tableCell}>{jobPost.jobType}</Text>
+            <Text style={styles.tableCell}>
+              {moment(jobPost.createdAt).format('MMMM Do, YYYY')}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </Page>
+  </Document>
+);
+
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'landscape',
+    padding: 30,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  table: {
+    display: 'table',
+    width: 'auto',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#f2f2f2',
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
+    borderBottomStyle: 'solid',
+  },
+  tableHeaderCell: {
+    margin: 'auto',
+    marginTop: 5,
+    padding: 5,
+    fontSize: 12,
+    flexGrow: 1,
+  },
+  tableRow: {
+    flexDirection: 'row',
+  },
+  tableCell: {
+    margin: 'auto',
+    marginTop: 5,
+    padding: 5,
+    fontSize: 10,
+    flexGrow: 1,
+  },
+});
+
 export default function GenerateReports() {
   const { user } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState('Create Report');
-  const [searchTerm, setSearchTerm] = useState('');
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [showAllApplicants, setShowAllApplicants] = useState(false);
   const [dateRange, setDateRange] = useState([null, null]);
@@ -42,8 +137,7 @@ export default function GenerateReports() {
   const [filteredApplicants, setFilteredApplicants] = useState([]);
   const [filter, setFilter] = useState({
     hiringStage: '',
-    fullName: '',
-    jobRole: '',
+    searchTerm: '',
     appliedDateStart: '',
     appliedDateEnd: '',
   });
@@ -74,15 +168,10 @@ export default function GenerateReports() {
       );
     }
 
-    if (filter.fullName) {
+    if (filter.searchTerm) {
+      const searchRegex = new RegExp(filter.searchTerm.split('%').join('.*'), 'i');
       filtered = filtered.filter((applicant) =>
-        applicant.fullName.toLowerCase().includes(filter.fullName.toLowerCase())
-      );
-    }
-
-    if (filter.jobRole) {
-      filtered = filtered.filter((applicant) =>
-        applicant.jobRole.toLowerCase().includes(filter.jobRole.toLowerCase())
+        searchRegex.test(applicant.fullName) || searchRegex.test(applicant.jobRole)
       );
     }
 
@@ -128,7 +217,7 @@ export default function GenerateReports() {
     setShowJobPosts(false);
   };
 
-   const handleJobPostsClick = () => {
+  const handleJobPostsClick = () => {
     fetchJobPosts();
     setShowJobPosts(true);
     setShowAllApplicants(false);
@@ -204,7 +293,7 @@ export default function GenerateReports() {
   }, []);
 
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.name.toLowerCase().includes(filter.searchTerm.toLowerCase())
   );
 
   return (
@@ -284,23 +373,11 @@ export default function GenerateReports() {
             </div>
             <div>
               <label className="block">
-                Full Name:
+                Search by Name or Role:
                 <input
                   type="text"
-                  name="fullName"
-                  value={filter.fullName}
-                  onChange={handleFilterChange}
-                  className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
-                />
-              </label>
-            </div>
-            <div>
-              <label className="block">
-                Job Role:
-                <input
-                  type="text"
-                  name="jobRole"
-                  value={filter.jobRole}
+                  name="searchTerm"
+                  value={filter.searchTerm}
                   onChange={handleFilterChange}
                   className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
                 />
@@ -376,6 +453,15 @@ export default function GenerateReports() {
               </tbody>
             </table>
           </div>
+          <div className="mt-4">
+            <PDFDownloadLink
+              document={<ApplicantsPDF applicants={filteredApplicants} />}
+              fileName="applicants_report.pdf"
+              className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
+            >
+              Download Applicants Report as PDF
+            </PDFDownloadLink>
+          </div>
         </div>
       )}
 
@@ -420,6 +506,15 @@ export default function GenerateReports() {
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="mt-4">
+            <PDFDownloadLink
+              document={<JobPostsPDF jobPosts={jobPosts} />}
+              fileName="job_posts_report.pdf"
+              className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
+            >
+              Download Job Posts Report as PDF
+            </PDFDownloadLink>
           </div>
         </div>
       )}
