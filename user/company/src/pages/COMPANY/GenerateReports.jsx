@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { DateRangePicker } from '@nextui-org/react'
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { DateRangePicker } from '@nextui-org/react';
 import {
   Table,
   TableHeader,
@@ -10,42 +11,141 @@ import {
   User,
   Chip,
   Tooltip,
-} from '@nextui-org/react'
-import { EditIcon } from './EditIcon'
-import { DeleteIcon } from './DeleteIcon'
-import { EyeIcon } from './EyeIcon'
-import { columns, users } from './data'
-// At the top of GenerateReports.jsx
-import AllApplicants from './AllApplicants' // Assuming both components are in the same directory
+} from '@nextui-org/react';
+import { EditIcon } from './EditIcon';
+import { DeleteIcon } from './DeleteIcon';
+import { EyeIcon } from './EyeIcon';
+import { columns, users } from './data';
+import ViewApplicantCard from '../../components/ViewApplicantCard'; // Ensure correct path
+import { apiRequest } from '../../utils';
+import moment from 'moment';
+
+// Remove HiringStageCell component
+
+const ActionCell = ({ applicant, onSeeProfile }) => (
+  <button
+    className="bg-green-500 py-1 px-2 rounded-md text-white hover:bg-green-600 focus:outline-none"
+    onClick={() => onSeeProfile(applicant)}
+  >
+    See Profile
+  </button>
+);
 
 export default function GenerateReports() {
-  const [activeTab, setActiveTab] = useState('Create Report') // State to track active tab
-  const [searchTerm, setSearchTerm] = useState('') // State to track search term
-  const [isActionsOpen, setIsActionsOpen] = useState(false)
-  const [showAllApplicants, setShowAllApplicants] = useState(false) // Add state to control the display of AllApplicants
-  const [dateRange, setDateRange] = useState([null, null]) // Initial state as an array with two null values
+  const { user } = useSelector((state) => state.user);
+  const [activeTab, setActiveTab] = useState('Create Report');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [showAllApplicants, setShowAllApplicants] = useState(false);
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [applicants, setApplicants] = useState([]);
+  const [filteredApplicants, setFilteredApplicants] = useState([]);
+  const [filter, setFilter] = useState({
+    hiringStage: '',
+    fullName: '',
+    jobRole: '',
+    appliedDateStart: '',
+    appliedDateEnd: '',
+  });
+  const [jobPosts, setJobPosts] = useState([]);
+  const [showJobPosts, setShowJobPosts] = useState(false);
+
+  useEffect(() => {
+    const fetchApplicants = async () => {
+      try {
+        const res = await apiRequest({
+          url: `/companies/get-company/${user._id}`,
+          method: 'GET',
+        });
+        setApplicants(res.data.applicants);
+      } catch (error) {
+        console.error('Error loading company data:', error);
+      }
+    };
+    fetchApplicants();
+  }, [user._id]);
+
+  useEffect(() => {
+    let filtered = applicants;
+
+    if (filter.hiringStage) {
+      filtered = filtered.filter((applicant) =>
+        applicant.hiringStage.includes(filter.hiringStage)
+      );
+    }
+
+    if (filter.fullName) {
+      filtered = filtered.filter((applicant) =>
+        applicant.fullName.toLowerCase().includes(filter.fullName.toLowerCase())
+      );
+    }
+
+    if (filter.jobRole) {
+      filtered = filtered.filter((applicant) =>
+        applicant.jobRole.toLowerCase().includes(filter.jobRole.toLowerCase())
+      );
+    }
+
+    if (filter.appliedDateStart && filter.appliedDateEnd) {
+      const startDate = moment(filter.appliedDateStart);
+      const endDate = moment(filter.appliedDateEnd);
+      filtered = filtered.filter((applicant) => {
+        const appliedDate = moment(applicant.appliedDate);
+        return appliedDate.isBetween(startDate, endDate, undefined, '[]');
+      });
+    }
+
+    setFilteredApplicants(filtered);
+  }, [applicants, filter]);
+
+  const fetchJobPosts = async () => {
+    try {
+      const res = await apiRequest({
+        url: `/companies/get-company/${user._id}`,
+        method: 'GET',
+      });
+      setJobPosts(res.data.jobPosts);
+    } catch (error) {
+      console.error('Error loading job posts:', error);
+    }
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      [name]: value,
+    }));
+  };
 
   const handleTabClick = (tab) => {
-    setActiveTab(tab)
-    setShowAllApplicants(false) // Hide All Applicants when switching tabs
-  }
+    setActiveTab(tab);
+    setShowAllApplicants(false);
+  };
 
   const handleAllApplicantsClick = () => {
-    setShowAllApplicants(true) // Show the AllApplicants component
-  }
+    setShowAllApplicants(true);
+    setShowJobPosts(false);
+  };
+
+   const handleJobPostsClick = () => {
+    fetchJobPosts();
+    setShowJobPosts(true);
+    setShowAllApplicants(false);
+  };
 
   const toggleDropdown = () => {
-    setIsActionsOpen(!isActionsOpen)
-  }
+    setIsActionsOpen(!isActionsOpen);
+  };
 
   const statusColorMap = {
     active: 'success',
     paused: 'danger',
     vacation: 'warning',
-  }
+  };
 
   const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey]
+    const cellValue = user[columnKey];
 
     switch (columnKey) {
       case 'name':
@@ -57,7 +157,7 @@ export default function GenerateReports() {
           >
             {user.email}
           </User>
-        )
+        );
       case 'role':
         return (
           <div className="flex flex-col">
@@ -66,7 +166,7 @@ export default function GenerateReports() {
               {user.team}
             </p>
           </div>
-        )
+        );
       case 'status':
         return (
           <Chip
@@ -77,7 +177,7 @@ export default function GenerateReports() {
           >
             {cellValue}
           </Chip>
-        )
+        );
       case 'actions':
         return (
           <div className="relative flex items-center gap-2">
@@ -97,37 +197,20 @@ export default function GenerateReports() {
               </span>
             </Tooltip>
           </div>
-        )
+        );
       default:
-        return cellValue
+        return cellValue;
     }
-  }, [])
+  }, []);
 
-  // Filter the users based on the search term
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <section className="container px-4 mx-auto">
       <div className="sm:flex sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-x-3">
-            <h2 className="text-lg font-medium text-gray-800 dark:text-white">
-              Generate Reports
-            </h2>
-          </div>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
-            These companies have purchased in the last 12 months.
-          </p>
-        </div>
         <div className="flex items-center mt-4 gap-x-3">
-          <DateRangePicker
-            placeholder={['Start date', 'End date']}
-            color="primary"
-            clearable
-            onChange={(dates) => setDateRange(dates)}
-          />
           <div className="relative">
             <button
               onClick={toggleDropdown}
@@ -159,229 +242,187 @@ export default function GenerateReports() {
                   </span>
                   <a
                     className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    onClick={handleAllApplicantsClick} // Add this
+                    onClick={handleAllApplicantsClick}
                   >
                     List of Applicants
                   </a>
                   <a
                     className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
+                    onClick={handleJobPostsClick}
                   >
                     List of Jobs Posted
-                  </a>
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
-                  >
-                    <svg
-                      className="flex-shrink-0 size-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
-                      <path d="M12 12v9" />
-                      <path d="m8 17 4 4 4-4" />
-                    </svg>
-                    Downloads
-                  </a>
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
-                  >
-                    <svg
-                      className="flex-shrink-0 size-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    Company Account
-                  </a>
-                </div>
-                <div className="py-2">
-                  <span className="block py-2 px-3 text-xs font-medium uppercase text-gray-400 dark:text-neutral-500">
-                    Contacts
-                  </span>
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-                    href="#"
-                  >
-                    <svg
-                      className="flex-shrink-0 size-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                      <line x1="9" x2="15" y1="10" y2="10" />
-                      <line x1="12" x2="12" y1="7" y2="13" />
-                    </svg>
-                    Contact support
                   </a>
                 </div>
               </div>
             )}
           </div>
-          <div className="flex items-center gap-x-3 mr-5">
-            <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clipPath="url(#clip0_3098_154395)">
-                  <path
-                    d="M13.3333 13.3332L9.99997 9.9999M9.99997 9.9999L6.66663 13.3332M9.99997 9.9999V17.4999M16.9916 15.3249C17.8044 14.8818 18.4465 14.1806 18.8165 13.3321C19.1866 12.4835 19.2635 11.5359 19.0351 10.6388C18.8068 9.7417 18.2862 8.94616 17.5555 8.37778C16.8248 7.80939 15.9257 7.50052 15 7.4999H13.95C13.6977 6.52427 13.2276 5.61852 12.5749 4.85073C11.9222 4.08295 11.104 3.47311 10.1817 3.06708C9.25943 2.66104 8.25709 2.46937 7.25006 2.50647C6.24304 2.54358 5.25752 2.80849 4.36761 3.28129C3.47771 3.7541 2.70656 4.42249 2.11215 5.23622C1.51774 6.04996 1.11554 6.98785 0.935783 7.9794C0.756025 8.97095 0.803388 9.99035 1.07431 10.961C1.34523 11.9316 1.83267 12.8281 2.49997 13.5832"
-                    stroke="currentColor"
-                    strokeWidth="1.67"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+        </div>
+      </div>
+
+      {showAllApplicants && (
+        <div className="flex flex-col p-6 gap-4">
+          <h1 className="text-3xl font-bold">
+            Total Applicants: {applicants.length}
+          </h1>
+          <div className="flex flex-wrap gap-4 mt-4 items-center">
+            <div className="flex items-center">
+              <label className="block mr-2">
+                Hiring Stage:
+                <select
+                  name="hiringStage"
+                  value={filter.hiringStage}
+                  onChange={handleFilterChange}
+                  className="bg-white border border-gray-300 rounded-md p-2 focus:border-blue-500 focus:outline-none"
+                >
+                  <option value="">All</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Hired">Hired</option>
+                  <option value="Declined">Declined</option>
+                  <option value="Shortlisted">Shortlisted</option>
+                </select>
+              </label>
+            </div>
+            <div>
+              <label className="block">
+                Full Name:
+                <input
+                  type="text"
+                  name="fullName"
+                  value={filter.fullName}
+                  onChange={handleFilterChange}
+                  className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+                />
+              </label>
+            </div>
+            <div>
+              <label className="block">
+                Job Role:
+                <input
+                  type="text"
+                  name="jobRole"
+                  value={filter.jobRole}
+                  onChange={handleFilterChange}
+                  className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+                />
+              </label>
+            </div>
+            <div className="flex flex-col">
+              <label className="flex block items-center">
+                Applied Date Range:
+                <div className="flex">
+                  <input
+                    type="date"
+                    value={filter.appliedDateStart}
+                    onChange={(e) =>
+                      handleFilterChange({
+                        target: {
+                          name: 'appliedDateStart',
+                          value: e.target.value,
+                        },
+                      })
+                    }
+                    className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500 mr-2"
                   />
-                </g>
-                <defs>
-                  <clipPath id="clip0_3098_154395">
-                    <rect width="20" height="20" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-
-              <span>Import</span>
-            </button>
-
-            <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-
-              <span>Get Report</span>
-            </button>
+                  <input
+                    type="date"
+                    value={filter.appliedDateEnd}
+                    onChange={(e) =>
+                      handleFilterChange({
+                        target: { name: 'appliedDateEnd', value: e.target.value },
+                      })
+                    }
+                    className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </label>
+            </div>
+          </div>
+          <div className="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Full Name
+                  </th>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Hiring Stage
+                  </th>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Applied Date
+                  </th>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Job Role
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredApplicants.map((filteredApplicant) => (
+                  <tr
+                    key={filteredApplicant.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <td className="px-4 py-2">{filteredApplicant.fullName}</td>
+                    <td className="px-4 py-2">
+                      {filteredApplicant.hiringStage}
+                    </td>
+                    <td className="px-4 py-2">
+                      {new Date(
+                        filteredApplicant.appliedDate
+                      ).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-2">{filteredApplicant.jobRole}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-
-      <div className="mt-6 md:flex md:items-center md:justify-between">
-        <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg dark:bg-gray-900 rtl:flex-row-reverse dark:border-gray-700 dark:divide-gray-700">
-          <button
-            className={`px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm ${
-              activeTab === 'Create Report'
-                ? 'bg-gray-100'
-                : 'hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-300'
-            }`}
-            onClick={() => handleTabClick('Create Report')}
-          >
-            Create Report
-          </button>
-          <button
-            className={`px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm ${
-              activeTab === 'Recent Report'
-                ? 'bg-gray-100'
-                : 'hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-300'
-            }`}
-            onClick={() => handleTabClick('Recent Report')}
-          >
-            Recent Report
-          </button>
-          {/* Add more buttons for other tabs */}
-        </div>
-        {/* Existing content */}
-        <div className="relative flex items-center mt-6 mb-2 md:mt-0 justify-end">
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5 mx-3 text-gray-400 dark:text-gray-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </span>
-            <input
-              type="text"
-              placeholder="Search"
-              className="block w-full py-1.5 pl-12 pr-5 text-gray-700 bg-white border border-gray-200 rounded-lg md:w-80 placeholder-gray-400/70 rtl:pr-11 rtl:pl-5 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {showAllApplicants && <AllApplicants dateRange={dateRange} />}
-
-      {activeTab === 'Create Report' && (
-        <div>{/* Your create report template */}</div>
       )}
 
-      {activeTab === 'Recent Report' && (
-        <div>
-          <Table
-            aria-label="Example table with custom cells"
-            className="mb-5 text-left"
-          >
-            <TableHeader columns={columns}>
-              {(column) => (
-                <TableColumn
-                  key={column.uid}
-                  align={column.uid === 'actions' ? 'start' : 'start'}
-                >
-                  {column.name}
-                </TableColumn>
-              )}
-            </TableHeader>
-            <TableBody items={filteredUsers}>
-              {(item) => (
-                <TableRow key={item.id}>
-                  {(columnKey) => (
-                    <TableCell>{renderCell(item, columnKey)}</TableCell>
-                  )}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+      {showJobPosts && (
+        <div className="flex flex-col p-6 gap-4">
+          <h1 className="text-3xl font-bold">
+            Total Job Posts: {jobPosts.length}
+          </h1>
+          <div className="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Job Title
+                  </th>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Vacancies
+                  </th>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Location
+                  </th>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Type
+                  </th>
+                  <th scope="col" className="py-3 px-6 text-base text-green-900">
+                    Date Posted
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {jobPosts.map((jobPost) => (
+                  <tr
+                    key={jobPost.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <td className="px-4 py-2">{jobPost.jobTitle}</td>
+                    <td className="px-4 py-2">{jobPost.vacancies}</td>
+                    <td className="px-4 py-2">{jobPost.location}</td>
+                    <td className="px-4 py-2">{jobPost.jobType}</td>
+                    <td className="px-4 py-2">{new Date(jobPost.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </section>
-  )
+  );
 }

@@ -111,7 +111,7 @@ const ViewApplicantCard = ({ userInfo, showModal, setShowModal }) => {
                 <p className="text-lg font-medium mb-1 flex items-center">
                   <FaList className="mr-2 text-green-700" /> Skills:
                 </p>
-                <p className="text-gray-700">
+                <p className="text-gray-700 flex flex-wrap">
                   {userInfo?.skills
                     ? userInfo.skills.split(' ').map((skill, index) => (
                         <span
