@@ -32,25 +32,27 @@ const ActionCell = ({ applicant, onSeeProfile }) => (
 
 const ApplicantsPDF = ({ applicants }) => (
   <Document>
-    <Page size="A4" style={styles.page}>
+    <Page size="A4" style={styles.page} orientation="landscape">
       <Text style={styles.title}>Applicants Report</Text>
-      <View style={styles.table}>
-        <View style={styles.tableHeader}>
-          <Text style={styles.tableHeaderCell}>Full Name</Text>
-          <Text style={styles.tableHeaderCell}>Hiring Stage</Text>
-          <Text style={styles.tableHeaderCell}>Applied Date</Text>
-          <Text style={styles.tableHeaderCell}>Job Role</Text>
-        </View>
-        {applicants.map((applicant) => (
-          <View key={applicant.id} style={styles.tableRow}>
-            <Text style={styles.tableCell}>{applicant.fullName}</Text>
-            <Text style={styles.tableCell}>{applicant.hiringStage}</Text>
-            <Text style={styles.tableCell}>
-              {moment(applicant.appliedDate).format('MMMM Do, YYYY')}
-            </Text>
-            <Text style={styles.tableCell}>{applicant.jobRole}</Text>
+      <View style={styles.tableContainer}> {/* Wrap the table with tableContainer */}
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={styles.tableHeaderCell}>Full Name</Text>
+            <Text style={styles.tableHeaderCell}>Hiring Stage</Text>
+            <Text style={styles.tableHeaderCell}>Applied Date</Text>
+            <Text style={styles.tableHeaderCell}>Job Role</Text>
           </View>
-        ))}
+          {applicants.map((applicant, index) => (
+            <View key={applicant.id} style={[styles.tableRow, index === applicants.length - 1 ? styles.lastRow : null]}>
+              <Text style={styles.tableCell}>{applicant.fullName}</Text>
+              <Text style={styles.tableCell}>{applicant.hiringStage}</Text>
+              <Text style={styles.tableCell}>
+                {moment(applicant.appliedDate).format('MMMM Do, YYYY')}
+              </Text>
+              <Text style={styles.tableCell}>{applicant.jobRole}</Text>
+            </View>
+          ))}
+        </View>
       </View>
     </Page>
   </Document>
@@ -58,74 +60,102 @@ const ApplicantsPDF = ({ applicants }) => (
 
 const JobPostsPDF = ({ jobPosts }) => (
   <Document>
-    <Page size="A4" style={styles.page}>
+    <Page size="A4" style={styles.page} orientation="landscape">
       <Text style={styles.title}>Job Posts Report</Text>
-      <View style={styles.table}>
-        <View style={styles.tableHeader}>
-          <Text style={styles.tableHeaderCell}>Job Title</Text>
-          <Text style={styles.tableHeaderCell}>Vacancies</Text>
-          <Text style={styles.tableHeaderCell}>Location</Text>
-          <Text style={styles.tableHeaderCell}>Type</Text>
-          <Text style={styles.tableHeaderCell}>Date Posted</Text>
-        </View>
-        {jobPosts.map((jobPost) => (
-          <View key={jobPost.id} style={styles.tableRow}>
-            <Text style={styles.tableCell}>{jobPost.jobTitle}</Text>
-            <Text style={styles.tableCell}>{jobPost.vacancies}</Text>
-            <Text style={styles.tableCell}>{jobPost.location}</Text>
-            <Text style={styles.tableCell}>{jobPost.jobType}</Text>
-            <Text style={styles.tableCell}>
-              {moment(jobPost.createdAt).format('MMMM Do, YYYY')}
-            </Text>
+      <View style={styles.tableContainer}> {/* Wrap the table with tableContainer */}
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={styles.tableHeaderCell}>Job Title</Text>
+            <Text style={styles.tableHeaderCell}>Vacancies</Text>
+            <Text style={styles.tableHeaderCell}>Location</Text>
+            <Text style={styles.tableHeaderCell}>Type</Text>
+            <Text style={styles.tableHeaderCell}>Date Posted</Text>
           </View>
-        ))}
+          {jobPosts.map((jobPost, index) => (
+            <View key={jobPost.id} style={[styles.tableRow, index === jobPosts.length - 1 ? styles.lastRow : null]}>
+              <Text style={styles.tableCell}>{jobPost.jobTitle}</Text>
+              <Text style={styles.tableCell}>{jobPost.vacancies}</Text>
+              <Text style={styles.tableCell}>{jobPost.location}</Text>
+              <Text style={styles.tableCell}>{jobPost.jobType}</Text>
+              <Text style={styles.tableCell}>
+                {moment(jobPost.createdAt).format('MMMM Do, YYYY')}
+              </Text>
+            </View>
+          ))}
+        </View>
       </View>
     </Page>
   </Document>
 );
 
+
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'landscape',
-    padding: 30,
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
+    textAlign: 'center',
+  },
+  tableContainer: {
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
   },
   table: {
     display: 'table',
     width: 'auto',
+    borderCollapse: 'collapse',
     borderStyle: 'solid',
     borderWidth: 1,
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
+    borderColor: '#000',
   },
   tableHeader: {
     flexDirection: 'row',
     backgroundColor: '#f2f2f2',
     borderBottomWidth: 1,
     borderBottomColor: '#000',
-    borderBottomStyle: 'solid',
   },
   tableHeaderCell: {
-    margin: 'auto',
-    marginTop: 5,
+    flex: 1,
     padding: 5,
     fontSize: 12,
-    flexGrow: 1,
+    textAlign: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#000',
+    borderBottomWidth: 1, // Add bottom border to table header cell
+    borderBottomColor: '#000', // Border color can be adjusted as needed
   },
   tableRow: {
     flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
   },
   tableCell: {
-    margin: 'auto',
-    marginTop: 5,
+    flex: 1,
     padding: 5,
     fontSize: 10,
-    flexGrow: 1,
+    textAlign: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#000',
+    borderBottomWidth: 1, // Add bottom border to table cell
+    borderBottomColor: '#000', // Border color can be adjusted as needed
+  },
+  lastRow: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
   },
 });
+
+
+
+
+
 
 export default function GenerateReports() {
   const { user } = useSelector((state) => state.user);
