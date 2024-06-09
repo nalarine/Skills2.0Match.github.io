@@ -30,26 +30,98 @@ const ActionCell = ({ applicant, onSeeProfile }) => (
   </button>
 );
 
+const style = StyleSheet.create({
+  page: {
+    padding: 30,
+  },
+  table: {
+    display: 'table',
+    width: 'auto',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+  },
+  tableColHeader: {
+    width: '25%',
+    backgroundColor: '#f2f2f2',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    padding: 5,
+  },
+  tableCol: {
+    width: '25%',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    padding: 5,
+  },
+  tableCellHeader: {
+    margin: 5,
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  tableCell: {
+    margin: 5,
+    fontSize: 10,
+  },
+  heading: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  section: {
+    marginBottom: 10,
+  },
+});
+
+
 const ApplicantsPDF = ({ applicants }) => (
   <Document>
-    <Page size="A4" style={styles.page} orientation="landscape">
-      <Text style={styles.title}>Applicants Report</Text>
-      <View style={styles.tableContainer}> {/* Wrap the table with tableContainer */}
-        <View style={styles.table}>
-          <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderCell}>Full Name</Text>
-            <Text style={styles.tableHeaderCell}>Hiring Stage</Text>
-            <Text style={styles.tableHeaderCell}>Applied Date</Text>
-            <Text style={styles.tableHeaderCell}>Job Role</Text>
+    <Page style={style.page}>
+      <View style={style.section}>
+        <Text style={style.heading}>Applicants Report</Text>
+        <View style={style.table}>
+          <View style={style.tableRow}>
+            <View style={style.tableColHeader}>
+              <Text style={style.tableCellHeader}>Full Name</Text>
+            </View>
+            <View style={style.tableColHeader}>
+              <Text style={style.tableCellHeader}>Hiring Stage</Text>
+            </View>
+            <View style={style.tableColHeader}>
+              <Text style={style.tableCellHeader}>Applied Date</Text>
+            </View>
+            <View style={style.tableColHeader}>
+              <Text style={style.tableCellHeader}>Job Role</Text>
+            </View>
           </View>
-          {applicants.map((applicant, index) => (
-            <View key={applicant.id} style={[styles.tableRow, index === applicants.length - 1 ? styles.lastRow : null]}>
-              <Text style={styles.tableCell}>{applicant.fullName}</Text>
-              <Text style={styles.tableCell}>{applicant.hiringStage}</Text>
-              <Text style={styles.tableCell}>
-                {moment(applicant.appliedDate).format('MMMM Do, YYYY')}
-              </Text>
-              <Text style={styles.tableCell}>{applicant.jobRole}</Text>
+          {applicants.map((applicant) => (
+            <View key={applicant.id} style={style.tableRow}>
+              <View style={style.tableCol}>
+                <Text style={style.tableCell}>{applicant.fullName}</Text>
+              </View>
+              <View style={style.tableCol}>
+                <Text style={style.tableCell}>{applicant.hiringStage}</Text>
+              </View>
+              <View style={style.tableCol}>
+                <Text style={style.tableCell}>
+                  {new Date(applicant.appliedDate).toLocaleDateString()}
+                </Text>
+              </View>
+              <View style={style.tableCol}>
+                <Text style={style.tableCell}>{applicant.jobRole}</Text>
+              </View>
             </View>
           ))}
         </View>
@@ -60,26 +132,46 @@ const ApplicantsPDF = ({ applicants }) => (
 
 const JobPostsPDF = ({ jobPosts }) => (
   <Document>
-    <Page size="A4" style={styles.page} orientation="landscape">
-      <Text style={styles.title}>Job Posts Report</Text>
-      <View style={styles.tableContainer}> {/* Wrap the table with tableContainer */}
+    <Page style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.heading}>Job Posts Report</Text>
         <View style={styles.table}>
-          <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderCell}>Job Title</Text>
-            <Text style={styles.tableHeaderCell}>Vacancies</Text>
-            <Text style={styles.tableHeaderCell}>Location</Text>
-            <Text style={styles.tableHeaderCell}>Type</Text>
-            <Text style={styles.tableHeaderCell}>Date Posted</Text>
+          <View style={styles.tableRow}>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.tableCellHeader}>Job Title</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.tableCellHeader}>Vacancies</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.tableCellHeader}>Location</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.tableCellHeader}>Type</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.tableCellHeader}>Date Posted</Text>
+            </View>
           </View>
-          {jobPosts.map((jobPost, index) => (
-            <View key={jobPost.id} style={[styles.tableRow, index === jobPosts.length - 1 ? styles.lastRow : null]}>
-              <Text style={styles.tableCell}>{jobPost.jobTitle}</Text>
-              <Text style={styles.tableCell}>{jobPost.vacancies}</Text>
-              <Text style={styles.tableCell}>{jobPost.location}</Text>
-              <Text style={styles.tableCell}>{jobPost.jobType}</Text>
-              <Text style={styles.tableCell}>
-                {moment(jobPost.createdAt).format('MMMM Do, YYYY')}
-              </Text>
+          {jobPosts.map((jobPost) => (
+            <View key={jobPost.id} style={styles.tableRow}>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>{jobPost.jobTitle}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>{jobPost.vacancies}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>{jobPost.location}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>{jobPost.jobType}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>
+                  {new Date(jobPost.createdAt).toLocaleDateString()}
+                </Text>
+              </View>
             </View>
           ))}
         </View>
@@ -88,74 +180,56 @@ const JobPostsPDF = ({ jobPosts }) => (
   </Document>
 );
 
-
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'landscape',
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  tableContainer: {
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    padding: 30,
   },
   table: {
     display: 'table',
     width: 'auto',
-    borderCollapse: 'collapse',
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: '#000',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#f2f2f2',
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
-  },
-  tableHeaderCell: {
-    flex: 1,
-    padding: 5,
-    fontSize: 12,
-    textAlign: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#000',
-    borderBottomWidth: 1, // Add bottom border to table header cell
-    borderBottomColor: '#000', // Border color can be adjusted as needed
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
   },
   tableRow: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
+  },
+  tableColHeader: {
+    width: '20%',
+    backgroundColor: '#f2f2f2',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    padding: 5,
+  },
+  tableCol: {
+    width: '20%',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    padding: 5,
+  },
+  tableCellHeader: {
+    margin: 5,
+    fontSize: 10,
+    fontWeight: 'bold',
   },
   tableCell: {
-    flex: 1,
-    padding: 5,
+    margin: 5,
     fontSize: 10,
-    textAlign: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#000',
-    borderBottomWidth: 1, // Add bottom border to table cell
-    borderBottomColor: '#000', // Border color can be adjusted as needed
   },
-  lastRow: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
+  heading: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  section: {
+    marginBottom: 10,
   },
 });
-
-
-
-
-
 
 export default function GenerateReports() {
   const { user } = useSelector((state) => state.user);
@@ -173,6 +247,28 @@ export default function GenerateReports() {
   });
   const [jobPosts, setJobPosts] = useState([]);
   const [showJobPosts, setShowJobPosts] = useState(false);
+  const [jobFilter, setJobFilter] = useState({
+    jobType: '',
+    datePostedStart: '',
+    datePostedEnd: '',
+  });
+
+  const handleJobFilterChange = (e) => {
+    const { name, value } = e.target;
+    setJobFilter((prevJobFilter) => ({
+      ...prevJobFilter,
+      [name]: value,
+    }));
+  };
+
+  const filteredPosts = jobPosts.filter((jobPost) => {
+    const matchesJobType = jobFilter.jobType === '' || jobPost.jobType === jobFilter.jobType;
+    const matchesDateRange =
+      (jobFilter.datePostedStart === '' || new Date(jobPost.createdAt) >= new Date(jobFilter.datePostedStart + 'T00:00:00')) &&
+      (jobFilter.datePostedEnd === '' || new Date(jobPost.createdAt) <= new Date(jobFilter.datePostedEnd + 'T23:59:59'));
+
+    return matchesJobType && matchesDateRange;
+  });
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -442,7 +538,16 @@ export default function GenerateReports() {
                   />
                 </div>
               </label>
-            </div>
+            </div>            
+          <div>
+            <PDFDownloadLink
+              document={<ApplicantsPDF applicants={filteredApplicants} />}
+              fileName="applicants_report.pdf"
+              className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
+            >
+              Download Applicants Report as PDF
+            </PDFDownloadLink>
+          </div>
           </div>
           <div className="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -469,13 +574,9 @@ export default function GenerateReports() {
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                   >
                     <td className="px-4 py-2">{filteredApplicant.fullName}</td>
+                    <td className="px-4 py-2">{filteredApplicant.hiringStage}</td>
                     <td className="px-4 py-2">
-                      {filteredApplicant.hiringStage}
-                    </td>
-                    <td className="px-4 py-2">
-                      {new Date(
-                        filteredApplicant.appliedDate
-                      ).toLocaleDateString()}
+                      {new Date(filteredApplicant.appliedDate).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-2">{filteredApplicant.jobRole}</td>
                   </tr>
@@ -483,70 +584,100 @@ export default function GenerateReports() {
               </tbody>
             </table>
           </div>
-          <div className="mt-4">
-            <PDFDownloadLink
-              document={<ApplicantsPDF applicants={filteredApplicants} />}
-              fileName="applicants_report.pdf"
-              className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
-            >
-              Download Applicants Report as PDF
-            </PDFDownloadLink>
-          </div>
         </div>
       )}
 
       {showJobPosts && (
-        <div className="flex flex-col p-6 gap-4">
-          <h1 className="text-3xl font-bold">
-            Total Job Posts: {jobPosts.length}
-          </h1>
-          <div className="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="py-3 px-6 text-base text-green-900">
-                    Job Title
-                  </th>
-                  <th scope="col" className="py-3 px-6 text-base text-green-900">
-                    Vacancies
-                  </th>
-                  <th scope="col" className="py-3 px-6 text-base text-green-900">
-                    Location
-                  </th>
-                  <th scope="col" className="py-3 px-6 text-base text-green-900">
-                    Type
-                  </th>
-                  <th scope="col" className="py-3 px-6 text-base text-green-900">
-                    Date Posted
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobPosts.map((jobPost) => (
-                  <tr
-                    key={jobPost.id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
-                    <td className="px-4 py-2">{jobPost.jobTitle}</td>
-                    <td className="px-4 py-2">{jobPost.vacancies}</td>
-                    <td className="px-4 py-2">{jobPost.location}</td>
-                    <td className="px-4 py-2">{jobPost.jobType}</td>
-                    <td className="px-4 py-2">{new Date(jobPost.createdAt).toLocaleDateString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <div className="flex flex-col p-6 gap-4">
+        <h1 className="text-3xl font-bold">
+          Total Job Posts: {jobPosts.length}
+        </h1>
+        <div className="flex flex-wrap gap-4 mt-4 items-center">
+          <div className="flex items-center">
+            <label className="block mr-2">
+              Job Type:
+              <select
+                name="jobType"
+                value={jobFilter.jobType}
+                onChange={handleJobFilterChange}
+                className="bg-white border border-gray-300 rounded-md p-2 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="">All</option>
+                <option value="Full-Time">Full Time</option>
+                <option value="Part-Time">Part Time</option>
+                <option value="Contract">Contract</option>
+              </select>
+            </label>
           </div>
-          <div className="mt-4">
-            <PDFDownloadLink
-              document={<JobPostsPDF jobPosts={jobPosts} />}
-              fileName="job_posts_report.pdf"
-              className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
-            >
-              Download Job Posts Report as PDF
-            </PDFDownloadLink>
+          <div className="flex flex-col">
+            <label className="flex block items-center">
+              Date Posted Range:
+              <div className="flex">
+                <input
+                  type="date"
+                  name="datePostedStart"
+                  value={jobFilter.datePostedStart}
+                  onChange={handleJobFilterChange}
+                  className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500 mr-2"
+                />
+                <input
+                  type="date"
+                  name="datePostedEnd"
+                  value={jobFilter.datePostedEnd}
+                  onChange={handleJobFilterChange}
+                  className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            </label>
           </div>
         </div>
+        <div className="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Job Title
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Vacancies
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Location
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Type
+                </th>
+                <th scope="col" className="py-3 px-6 text-base text-green-900">
+                  Date Posted
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPosts.map((jobPost) => (
+                <tr
+                  key={jobPost.id}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <td className="px-4 py-2">{jobPost.jobTitle}</td>
+                  <td className="px-4 py-2">{jobPost.vacancies}</td>
+                  <td className="px-4 py-2">{jobPost.location}</td>
+                  <td className="px-4 py-2">{jobPost.jobType}</td>
+                  <td className="px-4 py-2">{new Date(jobPost.createdAt).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4">
+          <PDFDownloadLink
+            document={<JobPostsPDF jobPosts={filteredPosts} />}
+            fileName="job_posts_report.pdf"
+            className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
+          >
+            Download Job Posts Report as PDF
+          </PDFDownloadLink>
+        </div>
+      </div>
       )}
     </section>
   );
