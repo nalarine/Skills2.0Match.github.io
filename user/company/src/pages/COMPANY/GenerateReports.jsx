@@ -630,6 +630,15 @@ export default function GenerateReports() {
               </div>
             </label>
           </div>
+            <div>
+              <PDFDownloadLink
+                document={<JobPostsPDF jobPosts={filteredPosts} />}
+                fileName="job_posts_report.pdf"
+                className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
+              >
+                Download Job Posts Report as PDF
+              </PDFDownloadLink>
+          </div>
         </div>
         <div className="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -667,15 +676,6 @@ export default function GenerateReports() {
               ))}
             </tbody>
           </table>
-        </div>
-        <div className="mt-4">
-          <PDFDownloadLink
-            document={<JobPostsPDF jobPosts={filteredPosts} />}
-            fileName="job_posts_report.pdf"
-            className="bg-blue-500 py-2 px-4 rounded-md text-white hover:bg-blue-600 focus:outline-none"
-          >
-            Download Job Posts Report as PDF
-          </PDFDownloadLink>
         </div>
       </div>
       )}
