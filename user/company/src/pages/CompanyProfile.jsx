@@ -13,16 +13,9 @@ import { CustomButton, JobCard, Loading, TextInput } from '../components'
 import { handleFileUpload } from '../utils'
 import { apiRequest } from '../utils'
 import { Login } from '../redux/userSlice'
-
-const CompnayForm = ({ open, setOpen }) => {
+const CompanyForm = ({ open, setOpen }) => {
   const { user } = useSelector((state) => state.user)
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     mode: 'onChange',
     defaultValues: { ...user },
   })
@@ -33,7 +26,6 @@ const CompnayForm = ({ open, setOpen }) => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewTitle, setPreviewTitle] = useState('')
   const [profileImage, setProfileImage] = useState('')
-  const [uploadCv, setUploadCv] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [errMsg, setErrMsg] = useState({ status: false, message: '' })
 
@@ -42,9 +34,7 @@ const CompnayForm = ({ open, setOpen }) => {
   const onSubmit = async (data) => {
     setIsLoading(true)
     setErrMsg(null)
-
     const uri = profileImage && (await handleFileUpload(profileImage))
-
     const newData = uri ? { ...data, profileUrl: uri } : data
 
     try {
@@ -96,16 +86,6 @@ const CompnayForm = ({ open, setOpen }) => {
   const handleProfileImageChange = async (info) => {
     const { file, fileList } = info
     setFileList(fileList)
-
-    // if (file.status === 'done' && file.originFileObj) {
-    //   const imageFile = file.originFileObj;
-    //   const imageUrl = URL.createObjectURL(imageFile);
-    //   console.log('Image URL:', imageUrl);
-
-    //   setProfileImage(imageFile);
-    //   handlePreview(imageFile);
-    // }
-
     setProfileImage(file)
   }
 
@@ -144,28 +124,21 @@ const CompnayForm = ({ open, setOpen }) => {
                     Edit Company Profile
                   </Dialog.Title>
 
-                  <form
-                    className="w-full mt-2 flex flex-col gap-5"
-                    onSubmit={handleSubmit(onSubmit)}
-                  >
+                  <form className="w-full mt-2 flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
                     <TextInput
                       name="name"
                       label="Company Name"
                       type="text"
-                      register={register('name', {
-                        required: 'Compnay Name is required',
-                      })}
+                      register={register('name', { required: 'Company Name is required' })}
                       error={errors.name ? errors.name?.message : ''}
                     />
 
                     <TextInput
                       name="location"
                       label="Location/Address"
-                      placeholder="eg. Manila"
+                      placeholder="e.g. Manila"
                       type="text"
-                      register={register('location', {
-                        required: 'Address is required',
-                      })}
+                      register={register('location', { required: 'Address is required' })}
                       error={errors.location ? errors.location?.message : ''}
                     />
 
@@ -176,17 +149,13 @@ const CompnayForm = ({ open, setOpen }) => {
                           label="Contact"
                           placeholder="Phone Number"
                           type="text"
-                          register={register('contact', {
-                            required: 'Contact is required!',
-                          })}
+                          register={register('contact', { required: 'Contact is required!' })}
                           error={errors.contact ? errors.contact?.message : ''}
                         />
                       </div>
 
                       <div className="w-1/2">
-                        <label className="text-gray-600 text-sm mb-1">
-                          Profile Picture
-                        </label>
+                        <label className="text-gray-600 text-sm mb-1">Profile Picture</label>
                         <Upload
                           action=""
                           listType="picture-card"
@@ -194,24 +163,12 @@ const CompnayForm = ({ open, setOpen }) => {
                           onPreview={handlePreview}
                           onChange={handleProfileImageChange}
                           beforeUpload={() => false}
-                          accept="image/jpeg, image/png" // Restrict files to JPEG and PNG formats
+                          accept="image/jpeg, image/png"
                         >
                           {fileList.length >= 1 ? null : (
-                            <button
-                              style={{
-                                border: 0,
-                                background: 'none',
-                              }}
-                              type="button"
-                            >
+                            <button style={{ border: 0, background: 'none' }} type="button">
                               <PlusOutlined />
-                              <div
-                                style={{
-                                  marginTop: 8,
-                                }}
-                              >
-                                Upload
-                              </div>
+                              <div style={{ marginTop: 8 }}>Upload</div>
                             </button>
                           )}
                         </Upload>
@@ -219,23 +176,16 @@ const CompnayForm = ({ open, setOpen }) => {
                     </div>
 
                     <div className="flex flex-col">
-                      <label className="text-gray-600 text-sm mb-1">
-                        About Company
-                      </label>
+                      <label className="text-gray-600 text-sm mb-1">About Company</label>
                       <textarea
-                        className="ounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none"
+                        className="rounded border border-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-base px-4 py-2 resize-none"
                         rows={4}
                         cols={6}
-                        {...register('about', {
-                          required: 'Write a little bit about your company.',
-                        })}
+                        {...register('about', { required: 'Write a little bit about your company.' })}
                         aria-invalid={errors.about ? 'true' : 'false'}
                       ></textarea>
                       {errors.about && (
-                        <span
-                          role="alert"
-                          className="text-xs text-red-500 mt-0.5"
-                        >
+                        <span role="alert" className="text-xs text-red-500 mt-0.5">
                           {errors.about?.message}
                         </span>
                       )}
@@ -247,8 +197,8 @@ const CompnayForm = ({ open, setOpen }) => {
                       ) : (
                         <CustomButton
                           type="submit"
-                          containerStyles="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#86CA16] hover:text-white focus:outline-none "
-                          title={'Submit'}
+                          containerStyles="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-8 py-2 text-sm font-medium text-white hover:bg-green-700 hover:text-white focus:outline-none"
+                          title="Submit"
                         />
                       )}
                     </div>
@@ -260,23 +210,13 @@ const CompnayForm = ({ open, setOpen }) => {
         </Dialog>
       </Transition>
       {/* Preview Modal */}
-      <Modal
-        visible={previewOpen}
-        title={previewTitle}
-        footer={null}
-        onCancel={handleCancel}
-      >
-        <img
-          alt="example"
-          style={{
-            width: '100%',
-          }}
-          src={previewImage}
-        />
+      <Modal visible={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </>
   )
 }
+
 
 const CompanyProfile = () => {
   const params = useParams()
@@ -287,20 +227,13 @@ const CompanyProfile = () => {
 
   const fetchCompany = async () => {
     setIsLoading(true)
-    let id = null
-
-    if (params.id && params.id !== undefined) {
-      id = params?.id
-    } else {
-      id = user?._id
-    }
+    let id = params.id || user?._id
 
     try {
       const res = await apiRequest({
         url: '/companies/get-company/' + id,
         method: 'GET',
       })
-
       setInfo(res?.data)
       setIsLoading(false)
     } catch (error) {
@@ -320,67 +253,61 @@ const CompanyProfile = () => {
 
   return (
     <div className="container mx-auto p-5">
-      <div className="">
-        <div className="w-full flex flex-col md:flex-row gap-3 justify-between">
-          <h2 className="text-gray-600 text-xl font-semibold">
+      <div className="bg-white rounded-lg shadow p-5">
+        <div className="flex flex-col md:flex-row gap-3 justify-between items-center">
+          <h2 className="text-gray-600 text-2xl font-semibold">
             Welcome, {info?.name}
           </h2>
 
-          {user?.user?.accountType === undefined && info?._id === user?._id && (
-            <div className="flex items-center justifu-center py-5 md:py-0 gap-4">
+          {user?.accountType === undefined && info?._id === user?._id && (
+            <div className="flex items-center justify-center py-5 md:py-0 gap-4">
               <CustomButton
                 onClick={() => setOpenForm(true)}
                 title="Edit Profile"
                 iconRight={<FiEdit />}
-                containerStyles={`py-1.5 px-3 md:px-5 focus:outline-none bg-green-600  hover:bg-green-700 text-white rounded text-sm md:text-base border border-green-600`}
+                containerStyles="py-1.5 px-3 md:px-5 focus:outline-none bg-green-600 hover:bg-green-700 text-white rounded text-sm md:text-base border border-green-600"
               />
 
               <Link to="/upload-job">
                 <CustomButton
                   title="Upload Job"
                   iconRight={<FiUpload />}
-                  containerStyles={`text-green-600 py-1.5 px-3 md:px-5 focus:outline-none  rounded text-sm md:text-base border border-green-600`}
+                  containerStyles="text-green-600 py-1.5 px-3 md:px-5 focus:outline-none rounded text-sm md:text-base border border-green-600"
                 />
               </Link>
             </div>
           )}
         </div>
 
-        <div className="w-full flex flex-col md:flex-row justify-start md:justify-between mt-4 md:mt-8 text-sm">
-          <p className="flex gap-1 items-center   px-3 py-1 text-slate-600 rounded-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 text-sm">
+          <p className="flex gap-1 items-center text-slate-600 px-3 py-1 rounded-full bg-gray-100">
             <HiLocationMarker /> {info?.location ?? 'No Location'}
           </p>
-          <p className="flex gap-1 items-center   px-3 py-1 text-slate-600 rounded-full">
+          <p className="flex gap-1 items-center text-slate-600 px-3 py-1 rounded-full bg-gray-100">
             <AiOutlineMail /> {info?.email ?? 'No Email'}
           </p>
-          <p className="flex gap-1 items-center   px-3 py-1 text-slate-600 rounded-full">
+          <p className="flex gap-1 items-center text-slate-600 px-3 py-1 rounded-full bg-gray-100">
             <FiPhoneCall /> {info?.contact ?? 'No Contact'}
           </p>
 
-          <div className="flex flex-col items-center mt-10 md:mt-0">
-            <span className="text-xl">{info?.jobPosts?.length}</span>
-            <p className="text-green-600 ">Job Post</p>
+          <div className="flex flex-col items-center mt-10 md:mt-0 col-span-1 md:col-span-3">
+            <span className="text-2xl font-semibold">{info?.jobPosts?.length}</span>
+            <p className="text-green-600">Job Posts</p>
           </div>
         </div>
       </div>
 
-      <div className="w-full mt-20 flex flex-col gap-2">
-        <p>Jobs Posted</p>
-
-        <div className="flex flex-wrap gap-3">
+      <div className="w-full mt-10 flex flex-col gap-4">
+        <h3 className="text-xl font-semibold">Jobs Posted</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {info?.jobPosts?.map((job, index) => {
-            const data = {
-              name: info?.name,
-              email: info?.email,
-              logo: info?.profileUrl,
-              ...job,
-            }
+            const data = { name: info?.name, email: info?.email, logo: info?.profileUrl, ...job }
             return <JobCard job={data} key={index} />
           })}
         </div>
       </div>
 
-      <CompnayForm open={openForm} setOpen={setOpenForm} />
+      <CompanyForm open={openForm} setOpen={setOpenForm} />
     </div>
   )
 }
