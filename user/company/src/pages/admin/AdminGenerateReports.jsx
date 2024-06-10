@@ -599,38 +599,38 @@ useEffect(() => {
 }, [searchQuery, companies]);
   
 
-  const handleDownloadPDF = async (type) => {
-    let data;
-    let ageFilter = '';
-    if (selectedFilter === 'age' && searchQuery) {
-      ageFilter = searchQuery; // Set age filter if selected filter is 'age' and search query is not empty
-    }
-    switch (type) {
-      case 'users':
-        data = users.map(({ id, ...rest }) => rest);
-        break;
-      case 'companies':
-        data = companies.map(({ id, ...rest }) => rest);
-        break;
-      case 'jobs':
-        data = jobs.map(({ id, ...rest }) => rest);
-        break;
-      default:
-        return;
-    }
-  
-    const doc = generatePDF(type, data, selectedFilter, ageFilter); // Pass age filter to generatePDF function
-  
-    try {
-      const pdfBlob = await pdf(doc).toBlob(); // Use pdf(doc).toBlob() to generate the PDF blob
-      saveAs(pdfBlob, `${type}_report.pdf`);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      // Display an error message to the user
-      toast.error('Error generating PDF. Please try again later.');
-    }
-  };
-  
+const handleDownloadPDF = async (type) => {
+  let data;
+  let ageFilter = '';
+  if (selectedFilter === 'age' && searchQuery) {
+    ageFilter = searchQuery; // Set age filter if selected filter is 'age' and search query is not empty
+  }
+  switch (type) {
+    case 'users':
+      data = users.map(({ id, ...rest }) => rest);
+      break;
+    case 'companies':
+      data = companies.map(({ id, ...rest }) => rest);
+      break;
+    case 'jobs':
+      data = filteredJobs.map(({ id, ...rest }) => rest); // Pass filteredJobs instead of jobs
+      break;
+    default:
+      return;
+  }
+
+  const doc = generatePDF(type, data, selectedFilter, ageFilter); // Pass filteredJobs to generatePDF function
+
+  try {
+    const pdfBlob = await pdf(doc).toBlob(); // Use pdf(doc).toBlob() to generate the PDF blob
+    saveAs(pdfBlob, `${type}_report.pdf`);
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    // Display an error message to the user
+    toast.error('Error generating PDF. Please try again later.');
+  }
+};
+
   
 
   const getCompanyName = (companyId) => {
@@ -872,7 +872,7 @@ useEffect(() => {
                   </select>
                   <button
                     className="bg-green-500 text-white px-4 py-2 rounded"
-                    onClick={() => handleDownloadPDF(filteredJobs)}
+                    onClick={() => handleDownloadJobPDF(filteredJobs)}
                   >
                     Download Jobs PDF
                   </button>
@@ -907,5 +907,4 @@ useEffect(() => {
     </div>
   );
 }
-
 
