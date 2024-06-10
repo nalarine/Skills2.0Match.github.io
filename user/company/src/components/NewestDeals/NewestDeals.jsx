@@ -77,7 +77,7 @@ const NewestDeals = () => {
         <div className="secContainer container mx-auto px-6 sm:top-[30%]">
           <div className="mainContent grid gap-8 grid-cols-1">
             <div
-              className="videoCard mt-2 p-8 bg-cover bg-center rounded-xl"
+              className="videoCard mt-20 p-8 bg-cover bg-center rounded-xl"
               style={{
                 backgroundImage:
                   'linear-gradient(rgba(33,33,33,0.522), rgba(33,33,33,0.522)), url(../../../src/assets/bg.jpg)',
@@ -143,7 +143,7 @@ const NewestDeals = () => {
               // data-aos="fade-right"
               data-aos-duration="2500"
             >
-              <h2 className="secTitle text-left font-bold text-3xl md:text-4xl">
+              <h2 className="mt-14 secTitle text-left font-bold text-3xl md:text-4xl">
                 Find Your Perfect Job
               </h2>
             </div>

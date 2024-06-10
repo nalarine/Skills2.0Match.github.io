@@ -1,26 +1,49 @@
-import React, { useState } from 'react'
-import question from '../../assets/question.svg'
+import React, { useState } from 'react';
+import question from '../../assets/question.svg';
 
 const FAQs = () => {
-  const [expanded, setExpanded] = useState(null)
-  const [activeCategory, setActiveCategory] = useState(null) // State to track the active category
+  const [expanded, setExpanded] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [feedback, setFeedback] = useState('');
+  const [rating, setRating] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [submittedData, setSubmittedData] = useState({ rating: null, feedback: '' });
 
   const toggleFAQ = (index) => {
-    setExpanded(expanded === index ? null : index)
-  }
+    setExpanded(expanded === index ? null : index);
+  };
 
   const handleClickCategory = (category) => {
-    setActiveCategory(category) // Set the active category when a TOC link is clicked
-  }
+    setActiveCategory(category);
+  };
+
+  const handleFeedbackChange = (event) => {
+    setFeedback(event.target.value);
+  };
+
+  const handleRatingChange = (event) => {
+    setRating(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    setSubmittedData({ rating, feedback });
+    setShowModal(true);
+    setFeedback('');
+    setRating(null);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const faqData = [
     {
       category: 'General',
       content: [
         {
-          question: ' What is the goal of Skills2.0Match?',
+          question: 'What is the goal of Skills2.0Match?',
           answer:
-            ' We prioritize data security and comply with all relevant data protection regulations. Your personal and professional information is encrypted and securely stored.',
+            'We prioritize data security and comply with all relevant data protection regulations. Your personal and professional information is encrypted and securely stored.',
         },
         {
           question: 'How secure is my data on this portal?',
@@ -35,7 +58,7 @@ const FAQs = () => {
         {
           question: 'Who can I contact if I have problems using the portal?',
           answer:
-            ' If you encounter any issues or have questions, you can contact our support team via the contact information provided on the site. We offer support through email and phone.',
+            'If you encounter any issues or have questions, you can contact our support team via the contact information provided on the site. We offer support through email and phone.',
         },
       ],
     },
@@ -43,10 +66,9 @@ const FAQs = () => {
       category: 'For OSY',
       content: [
         {
-          question:
-            'What job opportunities are available for OSYs on Skills2.0Match?',
+          question: 'What job opportunities are available for OSYs on Skills2.0Match?',
           answer:
-            'OSYs can explore various entry-level positions tailored to their skill levels and interests.  We partner with companies offering opportunities suitable for OSYs to kickstart their careers.',
+            'OSYs can explore various entry-level positions tailored to their skill levels and interests. We partner with companies offering opportunities suitable for OSYs to kickstart their careers.',
         },
         {
           question: 'How does Skills2.0Match work?',
@@ -54,8 +76,7 @@ const FAQs = () => {
             'Skills2.0Match utilizes automated algorithms to analyze the skills and qualifications of OSY users and match them with job opportunities listed on our platform. Users can create a profile, input their skills and preferences, and receive personalized job recommendations.',
         },
         {
-          question:
-            'What kind of job opportunities can I find on Skills2.0Match?',
+          question: 'What kind of job opportunities can I find on Skills2.0Match?',
           answer:
             'Skills2.0Match features a wide range of job opportunities across various industries, and categories.',
         },
@@ -77,7 +98,7 @@ const FAQs = () => {
         {
           question: 'What type of candidates can we expect from this portal?',
           answer:
-            ' Our job portal specifically supports out-of-school youth, which includes a diverse group of candidates with various skills and potential. These individuals may range from having informal job experiences to possessing specific technical skills.',
+            'Our job portal specifically supports out-of-school youth, which includes a diverse group of candidates with various skills and potential. These individuals may range from having informal job experiences to possessing specific technical skills.',
         },
         {
           question: 'Is there a fee for posting jobs on the portal?',
@@ -85,14 +106,13 @@ const FAQs = () => {
             'Currently, posting jobs on our portal is free. We aim to support companies in finding the right talent while providing job opportunities to out-of-school youth.',
         },
         {
-          question:
-            'How can we ensure our job listings reach the right candidates?',
+          question: 'How can we ensure our job listings reach the right candidates?',
           answer:
             'We offer tools to help target your job postings effectively. You can use filters and keywords to specify the skills and qualifications required, ensuring that your job listing reaches suitable candidates',
         },
       ],
     },
-  ]
+  ];
 
   return (
     <div>
@@ -177,16 +197,15 @@ const FAQs = () => {
                         </div>
                       ))}
                     </div>
-                  ),
+                  )
               )}
             </div>
           </div>
         </div>
       </section>
-      {/* Insert Rating Section Here */}
       <div className="flex justify-center my-8">
         <div className="border border-green-700 rounded-[15px] w-[90%] p-4 flex">
-          <div className=" mt-16">
+          <div className="mt-16">
             <h1 className="text-xl font-bold">How was your experience?</h1>
             <p>Share your feedback. Let us know about your experience!</p>
           </div>
@@ -195,41 +214,86 @@ const FAQs = () => {
             <div className="rating gap-1 flex justify-center mb-4">
               <input
                 type="radio"
-                name="rating-3"
-                className="mask mask-heart bg-red-400"
+                name="rating-2"
+                className="mask mask-star-2 bg-orange-400"
+                value="1"
+                checked={rating === '1'}
+                onChange={handleRatingChange}
               />
               <input
                 type="radio"
-                name="rating-3"
-                className="mask mask-heart bg-orange-400"
-                checked
+                name="rating-2"
+                className="mask mask-star-2 bg-orange-400"
+                value="2"
+                checked={rating === '2'}
+                onChange={handleRatingChange}
               />
               <input
                 type="radio"
-                name="rating-3"
-                className="mask mask-heart bg-yellow-400"
+                name="rating-2"
+                className="mask mask-star-2 bg-orange-400"
+                value="3"
+                checked={rating === '3'}
+                onChange={handleRatingChange}
               />
               <input
                 type="radio"
-                name="rating-3"
-                className="mask mask-heart bg-lime-400"
+                name="rating-2"
+                className="mask mask-star-2 bg-orange-400"
+                value="4"
+                checked={rating === '4'}
+                onChange={handleRatingChange}
               />
               <input
                 type="radio"
-                name="rating-3"
-                className="mask mask-heart bg-green-400"
+                name="rating-2"
+                className="mask mask-star-2 bg-orange-400"
+                value="5"
+                checked={rating === '5'}
+                onChange={handleRatingChange}
               />
             </div>
-            <textarea
-              className="textarea textarea-success w-full"
-              placeholder="Add your comment or suggestions here!"
-              rows="4"
-            ></textarea>
+            <div>
+              <textarea
+                className="textarea textarea-bordered w-full"
+                placeholder="Your Message"
+                value={feedback}
+                onChange={handleFeedbackChange}
+              ></textarea>
+            </div>
+            <div className="text-center">
+              <button
+                onClick={handleSubmit}
+                className="mt-4 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600 focus:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-200 ease-in-out"
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  )
-}
 
-export default FAQs
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Thank you for your feedback!</h2>
+            <p className="mb-2">
+              <strong>Rating:</strong> {submittedData.rating}
+            </p>
+            <p className="mb-4">
+              <strong>Feedback:</strong> {submittedData.feedback}
+            </p>
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600 focus:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-200 ease-in-out"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default FAQs;
