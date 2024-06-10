@@ -31,8 +31,7 @@ export default function AdminGenerateReports() {
     jobsPerType: {},
   });
   const [filteredCompanies, setFilteredCompanies] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState('all');
-  const [selectedJobType, setSelectedJobType] = useState('all');
+  
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -43,7 +42,10 @@ export default function AdminGenerateReports() {
   const [endDate, setEndDate] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [selectedFilter, setSelectedFilter] = useState('all');
-  const [setFilteredJobs ] = useState([]);
+
+  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [companyFilter, setCompanyFilter] = useState('');
+  const [jobTypeFilter, setJobTypeFilter] = useState('');
 
   useEffect(() => {
     filterUsers();
@@ -107,6 +109,45 @@ export default function AdminGenerateReports() {
       console.error('Error fetching jobs:', error);
       setLoading(false);
     }
+  };
+
+  const handleSearchJobs = (e) => {
+    setSearchQuery(e.target.value);
+    filterJobs(e.target.value, companyFilter, jobTypeFilter);
+  };
+
+  const handleCompanyFilterChange = (e) => {
+    setCompanyFilter(e.target.value);
+    filterJobs(searchQuery, e.target.value, jobTypeFilter);
+  };
+
+  const handleJobTypeFilterChange = (e) => {
+    setJobTypeFilter(e.target.value);
+    filterJobs(searchQuery, companyFilter, e.target.value);
+  };
+
+  const uniqueCompanies = [...new Set(jobs.map((job) => job.company))];
+  const uniqueJobTypes = [...new Set(jobs.map((job) => job.jobType))];
+  
+
+  const filterJobs = (search, company, jobType) => {
+    let filtered = jobs;
+
+    if (search) {
+      filtered = filtered.filter((job) =>
+        job.jobTitle.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (company) {
+      filtered = filtered.filter((job) => job.company === company);
+    }
+
+    if (jobType) {
+      filtered = filtered.filter((job) => job.jobType === jobType);
+    }
+
+    setFilteredJobs(filtered);
   };
 
   const calculateJobMetrics = (jobs) => {
@@ -492,29 +533,57 @@ const MyDocumentCompany = ({ filteredCompanies }) => (
   </Document>
 );
 
-const handleCompanyChange = (e) => {
-  setSelectedCompany(e.target.value);
-};
+const handleDownloadJobPDF = (jobs) => {
+  const JobListPDF = ({ jobs }) => (
+    <Document>
+      <Page size="A4" style={stylesjob.page}>
+        <View style={stylesjob.section}>
+          <Text style={stylesjob.title}>Job List</Text>
+          {jobs.map((job, index) => (
+            <View key={index} style={stylesjob.jobItem}>
+              <Text>Job Title: {job.jobTitle}</Text>
+              <Text>Company: {getCompanyName(job.company)}</Text>
+              <Text>Location: {job.location}</Text>
+              <Text>Vacancies: {job.vacancies}</Text>
+              <Text>Type: {job.jobType}</Text>
+            </View>
+          ))}
+        </View>
+      </Page>
+    </Document>
+  );
 
-const handleJobTypeChange = (e) => {
-  setSelectedJobType(e.target.value);
-};
+  const stylesjob = StyleSheet.create({
+    page: {
+      flexDirection: 'column',
+      padding: 10,
+    },
+    section: {
+      margin: 10,
+      padding: 10,
+      flexGrow: 1,
+    },
+    title: {
+      fontSize: 20,
+      textAlign: 'center',
+      marginBottom: 20,
+    },
+    jobItem: {
+      marginBottom: 10,
+      padding: 10,
+      borderBottom: '1px solid #ccc',
+    },
+  });
 
-useEffect(() => {
-  if (searchQuery || selectedCompany !== 'all' || selectedJobType !== 'all') {
-    const filtered = jobs.filter(job => {
-      const companyName = getCompanyName(job.company);
-      return (
-        job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (selectedCompany === 'all' || companyName === selectedCompany) &&
-        (selectedJobType === 'all' || job.jobType === selectedJobType)
-      );
+  const doc = <JobListPDF jobs={jobs} />;
+    pdf(doc).toBlob().then((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'jobs.pdf';
+      a.click();
     });
-    setFilteredJobs(filtered);
-  } else {
-    setFilteredJobs(jobs);
-  }
-}, [searchQuery, selectedCompany, selectedJobType, jobs]);
+};
 
 useEffect(() => {
   if (searchQuery) {
@@ -573,14 +642,14 @@ useEffect(() => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredJobs = jobs.filter((job) => {
-    const companyName = getCompanyName(job.company);
-    return (
-      job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
+  // const filteredJobs = jobs.filter((job) => {
+  //   const companyName = getCompanyName(job.company);
+  //   return (
+  //     job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     job.location.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
+  // });
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -763,75 +832,77 @@ useEffect(() => {
           </div>
         )}
         {reportType === 'jobList' && (
-  <div>
-    <h2 className="text-xl font-bold mb-4">List of all Jobs</h2>
-    {loading ? (
-      <p>Loading...</p>
-    ) : (
-      <div>
-        <div className="mb-4 flex items-center">
-          <input
-            type="text"
-            className="border rounded px-2 py-1 mr-4"
-            placeholder="Search Jobs"
-            value={searchQuery}
-            onChange={handleSearch}
-          />
-          <select
-            className="border rounded px-2 py-1 mr-4"
-            value={selectedCompany}
-            onChange={handleCompanyChange}
-          >
-            <option value="all">All Companies</option>
-            {companies.map((company) => (
-              <option key={company.id} value={company.name}>
-                {company.name}
-              </option>
-            ))}
-          </select>
-          <select
-            className="border rounded px-2 py-1 mr-4"
-            value={selectedJobType}
-            onChange={handleJobTypeChange}
-          >
-            <option value="all">All Job Types</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Full-time">Full-time</option>
-            <option value="Contract">Contract</option>
-          </select>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={() => handleDownloadPDF('jobs')}
-          >
-            Download Jobs PDF
-          </button>
-        </div>
-        <table className="min-w-full bg-white border">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border">Job Title</th>
-              <th className="px-4 py-2 border">Company</th>
-              <th className="px-4 py-2 border">Location</th>
-              <th className="px-4 py-2 border">Vacancies</th>
-              <th className="px-4 py-2 border">Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredJobs.map((job) => (
-              <tr key={job.id}>
-                <td className="px-4 py-2 border">{job.jobTitle}</td>
-                <td className="px-4 py-2 border">{getCompanyName(job.company)}</td>
-                <td className="px-4 py-2 border">{job.location}</td>
-                <td className="px-4 py-2 border">{job.vacancies}</td>
-                <td className="px-4 py-2 border">{job.jobType}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )}
-  </div>
-)}
+          <div>
+            <h2 className="text-xl font-bold mb-4">List of all Jobs</h2>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div>
+                <div className="mb-4 flex items-center">
+                  <input
+                    type="text"
+                    className="border rounded px-2 py-1 mr-4"
+                    placeholder="Search Jobs"
+                    value={searchQuery}
+                    onChange={handleSearchJobs}
+                  />
+                  <select
+                    className="border rounded px-2 py-1 mr-4"
+                    value={companyFilter}
+                    onChange={handleCompanyFilterChange}
+                  >
+                    <option value="">All Companies</option>
+                    {uniqueCompanies.map((companyId) => (
+                      <option key={companyId} value={companyId}>
+                        {getCompanyName(companyId)}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="border rounded px-2 py-1 mr-4"
+                    value={jobTypeFilter}
+                    onChange={handleJobTypeFilterChange}
+                  >
+                    <option value="">All Job Types</option>
+                    {uniqueJobTypes.map((jobType) => (
+                      <option key={jobType} value={jobType}>
+                        {jobType}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={() => handleDownloadPDF(filteredJobs)}
+                  >
+                    Download Jobs PDF
+                  </button>
+                </div>
+                <table className="min-w-full bg-white border">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 border">Job Title</th>
+                      <th className="px-4 py-2 border">Company</th>
+                      <th className="px-4 py-2 border">Location</th>
+                      <th className="px-4 py-2 border">Vacancies</th>
+                      <th className="px-4 py-2 border">Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredJobs.map((job) => (
+                      <tr key={job.id}>
+                        <td className="px-4 py-2 border">{job.jobTitle}</td>
+                        <td className="px-4 py-2 border">{getCompanyName(job.company)}</td>
+                        <td className="px-4 py-2 border">{job.location}</td>
+                        <td className="px-4 py-2 border">{job.vacancies}</td>
+                        <td className="px-4 py-2 border">{job.jobType}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
