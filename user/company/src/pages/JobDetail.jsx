@@ -5,8 +5,7 @@ import moment from 'moment'
 import { CustomButton, JobCard } from '../components'
 import Loading from '../components/Loading'
 import Modal from 'react-modal'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import Swal from 'sweetalert2';
 import { apiRequest } from '../utils'
 import { auth, storage } from '../firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
@@ -99,16 +98,15 @@ const JobDetail = () => {
   }
 
   const handleSubmit = async () => {
-
     if (!resume) {
-      setShowWarningModal(true)
-      return
+      setShowWarningModal(true);
+      return;
     }
-
-    toggleModal()
-    const attachmentRef = ref(storage, `resumeFiles/${user._id}/${resume.name}`)
-    await uploadBytes(attachmentRef, resume)
-    const url = await getDownloadURL(attachmentRef)
+  
+    toggleModal();
+    const attachmentRef = ref(storage, `resumeFiles/${user._id}/${resume.name}`);
+    await uploadBytes(attachmentRef, resume);
+    const url = await getDownloadURL(attachmentRef);
     try {
       const response = await apiRequest({
         url: `/jobs/apply-job/${id}`,
@@ -118,17 +116,32 @@ const JobDetail = () => {
           application: [user._id],
           attachmentURL: url,
         },
-      })
+      });
       if (response.success) {
-        toast.success('Job application successful.')
+        // Use SweetAlert2 for success notification
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Job application successful.',
+        });
       } else {
-        toast.error(`Job application failed. ${response.message}`)
+        // Use SweetAlert2 for error notification
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `Job application failed. ${response.message}`,
+        });
       }
     } catch (error) {
-      console.error('Error applying for job:', error)
-      toast.error(`Error applying for job: ${error.message}`)
+      console.error('Error applying for job:', error);
+      // Use SweetAlert2 for error notification
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `Error applying for job: ${error.message}`,
+      });
     }
-  }
+  };
 
   const toggleModal = () => {
     setShowModal(!isShowModal)
@@ -349,7 +362,6 @@ const JobDetail = () => {
           ))}
         </div>
       </div>
-      <ToastContainer />
       <Modal
         isOpen={isShowModal}
         onRequestClose={toggleModal}

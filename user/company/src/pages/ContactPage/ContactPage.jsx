@@ -7,6 +7,7 @@ import footerimg from '../../assets/header.png';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const ContactPage = () => {
   useEffect(() => {
@@ -35,21 +36,60 @@ const ContactPage = () => {
     message: '',
   });
 
+  const [formErrors, setFormErrors] = useState({});
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate form fields
+    const errors = {};
+    if (!formData.firstName) errors.firstName = 'First Name is required';
+    if (!formData.lastName) errors.lastName = 'Last Name is required';
+    if (!formData.email) errors.email = 'Email is required';
+    if (!formData.mobileNumber) errors.mobileNumber = 'Mobile Number is required';
+    if (!formData.message) errors.message = 'Message is required';
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:8800/api-v1/contacts', formData);
       console.log('Form submitted successfully:', response.data);
-      alert('Form submitted successfully!');
-      window.location.reload();
+      
+      Swal.fire({
+        title: 'Success!',
+        text: 'Form submitted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        mobileNumber: '',
+        message: '',
+      });
+      setFormErrors({});
     } catch (error) {
       console.error('Error submitting form:', error.message);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error submitting the form. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
   };
+
+  // Disable submit button when required fields are empty
+  const isDisabled = !formData.firstName || !formData.lastName || !formData.email || !formData.mobileNumber || !formData.message;
 
   return (
     <>
@@ -77,21 +117,26 @@ const ContactPage = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-field mb-5">
               <input type="text" name="firstName" placeholder="First Name" className="w-full p-2.5 rounded-md border border-solid border-gray-400" onChange={handleChange} />
+              {formErrors.firstName && <p className="text-red-500">{formErrors.firstName}</p>}
             </div>
             <div className="form-field mb-5">
               <input type="text" name="lastName" placeholder="Last Name" className="w-full p-2.5 rounded-md border border-solid border-gray-400" onChange={handleChange} />
+              {formErrors.lastName && <p className="text-red-500">{formErrors.lastName}</p>}
             </div>
             <div className="form-field mb-5">
               <input type="email" name="email" placeholder="Email Address" className="w-full p-2.5 rounded-md border border-solid border-gray-400" onChange={handleChange} />
+              {formErrors.email && <p className="text-red-500">{formErrors.email}</p>}
             </div>
             <div className="form-field mb-5">
               <input type="tel" name="mobileNumber" placeholder="Mobile/Telephone Number" className="w-full p-2.5 rounded-md border border-solid border-gray-400" onChange={handleChange} />
+              {formErrors.mobileNumber && <p className="text-red-500">{formErrors.mobileNumber}</p>}
             </div>
             <div className="form-field mb-5">
               <textarea name="message" placeholder="Message" className="w-full p-2.5 rounded-md border border-solid border-gray-400 h-36" onChange={handleChange}></textarea>
+              {formErrors.message && <p className="text-red-500">{formErrors.message}</p>}
             </div>
-            <div className="form-field mb-5 w-20 text-center py-2 text-md rounded-lg bg-green-500 cursor-pointer hover:bg-green-900">
-              <button type="submit">Submit</button>
+            <div className={`form-field mb-5 w-20 text-center py-2 text-md rounded-lg ${isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 cursor-pointer hover:bg-green-900'}`}>
+              <button type="submit" disabled={isDisabled}>Submit</button>
             </div>
           </form>
         </div>
