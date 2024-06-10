@@ -3,12 +3,15 @@ import { useSelector } from 'react-redux'
 import ViewApplicantCard from '../../components/ViewApplicantCard'
 import { apiRequest } from '../../utils'
 import moment from 'moment'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const HiringStageCell = ({ applicantId, value, onChange }) => (
   <select
     value={value}
     onChange={(e) => onChange(applicantId, e.target.value)}
     className="bg-white border border-gray-300 rounded-md p-2 focus:border-blue-500 focus:outline-none"
+    disabled={value === 'Hired' || value === 'Declined'}
   >
     {['Pending', 'Hired', 'Declined', 'Shortlisted'].map((option) => (
       <option key={option} value={option}>
@@ -96,6 +99,9 @@ export default function AllApplicants({ dateRange }) {
   }, [applicants, filter])
 
   const handleStatusChange = async (applicantId, newStatus) => {
+    if (newStatus === 'Hired' || newStatus === 'Declined') {
+      toast(`Applicant ${newStatus}!`, { type: 'info' })
+    }
     try {
       await apiRequest({
         url: `/companies/update-company-applicant/${user._id}`,
@@ -231,28 +237,28 @@ export default function AllApplicants({ dateRange }) {
               </tr>
             </thead>
             <tbody>
-              {filteredApplicants.map((filteredApplicants) => (
+              {filteredApplicants.map((filteredApplicant) => (
                 <tr
-                  key={filteredApplicants.id}
+                  key={filteredApplicant.id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                  <td className="px-4 py-2">{filteredApplicants.fullName}</td>
+                  <td className="px-4 py-2">{filteredApplicant.fullName}</td>
                   <td className="px-4 py-2">
                     <HiringStageCell
-                      applicantId={filteredApplicants.id}
-                      value={filteredApplicants.hiringStage}
+                      applicantId={filteredApplicant.id}
+                      value={filteredApplicant.hiringStage}
                       onChange={handleStatusChange}
                     />
                   </td>
                   <td className="px-4 py-2">
                     {new Date(
-                      filteredApplicants.appliedDate,
+                      filteredApplicant.appliedDate,
                     ).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-2">{filteredApplicants.jobRole}</td>
+                  <td className="px-4 py-2">{filteredApplicant.jobRole}</td>
                   <td className="px-4 py-2">
                     <ActionCell
-                      applicant={filteredApplicants}
+                      applicant={filteredApplicant}
                       onSeeProfile={handleSeeProfile}
                     />
                   </td>
@@ -269,6 +275,7 @@ export default function AllApplicants({ dateRange }) {
           />
         )}
       </div>
+      <ToastContainer />
     </>
   )
 }
