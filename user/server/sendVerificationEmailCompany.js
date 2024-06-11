@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 // Function to send forgot password email
 export const sendForgotPasswordEmail = async (user) => {
   const subject = "Reset Your Password";
-  const resetPasswordLink = `http://localhost:5173/reset-password-token/${user.resetPasswordToken}`;
+  const resetPasswordLink = `https://skills2match.site/reset-password-token/${user.resetPasswordToken}`;
   const headerImagePath = path.join(__dirname, '..', 'company', 'src', 'assets', 'header-password.png');
   const logoPath = path.join(__dirname, '..', 'company', 'src', 'assets', 'logo.png');
   const message = `
