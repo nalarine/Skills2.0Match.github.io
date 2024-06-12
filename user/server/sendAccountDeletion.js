@@ -56,7 +56,7 @@ export const sendAccountDeletionEmail = async (user) => {
         </div>
         <div class="content">
           <p>Dear <strong>${user.firstName}</strong>,</p>
-          <p>Your account is scheduled for deletion. If this is a mistake, please contact us immediately.</p>
+          <p>Your account is scheduled for deletion. If this is a mistake, please contact us immediately at (02) 8911 0964 or via email at info@tip.edu.ph.</p>
         </div>
         <div class="footer">
           <p>Best regards,</p>
