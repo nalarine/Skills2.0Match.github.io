@@ -10,7 +10,7 @@ import ReactPDF from '@react-pdf/renderer';
 // import { Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import { pdf } from '@react-pdf/renderer';
-import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import logo from '../../assets/logo.png'
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
@@ -447,12 +447,36 @@ const styles = StyleSheet.create({
     margin: "auto",
     marginTop: 5,
     fontSize: 10
-  }
+  },
+  header: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    marginRight: 10,
+  },
+  timestamp: {
+    position: 'absolute',
+    fontSize: 10,
+    top: 10,
+    right: 10,
+  },
 });
+
+const Header = () => (
+  <View style={{ alignItems: 'center', marginBottom: 20 }}>
+    <Image style={styles.logo} src={logo} />
+    <Text style={styles.header}>Skills2.0Match</Text>
+    <Text style={styles.timestamp}>{new Date().toLocaleString()}</Text>
+  </View>
+);
 
 const MyDocument = ({ filteredUsers }) => (
   <Document>
     <Page style={styles.page}>
+    <Header />
       <Text style={{ marginBottom: 20, fontSize: 16 }}>User List</Text>
       <View style={styles.table}>
         <View style={styles.tableRow}>
@@ -479,6 +503,8 @@ const MyDocument = ({ filteredUsers }) => (
 const style = StyleSheet.create({
   page: {
     padding: 30,
+    fontFamily: 'Helvetica',
+    fontSize: 12,
   },
   section: {
     margin: 10,
@@ -486,34 +512,54 @@ const style = StyleSheet.create({
     flexGrow: 1,
   },
   table: {
-    display: "table",
-    width: "auto",
-    borderStyle: "solid",
+    display: 'table',
+    width: 'auto',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderRightWidth: 0,
-    borderBottomWidth: 0
+    borderBottomWidth: 0,
+    marginBottom: 10,
   },
   tableRow: {
-    margin: "auto",
-    flexDirection: "row"
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    borderStyle: 'solid',
+    borderWidth: 1,
   },
   tableCol: {
-    width: "33%",
-    borderStyle: "solid",
+    width: '33.33%',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
-    borderTopWidth: 0
+    borderTopWidth: 0,
+    padding: 8,
   },
   tableCell: {
-    margin: "auto",
-    marginTop: 5,
-    fontSize: 10
-  }
+    fontSize: 10,
+  },
+  header: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    marginRight: 10,
+  },
+  timestamp: {
+    position: 'absolute',
+    fontSize: 10,
+    top: 10,
+    right: 10,
+  },
 });
 
 const MyDocumentCompany = ({ filteredCompanies }) => (
   <Document>
     <Page style={style.page}>
+    <Header />
       <Text style={{ marginBottom: 20, fontSize: 16 }}>Company List</Text>
       <View style={style.table}>
         <View style={style.tableRow}>
@@ -537,6 +583,7 @@ const handleDownloadJobPDF = (jobs) => {
   const JobListPDF = ({ jobs }) => (
     <Document>
       <Page size="A4" style={stylesjob.page}>
+      <Header />
         <View style={stylesjob.section}>
           <Text style={stylesjob.title}>Job List</Text>
           {jobs.map((job, index) => (
@@ -555,23 +602,39 @@ const handleDownloadJobPDF = (jobs) => {
 
   const stylesjob = StyleSheet.create({
     page: {
-      flexDirection: 'column',
-      padding: 10,
+      padding: 30,
+      fontFamily: 'Helvetica',
+      fontSize: 12,
     },
     section: {
       margin: 10,
       padding: 10,
       flexGrow: 1,
     },
+    jobItem: {
+      marginBottom: 10,
+      padding: 10,
+      borderBottom: '1px solid #ccc',
+    },
     title: {
       fontSize: 20,
       textAlign: 'center',
       marginBottom: 20,
     },
-    jobItem: {
-      marginBottom: 10,
-      padding: 10,
-      borderBottom: '1px solid #ccc',
+    header: {
+      fontSize: 16,
+      marginBottom: 20,
+    },
+    logo: {
+      width: 60,
+      height: 60,
+      marginRight: 10,
+    },
+    timestamp: {
+      position: 'absolute',
+      fontSize: 10,
+      top: 10,
+      right: 10,
     },
   });
 
