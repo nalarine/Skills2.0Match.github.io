@@ -54,14 +54,12 @@ const JobAvailable = () => {
       <div className="w-full flex flex-wrap gap-4">
         {postedJobs.length > 0 ? (
           postedJobs.map((job, index) => {
-            if (index < 3) {
-              const newJob = {
-                name: job?.company?.name,
-                logo: job?.company?.profileUrl,
-                ...job,
-              }
-              return job.vacancies >= 0 && <JobCard job={newJob} key={index} />
+            const newJob = {
+              name: job?.company?.name,
+              logo: job?.company?.profileUrl,
+              ...job,
             }
+            return job.vacancies >= 0 && <JobCard job={newJob} key={index} />
           })
         ) : (
           <div className="w-full text-center text-xl">No jobs available</div>

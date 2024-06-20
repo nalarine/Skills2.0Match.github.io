@@ -1,42 +1,36 @@
 import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-
 import { useResponsive } from '../admin2/hooks/use-responsive';
-
 import { bgBlur } from '../admin2/theme/css';
-
 import Iconify from '../admin2/components/iconify';
-
 import Searchbar from '../admin2/layouts/dashboard/common/searchbar';
 import { NAV, HEADER } from '../admin2/layouts/dashboard/config-layout';
 import AccountPopover from '../admin2/layouts/dashboard/common/account-popover';
 import NotificationsPopover from '../admin2/layouts/dashboard/common/notifications-popover';
 
-// ----------------------------------------------------------------------
-
-export default function Header({ onOpenNav }) {
+const HeaderTop = ({ onOpenNav }) => {
   const theme = useTheme();
-
   const lgUp = useResponsive('up', 'lg');
+
+  const handleMenuClick = () => {
+    console.log("Menu button clicked");
+    onOpenNav();
+  };
 
   const renderContent = (
     <>
       {!lgUp && (
-        <IconButton onClick={onOpenNav} sx={{ mr: 1 }}>
+        <IconButton onClick={handleMenuClick} sx={{ mr: 1 }}>
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-
       <Searchbar />
-
       <Box sx={{ flexGrow: 1 }} />
-
       <Stack direction="row" alignItems="center" spacing={1}>
         <NotificationsPopover />
         <AccountPopover />
@@ -62,18 +56,15 @@ export default function Header({ onOpenNav }) {
         }),
       }}
     >
-      <Toolbar
-        sx={{
-          height: 1,
-          px: { lg: 5 },
-        }}
-      >
+      <Toolbar sx={{ height: 1, px: { lg: 5 } }}>
         {renderContent}
       </Toolbar>
     </AppBar>
   );
-}
-
-Header.propTypes = {
-  onOpenNav: PropTypes.func,
 };
+
+HeaderTop.propTypes = {
+  onOpenNav: PropTypes.func.isRequired,
+};
+
+export default HeaderTop;

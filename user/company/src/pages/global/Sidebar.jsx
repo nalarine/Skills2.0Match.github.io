@@ -1,44 +1,34 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import { usePathname } from '../admin2/routes/hooks';
 import { RouterLink } from '../admin2/routes/components';
-
 import { useResponsive } from '../admin2/hooks/use-responsive';
-
 import { account } from '../admin2/_mock/account';
-
 import Logo from '../admin2/components/logo';
 import Scrollbar from '../admin2/components/scrollbar';
-
 import { NAV } from '../admin2/layouts/dashboard/config-layout';
 import navConfig from '../admin2/layouts/dashboard/config-navigation';
 
-// ----------------------------------------------------------------------
-
-export default function Nav({ openNav, onCloseNav }) {
+const SidebarAdm = ({ openNav, onCloseNav }) => {
   const pathname = usePathname();
-  const { user } = useSelector((state) => state.user)
-
-  const profileUrl = user?.profileUrl || '' // Initialize profileUrl to empty string if not available
-
+  const { user } = useSelector((state) => state.user);
+  const profileUrl = user?.profileUrl || '';
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
     if (openNav) {
+      console.log("Nav is open");
       onCloseNav();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname, openNav, onCloseNav]);
 
   const renderAccount = (
     <Box
@@ -54,10 +44,8 @@ export default function Nav({ openNav, onCloseNav }) {
       }}
     >
       <Avatar src={profileUrl} alt="photoURL" />
-
       <Box sx={{ ml: 2 }}>
         <Typography variant="subtitle2">{user?.firstName}</Typography>
-
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {account.role}
         </Typography>
@@ -85,11 +73,8 @@ export default function Nav({ openNav, onCloseNav }) {
       }}
     >
       <Logo sx={{ mt: 3, ml: 4 }} />
-
       {renderAccount}
-
       {renderMenu}
-
     </Scrollbar>
   );
 
@@ -126,18 +111,15 @@ export default function Nav({ openNav, onCloseNav }) {
       )}
     </Box>
   );
-}
-
-Nav.propTypes = {
-  openNav: PropTypes.bool,
-  onCloseNav: PropTypes.func,
 };
 
-// ----------------------------------------------------------------------
+SidebarAdm.propTypes = {
+  openNav: PropTypes.bool.isRequired,
+  onCloseNav: PropTypes.func.isRequired,
+};
 
-function NavItem({ item }) {
+const NavItem = ({ item }) => {
   const pathname = usePathname();
-
   const active = item.path === pathname;
 
   return (
@@ -164,12 +146,13 @@ function NavItem({ item }) {
       <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
         {item.icon}
       </Box>
-
-      <Box component="span">{item.title} </Box>
+      <Box component="span">{item.title}</Box>
     </ListItemButton>
   );
-}
+};
 
 NavItem.propTypes = {
-  item: PropTypes.object,
+  item: PropTypes.object.isRequired,
 };
+
+export default SidebarAdm;
