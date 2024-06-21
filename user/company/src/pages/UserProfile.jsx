@@ -513,95 +513,100 @@ const UserProfile = () => {
   }, [user]);
 
   return (
-    <div className="container mx-auto flex items-center justify-center pt-10 pb-24 bg-gradient-to-r from-green-200 to-blue-200">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 rounded-lg shadow-lg bg-white">
-        {/* Left Side */}
-        <div className="bg-gray-100 p-6 rounded-lg flex flex-col items-center overflow-hidden shadow-md">
-          <div className="relative mb-4">
+    <div className="container mx-auto pt-10 pb-24 px-6 bg-gradient-to-r from-green-200 to-blue-200 min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-lg space-y-6">
+         {/* Profile Header */}
+         <div className="flex flex-col md:flex-row items-center md:items-start">
+          <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
             <img
               src={userInfo?.profileUrl || userInfo?.NoProfile}
               alt={userInfo?.firstName}
               className="w-40 h-40 object-cover rounded-full border-4 border-green-600 shadow-lg"
             />
-            <div className="absolute bottom-0 right-0 bg-green-600 text-white px-2 py-1 rounded-full text-sm transform translate-x-2 translate-y-2">
-              Profile Picture
-            </div>
           </div>
-          <h1 className="text-2xl font-semibold text-gray-700 flex items-center">
-            {userInfo?.firstName + ' ' + userInfo?.lastName}
-            {isEmailVerified && (
-              <span className="ml-2">
-                <img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAADGElEQVR4nO2W3U9ScRzG2dwaL5mCYAio2NaW11w0t7TxYmb4iqCCJghsttTavOOmNVTESpQIEeUgpFM84tra7GWzf6GXtS66aqs711ZNGFfwbb+jkA6OHA7rzucePnu+5znPcxiMM1GQeMcqqYkYxyWbQ2PitQEJ439Jgo+Ia3CrrC4yrKrdMs1WR0yJ6k0jVG8MgXh9MCFaG3CKwgZVVcggk4R04uKJuK6kbscakm5bUlLcDLVbw1ATMUEaKlm/DeK1QRA9HwBR2ABVq3oQYv0pYaAviH5Lm1sXtdikUQtQhgb7QYj1wcVALwj8Whst6KXoyGVp1BKjA61c1gF/qSfG92kuF3beqMUm3TbH6UIFfi0IlnqgYlET53m7bJTOTjxTmuc9DuX7NFDh7Qbesy7gejqxvOktKEi5oD4N8Bf/QXmeTuA+bU/yXd1VpOBa3NxQFNSrAetLJ5heOIDn7jyCdkD5Qjtw59saSMHSiLmpGOjEWw+kIAXJVAp0+APgug+h5fNtUO5SN5I73jLN5oSGqUORfiUO4GrgTgZa5lJD6ZNWJ2kNHm+kNFSM6WFizwv12DBl6PXV8UOXR9ALc7eg9HFrgjWnzm411L1ZToMGwD7uEn/4Zf8bXFkx0YVC6aObwHHeGMtO9IZxPOuZYvoMOANfHqIFPT/bkhuMVgYVflaQlnoh/OlNBv7153eo9xvh/ms3ESKk34kDkIfu5YMmWFOK3ANCrEyO9Ap9Wtj8vJeB//izX6hTYDmaZ0hTLQwZmsjSW+nRQOjDqwy8AKfAdjQDc1pB/jqJwvqG02pQ4O6C1fe7BUPZ0ypgOpTkBYJGnNjTU7qXv9ABD99hcC14lzKUNaVIsqcaySuTOHegL3ha4RM16EbF0E4RqgTmpHyFkVe4rgSNON+vjeeEHnUvRadxpl1ObRbTQiNesdgdow2dVMTO2VUFfAgcExpxek6VQDilLVxXgkYc7WkB500y7fJAUR97aaERL3OrZWUutQqtDCr8E4003ezkTCpVbLtclje9xQitDGemZZQz0zxKWoNnYpzUXzW9KCUUY2u8AAAAAElFTkSuQmCC"
-                  alt="Verified Icon"
-                  className="w-5 h-5"
-                />
-              </span>
-            )}
-          </h1>
-          <h5 className="text-green-900 text-lg font-bold mt-4">Applicant</h5>
+          <div className="flex flex-col justify-center text-center md:text-left mt-12">
+            <h1 className="text-3xl font-bold text-gray-800">
+              {userInfo?.firstName + ' ' + userInfo?.lastName}
+              {isEmailVerified && (
+                <span className="ml-2 inline-block">
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAADGElEQVR4nO2W3U9ScRzG2dwaL5mCYAio2NaW11w0t7TxYmb4iqCCJghsttTavOOmNVTESpQIEeUgpFM84tra7GWzf6GXtS66aqs711ZNGFfwbb+jkA6OHA7rzucePnu+5znPcxiMM1GQeMcqqYkYxyWbQ2PitQEJ439Jgo+Ia3CrrC4yrKrdMs1WR0yJ6k0jVG8MgXh9MCFaG3CKwgZVVcggk4R04uKJuK6kbscakm5bUlLcDLVbw1ATMUEaKlm/DeK1QRA9HwBR2ABVq3oQYv0pYaAviH5Lm1sXtdikUQtQhgb7QYj1wcVALwj8Whst6KXoyGVp1BKjA61c1gF/qSfG92kuF3beqMUm3TbH6UIFfi0IlnqgYlET53m7bJTOTjxTmuc9DuX7NFDh7Qbesy7gejqxvOktKEi5oD4N8Bf/QXmeTuA+bU/yXd1VpOBa3NxQFNSrAetLJ5heOIDn7jyCdkD5Qjtw59saSMHSiLmpGOjEWw+kIAXJVAp0+APgug+h5fNtUO5SN5I73jLN5oSGqUORfiUO4GrgTgZa5lJD6ZNWJ2kNHm+kNFSM6WFizwv12DBl6PXV8UOXR9ALc7eg9HFrgjWnzm411L1ZToMGwD7uEn/4Zf8bXFkx0YVC6aObwHHeGMtO9IZxPOuZYvoMOANfHqIFPT/bkhuMVgYVflaQlnoh/OlNBv7153eo9xvh/ms3ESKk34kDkIfu5YMmWFOK3ANCrEyO9Ap9Wtj8vJeB//izX6hTYDmaZ0hTLQwZmsjSW+nRQOjDqwy8AKfAdjQDc1pB/jqJwvqG02pQ4O6C1fe7BUPZ0ypgOpTkBYJGnNjTU7qXv9ABD99hcC14lzKUNaVIsqcaySuTOHegL3ha4RM16EbF0E4RqgTmpHyFkVe4rgSNON+vjeeEHnUvRadxpl1ObRbTQiNesdgdow2dVMTO2VUFfAgcExpxek6VQDilLVxXgkYc7WkB500y7fJAUR97aaERL3OrZWUutQqtDCr8E4003ezkTCpVbLtclje9xQitDGemZZQz0zxKWoNnYpzUXzW9KCUUY2u8AAAAAElFTkSuQmCC"
+                    alt="Verified Icon"
+                    className="w-6 h-6"
+                  />
+                </span>
+              )}
+            </h1>
+            <p className="text-green-800 text-xl font-medium mt-1">Applicant</p>
+          </div>
         </div>
 
-        {/* Right Side */}
-        <div className="flex flex-col gap-4">
-          {/* Upper Right */}
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-            <div className="flex items-center gap-2 mb-3">
-              <HiLocationMarker size={24} className="text-green-800" />
-              <p className="text-lg text-gray-700">
-                {userInfo?.location ?? 'No Location'}
-              </p>
+        {/* Contact Info */}
+        <div className="bg-green-100 p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Contact Information</h2>
+          <div className="flex flex-wrap items-center justify-center space-x-6">
+            <div className="flex items-center mb-2 md:mb-0 bg-green-50 border border-dashed border-emerald-400 rounded-full p-2">
+              <HiLocationMarker size={24} className="text-green-800 mr-2" />
+              <p className="text-lg text-gray-700">{userInfo?.location ?? 'No Location'}</p>
             </div>
-            <div className="flex items-center gap-2 mb-3">
-              <AiOutlineMail size={24} className="text-green-800" />
+            <div className="flex items-center mb-2 md:mb-0 bg-green-50 border border-dashed border-emerald-400 rounded-full p-2">
+              <AiOutlineMail size={24} className="text-green-800 mr-2" />
               <p className="text-lg text-gray-700">{userInfo?.email ?? 'No Email'}</p>
             </div>
-            <div className="flex items-center gap-2 mb-4">
-              <FiPhoneCall size={24} className="text-green-800" />
+            <div className="flex items-center mb-2 md:mb-0 bg-green-50 border border-dashed border-emerald-400 rounded-full p-2">
+              <FiPhoneCall size={24} className="text-green-800 mr-2" />
               <p className="text-lg text-gray-700">{userInfo?.contact ?? 'No Contact'}</p>
             </div>
+          </div>
+        </div>
 
-            <p className="text-green-600 font-bold text-lg">SKILLS</p>
-            <div className="flex flex-wrap mt-2">
+
+        {/* Skills & About */}
+        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+          <div className="flex-1 bg-green-50 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Skills</h2>
+            <div className="flex flex-wrap">
               {userInfo?.skills
                 ? userInfo.skills.split(' ').map((skill, index) => (
                     <span
                       key={index}
-                      className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm mr-2 mb-2"
+                      className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm mr-2 mb-2"
                     >
                       {skill.trim()}
                     </span>
                   ))
                 : 'No Skills Indicated'}
             </div>
+          </div>
 
-            <p className="text-green-600 font-bold text-lg mt-4">ABOUT</p>
-            <div className="overflow-y-auto max-h-40 mt-2">
+          <div className="flex-1 bg-green-50 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">About</h2>
+            <div className="overflow-y-auto max-h-40">
               <p className="text-base leading-7 text-gray-700">
                 {userInfo?.about ?? 'No About Found'}
               </p>
             </div>
           </div>
+        </div>
 
-          {/* Lower Right */}
+        {/* Actions */}
+        <div className="flex flex-col md:flex-row items-center md:justify-between">
           <button
-            className="bg-green-600 text-white py-2 px-8 rounded hover:bg-green-700 focus:outline-none self-start mt-4 transition duration-300 ease-in-out transform hover:scale-105"
+            className="bg-green-600 text-white py-2 px-8 rounded-lg hover:bg-green-700 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105"
             onClick={() => setOpen(true)}
           >
             Edit Profile
           </button>
 
           {resumeUrl && (
-            <div className="flex items-center justify-center mt-4">
-              <a
-                href={resumeUrl}
-                download="resume.pdf"
-                className="flex items-center bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105"
-              >
-                <DownloadOutlined className="mr-2" />
-                Download Resume
-              </a>
-            </div>
+            <a
+              href={resumeUrl}
+              download="resume.pdf"
+              className="flex items-center bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 mt-4 md:mt-0"
+            >
+              <DownloadOutlined className="mr-2" />
+              Download Resume
+            </a>
           )}
         </div>
       </div>
