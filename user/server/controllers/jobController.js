@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Jobs from "../models/jobsModel.js";
 import Companies from "../models/companiesModel.js";
 import User from "../models/userModel.js";
+import natural from 'natural';
 
 export const allJobs = async (req, res, next) => {
     try {
@@ -390,6 +391,30 @@ export const applyJob = async (req, res, next) => {
 //     }
 // };
 
+const getSynonyms = (word) => {
+    const WordNet = new natural.WordNet();
+    return new Promise((resolve, reject) => {
+        WordNet.lookup(word, (results) => {
+            if (results.length > 0) {
+                const synonyms = new Set();
+                results.forEach(result => {
+                    result.synonyms.forEach(synonym => {
+                        synonyms.add(synonym);
+                    });
+                });
+                resolve(Array.from(synonyms));
+            } else {
+                resolve([word]);
+            }
+        });
+    });
+};
+
+const stemWord = (word) => {
+    const stemmer = natural.PorterStemmer;
+    return stemmer.stem(word);
+};
+
 export const getJobPosts = async (req, res, next) => {
     try {
         const { search, sort, location, jType, exp, user_id } = req.query;
@@ -408,12 +433,10 @@ export const getJobPosts = async (req, res, next) => {
             endHiringDate: { $gte: new Date(new Date().setHours(0, 0, 0)) },
         };
 
-        // Function to validate and clean the skills
         const cleanSkills = (skills) => {
             return skills
                 .split(/\s+/) // Split the skills string into an array of words
                 .filter(skill => {
-                    // Remove any non-alphanumeric characters and filter out short common words
                     const cleanedSkill = skill.replace(/[^a-zA-Z0-9]/g, '');
                     return cleanedSkill.length > 2 && !["and", "the", "for", "with", "etc"].includes(cleanedSkill.toLowerCase());
                 });
@@ -422,27 +445,24 @@ export const getJobPosts = async (req, res, next) => {
         // If user provides skills, include skill matching logic in the query
         if (user.skills) {
             const skills = cleanSkills(user.skills);
-            if (skills.length > 0) {
-                const skillQueries = skills.map(skill => ({
-                    "detail.requirements": { $regex: skill, $options: "i" },
-                }));
+            let skillQueries = [];
+
+            for (let skill of skills) {
+                const synonyms = await getSynonyms(skill);
+                synonyms.push(skill); // Include the original skill as well
+                const stemmedWords = synonyms.map(syn => stemWord(syn));
+                stemmedWords.forEach(stem => {
+                    skillQueries.push({ "detail.requirements": { $regex: stem, $options: "i" } });
+                });
+            }
+
+            if (skillQueries.length > 0) {
                 queryObject.$or = skillQueries;
             }
         }
 
-        // If user provides job title, include job title matching logic in the query
-        // if (user.jobTitle) {
-        //     queryObject.$or = queryObject.$or || [];
-        //     queryObject.$or.push({
-        //         jobTitle: { $regex: user.jobTitle, $options: "i" },
-        //     });
-        // }
-
-        // If neither job title nor skills provided, return an error or handle as appropriate
         if (!queryObject.$or || queryObject.$or.length === 0) {
-            return res
-                .status(400)
-                .json({ message: "Please provide job skills" });
+            return res.status(400).json({ message: "Please provide job skills" });
         }
 
         if (location) {
@@ -465,12 +485,8 @@ export const getJobPosts = async (req, res, next) => {
                 $or: [
                     { jobTitle: { $regex: search, $options: "i" } },
                     { jobType: { $regex: search, $options: "i" } },
-                    {
-                        "detail.requirements": {
-                            $regex: search, $options: "i",
-                        },
-                    }, // Match against job requirements
-                    { "detail.desc": { $regex: search, $options: "i" } }, // Match against job description
+                    { "detail.requirements": { $regex: search, $options: "i" } },
+                    { "detail.desc": { $regex: search, $options: "i" } },
                 ],
             };
             queryObject = { ...queryObject, ...searchQuery };
@@ -504,7 +520,7 @@ export const getJobPosts = async (req, res, next) => {
         const totalJobs = await Jobs.countDocuments(queryResult);
         const numOfPage = Math.ceil(totalJobs / limit);
 
-        queryResult = queryResult.limit(limit * page);
+        queryResult = queryResult.limit(limit).skip(skip);
 
         const jobs = await queryResult;
 
@@ -520,6 +536,7 @@ export const getJobPosts = async (req, res, next) => {
         res.status(404).json({ message: error.message });
     }
 };
+
 
 export const getJobApplications = async (req, res, next) => {
     try {
