@@ -483,103 +483,101 @@ const UserForm = ({ open, setOpen, user, profileUrl }) => {
 }
 
 const UserProfile = () => {
-  const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.user)
-  const [open, setOpen] = useState(false)
-  const [userInfo, setUserInfo] = useState(null)
-  const [resumeUrl, setResumeUrl] = useState(null) // Define resumeUrl state
-  const [isEmailVerified, setIsEmailVerified] = useState(false)
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const [open, setOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [resumeUrl, setResumeUrl] = useState(null);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const getUser = async () => {
     const res = await apiRequest({
       url: '/users/get-user',
       token: user?.token,
       method: 'GET',
-    })
-    const updatedUserInfo = { token: user?.token, ...res?.user }
-    setUserInfo(updatedUserInfo)
-    setIsEmailVerified(updatedUserInfo?.emailVerified) // Set email verification status
-    dispatch(Login(updatedUserInfo))
-  }
+    });
+    const updatedUserInfo = { token: user?.token, ...res?.user };
+    setUserInfo(updatedUserInfo);
+    setIsEmailVerified(updatedUserInfo?.emailVerified);
+    dispatch(Login(updatedUserInfo));
+  };
 
   useEffect(() => {
-    getUser()
-  }, [])
+    getUser();
+  }, []);
 
   useEffect(() => {
     if (user) {
-      setUserInfo(user)
+      setUserInfo(user);
     }
-  }, [user])
+  }, [user]);
 
   return (
-    <div className="container mx-auto flex items-center justify-center pt-10 pb-24 bg-green-200">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="container mx-auto flex items-center justify-center pt-10 pb-24 bg-gradient-to-r from-green-200 to-blue-200">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 rounded-lg shadow-lg bg-white">
         {/* Left Side */}
-        <div className="bg-slate-100 p-6 pb-2 rounded-lg flex flex-col items-center overflow-hidden">
-          <div>
+        <div className="bg-gray-100 p-6 rounded-lg flex flex-col items-center overflow-hidden shadow-md">
+          <div className="relative mb-4">
             <img
               src={userInfo?.profileUrl || userInfo?.NoProfile}
               alt={userInfo?.firstName}
-              className="w-full h-48 object-contain rounded-lg mb-4"
+              className="w-40 h-40 object-cover rounded-full border-4 border-green-600 shadow-lg"
             />
-            <h1 className="text-2xl font-semibold text-slate-600 flex items-center">
-              {userInfo?.firstName + ' ' + userInfo?.lastName}
-              {isEmailVerified && ( // Render verified icon if email is verified
-                <span className="ml-2">
-                  <img
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAADGElEQVR4nO2W3U9ScRzG2dwaL5mCYAio2NaW11w0t7TxYmb4iqCCJghsttTavOOmNVTESpQIEeUgpFM84tra7GWzf6GXtS66aqs711ZNGFfwbb+jkA6OHA7rzucePnu+5znPcxiMM1GQeMcqqYkYxyWbQ2PitQEJ439Jgo+Ia3CrrC4yrKrdMs1WR0yJ6k0jVG8MgXh9MCFaG3CKwgZVVcggk4R04uKJuK6kbscakm5bUlLcDLVbw1ATMUEaKlm/DeK1QRA9HwBR2ABVq3oQYv0pYaAviH5Lm1sXtdikUQtQhgb7QYj1wcVALwj8Whst6KXoyGVp1BKjA61c1gF/qSfG92kuF3beqMUm3TbH6UIFfi0IlnqgYlET53m7bJTOTjxTmuc9DuX7NFDh7Qbesy7gejqxvOktKEi5oD4N8Bf/QXmeTuA+bU/yXd1VpOBa3NxQFNSrAetLJ5heOIDn7jyCdkD5Qjtw59saSMHSiLmpGOjEWw+kIAXJVAp0+APgug+h5fNtUO5SN5I73jLN5oSGqUORfiUO4GrgTgZa5lJD6ZNWJ2kNHm+kNFSM6WFizwv12DBl6PXV8UOXR9ALc7eg9HFrgjWnzm411L1ZToMGwD7uEn/4Zf8bXFkx0YVC6aObwHHeGMtO9IZxPOuZYvoMOANfHqIFPT/bkhuMVgYVflaQlnoh/OlNBv7153eo9xvh/ms3ESKk34kDkIfu5YMmWFOK3ANCrEyO9Ap9Wtj8vJeB//izX6hTYDmaZ0hTLQwZmsjSW+nRQOjDqwy8AKfAdjQDc1pB/jqJwvqG02pQ4O6C1fe7BUPZ0ypgOpTkBYJGnNjTU7qXv9ABD99hcC14lzKUNaVIsqcaySuTOHegL3ha4RM16EbF0E4RqgTmpHyFkVe4rgSNON+vjeeEHnUvRadxpl1ObRbTQiNesdgdow2dVMTO2VUFfAgcExpxek6VQDilLVxXgkYc7WkB500y7fJAUR97aaERL3OrZWUutQqtDCr8E4003ezkTCpVbLtclje9xQitDGemZZQz0zxKWoNnYpzUXzW9KCUUY2u8AAAAAElFTkSuQmCC"
-                    alt="Verified Icon"
-                  />
-                </span>
-              )}
-            </h1>
-            <h5 className="text-green-900 text-lg font-bold mb-4 mt-4">
-              Applicant
-            </h5>
+            <div className="absolute bottom-0 right-0 bg-green-600 text-white px-2 py-1 rounded-full text-sm transform translate-x-2 translate-y-2">
+              Profile Picture
+            </div>
           </div>
+          <h1 className="text-2xl font-semibold text-gray-700 flex items-center">
+            {userInfo?.firstName + ' ' + userInfo?.lastName}
+            {isEmailVerified && (
+              <span className="ml-2">
+                <img
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAADGElEQVR4nO2W3U9ScRzG2dwaL5mCYAio2NaW11w0t7TxYmb4iqCCJghsttTavOOmNVTESpQIEeUgpFM84tra7GWzf6GXtS66aqs711ZNGFfwbb+jkA6OHA7rzucePnu+5znPcxiMM1GQeMcqqYkYxyWbQ2PitQEJ439Jgo+Ia3CrrC4yrKrdMs1WR0yJ6k0jVG8MgXh9MCFaG3CKwgZVVcggk4R04uKJuK6kbscakm5bUlLcDLVbw1ATMUEaKlm/DeK1QRA9HwBR2ABVq3oQYv0pYaAviH5Lm1sXtdikUQtQhgb7QYj1wcVALwj8Whst6KXoyGVp1BKjA61c1gF/qSfG92kuF3beqMUm3TbH6UIFfi0IlnqgYlET53m7bJTOTjxTmuc9DuX7NFDh7Qbesy7gejqxvOktKEi5oD4N8Bf/QXmeTuA+bU/yXd1VpOBa3NxQFNSrAetLJ5heOIDn7jyCdkD5Qjtw59saSMHSiLmpGOjEWw+kIAXJVAp0+APgug+h5fNtUO5SN5I73jLN5oSGqUORfiUO4GrgTgZa5lJD6ZNWJ2kNHm+kNFSM6WFizwv12DBl6PXV8UOXR9ALc7eg9HFrgjWnzm411L1ZToMGwD7uEn/4Zf8bXFkx0YVC6aObwHHeGMtO9IZxPOuZYvoMOANfHqIFPT/bkhuMVgYVflaQlnoh/OlNBv7153eo9xvh/ms3ESKk34kDkIfu5YMmWFOK3ANCrEyO9Ap9Wtj8vJeB//izX6hTYDmaZ0hTLQwZmsjSW+nRQOjDqwy8AKfAdjQDc1pB/jqJwvqG02pQ4O6C1fe7BUPZ0ypgOpTkBYJGnNjTU7qXv9ABD99hcC14lzKUNaVIsqcaySuTOHegL3ha4RM16EbF0E4RqgTmpHyFkVe4rgSNON+vjeeEHnUvRadxpl1ObRbTQiNesdgdow2dVMTO2VUFfAgcExpxek6VQDilLVxXgkYc7WkB500y7fJAUR97aaERL3OrZWUutQqtDCr8E4003ezkTCpVbLtclje9xQitDGemZZQz0zxKWoNnYpzUXzW9KCUUY2u8AAAAAElFTkSuQmCC"
+                  alt="Verified Icon"
+                  className="w-5 h-5"
+                />
+              </span>
+            )}
+          </h1>
+          <h5 className="text-green-900 text-lg font-bold mt-4">Applicant</h5>
         </div>
 
         {/* Right Side */}
         <div className="flex flex-col gap-4">
           {/* Upper Right */}
-          <div className="bg-slate-50 p-6 rounded-lg h-auto overflow-hidden max-w-md">
-            <div className="flex gap-1 items-center justify-start px-3 py-1 text-sm text-slate-600">
+          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+            <div className="flex items-center gap-2 mb-3">
               <HiLocationMarker size={24} className="text-green-800" />
-              <p className="pl-2 text-lg">
+              <p className="text-lg text-gray-700">
                 {userInfo?.location ?? 'No Location'}
               </p>
             </div>
-            <div className="flex gap-1 items-center justify-start px-3 py-1 text-sm text-slate-600">
+            <div className="flex items-center gap-2 mb-3">
               <AiOutlineMail size={24} className="text-green-800" />
-              <p className="pl-2 text-lg">{userInfo?.email ?? 'No Email'}</p>
+              <p className="text-lg text-gray-700">{userInfo?.email ?? 'No Email'}</p>
             </div>
-            <div className="flex gap-1 items-center justify-start px-3 py-1 pb-4 text-sm text-slate-600">
+            <div className="flex items-center gap-2 mb-4">
               <FiPhoneCall size={24} className="text-green-800" />
-              <p className="pl-2 text-lg">
-                {userInfo?.contact ?? 'No Contact'}
-              </p>
+              <p className="text-lg text-gray-700">{userInfo?.contact ?? 'No Contact'}</p>
             </div>
 
-            <p className="text-green-600 font-bold text-lg text-left">SKILLS</p>
-            <div className="flex flex-wrap">
-              <p className="text-base text-left leading-7 px-3 py-2 text-sm text-slate-600 flex flex-wrap">
+            <p className="text-green-600 font-bold text-lg">SKILLS</p>
+            <div className="flex flex-wrap mt-2">
               {userInfo?.skills
-              ? userInfo.skills.split(' ').map((skill, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm mr-2 mb-2"
-                  >
-                    {skill.trim()}
-                  </span>
-                ))
-              : 'No Skills Indicated'}
-              </p>
+                ? userInfo.skills.split(' ').map((skill, index) => (
+                    <span
+                      key={index}
+                      className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm mr-2 mb-2"
+                    >
+                      {skill.trim()}
+                    </span>
+                  ))
+                : 'No Skills Indicated'}
             </div>
 
-            <p className="text-green-600 font-bold text-lg text-left">ABOUT</p>
-            <div className="overflow-y-auto max-h-40">
-              <p className="text-base text-left leading-7 px-3 py-2 text-sm text-slate-600">
+            <p className="text-green-600 font-bold text-lg mt-4">ABOUT</p>
+            <div className="overflow-y-auto max-h-40 mt-2">
+              <p className="text-base leading-7 text-gray-700">
                 {userInfo?.about ?? 'No About Found'}
               </p>
             </div>
@@ -587,24 +585,24 @@ const UserProfile = () => {
 
           {/* Lower Right */}
           <button
-            className="bg-green-600 text-white py-2 px-44 rounded hover:bg-[#86EFAC] hover:text-[#15803D] focus:outline-none self-start mt-4"
+            className="bg-green-600 text-white py-2 px-8 rounded hover:bg-green-700 focus:outline-none self-start mt-4 transition duration-300 ease-in-out transform hover:scale-105"
             onClick={() => setOpen(true)}
           >
             Edit Profile
           </button>
 
-          {/* {resumeUrl && (
-            <div className="flex items-center justify-center">
+          {resumeUrl && (
+            <div className="flex items-center justify-center mt-4">
               <a
                 href={resumeUrl}
                 download="resume.pdf"
-                className="flex items-center bg-green-600 text-white py-2 px-4 rounded hover:bg-[#86EFAC] hover:text-[#15803D] focus:outline-none self-start mt-4"
+                className="flex items-center bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105"
               >
                 <DownloadOutlined className="mr-2" />
                 Download Resume
               </a>
             </div>
-          )} */}
+          )}
         </div>
       </div>
       <UserForm
@@ -614,7 +612,7 @@ const UserProfile = () => {
         profileUrl={userInfo?.profileUrl}
       />
     </div>
-  )
-}
+  );
+};
 
-export default UserProfile
+export default UserProfile;
