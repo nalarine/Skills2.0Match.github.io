@@ -117,6 +117,7 @@
     "socket.io-client": "^4.7.5",
     "styled-components": "^6.1.8",
     "sweetalert2": "^11.11.1",
+    "sweetalert2-react-content": "^5.0.7",
     "victory": "^37.0.2",
     "vite-plugin-svgr": "^4.2.0",
     "web-vitals": "^3.5.2",
