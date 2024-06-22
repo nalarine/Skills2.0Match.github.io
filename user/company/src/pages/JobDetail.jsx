@@ -168,8 +168,10 @@ const JobDetail = () => {
 
   return (
     <div className="container mx-auto">
-      {isFetching ? (
-        <Loading />
+       {isFetching ? (
+        <div className="flex items-center justify-center h-screen">
+          <Loading />
+        </div>
       ) : job ? (
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="w-full lg:w-2/3 px-5 py-10">
