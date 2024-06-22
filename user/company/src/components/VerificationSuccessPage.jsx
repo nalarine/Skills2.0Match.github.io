@@ -14,9 +14,12 @@ const VerificationSuccess = () => {
   };
 
   // Effect to verify email on component mount
-  useEffect(() => {
+   // Effect to verify email on component mount
+   useEffect(() => {
+    const API_URL = 'https://usaid-project.onrender.com/api-v1'; // Your Render API URL
+
     // Send verification token to backend API
-    fetch(`http://localhost:8800/api-v1/auth/verification-success/${verificationToken}`, {
+    fetch(`${API_URL}/auth/verification-success/${verificationToken}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -36,6 +39,7 @@ const VerificationSuccess = () => {
         console.error('Error verifying email:', error);
       });
   }, [verificationToken]);
+
 
   return (
     <div

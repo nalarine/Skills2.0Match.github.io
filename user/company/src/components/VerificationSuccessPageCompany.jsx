@@ -15,8 +15,10 @@ const VerificationSuccess = () => {
 
   // Effect to verify email on component mount
   useEffect(() => {
+    const API_URL = 'https://usaid-project.onrender.com/api-v1'; // Your Render API URL
+
     // Send verification token to backend API
-    fetch(`http://localhost:8800/api-v1/companies/verification-success-company/${verificationToken}`, {
+    fetch(`${API_URL}/companies/verification-success-company/${verificationToken}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
